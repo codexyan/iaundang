@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+﻿import { notFound } from 'next/navigation'
 import { templateRecords } from '@/lib/db'
 import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
 import InvitationRenderer from '@/components/renderer/InvitationRenderer'
@@ -11,9 +11,9 @@ interface Props {
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ searchParams }: Props) {
-  if (!searchParams.id) return { title: 'Demo Tema — Akundang' }
+  if (!searchParams.id) return { title: 'Demo Tema â€” Akundang' }
   const rec = await templateRecords.findById(searchParams.id)
-  return { title: `Preview: ${rec?.name ?? 'Tema'} — Akundang` }
+  return { title: `Preview: ${rec?.name ?? 'Tema'} â€” Akundang` }
 }
 
 const DEMO_DATA: NewInvitationData = {
@@ -21,7 +21,7 @@ const DEMO_DATA: NewInvitationData = {
   bride_name: 'Ani Permatasari',
   bride_parents: 'Bapak Hendra Permata & Ibu Dewi Lestari',
   groom_parents: 'Bapak Ahmad Santoso & Ibu Sri Rahayu',
-  tagline: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri. — QS Ar-Rum: 21',
+  tagline: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri. â€” QS Ar-Rum: 21',
   story_title: 'Kisah Kami',
   story_text: 'Kami pertama kali bertemu di sebuah acara kampus pada tahun 2019. Sebuah perkenalan singkat yang ternyata menjadi awal dari perjalanan panjang yang penuh makna.',
   akad: {
@@ -45,7 +45,7 @@ const DEMO_DATA: NewInvitationData = {
 }
 
 const DEMO_WISHES: Wish[] = [
-  { id: '1', invitation_id: 'demo', name: 'Reza Firmansyah', message: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallah 💕', created_at: new Date(Date.now() - 2 * 3600000).toISOString() },
+  { id: '1', invitation_id: 'demo', name: 'Reza Firmansyah', message: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallah ðŸ’•', created_at: new Date(Date.now() - 2 * 3600000).toISOString() },
   { id: '2', invitation_id: 'demo', name: 'Sari & Keluarga',  message: 'Turut berbahagia atas pernikahan kalian. Semoga dipenuhi kebahagiaan dan keberkahan!', created_at: new Date(Date.now() - 5 * 3600000).toISOString() },
 ]
 
@@ -58,12 +58,22 @@ export default async function DemoRendererPage({ searchParams }: Props) {
     template = rec
   }
 
+  // Force tampilkan halaman cover/welcome — user harus klik "Buka Undangan" dulu
+  const demoTemplate = {
+    ...template,
+    config: {
+      ...template.config,
+      opening: { ...template.config.opening, show_opening: true },
+    },
+  }
+
   return (
     <InvitationRenderer
       invitationId={`demo-${template.id}`}
       invitationData={DEMO_DATA}
-      template={template}
+      template={demoTemplate}
       initialWishes={DEMO_WISHES}
     />
   )
 }
+
