@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   }
 
   const body = await req.json()
-  const updated = invitations.update(params.id, body)
+  const updated = await invitations.update(params.id, body)
   if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   return NextResponse.json({ invitation: updated })
 }

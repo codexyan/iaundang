@@ -17,7 +17,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const inv = invitations.findBySlug(params.slug)
+  const inv = await invitations.findBySlug(params.slug)
   if (!inv?.is_published) return {}
 
   // New style data
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function InvitationPage({ params }: Props) {
-  const invitation = invitations.findBySlug(params.slug)
+  const invitation = await invitations.findBySlug(params.slug)
 
   if (!invitation) notFound()
 
@@ -54,12 +54,12 @@ export default async function InvitationPage({ params }: Props) {
   const isLegacy = (LEGACY_TEMPLATE_IDS as string[]).includes(invitation.template_id)
 
   if (!isLegacy) {
-    const template = templateRecords.findById(invitation.template_id)
+    const template = await templateRecords.findById(invitation.template_id)
     if (!template) {
       return <UnpublishedPage message="Template undangan tidak ditemukan." />
     }
 
-    const invWishes = wishes.findByInvitationId(invitation.id)
+    const invWishes = await wishes.findByInvitationId(invitation.id)
 
     return (
       <InvitationRenderer
@@ -75,9 +75,9 @@ export default async function InvitationPage({ params }: Props) {
   // ── Legacy hardcoded templates path ───────────────────────────
   const props = {
     invitation: invitation as Invitation,
-    galleries: galleries.findByInvitationId(invitation.id) as Gallery[],
-    wishes: wishes.findByInvitationId(invitation.id) as Wish[],
-    guests: guests.findByInvitationId(invitation.id) as Guest[],
+    galleries: await galleries.findByInvitationId(invitation.id) as Gallery[],
+    wishes: await wishes.findByInvitationId(invitation.id) as Wish[],
+    guests: await guests.findByInvitationId(invitation.id) as Guest[],
   }
 
   switch (invitation.template_id) {

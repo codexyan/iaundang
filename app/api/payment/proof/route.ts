@@ -5,7 +5,7 @@ import { paymentProofs, invitations, users } from '@/lib/db'
 export async function GET() {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json({ proofs: paymentProofs.findByUserId(session.userId) })
+  return NextResponse.json({ proofs: await paymentProofs.findByUserId(session.userId) })
 }
 
 export async function POST(req: NextRequest) {
@@ -15,17 +15,17 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { invitation_id, amount, bank_name, transfer_date, proof_url, notes } = body
 
-  const inv = invitations.findById(invitation_id)
+  const inv = await invitations.findById(invitation_id)
   if (!inv || inv.user_id !== session.userId) return NextResponse.json({ error: 'Undangan tidak ditemukan' }, { status: 404 })
 
   if (inv.is_paid) return NextResponse.json({ error: 'Undangan sudah aktif' }, { status: 409 })
 
   // Cek apakah sudah ada proof pending
-  const existingPending = paymentProofs.findByInvitationId(invitation_id).find((p) => p.status === 'pending')
+  const existingPending = (await paymentProofs.findByInvitationId(invitation_id)).find((p) => p.status === 'pending')
   if (existingPending) return NextResponse.json({ error: 'Sudah ada bukti transfer yang menunggu verifikasi' }, { status: 409 })
 
-  const user = users.findById(session.userId)
-  const proof = paymentProofs.create({
+  const user = await users.findById(session.userId)
+  const proof = await paymentProofs.create({
     invitation_id,
     user_id: session.userId,
     user_email: user?.email ?? session.email,

@@ -17,17 +17,17 @@ export async function POST(req: NextRequest) {
 
   const { invitationId, name, message } = parsed.data
 
-  const inv = invitations.findById(invitationId)
+  const inv = await invitations.findById(invitationId)
   if (!inv || !inv.is_published) {
     return NextResponse.json({ error: 'Undangan tidak ditemukan' }, { status: 404 })
   }
 
-  const wish = wishes.create({ invitation_id: invitationId, name, message })
+  const wish = await wishes.create({ invitation_id: invitationId, name, message })
   return NextResponse.json({ wish })
 }
 
 // GET /api/wishes?invitationId=xxx — untuk dashboard
 export async function GET(req: NextRequest) {
   const invitationId = req.nextUrl.searchParams.get('invitationId') || ''
-  return NextResponse.json({ wishes: wishes.findByInvitationId(invitationId) })
+  return NextResponse.json({ wishes: await wishes.findByInvitationId(invitationId) })
 }

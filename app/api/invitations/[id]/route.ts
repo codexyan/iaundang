@@ -9,7 +9,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const inv = invitations.findById(params.id)
+  const inv = await invitations.findById(params.id)
   if (!inv || inv.user_id !== session.userId) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
@@ -17,10 +17,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const body = await req.json()
 
   // Jika ada slug baru, cek ketersediaannya
-  if (body.slug && body.slug !== inv.slug && invitations.slugExists(body.slug, params.id)) {
+  if (body.slug && body.slug !== inv.slug && await invitations.slugExists(body.slug, params.id)) {
     return NextResponse.json({ error: 'Slug sudah dipakai' }, { status: 409 })
   }
 
-  const updated = invitations.update(params.id, body)
+  const updated = await invitations.update(params.id, body)
   return NextResponse.json({ invitation: updated })
 }

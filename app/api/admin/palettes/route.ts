@@ -14,7 +14,7 @@ function isHex(v: unknown): v is string {
 export async function GET() {
   const session = await getSession()
   if (!isAdmin(session)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json({ palettes: settings.get().colorPalettes })
+  return NextResponse.json({ palettes: (await settings.get()).colorPalettes })
 }
 
 export async function POST(req: NextRequest) {
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Semua warna wajib format #RRGGBB' }, { status: 400 })
   }
 
-  const s = settings.get()
+  const s = await settings.get()
   const id = String(body?.id || name).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '') || crypto.randomUUID().slice(0, 8)
   if (s.colorPalettes.find((p) => p.id === id)) {
     return NextResponse.json({ error: 'Palet dengan ID itu sudah ada' }, { status: 409 })
@@ -46,6 +46,6 @@ export async function POST(req: NextRequest) {
     is_built_in: false,
   }
   s.colorPalettes = [...s.colorPalettes, palette]
-  settings.save(s)
+  await settings.save(s)
   return NextResponse.json({ palette }, { status: 201 })
 }

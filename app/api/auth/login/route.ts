@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, password } = parsed.data
-  const user = users.findByEmail(email)
+  const user = await users.findByEmail(email)
 
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     return NextResponse.json({ error: 'Email atau password salah' }, { status: 401 })

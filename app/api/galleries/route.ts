@@ -8,10 +8,10 @@ export async function GET(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const invitationId = req.nextUrl.searchParams.get('invitationId') || ''
-  const inv = invitations.findById(invitationId)
+  const inv = await invitations.findById(invitationId)
   if (!inv || inv.user_id !== session.userId) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 
-  return NextResponse.json({ galleries: galleries.findByInvitationId(invitationId) })
+  return NextResponse.json({ galleries: await galleries.findByInvitationId(invitationId) })
 }

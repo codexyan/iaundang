@@ -5,6 +5,6 @@ import { invitations } from '@/lib/db'
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get('slug') || ''
   const excludeId = req.nextUrl.searchParams.get('excludeId') || undefined
-  const available = !invitations.slugExists(slug, excludeId)
+  const available = !await invitations.slugExists(slug, excludeId)
   return NextResponse.json({ available })
 }

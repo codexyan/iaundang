@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'File dan invitationId wajib diisi' }, { status: 400 })
   }
 
-  const inv = invitations.findById(invitationId)
+  const inv = await invitations.findById(invitationId)
   if (!inv || inv.user_id !== session.userId) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 
-  const existing = galleries.findByInvitationId(invitationId)
+  const existing = await galleries.findByInvitationId(invitationId)
   if (existing.length >= MAX_FILES) {
     return NextResponse.json({ error: `Maksimal ${MAX_FILES} foto` }, { status: 400 })
   }
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true })
   fs.writeFileSync(path.join(uploadDir, filename), buffer)
 
-  const gallery = galleries.create({
+  const gallery = await galleries.create({
     invitation_id: invitationId,
     url: `/uploads/${filename}`,
     order: existing.length,

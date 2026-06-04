@@ -1,104 +1,73 @@
-// Akundang DB Schema
-//
-// Strategi: SQLite lokal untuk dev (file: prisma/dev.db),
-// swap ke MySQL untuk production hanya dengan mengganti datasource.
-//
-// MySQL-compat: hindari @db.* annotation SQLite-only, semua Json/DateTime/String
-// portable. Untuk pindah ke MySQL: ganti provider = "mysql" + ubah DATABASE_URL.
+// Akundang DB Schema — PostgreSQL (Supabase)
+// Dev: DATABASE_URL = direct connection Supabase
+// Prod: DATABASE_URL = pooler (pgbouncer), DIRECT_URL = direct
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// ─── USERS ────────────────────────────────────────────────────────────
+// ─── USERS ────────────────────────────────────────────────────
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String   @map("password_hash")
-  name         String?
-  // plan: 'free' | 'starter' | 'premium' | 'ultimate' (lihat lib/packages.ts)
-  plan         String   @default("free")
+  role         String   @default("user")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  invitations Invitation[]
+  invitations   Invitation[]
+  paymentProofs PaymentProof[]
 
   @@map("users")
 }
 
-// ─── TEMPLATES ────────────────────────────────────────────────────────
-// Dipublish lewat Template Lab. sectionsConfig & designTokens disimpan
-// sebagai Json — di SQLite serialized text, di MySQL native JSON.
-model Template {
-  id             String   @id @default(cuid())
-  slug           String   @unique
-  name           String
-  category       String
-  // JsonTemplateConfig.sections (lihat lib/types.ts) → array SectionConfig
-  sectionsConfig Json     @map("sections_config")
-  // ColorScheme + FontConfig + animasi preset + layout mode
-  designTokens   Json     @map("design_tokens")
-  price          Int      @default(0)
-  // 'draft' | 'active' | 'archived'
-  status         String   @default("draft")
-  thumbnailUrl   String   @default("") @map("thumbnail_url")
-  sortOrder      Int      @default(0)  @map("sort_order")
-  usageCount     Int      @default(0)  @map("usage_count")
-  createdAt      DateTime @default(now()) @map("created_at")
-
-  invitations Invitation[]
-
-  @@map("templates")
-}
-
-// ─── INVITATIONS ──────────────────────────────────────────────────────
-// Satu invitation = satu undangan yang dibuat user dari satu template.
-// Data dipisah jadi 4 kolom Json untuk modularitas tanpa harus banyak join.
+// ─── INVITATIONS ──────────────────────────────────────────────
 model Invitation {
-  id           String    @id @default(cuid())
-  userId       String    @map("user_id")
-  templateId   String    @map("template_id")
-  slug         String    @unique
-  // NewInvitationData minus event/story/gallery (yang dipisah ke kolom lain):
-  // bride_name, groom_name, bride_parents, groom_parents, tagline, foto, dst.
-  coupleData   Json      @map("couple_data")
-  // EventDetail × N (akad, resepsi, dst.)
-  eventData    Json      @map("event_data")
-  // story_title, story_text, story_timeline (TimelineItem[])
-  storyData    Json      @map("story_data")
-  // Array URL Cloudflare R2 (atau lokal /uploads/* untuk dev)
-  galleryUrls  Json      @map("gallery_urls")
-  // 'starter' | 'premium' | 'ultimate' — null = belum bayar / free tier
-  packageTier  String?   @map("package_tier")
-  isPublished  Boolean   @default(false) @map("is_published")
-  isPaid       Boolean   @default(false) @map("is_paid")
-  expiresAt    DateTime? @map("expires_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  slug        String    @unique
+  templateId  String    @map("template_id")
+  data        Json
+  packageTier String?   @map("package_tier")
+  isPublished Boolean   @default(false) @map("is_published")
+  isPaid      Boolean   @default(false) @map("is_paid")
+  expiresAt   DateTime? @map("expires_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
 
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  template Template       @relation(fields: [templateId], references: [id])
-  guests   Guest[]
-  rsvps    RsvpResponse[]
-  wishes   Wish[]
-  giftInfo GiftInfo[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  galleries     Gallery[]
+  guests        Guest[]
+  wishes        Wish[]
+  paymentProofs PaymentProof[]
 
   @@index([userId])
-  @@index([templateId])
   @@map("invitations")
 }
 
-// ─── GUESTS ───────────────────────────────────────────────────────────
-// Daftar tamu yang di-import user (untuk personalisasi link ?to=NamaTamu).
+// ─── GALLERIES ────────────────────────────────────────────────
+model Gallery {
+  id           String @id @default(cuid())
+  invitationId String @map("invitation_id")
+  url          String
+  order        Int    @default(0)
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId])
+  @@map("galleries")
+}
+
+// ─── GUESTS ───────────────────────────────────────────────────
 model Guest {
   id           String   @id @default(cuid())
   invitationId String   @map("invitation_id")
   name         String
-  // URL-safe slug, contoh: "budi-santoso" → link akundang.id/.../slug?to=budi-santoso
-  slugParam    String?  @map("slug_param")
+  attending    Boolean  @default(false)
+  totalGuests  Int      @default(1) @map("total_guests")
   createdAt    DateTime @default(now()) @map("created_at")
 
   invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
@@ -107,30 +76,11 @@ model Guest {
   @@map("guests")
 }
 
-// ─── RSVP RESPONSES ───────────────────────────────────────────────────
-// Submit dari form RSVP di undangan publik. Bukan harus tamu yang ter-import.
-model RsvpResponse {
-  id           String   @id @default(cuid())
-  invitationId String   @map("invitation_id")
-  guestName    String   @map("guest_name")
-  // 'yes' | 'no' | 'maybe'
-  attendance   String
-  paxCount     Int      @default(1) @map("pax_count")
-  note         String?
-  submittedAt  DateTime @default(now()) @map("submitted_at")
-
-  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
-
-  @@index([invitationId])
-  @@map("rsvp_responses")
-}
-
-// ─── WISHES ───────────────────────────────────────────────────────────
-// Buku ucapan publik dari tamu. Realtime (Pusher/Ably) untuk live update.
+// ─── WISHES ───────────────────────────────────────────────────
 model Wish {
   id           String   @id @default(cuid())
   invitationId String   @map("invitation_id")
-  guestName    String   @map("guest_name")
+  name         String
   message      String
   createdAt    DateTime @default(now()) @map("created_at")
 
@@ -140,19 +90,54 @@ model Wish {
   @@map("wishes")
 }
 
-// ─── GIFT INFO ────────────────────────────────────────────────────────
-// Multi-rekening per undangan (BCA, BNI, Mandiri, GoPay, dst.).
-// Untuk Gift Registry (Tokopedia/Shopee link), simpan di Invitation.coupleData
-// supaya tidak menambah tabel untuk data semi-statis.
-model GiftInfo {
-  id            String @id @default(cuid())
-  invitationId  String @map("invitation_id")
-  bankName      String @map("bank_name")
-  accountName   String @map("account_name")
-  accountNumber String @map("account_number")
+// ─── TEMPLATE RECORDS (JSON-driven system) ────────────────────
+model TemplateRecord {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  category        String
+  config          Json
+  thumbnailUrl    String   @default("") @map("thumbnail_url")
+  status          String   @default("draft")
+  sortOrder       Int      @default(0) @map("sort_order")
+  usageCount      Int      @default(0) @map("usage_count")
+  price           Int      @default(0)
+  requiredPackage String   @default("all") @map("required_package")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("template_records")
+}
+
+// ─── PAYMENT PROOFS ───────────────────────────────────────────
+model PaymentProof {
+  id           String    @id @default(cuid())
+  invitationId String    @map("invitation_id")
+  userId       String    @map("user_id")
+  userEmail    String    @map("user_email")
+  slug         String
+  amount       Int       @default(0)
+  bankName     String    @default("") @map("bank_name")
+  transferDate String    @default("") @map("transfer_date")
+  proofUrl     String    @default("") @map("proof_url")
+  notes        String    @default("")
+  status       String    @default("pending")
+  adminNotes   String    @default("") @map("admin_notes")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  reviewedAt   DateTime? @map("reviewed_at")
 
   invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@index([invitationId])
-  @@map("gift_info")
+  @@map("payment_proofs")
+}
+
+// ─── APP SETTINGS (single row, key = "main") ─────────────────
+model AppSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
 }

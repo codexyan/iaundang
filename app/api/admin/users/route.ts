@@ -10,8 +10,8 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const allUsers = users.findAll()
-  const allInvitations = invitations.findAll()
+  const allUsers = await users.findAll()
+  const allInvitations = await invitations.findAll()
 
   const data = allUsers.map((u) => ({
     id: u.id,

@@ -18,12 +18,12 @@ export async function POST(req: NextRequest) {
 
   const { email, password } = parsed.data
 
-  if (users.findByEmail(email)) {
+  if (await users.findByEmail(email)) {
     return NextResponse.json({ error: 'Email sudah terdaftar' }, { status: 409 })
   }
 
   const password_hash = await bcrypt.hash(password, 10)
-  const user = users.create({ email, password_hash, role: 'user' })
+  const user = await users.create({ email, password_hash, role: 'user' })
   const token = await createSessionToken({ userId: user.id, email: user.email, role: 'user' })
 
   return NextResponse.json(

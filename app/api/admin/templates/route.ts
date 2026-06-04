@@ -9,7 +9,7 @@ import crypto from 'crypto'
 export async function GET() {
   const session = await getSession()
   if (!isAdmin(session)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json({ templates: settings.get().templates })
+  return NextResponse.json({ templates: (await settings.get()).templates })
 }
 
 export async function POST(req: NextRequest) {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!isAdmin(session)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
-  const s = settings.get()
+  const s = await settings.get()
 
   const existing = s.templates.find((t) => t.id === body.id)
   if (existing) return NextResponse.json({ error: 'Template ID sudah ada' }, { status: 409 })
@@ -45,6 +45,6 @@ export async function POST(req: NextRequest) {
   }
 
   s.templates.push(newTemplate)
-  settings.save(s)
+  await settings.save(s)
   return NextResponse.json({ template: newTemplate }, { status: 201 })
 }

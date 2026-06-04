@@ -18,12 +18,12 @@ export async function POST(req: NextRequest) {
 
   const { invitationId, name, attending, totalGuests } = parsed.data
 
-  const inv = invitations.findById(invitationId)
+  const inv = await invitations.findById(invitationId)
   if (!inv || !inv.is_published) {
     return NextResponse.json({ error: 'Undangan tidak ditemukan' }, { status: 404 })
   }
 
-  const guest = guests.create({
+  const guest = await guests.create({
     invitation_id: invitationId,
     name,
     attending,
@@ -36,5 +36,5 @@ export async function POST(req: NextRequest) {
 // GET /api/rsvp?invitationId=xxx — untuk dashboard
 export async function GET(req: NextRequest) {
   const invitationId = req.nextUrl.searchParams.get('invitationId') || ''
-  return NextResponse.json({ guests: guests.findByInvitationId(invitationId) })
+  return NextResponse.json({ guests: await guests.findByInvitationId(invitationId) })
 }

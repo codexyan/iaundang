@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'File dan invitationId wajib diisi' }, { status: 400 })
   }
 
-  const inv = invitations.findById(invitationId)
+  const inv = await invitations.findById(invitationId)
   if (!inv || inv.user_id !== session.userId) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
   fs.writeFileSync(path.join(uploadDir, filename), buffer)
 
   const musicUrl = `/uploads/${filename}`
-  invitations.update(invitationId, {
+  await invitations.update(invitationId, {
     data: { ...inv.data, musicUrl },
   })
 

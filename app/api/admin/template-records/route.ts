@@ -8,7 +8,7 @@ import crypto from 'crypto'
 export async function GET() {
   const session = await getSession()
   if (!isAdmin(session)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json({ records: templateRecords.findAll() })
+  return NextResponse.json({ records: await templateRecords.findAll() })
 }
 
 /** Rilis template dari Studio Desain — terima full JsonTemplateConfig. */
@@ -23,12 +23,12 @@ export async function POST(req: NextRequest) {
   }
 
   // Cek duplicate slug — slug dipakai sebagai public identifier.
-  const existing = templateRecords.findBySlug(body.slug)
+  const existing = await templateRecords.findBySlug(body.slug)
   if (existing && existing.id !== body.id) {
     return NextResponse.json({ error: 'Slug template sudah dipakai' }, { status: 409 })
   }
 
-  const all = templateRecords.findAll()
+  const all = await templateRecords.findAll()
   const maxOrder = all.reduce((m, t) => Math.max(m, t.sort_order), 0)
 
   const record: TemplateRecord = {
@@ -46,6 +46,6 @@ export async function POST(req: NextRequest) {
     created_at: new Date().toISOString(),
   }
 
-  templateRecords.upsert(record)
+  await templateRecords.upsert(record)
   return NextResponse.json({ record }, { status: 201 })
 }

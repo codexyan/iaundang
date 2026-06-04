@@ -13,7 +13,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const session = await getSession()
   if (!session) redirect('/login')
 
-  const invitation = invitations.findByUserId(session.userId) as Invitation | null
+  const invitation = await invitations.findByUserId(session.userId) as Invitation | null
 
   // All available templates: legacy + new JSON-driven
   const legacyTemplates = TEMPLATES.map(t => ({
@@ -25,7 +25,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     isNew: false,
   }))
 
-  const newTemplates = templateRecords.findActive().map(t => ({
+  const newTemplates = (await templateRecords.findActive()).map(t => ({
     id: t.id,
     name: t.name,
     category: t.category,

@@ -8,12 +8,12 @@ export default async function AdminPage() {
   const session = await getSession()
   if (!session || !isAdmin(session)) redirect('/dashboard')
 
-  const allUsers = users.findAll()
-  const allInvitations = invitations.findAll()
-  const allOrders = orders.findAll() as Record<string, unknown>[]
-  const allProofs = paymentProofs.findAll()
-  const appSettings = settings.get()
-  const allTemplateRecords = templateRecords.findAll()
+  const allUsers = await users.findAll()
+  const allInvitations = await invitations.findAll()
+  const allOrders = await orders.findAll() as unknown as Record<string, unknown>[]
+  const allProofs = await paymentProofs.findAll()
+  const appSettings = await settings.get()
+  const allTemplateRecords = await templateRecords.findAll()
 
   const usersWithInvitations = allUsers.map((u) => ({
     id: u.id,

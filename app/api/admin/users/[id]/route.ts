@@ -11,12 +11,12 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const target = users.findById(params.id)
+  const target = await users.findById(params.id)
   if (!target) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   if (target.role === 'admin' || target.email === getAdminEmail()) {
     return NextResponse.json({ error: 'Tidak bisa menghapus akun admin' }, { status: 403 })
   }
 
-  users.delete(params.id)
+  await users.delete(params.id)
   return NextResponse.json({ success: true })
 }

@@ -10,7 +10,7 @@ export async function GET() {
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  return NextResponse.json({ settings: settings.get() })
+  return NextResponse.json({ settings: await settings.get() })
 }
 
 export async function PATCH(req: NextRequest) {
@@ -19,6 +19,6 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const body = (await req.json()) as AppSettings
-  settings.save(body)
+  await settings.save(body)
   return NextResponse.json({ settings: body })
 }

@@ -7,7 +7,7 @@ import type { TemplateCategory } from '@/lib/types'
 export async function GET() {
   const session = await getSession()
   if (!isAdmin(session)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json({ categories: settings.get().categories })
+  return NextResponse.json({ categories: (await settings.get()).categories })
 }
 
 export async function POST(req: NextRequest) {
@@ -23,13 +23,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Slug: 2-30 karakter, huruf kecil + angka + strip' }, { status: 400 })
   }
 
-  const s = settings.get()
+  const s = await settings.get()
   if (s.categories.find((c) => c.slug === slug)) {
     return NextResponse.json({ error: 'Kategori dengan slug itu sudah ada' }, { status: 409 })
   }
 
   const category: TemplateCategory = { slug, label, is_built_in: false }
   s.categories = [...s.categories, category]
-  settings.save(s)
+  await settings.save(s)
   return NextResponse.json({ category }, { status: 201 })
 }
