@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import type { SectionConfig, NewInvitationData, TemplateMeta } from '@/lib/types'
 import SectionWrapper, { resolveFont } from '../SectionWrapper'
+import { usePreviewContext } from '../PreviewContext'
 
 interface Props {
   section: SectionConfig
@@ -176,7 +177,7 @@ function HeroDefault({ section, data, font, accent, text }: {
   )
 }
 
-// ─── Variant: Bottom (foto/video penuh, teks di bawah) ────────────────────
+// ─── Variant: Bottom (foto/video penuh, teks anchor ke bawah) ────────────
 function HeroBottom({ section, data, font, accent, text, primary }: {
   section: SectionConfig
   data: NewInvitationData
@@ -185,59 +186,110 @@ function HeroBottom({ section, data, font, accent, text, primary }: {
   text: string
   primary: string
 }) {
+  const { isPreview } = usePreviewContext()
   const titleSz   = section.hero_title_size   ?? 38
   const andSz     = section.hero_and_size     ?? 20
   const taglineSz = section.hero_tagline_size ?? 10
+  const labelSz   = section.hero_label_size   ?? 9
   const dur       = section.hero_anim_duration  ?? 0.9
   const stagger   = section.hero_anim_stagger   ?? 0.15
   const shadow    = section.hero_text_shadow !== false
   const padB      = section.hero_padding_bottom ?? 0
 
+  // Preview: pakai fixed px; live: pakai dvh-safe padding
+  const bottomPad = isPreview ? 72 + padB : `calc(10dvh + ${padB}px)`
+
   const ts = (n: number) => ({ delay: n * stagger, duration: dur })
 
   return (
-    <div style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: `calc(8vh + ${padB}px)`, position: 'relative' }}>
+    <div style={{
+      flex: 1, width: '100%',
+      display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+      paddingBottom: bottomPad, position: 'relative',
+    }}>
+      {/* Multi-layer gradient for cinematic depth */}
       <div style={{
-        position: 'absolute', inset: '30% 0 0 0',
-        background: `linear-gradient(to bottom, transparent, ${primary}ee 55%, ${primary} 100%)`,
+        position: 'absolute', inset: '20% 0 0 0',
+        background: `linear-gradient(to bottom,
+          transparent 0%,
+          ${primary}66 35%,
+          ${primary}cc 60%,
+          ${primary}f5 80%,
+          ${primary} 100%)`,
         pointerEvents: 'none',
       }} />
 
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', paddingLeft: 32, paddingRight: 32 }}>
-        <Bismillah section={section} font={font} accent={accent} delay={stagger * 1} />
-        <Divider accent={accent} delay={stagger * 2} dur={dur * 0.7} />
+      {/* Vignette sides */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse at center bottom, transparent 50%, ${primary}55 100%)`,
+      }} />
 
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', paddingLeft: 28, paddingRight: 28 }}>
+
+        {/* Date badge (placeholder acara) */}
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: ts(1) } }}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            marginBottom: 18,
+          }}
+        >
+          <div style={{ height: '0.5px', width: 30, backgroundColor: `${accent}88` }} />
+          <p style={{
+            fontSize: labelSz, letterSpacing: '0.3em', textTransform: 'uppercase',
+            color: `${accent}cc`, fontFamily: `'${font.body}', serif`,
+          }}>
+            {section.hero_bismillah === 'none' ? 'Undangan Pernikahan'
+              : section.hero_bismillah === 'arabic' ? 'بِسْمِ اللَّهِ'
+              : (section.hero_bismillah_custom || 'Bismillahirrahmanirrahim')}
+          </p>
+          <div style={{ height: '0.5px', width: 30, backgroundColor: `${accent}88` }} />
+        </motion.div>
+
+        {/* Couple names — elegant stacked layout */}
         <motion.h1
-          variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: ts(3) } }}
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: ts(2) } }}
           style={{
             fontSize: titleSz, fontWeight: font.hw as number,
-            lineHeight: 1, color: '#fff',
+            lineHeight: 1.05, color: '#fff',
             fontFamily: `'${font.heading}', serif`,
-            letterSpacing: '0.04em', textTransform: 'uppercase', margin: 0,
-            textShadow: shadow ? '0 2px 24px rgba(0,0,0,0.6)' : 'none',
+            letterSpacing: '0.06em', margin: 0,
+            textShadow: shadow ? '0 3px 32px rgba(0,0,0,0.7)' : 'none',
           }}
         >{data.groom_name}</motion.h1>
 
-        <motion.p
-          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: ts(4) } }}
-          style={{ fontSize: andSz, margin: '6px 0', fontStyle: 'italic', fontWeight: font.bw as number, color: accent, fontFamily: `'${font.heading}', serif` }}
-        >&amp;</motion.p>
+        {/* Divider with accent dot */}
+        <motion.div
+          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: ts(3) } }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, margin: '10px 0' }}
+        >
+          <div style={{ height: '0.5px', width: 40, backgroundColor: `${accent}66` }} />
+          <span style={{ fontSize: andSz, fontStyle: 'italic', color: accent, fontFamily: `'${font.heading}', serif`, fontWeight: font.bw as number }}>
+            &amp;
+          </span>
+          <div style={{ height: '0.5px', width: 40, backgroundColor: `${accent}66` }} />
+        </motion.div>
 
         <motion.h1
-          variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: ts(5) } }}
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: ts(4) } }}
           style={{
             fontSize: titleSz, fontWeight: font.hw as number,
-            lineHeight: 1, color: '#fff',
+            lineHeight: 1.05, color: '#fff',
             fontFamily: `'${font.heading}', serif`,
-            letterSpacing: '0.04em', textTransform: 'uppercase', margin: 0,
-            textShadow: shadow ? '0 2px 24px rgba(0,0,0,0.6)' : 'none',
+            letterSpacing: '0.06em', margin: 0,
+            textShadow: shadow ? '0 3px 32px rgba(0,0,0,0.7)' : 'none',
           }}
         >{data.bride_name}</motion.h1>
 
         {data.tagline && (
           <motion.p
-            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: ts(7) } }}
-            style={{ fontSize: taglineSz, lineHeight: 1.8, marginTop: 14, fontStyle: 'italic', color: 'rgba(255,255,255,0.72)', fontFamily: `'${font.body}', serif`, maxWidth: 270, margin: '14px auto 0' }}
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: ts(6) } }}
+            style={{
+              fontSize: taglineSz, lineHeight: 1.85, marginTop: 16,
+              fontStyle: 'italic', color: 'rgba(255,255,255,0.68)',
+              fontFamily: `'${font.body}', serif`, maxWidth: 240, margin: '16px auto 0',
+            }}
           >{data.tagline}</motion.p>
         )}
       </div>

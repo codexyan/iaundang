@@ -730,6 +730,7 @@ function SectionRow({
 }) {
   const controls = useDragControls()
   const Icon = SICONS[section.type] ?? BookOpen
+  const on = section.enabled
 
   return (
     <Reorder.Item
@@ -739,58 +740,82 @@ function SectionRow({
       className="list-none"
       style={{ position: 'relative' }}
     >
-      <div className={`rounded-lg border bg-white transition-all ${isExpanded ? 'border-rose-200 shadow-sm' : 'border-gray-100'} ${!section.enabled ? 'opacity-40' : ''}`}>
+      <div className={`rounded-xl border overflow-hidden transition-all duration-200 ${
+        isExpanded
+          ? 'border-rose-300 shadow-md shadow-rose-50/60'
+          : on ? 'border-gray-200 hover:border-gray-300' : 'border-dashed border-gray-200 bg-gray-50/50'
+      }`}>
+
+        {/* Active left accent bar */}
+        <div className={`absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl transition-all duration-200 ${isExpanded ? 'bg-rose-400' : 'bg-transparent'}`} />
+
         {/* Row header */}
-        <div className="flex items-center h-9 px-2 gap-2">
-          {/* Drag handle — touch-none is critical for Framer Motion drag */}
+        <div className={`flex items-center h-10 pl-4 pr-2.5 gap-2 transition-colors ${isExpanded ? 'bg-rose-50/70' : ''}`}>
+          {/* Drag handle */}
           <div
-            className="flex items-center justify-center w-5 h-5 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 shrink-0 touch-none"
+            className={`flex items-center justify-center w-4 h-4 cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors ${on ? 'text-gray-300 hover:text-gray-500' : 'text-gray-200'}`}
             onPointerDown={e => controls.start(e)}
           >
-            <GripVertical size={13} />
+            <GripVertical size={12} />
           </div>
 
-          {/* Icon + label — click to expand */}
-          <button
-            className="flex items-center gap-1.5 flex-1 min-w-0 text-left"
-            onClick={onToggleExpand}
-          >
-            <Icon size={12} className="text-gray-400 shrink-0" />
-            <span className="text-xs font-medium text-gray-700 truncate">
+          {/* Icon */}
+          <Icon size={12} className={`shrink-0 transition-colors ${isExpanded ? 'text-rose-500' : on ? 'text-gray-400' : 'text-gray-300'}`} />
+
+          {/* Label */}
+          <button className="flex items-center gap-1.5 flex-1 min-w-0 text-left" onClick={onToggleExpand}>
+            <span className={`text-xs font-medium truncate transition-colors ${isExpanded ? 'text-rose-700' : on ? 'text-gray-700' : 'text-gray-400'}`}>
               {SLABELS[section.type] ?? section.type}
             </span>
+            {!on && (
+              <span className="text-[9px] bg-gray-200/80 text-gray-400 px-1.5 py-0.5 rounded font-semibold tracking-wide shrink-0">OFF</span>
+            )}
           </button>
 
-          {/* Toggle on/off */}
+          {/* Toggle ON/OFF — prominent */}
           <button
-            className="shrink-0 flex items-center"
+            title={on ? 'Nonaktifkan section' : 'Aktifkan section'}
+            className={`shrink-0 flex items-center rounded-full transition-all px-1 ${on ? 'hover:bg-rose-50' : 'hover:bg-gray-100'}`}
             onClick={e => { e.stopPropagation(); onToggle() }}
           >
-            {section.enabled
-              ? <ToggleRight size={18} className="text-rose-500" />
-              : <ToggleLeft size={18} className="text-gray-200" />
+            {on
+              ? <ToggleRight size={20} className="text-rose-500" />
+              : <ToggleLeft size={20} className="text-gray-300" />
             }
           </button>
 
           {/* Chevron */}
-          <button onClick={onToggleExpand} className="shrink-0">
-            <ChevronDown size={12} className={`text-gray-300 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+          <button onClick={onToggleExpand} className="shrink-0 w-5 h-5 flex items-center justify-center">
+            <ChevronDown size={12} className={`transition-all duration-200 ${isExpanded ? 'rotate-180 text-rose-400' : 'text-gray-300'}`} />
           </button>
         </div>
 
         {/* Form body */}
         <AnimatePresence>
-          {isExpanded && section.enabled && (
+          {isExpanded && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.18 }}
               className="overflow-hidden"
             >
-              <div className="px-2.5 pb-2.5 pt-1.5 border-t border-gray-50">
-                <SectionForm type={section.type} data={data} onChange={onChange} />
-              </div>
+              {!on ? (
+                /* Disabled state: show enable button */
+                <div className="px-4 py-4 border-t border-gray-100 bg-gray-50">
+                  <p className="text-[11px] text-gray-400 mb-2.5">
+                    Section ini <strong>tidak aktif</strong> dan tidak akan tampil di undangan.
+                  </p>
+                  <button onClick={onToggle}
+                    className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-500 hover:text-rose-600 transition-colors">
+                    <ToggleRight size={14} /> Aktifkan section ini
+                  </button>
+                </div>
+              ) : (
+                <div className="px-2.5 pb-2.5 pt-2 border-t border-rose-100/60">
+                  <SectionForm type={section.type} data={data} onChange={onChange} />
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
