@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, Mail, ShoppingCart, Settings, LogOut,
   TrendingUp, CheckCircle2, Clock, Trash2, Eye, EyeOff, Search,
   Save, Crown, AlertCircle, ExternalLink, Ban,
-  ToggleLeft, ToggleRight, Palette, CreditCard, FlaskConical,
+  ToggleLeft, ToggleRight, Package, CreditCard, FlaskConical,
 } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 import { TEMPLATES } from '@/lib/types'
@@ -275,14 +275,8 @@ export default function AdminPanel({
         )}
         {activeTab === 'template' && (
           <TemplatesTab
-            templates={appSettings.templates}
             records={templateRecords}
-            categories={appSettings.categories}
-            palettes={appSettings.colorPalettes}
-            onUpdate={(tpls) => setAppSettings({ ...appSettings, templates: tpls })}
             onRecordsUpdate={(recs) => setTemplateRecords(recs)}
-            onCategoriesUpdate={(cats) => setAppSettings({ ...appSettings, categories: cats })}
-            onPalettesUpdate={(pals) => setAppSettings({ ...appSettings, colorPalettes: pals })}
             onGoToLab={() => handleTabChange('lab')}
             globalPrice={appSettings.price}
             packageName={appSettings.packageName}
@@ -335,7 +329,7 @@ const NAV_GROUPS = [
     label: 'Template',
     items: [
       { id: 'lab'         as NavTab, label: 'Studio Desain',      icon: FlaskConical,    desc: 'Buat & eksperimen template' },
-      { id: 'template'    as NavTab, label: 'Manajemen',          icon: Palette,         desc: 'Harga, paket, & aktivasi' },
+      { id: 'template'    as NavTab, label: 'Manajemen',          icon: Package,         desc: 'Review, harga & publikasi tema' },
     ],
   },
   {
