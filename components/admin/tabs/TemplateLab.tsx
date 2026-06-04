@@ -1635,21 +1635,141 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                           Konten & Foto
                         </p>
 
-                        {/* HERO */}
+                        {/* HERO — editor lengkap */}
                         {s.type === 'hero' && (
-                          <div className="space-y-2">
-                            <SectionField label="Nama Pria">
-                              <input className={miniInput} value={previewData.groom_name} onChange={e => setPreviewData(d => ({ ...d, groom_name: e.target.value }))} />
-                            </SectionField>
-                            <SectionField label="Nama Wanita">
-                              <input className={miniInput} value={previewData.bride_name} onChange={e => setPreviewData(d => ({ ...d, bride_name: e.target.value }))} />
-                            </SectionField>
-                            <SectionField label="Tagline">
-                              <textarea className={miniInput + ' resize-none'} rows={2} value={previewData.tagline ?? ''} onChange={e => setPreviewData(d => ({ ...d, tagline: e.target.value }))} />
-                            </SectionField>
-                            <SectionField label="Foto Pasangan (Background)">
-                              <ImageUploadField value={previewData.couple_photo_url} onChange={url => setPreviewData(d => ({ ...d, couple_photo_url: url }))} />
-                            </SectionField>
+                          <div className="space-y-3">
+
+                            {/* Konten */}
+                            <div className="space-y-1.5">
+                              <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Konten</p>
+                              <SectionField label="Nama Pria">
+                                <input className={miniInput} value={previewData.groom_name} onChange={e => setPreviewData(d => ({ ...d, groom_name: e.target.value }))} />
+                              </SectionField>
+                              <SectionField label="Nama Wanita">
+                                <input className={miniInput} value={previewData.bride_name} onChange={e => setPreviewData(d => ({ ...d, bride_name: e.target.value }))} />
+                              </SectionField>
+                              <SectionField label="Tagline / Ayat">
+                                <textarea className={miniInput + ' resize-none'} rows={2} value={previewData.tagline ?? ''} onChange={e => setPreviewData(d => ({ ...d, tagline: e.target.value }))} />
+                              </SectionField>
+                              <SectionField label="Foto Background">
+                                <ImageUploadField value={previewData.couple_photo_url} onChange={url => setPreviewData(d => ({ ...d, couple_photo_url: url }))} />
+                              </SectionField>
+                            </div>
+
+                            {/* Bismillah */}
+                            <div className="border-t border-violet-50 pt-2.5 space-y-1.5">
+                              <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Bismillah</p>
+                              <div className="flex gap-1">
+                                {([['none','Tanpa'],['text','Teks'],['arabic','Arab']] as const).map(([v,lbl]) => (
+                                  <button key={v} type="button"
+                                    onClick={() => updateSection(s.id, { hero_bismillah: v })}
+                                    className={`flex-1 py-1 rounded text-[9px] font-semibold transition-colors ${(s.hero_bismillah ?? 'text') === v ? 'bg-violet-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-violet-100'}`}>
+                                    {lbl}
+                                  </button>
+                                ))}
+                              </div>
+                              {(s.hero_bismillah === 'text' || !s.hero_bismillah) && (
+                                <SectionField label="Teks Kustom (kosong = default)">
+                                  <input className={miniInput} value={s.hero_bismillah_custom ?? ''} placeholder="Bismillahirrahmanirrahim"
+                                    onChange={e => updateSection(s.id, { hero_bismillah_custom: e.target.value || undefined })} />
+                                </SectionField>
+                              )}
+                              {s.hero_bismillah === 'arabic' && (
+                                <p className="text-[8px] text-gray-400 italic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ + transliterasi</p>
+                              )}
+                            </div>
+
+                            {/* Tipografi ukuran px */}
+                            <div className="border-t border-violet-50 pt-2.5 space-y-1.5">
+                              <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Ukuran Font (px)</p>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                {([
+                                  ['Nama', 'hero_title_size', 36],
+                                  ['Simbol &', 'hero_and_size', 22],
+                                  ['Tagline', 'hero_tagline_size', 11],
+                                  ['Label kecil', 'hero_label_size', 9],
+                                ] as const).map(([lbl, key, def]) => (
+                                  <div key={key}>
+                                    <p className="text-[8px] text-gray-400 mb-0.5">{lbl} <span className="text-gray-300">({def}px)</span></p>
+                                    <input type="number" min={6} max={120} step={1}
+                                      className={miniInput}
+                                      value={s[key] ?? def}
+                                      onChange={e => updateSection(s.id, { [key]: Number(e.target.value) })} />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Animasi */}
+                            <div className="border-t border-violet-50 pt-2.5 space-y-1.5">
+                              <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Animasi</p>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <div>
+                                  <div className="flex justify-between">
+                                    <p className="text-[8px] text-gray-400">Durasi (dtk)</p>
+                                    <span className="text-[8px] font-mono text-gray-500">{(s.hero_anim_duration ?? 0.8).toFixed(1)}</span>
+                                  </div>
+                                  <input type="range" min={0.2} max={2.0} step={0.1}
+                                    value={s.hero_anim_duration ?? 0.8}
+                                    onChange={e => updateSection(s.id, { hero_anim_duration: Number(e.target.value) })}
+                                    className="w-full h-1 accent-violet-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between">
+                                    <p className="text-[8px] text-gray-400">Jeda (stagger)</p>
+                                    <span className="text-[8px] font-mono text-gray-500">{(s.hero_anim_stagger ?? 0.15).toFixed(2)}</span>
+                                  </div>
+                                  <input type="range" min={0} max={0.5} step={0.05}
+                                    value={s.hero_anim_stagger ?? 0.15}
+                                    onChange={e => updateSection(s.id, { hero_anim_stagger: Number(e.target.value) })}
+                                    className="w-full h-1 accent-violet-500" />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Layout & padding */}
+                            <div className="border-t border-violet-50 pt-2.5 space-y-1.5">
+                              <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Layout</p>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <div>
+                                  <p className="text-[8px] text-gray-400 mb-0.5">Padding Atas (px)</p>
+                                  <input type="number" min={0} max={200} step={4}
+                                    className={miniInput} value={s.hero_padding_top ?? 0}
+                                    onChange={e => updateSection(s.id, { hero_padding_top: Number(e.target.value) })} />
+                                </div>
+                                <div>
+                                  <p className="text-[8px] text-gray-400 mb-0.5">Padding Bawah (px)</p>
+                                  <input type="number" min={0} max={200} step={4}
+                                    className={miniInput} value={s.hero_padding_bottom ?? 0}
+                                    onChange={e => updateSection(s.id, { hero_padding_bottom: Number(e.target.value) })} />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between">
+                                    <p className="text-[8px] text-gray-400">Overlay background</p>
+                                    <span className="text-[8px] font-mono text-gray-500">{Math.round((s.hero_overlay ?? 0.52) * 100)}%</span>
+                                  </div>
+                                  <input type="range" min={0} max={0.95} step={0.05}
+                                    value={s.hero_overlay ?? 0.52}
+                                    onChange={e => updateSection(s.id, { hero_overlay: Number(e.target.value) })}
+                                    className="w-full h-1 accent-violet-500" />
+                                </div>
+                                <div className="flex items-center gap-2 pt-3">
+                                  <input type="checkbox" id={`scroll-${s.id}`}
+                                    checked={s.hero_show_scroll !== false}
+                                    onChange={e => updateSection(s.id, { hero_show_scroll: e.target.checked })}
+                                    className="accent-violet-500 w-3 h-3" />
+                                  <label htmlFor={`scroll-${s.id}`} className="text-[9px] text-gray-500 cursor-pointer">Indikator scroll</label>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <input type="checkbox" id={`shadow-${s.id}`}
+                                    checked={s.hero_text_shadow !== false}
+                                    onChange={e => updateSection(s.id, { hero_text_shadow: e.target.checked })}
+                                    className="accent-violet-500 w-3 h-3" />
+                                  <label htmlFor={`shadow-${s.id}`} className="text-[9px] text-gray-500 cursor-pointer">Bayangan teks</label>
+                                </div>
+                              </div>
+                            </div>
+
                           </div>
                         )}
 

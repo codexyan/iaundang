@@ -57,6 +57,7 @@ function initData(inv: Invitation): NewInvitationData {
     groom_bio: d.groom_bio ?? '',
     bride_bio: d.bride_bio ?? '',
     couple_photo_url: d.couple_photo_url ?? '',
+    hero_video_url: d.hero_video_url ?? '',
     akad: d.akad ?? { date: '', time: '08:00', venue_name: '', venue_address: '' },
     resepsi: d.resepsi ?? { date: '', time: '11:00', venue_name: '', venue_address: '' },
     story_title: d.story_title ?? '',
@@ -115,27 +116,7 @@ function SectionForm({ type, data, onChange }: {
   const resepsi = data.resepsi ?? { date: '', time: '11:00', venue_name: '', venue_address: '' }
 
   switch (type) {
-    case 'hero': return (
-      <div className="space-y-2">
-        <div className="grid grid-cols-2 gap-2">
-          <F label="Nama Pria *">
-            <input className={ic} value={data.groom_name} onChange={e => onChange({ groom_name: e.target.value })} placeholder="Budi Santoso" />
-          </F>
-          <F label="Nama Wanita *">
-            <input className={ic} value={data.bride_name} onChange={e => onChange({ bride_name: e.target.value })} placeholder="Ani Rahayu" />
-          </F>
-        </div>
-        <F label="Tagline / Ayat">
-          <textarea className={`${ic} resize-none`} rows={2} value={data.tagline ?? ''} onChange={e => onChange({ tagline: e.target.value })} placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." />
-        </F>
-        <F label="URL Foto Bersama" hint="Jadi background hero">
-          <div className="flex gap-1.5">
-            <input className={ic} value={data.couple_photo_url ?? ''} onChange={e => onChange({ couple_photo_url: e.target.value })} placeholder="https://..." />
-            {data.couple_photo_url && <div className="w-8 h-8 rounded overflow-hidden border shrink-0"><img src={data.couple_photo_url} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.display = 'none' }} /></div>}
-          </div>
-        </F>
-      </div>
-    )
+    case 'hero': return <HeroForm data={data} onChange={onChange} />
 
     case 'profiles': return (
       <div className="space-y-3">
@@ -246,6 +227,107 @@ function SectionForm({ type, data, onChange }: {
 
     default: return null
   }
+}
+
+// ── Hero Form ──────────────────────────────────────────────────
+
+function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: Partial<NewInvitationData>) => void }) {
+  const [uploading, setUploading] = useState<'photo' | 'video' | null>(null)
+  const photoRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLInputElement>(null)
+
+  async function upload(file: File, type: 'photo' | 'video') {
+    setUploading(type)
+    const form = new FormData()
+    form.append('file', file)
+    form.append('folder', 'hero')
+    const res = await fetch('/api/user/upload', { method: 'POST', body: form })
+    setUploading(null)
+    if (!res.ok) { toast.error('Gagal upload'); return }
+    const { url, type: fileType } = await res.json()
+    if (fileType === 'video') {
+      onChange({ hero_video_url: url, couple_photo_url: '' })
+    } else {
+      onChange({ couple_photo_url: url, hero_video_url: '' })
+    }
+    toast.success('Background terupload')
+  }
+
+  const hasVideo = !!data.hero_video_url
+  const hasPhoto = !!data.couple_photo_url && !hasVideo
+
+  return (
+    <div className="space-y-2.5">
+      {/* Nama & tagline */}
+      <div className="grid grid-cols-2 gap-2">
+        <F label="Nama Pria *">
+          <input className={ic} value={data.groom_name} onChange={e => onChange({ groom_name: e.target.value })} placeholder="Budi Santoso" />
+        </F>
+        <F label="Nama Wanita *">
+          <input className={ic} value={data.bride_name} onChange={e => onChange({ bride_name: e.target.value })} placeholder="Ani Rahayu" />
+        </F>
+      </div>
+      <F label="Tagline / Ayat">
+        <textarea className={`${ic} resize-none`} rows={2} value={data.tagline ?? ''}
+          onChange={e => onChange({ tagline: e.target.value })} placeholder="Dan di antara tanda-tanda kekuasaan-Nya..." />
+      </F>
+
+      {/* Background foto / video */}
+      <div>
+        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+          Background Hero
+          <span className="ml-1 font-normal normal-case text-[9px]">Foto (8MB) atau Video pendek (80MB)</span>
+        </p>
+        <input ref={photoRef} type="file" accept="image/*" className="hidden"
+          onChange={e => { const f = e.target.files?.[0]; if (f) upload(f, 'photo') }} />
+        <input ref={videoRef} type="file" accept="video/mp4,video/webm,video/quicktime" className="hidden"
+          onChange={e => { const f = e.target.files?.[0]; if (f) upload(f, 'video') }} />
+
+        {hasVideo ? (
+          <div className="relative rounded-xl overflow-hidden bg-black" style={{ aspectRatio: '16/7' }}>
+            <video src={data.hero_video_url} muted loop className="w-full h-full object-cover opacity-75" />
+            <div className="absolute inset-0 flex items-center justify-center gap-2">
+              <button onClick={() => videoRef.current?.click()}
+                className="flex items-center gap-1 bg-white/90 text-gray-800 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
+                <Upload size={10} /> Ganti Video
+              </button>
+              <button onClick={() => onChange({ hero_video_url: '' })}
+                className="flex items-center gap-1 bg-red-500/90 text-white text-[10px] font-semibold px-2 py-1.5 rounded-lg">
+                <Trash2 size={10} />
+              </button>
+            </div>
+          </div>
+        ) : hasPhoto ? (
+          <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16/7' }}>
+            <img src={data.couple_photo_url} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center gap-2 opacity-0 hover:opacity-100 transition-opacity">
+              <button onClick={() => photoRef.current?.click()}
+                className="flex items-center gap-1 bg-white/90 text-gray-800 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
+                <Upload size={10} /> Ganti Foto
+              </button>
+              <button onClick={() => videoRef.current?.click()}
+                className="flex items-center gap-1 bg-gray-900/90 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
+                ▶ Pakai Video
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <button onClick={() => photoRef.current?.click()} disabled={!!uploading}
+              className="flex-1 py-5 border border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-1.5 text-gray-400 hover:border-rose-300 hover:text-rose-400 transition-colors disabled:opacity-50">
+              {uploading === 'photo' ? <><Loader2 size={16} className="animate-spin" /><span className="text-[9px]">Upload...</span></>
+                : <><Image size={16} /><span className="text-[9px] font-medium">Upload Foto</span></>}
+            </button>
+            <button onClick={() => videoRef.current?.click()} disabled={!!uploading}
+              className="flex-1 py-5 border border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-1.5 text-gray-400 hover:border-indigo-300 hover:text-indigo-400 transition-colors disabled:opacity-50">
+              {uploading === 'video' ? <><Loader2 size={16} className="animate-spin" /><span className="text-[9px]">Upload...</span></>
+                : <><span className="text-base">▶</span><span className="text-[9px] font-medium">Upload Video</span></>}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
 
 // ── Story Form ─────────────────────────────────────────────────

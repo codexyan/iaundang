@@ -184,6 +184,21 @@ export interface SectionConfig {
   body_weight?: number              // Ketebalan teks: 300 | 400 | 500 | 600 | 700
   heading_scale?: number            // Ukuran judul/heading: 0.7 – 1.8 (default 1.0)
   body_scale?: number               // Ukuran teks isi/body: 0.7 – 1.5 (default 1.0)
+
+  // ── Hero section controls ─────────────────────────────────
+  hero_bismillah?: 'none' | 'text' | 'arabic'
+  hero_bismillah_custom?: string    // Teks kustom (override 'text')
+  hero_title_size?: number          // px ukuran nama (default 36)
+  hero_and_size?: number            // px ukuran simbol "&" (default 22)
+  hero_tagline_size?: number        // px ukuran tagline/ayat (default 11)
+  hero_label_size?: number          // px ukuran bismillah/label kecil (default 9)
+  hero_overlay?: number             // 0–1 kegelapan foto/video background
+  hero_padding_top?: number         // px padding atas konten
+  hero_padding_bottom?: number      // px padding bawah konten
+  hero_show_scroll?: boolean        // tampilkan indikator scroll (default true)
+  hero_anim_duration?: number       // durasi animasi masuk (detik, default 0.8)
+  hero_anim_stagger?: number        // jeda antar elemen (detik, default 0.15)
+  hero_text_shadow?: boolean        // bayangan teks untuk keterbacaan
 }
 
 export type AssetPosition =
@@ -378,6 +393,8 @@ export interface NewInvitationData {
   story_timeline?: TimelineItem[]
   // Kisah Cinta bergambar: beberapa bab, masing-masing full-screen + foto
   story_chapters?: StoryChapter[]
+  // Hero
+  hero_video_url?: string           // Video pendek background hero (mp4/webm)
   akad?: EventDetail
   resepsi?: EventDetail
   gallery_photos?: string[]
