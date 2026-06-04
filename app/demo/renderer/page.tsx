@@ -1,10 +1,19 @@
-import InvitationRenderer from '@/components/renderer/InvitationRenderer'
+import { notFound } from 'next/navigation'
+import { templateRecords } from '@/lib/db'
 import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
+import InvitationRenderer from '@/components/renderer/InvitationRenderer'
 import type { NewInvitationData, Wish } from '@/lib/types'
 
-export const metadata = {
-  title: 'Demo Renderer — Akundang',
-  description: 'Preview JSON-driven template renderer',
+interface Props {
+  searchParams: { id?: string }
+}
+
+export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({ searchParams }: Props) {
+  if (!searchParams.id) return { title: 'Demo Tema — Akundang' }
+  const rec = await templateRecords.findById(searchParams.id)
+  return { title: `Preview: ${rec?.name ?? 'Tema'} — Akundang` }
 }
 
 const DEMO_DATA: NewInvitationData = {
@@ -14,7 +23,7 @@ const DEMO_DATA: NewInvitationData = {
   groom_parents: 'Bapak Ahmad Santoso & Ibu Sri Rahayu',
   tagline: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri. — QS Ar-Rum: 21',
   story_title: 'Kisah Kami',
-  story_text: 'Kami pertama kali bertemu di sebuah acara kampus pada tahun 2019. Sebuah perkenalan singkat yang ternyata menjadi awal dari perjalanan panjang yang penuh makna. Dengan izin Allah SWT, kami memutuskan untuk melanjutkan ke jenjang yang lebih serius.',
+  story_text: 'Kami pertama kali bertemu di sebuah acara kampus pada tahun 2019. Sebuah perkenalan singkat yang ternyata menjadi awal dari perjalanan panjang yang penuh makna.',
   akad: {
     date: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     time: '08:00',
@@ -31,36 +40,29 @@ const DEMO_DATA: NewInvitationData = {
   },
   gift_accounts: [
     { type: 'bank', bank: 'BCA', number: '1234567890', name: 'Budi Santoso' },
-    { type: 'ewallet', platform: 'GoPay', number: '081234567890', name: 'Ani Permatasari' },
   ],
-  closing_text:
-    'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.',
-  thank_you_message: 'Terima kasih atas doa dan kehadiran Anda.',
+  closing_text: 'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu berkenan hadir.',
 }
 
 const DEMO_WISHES: Wish[] = [
-  {
-    id: '1',
-    invitation_id: 'demo',
-    name: 'Reza Firmansyah',
-    message: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallah 💕',
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '2',
-    invitation_id: 'demo',
-    name: 'Sari & Keluarga',
-    message: 'Turut berbahagia atas pernikahan kalian. Semoga rumah tangga kalian dipenuhi kebahagiaan dan keberkahan!',
-    created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-  },
+  { id: '1', invitation_id: 'demo', name: 'Reza Firmansyah', message: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallah 💕', created_at: new Date(Date.now() - 2 * 3600000).toISOString() },
+  { id: '2', invitation_id: 'demo', name: 'Sari & Keluarga',  message: 'Turut berbahagia atas pernikahan kalian. Semoga dipenuhi kebahagiaan dan keberkahan!', created_at: new Date(Date.now() - 5 * 3600000).toISOString() },
 ]
 
-export default function DemoRendererPage() {
+export default async function DemoRendererPage({ searchParams }: Props) {
+  let template = JAVANESE_GOLD
+
+  if (searchParams.id) {
+    const rec = await templateRecords.findById(searchParams.id)
+    if (!rec) notFound()
+    template = rec
+  }
+
   return (
     <InvitationRenderer
-      invitationId="demo-renderer"
+      invitationId={`demo-${template.id}`}
       invitationData={DEMO_DATA}
-      template={JAVANESE_GOLD}
+      template={template}
       initialWishes={DEMO_WISHES}
     />
   )

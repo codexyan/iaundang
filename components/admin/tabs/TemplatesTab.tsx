@@ -1,16 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import toast from 'react-hot-toast'
 import {
   FlaskConical, ExternalLink, Eye, EyeOff, Save, Trash2,
-  Crown, Sparkles, ChevronDown, ChevronUp, Archive,
-  Package, TrendingUp, CheckCircle2, Clock,
+  Crown, ChevronDown, ChevronUp, Archive,
+  Package, TrendingUp, CheckCircle2, Clock, Upload, ImageIcon, Tag,
 } from 'lucide-react'
-import type { TemplateRecord, TemplatePackageRequirement } from '@/lib/types'
+import type { TemplateRecord, TemplatePackageRequirement, TemplateCategory } from '@/lib/types'
+import { BUILT_IN_CATEGORIES } from '@/lib/db'
 
 interface Props {
   records: TemplateRecord[]
+  categories?: TemplateCategory[]
   onRecordsUpdate: (records: TemplateRecord[]) => void
   onGoToLab?: () => void
   globalPrice?: number
@@ -39,18 +41,22 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function TemplatesTab({
-  records, onRecordsUpdate, onGoToLab,
+  records, categories, onRecordsUpdate, onGoToLab,
   globalPrice = 129000, packageName = 'Premium', packageDuration = 6, onPricingUpdate,
 }: Props) {
   const [filter, setFilter]           = useState<Filter>('all')
   const [editingId, setEditingId]     = useState<string | null>(null)
   const [editData, setEditData]       = useState<Partial<TemplateRecord>>({})
   const [saving, setSaving]           = useState(false)
+  const [uploadingThumb, setUploadingThumb] = useState(false)
   const [savingPricing, setSavingPricing] = useState(false)
   const [showPricing, setShowPricing] = useState(false)
   const [localPrice, setLocalPrice]   = useState(globalPrice)
   const [localPkg, setLocalPkg]       = useState(packageName)
   const [localDur, setLocalDur]       = useState(packageDuration)
+  const thumbInputRef = useRef<HTMLInputElement>(null)
+
+  const allCategories: TemplateCategory[] = categories ?? BUILT_IN_CATEGORIES
 
   const sorted = [...records].sort((a, b) => a.sort_order - b.sort_order)
   const counts = {
@@ -63,7 +69,21 @@ export default function TemplatesTab({
 
   function openEdit(rec: TemplateRecord) {
     setEditingId(rec.id)
-    setEditData({ name: rec.name, thumbnail_url: rec.thumbnail_url, price: rec.price, required_package: rec.required_package, sort_order: rec.sort_order })
+    setEditData({ name: rec.name, category: rec.category, thumbnail_url: rec.thumbnail_url, price: rec.price, required_package: rec.required_package, sort_order: rec.sort_order })
+  }
+
+  async function handleThumbUpload(file: File) {
+    if (!editingId) return
+    setUploadingThumb(true)
+    const form = new FormData()
+    form.append('file', file)
+    form.append('folder', 'thumbnails')
+    const res = await fetch('/api/admin/upload', { method: 'POST', body: form })
+    setUploadingThumb(false)
+    if (!res.ok) { toast.error('Gagal upload thumbnail'); return }
+    const { url } = await res.json()
+    setEditData(d => ({ ...d, thumbnail_url: url }))
+    toast.success('Thumbnail terupload')
   }
 
   async function toggleStatus(rec: TemplateRecord) {
@@ -318,17 +338,44 @@ export default function TemplatesTab({
                 {/* ── Inline edit panel ── */}
                 {editingId === rec.id && (
                   <div className="border-t border-indigo-100 bg-indigo-50/20 px-5 py-5">
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div>
+                    {/* Identitas tema */}
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="col-span-1">
                         <label className="block text-xs font-medium text-gray-600 mb-1.5">Nama Tampilan</label>
                         <input value={editData.name ?? ''} onChange={e => setEditData({ ...editData, name: e.target.value })}
                           className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white" />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1.5">URL Thumbnail</label>
-                        <input value={editData.thumbnail_url ?? ''} onChange={e => setEditData({ ...editData, thumbnail_url: e.target.value })}
-                          placeholder="https://... atau /images/..."
-                          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white" />
+                        <label className="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1.5">
+                          <Tag className="w-3 h-3" /> Kategori
+                        </label>
+                        <select value={editData.category ?? rec.category}
+                          onChange={e => setEditData({ ...editData, category: e.target.value })}
+                          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white">
+                          {allCategories.map(c => (
+                            <option key={c.slug} value={c.slug}>{c.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1.5">
+                          <ImageIcon className="w-3 h-3" /> Cover / Thumbnail
+                          <span className="text-[10px] text-gray-400 font-normal">(tampil di landing page)</span>
+                        </label>
+                        <input ref={thumbInputRef} type="file" accept="image/*" className="hidden"
+                          onChange={e => { const f = e.target.files?.[0]; if (f) handleThumbUpload(f) }} />
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => thumbInputRef.current?.click()}
+                            disabled={uploadingThumb}
+                            className="flex items-center gap-1.5 px-3 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition-colors bg-white disabled:opacity-50 disabled:cursor-wait">
+                            <Upload className="w-3.5 h-3.5" />
+                            {uploadingThumb ? 'Mengupload...' : editData.thumbnail_url ? 'Ganti' : 'Upload'}
+                          </button>
+                          {editData.thumbnail_url && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={editData.thumbnail_url} alt="thumbnail" className="h-10 w-16 object-cover rounded-lg border border-gray-200" />
+                          )}
+                        </div>
                       </div>
                     </div>
 
