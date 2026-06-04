@@ -7,8 +7,9 @@ import {
   GripVertical, ChevronDown, ToggleLeft, ToggleRight, Loader2, Check,
   ExternalLink, Sparkles, Users, Timer, Heart, MapPin, Image, Gift,
   CheckSquare, MessageSquare, Video, BookOpen, Clock,
+  Upload, Trash2, ChevronUp, Plus,
 } from 'lucide-react'
-import type { Invitation, NewInvitationData, TemplateRecord, GiftAccount, SectionType } from '@/lib/types'
+import type { Invitation, NewInvitationData, TemplateRecord, GiftAccount, SectionType, StoryChapter } from '@/lib/types'
 import InvitationPreview from '@/components/renderer/InvitationPreview'
 
 // ── Types ──────────────────────────────────────────────────────
@@ -64,6 +65,7 @@ function initData(inv: Invitation): NewInvitationData {
     thank_you_message: d.thank_you_message ?? '',
     gift_accounts: d.gift_accounts ?? [],
     gallery_photos: d.gallery_photos ?? [],
+    story_chapters: d.story_chapters ?? [],
     music_url: d.music_url ?? '',
     livestream_url: d.livestream_url ?? '',
   }
@@ -209,14 +211,7 @@ function SectionForm({ type, data, onChange }: {
       </div>
     )
 
-    case 'story': return (
-      <div className="space-y-2">
-        <F label="Judul"><input className={ic} value={data.story_title ?? ''} onChange={e => onChange({ story_title: e.target.value })} placeholder="Kisah Kami" /></F>
-        <F label="Cerita" hint={`${(data.story_text ?? '').length}/500`}>
-          <textarea className={`${ic} resize-none`} rows={4} maxLength={500} value={data.story_text ?? ''} onChange={e => onChange({ story_text: e.target.value })} placeholder="Kami pertama kali bertemu di..." />
-        </F>
-      </div>
-    )
+    case 'story': return <StoryForm data={data} onChange={onChange} />
 
     case 'gallery': return (
       <InfoBox icon={Image} text="Kelola foto di tab Galeri (upload, hapus, lihat limit)." />
@@ -252,6 +247,199 @@ function SectionForm({ type, data, onChange }: {
     default: return null
   }
 }
+
+// ── Story Form ─────────────────────────────────────────────────
+
+function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: Partial<NewInvitationData>) => void }) {
+  const mode = (data.story_chapters && data.story_chapters.length > 0) ? 'chapters' : 'text'
+  const chapters = data.story_chapters ?? []
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(0)
+  const [uploadingIdx, setUploadingIdx] = useState<number | null>(null)
+  const fileRefs = useRef<(HTMLInputElement | null)[]>([])
+
+  function setMode(m: 'text' | 'chapters') {
+    if (m === 'chapters' && chapters.length === 0) {
+      onChange({ story_chapters: [{ title: '', text: '', date: '', photo_url: '', overlay_opacity: 0.45 }] })
+    } else if (m === 'text') {
+      onChange({ story_chapters: [] })
+    }
+  }
+
+  function updateChapter(i: number, patch: Partial<StoryChapter>) {
+    const next = chapters.map((c, j) => j === i ? { ...c, ...patch } : c)
+    onChange({ story_chapters: next })
+  }
+
+  function addChapter() {
+    const next = [...chapters, { title: '', text: '', date: '', photo_url: '', overlay_opacity: 0.45 }]
+    onChange({ story_chapters: next })
+    setExpandedIdx(next.length - 1)
+  }
+
+  function removeChapter(i: number) {
+    if (chapters.length === 1) { onChange({ story_chapters: [] }); return }
+    onChange({ story_chapters: chapters.filter((_, j) => j !== i) })
+    setExpandedIdx(null)
+  }
+
+  function moveChapter(i: number, dir: -1 | 1) {
+    const j = i + dir
+    if (j < 0 || j >= chapters.length) return
+    const next = [...chapters]
+    ;[next[i], next[j]] = [next[j], next[i]]
+    onChange({ story_chapters: next })
+    setExpandedIdx(j)
+  }
+
+  async function uploadPhoto(i: number, file: File) {
+    setUploadingIdx(i)
+    const form = new FormData()
+    form.append('file', file)
+    form.append('folder', 'stories')
+    const res = await fetch('/api/user/upload', { method: 'POST', body: form })
+    setUploadingIdx(null)
+    if (!res.ok) { toast.error('Gagal upload foto'); return }
+    const { url } = await res.json()
+    updateChapter(i, { photo_url: url })
+    toast.success('Foto terupload')
+  }
+
+  return (
+    <div className="space-y-2.5">
+      {/* Mode toggle */}
+      <div className="flex rounded-lg overflow-hidden border border-gray-200 text-[10px] font-semibold">
+        {(['text', 'chapters'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)}
+            className={`flex-1 py-1.5 transition-colors ${mode === m ? 'bg-rose-500 text-white' : 'bg-white text-gray-400 hover:text-gray-600'}`}>
+            {m === 'text' ? '✍ Teks Biasa' : '📸 Bab Bergambar'}
+          </button>
+        ))}
+      </div>
+
+      {mode === 'text' ? (
+        <div className="space-y-2">
+          <F label="Judul">
+            <input className={ic} value={data.story_title ?? ''} onChange={e => onChange({ story_title: e.target.value })} placeholder="Kisah Kami" />
+          </F>
+          <F label="Cerita" hint={`${(data.story_text ?? '').length}/500`}>
+            <textarea className={`${ic} resize-none`} rows={5} maxLength={500} value={data.story_text ?? ''}
+              onChange={e => onChange({ story_text: e.target.value })} placeholder="Kami pertama kali bertemu di..." />
+          </F>
+        </div>
+      ) : (
+        <div className="space-y-1.5">
+          <p className="text-[9px] text-gray-400">Tiap bab = layar penuh dengan foto background cinematic. Scroll tamu = berganti bab.</p>
+
+          {chapters.map((ch, i) => (
+            <div key={i} className={`rounded-lg border overflow-hidden transition-all ${expandedIdx === i ? 'border-rose-200' : 'border-gray-100'}`}>
+              {/* Chapter header */}
+              <div className="flex items-center h-8 px-2 gap-1.5 bg-white">
+                <div className="flex flex-col gap-0.5">
+                  <button onClick={() => moveChapter(i, -1)} disabled={i === 0} className="text-gray-300 hover:text-gray-500 disabled:opacity-20">
+                    <ChevronUp size={10} />
+                  </button>
+                  <button onClick={() => moveChapter(i, 1)} disabled={i === chapters.length - 1} className="text-gray-300 hover:text-gray-500 disabled:opacity-20">
+                    <ChevronDown size={10} />
+                  </button>
+                </div>
+
+                <button className="flex-1 text-left flex items-center gap-1.5" onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}>
+                  {ch.photo_url
+                    ? <img src={ch.photo_url} alt="" className="w-5 h-5 rounded object-cover border border-gray-200 shrink-0" />
+                    : <div className="w-5 h-5 rounded bg-gray-100 shrink-0 flex items-center justify-center"><Image size={9} className="text-gray-400" /></div>
+                  }
+                  <span className="text-[10px] font-medium text-gray-600 truncate">
+                    {ch.title || `Bab ${i + 1}`}
+                  </span>
+                </button>
+
+                <button onClick={() => removeChapter(i)} className="text-gray-200 hover:text-red-400 transition-colors shrink-0">
+                  <Trash2 size={11} />
+                </button>
+                <button onClick={() => setExpandedIdx(expandedIdx === i ? null : i)} className="shrink-0">
+                  <ChevronDown size={10} className={`text-gray-300 transition-transform ${expandedIdx === i ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+
+              {/* Chapter body */}
+              <AnimatePresence>
+                {expandedIdx === i && (
+                  <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }}
+                    transition={{ duration: 0.15 }} className="overflow-hidden">
+                    <div className="px-2.5 pb-2.5 pt-1.5 border-t border-gray-50 space-y-2">
+
+                      {/* Photo upload */}
+                      <div>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Foto Background</p>
+                        <input
+                          ref={el => { fileRefs.current[i] = el }}
+                          type="file" accept="image/*" className="hidden"
+                          onChange={e => { const f = e.target.files?.[0]; if (f) uploadPhoto(i, f) }}
+                        />
+                        {ch.photo_url ? (
+                          <div className="relative rounded-lg overflow-hidden" style={{ aspectRatio: '16/7' }}>
+                            <img src={ch.photo_url} alt="" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                              <button onClick={() => fileRefs.current[i]?.click()}
+                                className="flex items-center gap-1 bg-white/90 text-gray-800 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
+                                <Upload size={10} /> Ganti
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button onClick={() => fileRefs.current[i]?.click()}
+                            disabled={uploadingIdx === i}
+                            className="w-full py-4 border border-dashed border-gray-200 rounded-lg flex flex-col items-center gap-1 text-gray-400 hover:border-rose-300 hover:text-rose-400 transition-colors disabled:opacity-50">
+                            {uploadingIdx === i
+                              ? <><Loader2 size={14} className="animate-spin" /><span className="text-[9px]">Mengupload...</span></>
+                              : <><Upload size={14} /><span className="text-[9px]">Upload foto (maks 8MB)</span></>
+                            }
+                          </button>
+                        )}
+                        {ch.photo_url && (
+                          <div className="mt-1.5 space-y-0.5">
+                            <div className="flex items-center justify-between">
+                              <p className="text-[9px] text-gray-400">Kegelapan overlay</p>
+                              <span className="text-[9px] text-gray-500 font-mono">{Math.round((ch.overlay_opacity ?? 0.45) * 100)}%</span>
+                            </div>
+                            <input type="range" min={0.1} max={0.9} step={0.05}
+                              value={ch.overlay_opacity ?? 0.45}
+                              onChange={e => updateChapter(i, { overlay_opacity: Number(e.target.value) })}
+                              className="w-full accent-rose-500 h-1" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Text fields */}
+                      <F label="Tanggal / Keterangan" hint="Opsional — misal: 2019 atau Mei 2022">
+                        <input className={ic} value={ch.date ?? ''} onChange={e => updateChapter(i, { date: e.target.value })} placeholder="2019" />
+                      </F>
+                      <F label="Judul Bab">
+                        <input className={ic} value={ch.title ?? ''} onChange={e => updateChapter(i, { title: e.target.value })} placeholder="Pertama Bertemu" />
+                      </F>
+                      <F label="Cerita" hint={`${(ch.text ?? '').length}/300`}>
+                        <textarea className={`${ic} resize-none`} rows={3} maxLength={300}
+                          value={ch.text ?? ''} onChange={e => updateChapter(i, { text: e.target.value })}
+                          placeholder="Kami pertama bertemu di..." />
+                      </F>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+
+          <button onClick={addChapter}
+            className="w-full py-2 border border-dashed border-gray-200 rounded-lg flex items-center justify-center gap-1.5 text-[10px] font-semibold text-gray-400 hover:border-rose-300 hover:text-rose-500 transition-colors">
+            <Plus size={12} /> Tambah Bab
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Gift Form ──────────────────────────────────────────────────
 
 function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: Partial<NewInvitationData>) => void }) {
   const [adding, setAdding] = useState(false)
