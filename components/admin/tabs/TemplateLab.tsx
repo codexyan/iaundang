@@ -401,7 +401,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
     slug: 'template-baru',
   }))
   const [activeTab, setActiveTab] = useState<ConfigTab>('identity')
-  const [previewMode, setPreviewMode] = useState<'invitation' | 'cover'>('invitation')
+  const [previewMode, setPreviewMode] = useState<'invitation' | 'cover' | 'loading'>('invitation')
   const [previewGuestName, setPreviewGuestName] = useState('Bapak Budi dan Keluarga')
   const [jsonText, setJsonText] = useState('')
   const [previewData, setPreviewData] = useState<NewInvitationData>(PREVIEW_DATA_DEFAULT)
@@ -1175,32 +1175,6 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
           {activeTab === 'opening' && (
             <div className="space-y-5">
 
-              {/* ── Info: Preview Flow Available ── */}
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl">▶️</div>
-                  <div>
-                    <p className="text-sm font-semibold text-blue-900 mb-1">
-                      Preview Full Flow: Cover → Loading → Undangan
-                    </p>
-                    <p className="text-xs text-blue-700 leading-relaxed mb-2">
-                      Klik tombol "Preview" di Cover atau Loading untuk melihat flow lengkap di mockup.
-                      Flow ini HANYA untuk preview admin, di undangan live langsung masuk tanpa delay.
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setPreviewPlaying(true)}
-                        className="text-[10px] font-semibold text-blue-700 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-lg px-3 py-1.5 transition-colors"
-                      >
-                        ▶ Preview Flow Lengkap
-                      </button>
-                      <span className="text-[9px] text-blue-600">
-                        Cover → (klik MASUK SEKARANG) → Loading → Undangan
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* ── Opening Content (Still configurable for future use) ── */}
               <div>
