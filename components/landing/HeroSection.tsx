@@ -378,9 +378,9 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 60, scale: 0.9, rotateY: -15 }}
             animate={{ opacity: 1, y: 0, scale: 1, rotateY: 0 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex justify-center lg:justify-end perspective-1000"
+            className="flex justify-center lg:justify-end perspective-1000 mt-12 lg:mt-0"
           >
-            <div className="relative select-none" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="relative select-none" style={{ transformStyle: 'preserve-3d', isolation: 'isolate' }}>
 
               {/* Enhanced glow */}
               <div className="absolute -inset-20 pointer-events-none">
@@ -396,14 +396,15 @@ export default function HeroSection() {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ delay: card.delay, duration: 0.6, type: 'spring', stiffness: 100 }}
                   whileHover={{ scale: 1.05, y: -5 }}
-                  className={`absolute z-20 ${card.bgGradient} backdrop-blur-xl rounded-2xl p-4 border border-white/20`}
+                  className={`absolute z-20 ${card.bgGradient} backdrop-blur-xl rounded-2xl p-3 sm:p-4 border border-white/20 hidden lg:block`}
                   style={{
-                    [card.side === 'left' ? 'left' : 'right']: '-20px',
+                    [card.side === 'left' ? 'left' : 'right']: '-10px',
                     top: card.top,
                     transform: `translateX(${card.side === 'left' ? '-100%' : '100%'})`,
-                    background: 'rgba(255,255,255,0.95)',
+                    background: 'rgba(255,255,255,0.98)',
                     boxShadow: '0 12px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
                     maxWidth: 180,
+                    willChange: 'transform',
                   }}
                 >
                   <div className="flex items-center gap-3">
