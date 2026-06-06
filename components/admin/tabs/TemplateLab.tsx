@@ -2534,7 +2534,8 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                   <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'relative' }}>
                     <LoadingScreen
                       config={cfg.loading}
-                      onDone={() => {}} // No auto-transition in static preview
+                      onDone={() => {}}
+                      isPreview={true}
                     />
                   </div>
                 </div>
@@ -2555,6 +2556,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                           setPreviewLoading(false)
                           setPreviewPlaying(false)
                         }}
+                        isPreview={true}
                       />
                     </div>
                   </div>

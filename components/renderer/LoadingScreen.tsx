@@ -7,9 +7,10 @@ import type { LoadingConfig } from '@/lib/types'
 interface Props {
   config: LoadingConfig
   onDone: () => void
+  isPreview?: boolean
 }
 
-export default function LoadingScreen({ config, onDone }: Props) {
+export default function LoadingScreen({ config, onDone, isPreview = false }: Props) {
   useEffect(() => {
     const timer = setTimeout(onDone, 1600)
     return () => clearTimeout(timer)
@@ -17,7 +18,7 @@ export default function LoadingScreen({ config, onDone }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 z-50 flex flex-col items-center justify-center`}
       style={{ backgroundColor: config.background_color }}
     >
       {config.logo_image && (
