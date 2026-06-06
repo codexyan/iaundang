@@ -44,7 +44,7 @@ export default function RSVPList({ invitationId }: Props) {
           { label: 'Tidak Hadir', value: totalNotAttending },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-            <p className="text-2xl font-bold text-rose-600">{s.value}</p>
+            <p className="text-2xl font-bold text-gold-600">{s.value}</p>
             <p className="text-xs text-gray-500 mt-1">{s.label}</p>
           </div>
         ))}
@@ -53,7 +53,7 @@ export default function RSVPList({ invitationId }: Props) {
       <div className="flex justify-end">
         <button
           onClick={fetchData}
-          className="text-xs text-rose-600 hover:underline"
+          className="text-xs text-gold-600 hover:underline"
         >
           Refresh data
         </button>

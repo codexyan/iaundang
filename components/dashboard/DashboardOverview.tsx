@@ -195,7 +195,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
           </div>
           {daysUntil !== null ? (
             <>
-              <p className={`text-3xl font-bold ${daysUntil <= 30 ? 'text-rose-600' : 'text-gray-900'}`}>
+              <p className={`text-3xl font-bold ${daysUntil <= 30 ? 'text-gold-600' : 'text-gray-900'}`}>
                 {daysUntil > 0 ? daysUntil : daysUntil === 0 ? '🎉' : 'Selesai'}
               </p>
               {daysUntil > 0 && <p className="text-xs text-gray-400">hari lagi</p>}
@@ -238,7 +238,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
           </div>
           <div className="flex items-center gap-2">
             <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-rose-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+              <div className="h-full bg-gold-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
             </div>
             <span className="text-xs font-bold text-gray-500">{progress}%</span>
           </div>
@@ -249,7 +249,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
             <button
               key={item.label}
               onClick={item.action}
-              className={`w-full flex items-start gap-3 px-5 py-3.5 text-left transition-colors group ${item.done ? 'bg-green-50/40' : 'hover:bg-rose-50/30'}`}
+              className={`w-full flex items-start gap-3 px-5 py-3.5 text-left transition-colors group ${item.done ? 'bg-green-50/40' : 'hover:bg-gold-50/30'}`}
             >
               {/* Icon */}
               <div className={`mt-0.5 shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${item.done ? 'bg-green-500' : 'border-2 border-gray-200 group-hover:border-rose-300'} transition-colors`}>
@@ -283,9 +283,9 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button
           onClick={() => onNavigate('undangan')}
-          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-rose-200 hover:bg-rose-50/50 transition-all text-left group"
+          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-gold-200 hover:bg-gold-50/50 transition-all text-left group"
         >
-          <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-gold-50 flex items-center justify-center group-hover:bg-gold-100 transition-colors">
             <FileEdit size={18} className="text-rose-500" strokeWidth={1.5} />
           </div>
           <div>
@@ -296,9 +296,9 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
 
         <button
           onClick={() => onNavigate('gallery')}
-          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-rose-200 hover:bg-rose-50/50 transition-all text-left group"
+          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-gold-200 hover:bg-gold-50/50 transition-all text-left group"
         >
-          <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-gold-50 flex items-center justify-center group-hover:bg-gold-100 transition-colors">
             <Images size={18} className="text-rose-500" strokeWidth={1.5} />
           </div>
           <div>
@@ -309,9 +309,9 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
 
         <button
           onClick={() => onNavigate('music')}
-          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-rose-200 hover:bg-rose-50/50 transition-all text-left group"
+          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-gold-200 hover:bg-gold-50/50 transition-all text-left group"
         >
-          <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-gold-50 flex items-center justify-center group-hover:bg-gold-100 transition-colors">
             <Music size={18} className="text-rose-500" strokeWidth={1.5} />
           </div>
           <div>
@@ -322,9 +322,9 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
 
         <button
           onClick={() => onNavigate('rsvp')}
-          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-rose-200 hover:bg-rose-50/50 transition-all text-left group"
+          className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 hover:border-gold-200 hover:bg-gold-50/50 transition-all text-left group"
         >
-          <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-gold-50 flex items-center justify-center group-hover:bg-gold-100 transition-colors">
             <Users size={18} className="text-rose-500" strokeWidth={1.5} />
           </div>
           <div>
@@ -339,7 +339,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
         <div className="bg-white border border-gray-100 rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900 text-sm">Ringkasan Undangan</h3>
-            <button onClick={() => onNavigate('undangan')} className="text-xs text-rose-600 hover:underline">Edit</button>
+            <button onClick={() => onNavigate('undangan')} className="text-xs text-gold-600 hover:underline">Edit</button>
           </div>
           <dl className="divide-y divide-gray-50">
             {[

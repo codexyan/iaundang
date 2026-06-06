@@ -89,7 +89,7 @@ export default function MusicManager({ invitation }: Props) {
                   key={track.id}
                   type="button"
                   onClick={() => handleChoosePreset(track)}
-                  className={`rounded-3xl border p-4 text-left transition ${selectedId === track.id ? 'border-rose-500 bg-rose-50' : 'border-gray-200 hover:border-rose-300 hover:bg-rose-50/50'}`}
+                  className={`rounded-3xl border p-4 text-left transition ${selectedId === track.id ? 'border-rose-500 bg-gold-50' : 'border-gray-200 hover:border-rose-300 hover:bg-gold-50/50'}`}
                 >
                   <p className="font-semibold text-gray-900">{track.title}</p>
                   <p className="text-xs text-gray-500 mt-1">{track.description}</p>
@@ -102,7 +102,7 @@ export default function MusicManager({ invitation }: Props) {
             <h3 className="font-semibold text-gray-900 mb-3">Upload musik sendiri</h3>
             <div
               {...getRootProps()}
-              className={`rounded-3xl border-2 border-dashed p-6 text-center transition ${isDragActive ? 'border-rose-400 bg-rose-50' : 'border-gray-200 hover:border-rose-300 hover:bg-rose-50/50'} ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+              className={`rounded-3xl border-2 border-dashed p-6 text-center transition ${isDragActive ? 'border-rose-400 bg-gold-50' : 'border-gray-200 hover:border-rose-300 hover:bg-gold-50/50'} ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
             >
               <input {...getInputProps()} />
               <p className="text-lg font-semibold text-gray-900">{uploading ? 'Mengupload...' : musicUrl ? 'Klik untuk ganti musik' : 'Klik atau seret file MP3/OGG di sini'}</p>

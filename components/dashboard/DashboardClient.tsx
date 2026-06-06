@@ -143,29 +143,29 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
 
       {/* ── Sidebar ─────────────────────────────────────────── */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-100 flex flex-col
+        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-stone-200/50 flex flex-col
         transition-transform duration-200 ease-in-out shadow-xl
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         md:static md:translate-x-0 md:flex md:shadow-none
       `}>
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-gray-100">
+        <div className="h-16 flex items-center justify-between px-5 border-b border-stone-200/50">
           <Link href="/" className="flex items-center leading-none">
-            <span className="text-lg font-bold tracking-tight"><span className="text-rose-600">ak</span><span className="text-stone-900">undang</span></span>
+            <span className="text-lg font-bold tracking-tight"><span className="text-gold-600">ak</span><span className="text-stone-900">undang</span></span>
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-400">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-stone-400">
             <X size={18} />
           </button>
         </div>
 
         {/* User + status */}
-        <div className="px-4 py-4 border-b border-gray-50">
+        <div className="px-4 py-4 border-b border-stone-100">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+            <div className="w-9 h-9 rounded-full bg-gold-gradient flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-md">
               {user.email[0].toUpperCase()}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium text-gray-900 truncate">{user.email}</p>
+              <p className="text-xs font-medium text-stone-900 truncate">{user.email}</p>
               {inv && (
                 <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 ${statusBadge.cls}`}>
                   {statusBadge.label}
@@ -174,11 +174,11 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
             </div>
           </div>
           {inv?.slug && (
-            <div className="bg-gray-50 rounded-lg px-3 py-2">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Link undangan</p>
-              <p className="text-xs font-mono text-rose-600 truncate font-semibold">{inv.slug}.akundang.id</p>
+            <div className="bg-gradient-to-br from-gold-50 to-champagne-50 rounded-lg px-3 py-2 border border-gold-200/50">
+              <p className="text-[10px] text-stone-500 uppercase tracking-wide mb-0.5">Link undangan</p>
+              <p className="text-xs font-mono text-gold-700 truncate font-semibold">{inv.slug}.akundang.id</p>
               {inv.expires_at && (
-                <p className="text-[10px] text-gray-400 mt-0.5">
+                <p className="text-[10px] text-stone-500 mt-0.5">
                   Aktif s/d {new Date(inv.expires_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </p>
               )}
@@ -198,38 +198,38 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
                 disabled={locked}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${
                   active
-                    ? 'bg-rose-50 text-rose-700'
+                    ? 'bg-gradient-to-r from-gold-50 to-champagne-50 text-gold-700 border border-gold-200/50 shadow-sm'
                     : locked
-                    ? 'text-gray-300 cursor-not-allowed'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'text-stone-300 cursor-not-allowed'
+                    : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
                 }`}
               >
                 <Icon size={17} strokeWidth={active ? 2 : 1.5} />
                 <span className="flex-1">{label}</span>
-                {locked && <span className="text-[10px] text-gray-300">🔒</span>}
-                {active && <ChevronRight size={13} className="text-rose-400" />}
+                {locked && <span className="text-[10px] text-stone-300">🔒</span>}
+                {active && <ChevronRight size={13} className="text-gold-500" />}
               </button>
             )
           })}
         </nav>
 
         {/* Bottom actions */}
-        <div className="px-3 pb-4 pt-3 space-y-1 border-t border-gray-50">
+        <div className="px-3 pb-4 pt-3 space-y-1 border-t border-stone-100">
           {inv?.is_paid && (
             <a
               href={getInvitationUrl(inv.slug)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-stone-600 hover:bg-stone-50 transition-colors"
             >
               <Eye size={17} strokeWidth={1.5} />
               Preview Undangan
-              <ExternalLink size={12} className="ml-auto text-gray-300" />
+              <ExternalLink size={12} className="ml-auto text-stone-300" />
             </a>
           )}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-stone-500 hover:bg-red-50 hover:text-red-600 transition-colors"
           >
             <LogOut size={17} strokeWidth={1.5} />
             Keluar
@@ -241,23 +241,23 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Mobile header */}
-        <header className="md:hidden h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 shrink-0">
-          <button onClick={() => setSidebarOpen(true)} className="text-gray-500">
+        <header className="md:hidden h-14 bg-white border-b border-stone-200/50 flex items-center justify-between px-4 shrink-0">
+          <button onClick={() => setSidebarOpen(true)} className="text-stone-500">
             <Menu size={20} />
           </button>
-          <span className="font-bold tracking-tight text-sm"><span className="text-rose-600">ak</span><span className="text-stone-900">undang</span></span>
+          <span className="font-bold tracking-tight text-sm"><span className="text-gold-600">ak</span><span className="text-stone-900">undang</span></span>
           <div className="w-8" />
         </header>
 
         {/* Page header */}
-        <div className="bg-white border-b border-gray-100 px-5 py-4 shrink-0">
+        <div className="bg-white border-b border-stone-200/50 px-5 py-4 shrink-0">
           <div className="flex items-center justify-between gap-4 max-w-4xl">
             <div>
-              <h1 className="font-serif text-lg font-bold text-gray-900">
+              <h1 className="font-serif text-lg font-bold text-stone-900">
                 {NAV.find(n => n.id === tab)?.label}
               </h1>
               {inv?.is_paid && names?.groom && (
-                <p className="text-sm text-gray-400 mt-0.5">
+                <p className="text-sm text-stone-500 mt-0.5">
                   {names.groom} & {names.bride}
                 </p>
               )}
@@ -325,13 +325,13 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
 
         {/* Mobile bottom nav */}
         {inv?.is_paid && (
-          <nav className="md:hidden bg-white border-t border-gray-100 flex shrink-0">
+          <nav className="md:hidden bg-white border-t border-stone-200/50 flex shrink-0">
             {NAV.slice(0, 5).map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => navTo(id)}
                 className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-medium transition-colors ${
-                  tab === id ? 'text-rose-600' : 'text-gray-400'
+                  tab === id ? 'text-gold-600' : 'text-stone-400'
                 }`}
               >
                 <Icon size={18} strokeWidth={tab === id ? 2 : 1.5} />
@@ -501,7 +501,7 @@ function PaymentGate({ invitation, selectedTemplateId, allTemplates, onInvitatio
         {/* Selected template display */}
         <button
           onClick={() => setShowTemplatePicker(!showTemplatePicker)}
-          className="w-full flex items-center gap-4 p-4 border-2 border-rose-200 rounded-2xl bg-rose-50 hover:bg-rose-100 transition-colors"
+          className="w-full flex items-center gap-4 p-4 border-2 border-gold-200 rounded-2xl bg-gold-50 hover:bg-gold-100 transition-colors"
         >
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-300 to-pink-400 shrink-0 overflow-hidden">
             {selectedTemplate.thumbnailUrl && (
@@ -512,7 +512,7 @@ function PaymentGate({ invitation, selectedTemplateId, allTemplates, onInvitatio
             <div className="flex items-center gap-2">
               <p className="font-semibold text-gray-900 text-sm">{selectedTemplate.name}</p>
               {selectedTemplate.isNew && (
-                <span className="text-[10px] bg-rose-500 text-white px-1.5 py-0.5 rounded-full font-bold">NEW</span>
+                <span className="text-[10px] bg-gold-500 text-white px-1.5 py-0.5 rounded-full font-bold">NEW</span>
               )}
             </div>
             <p className="text-xs text-gray-500 capitalize mt-0.5">{selectedTemplate.category}</p>
@@ -546,11 +546,11 @@ function PaymentGate({ invitation, selectedTemplateId, allTemplates, onInvitatio
                     <div className="px-2.5 py-2">
                       <div className="flex items-center gap-1.5">
                         <p className="text-xs font-semibold text-gray-800 truncate">{t.name}</p>
-                        {t.isNew && <span className="text-[9px] bg-rose-500 text-white px-1 py-0.5 rounded font-bold shrink-0">NEW</span>}
+                        {t.isNew && <span className="text-[9px] bg-gold-500 text-white px-1 py-0.5 rounded font-bold shrink-0">NEW</span>}
                       </div>
                     </div>
                     {selectedTemplate.id === t.id && (
-                      <div className="absolute top-2 right-2 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center">
+                      <div className="absolute top-2 right-2 w-5 h-5 bg-gold-500 rounded-full flex items-center justify-center">
                         <Check size={11} className="text-white" />
                       </div>
                     )}
@@ -608,8 +608,8 @@ function PaymentGate({ invitation, selectedTemplateId, allTemplates, onInvitatio
                   onClick={() => handleSlugChange(s)}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     slug === s
-                      ? 'bg-rose-600 text-white border-rose-600'
-                      : 'border-gray-200 text-gray-600 hover:border-rose-400 hover:text-rose-600'
+                      ? 'bg-gold-600 text-white border-rose-600'
+                      : 'border-gray-200 text-gray-600 hover:border-rose-400 hover:text-gold-600'
                   }`}
                 >
                   {s}
@@ -652,7 +652,7 @@ function PaymentGate({ invitation, selectedTemplateId, allTemplates, onInvitatio
         <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-500">Paket Lengkap · 1 Tahun Aktif</p>
-            <p className="text-xl font-bold text-rose-600">{PRICE_FORMATTED}</p>
+            <p className="text-xl font-bold text-gold-600">{PRICE_FORMATTED}</p>
           </div>
           <Button
             size="lg"

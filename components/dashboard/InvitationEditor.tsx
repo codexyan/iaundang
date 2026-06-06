@@ -138,7 +138,7 @@ function SectionForm({ type, data, onChange }: {
             </F>
           </div>
         </div>
-        <div className="p-2.5 bg-rose-50 rounded-lg space-y-2">
+        <div className="p-2.5 bg-gold-50 rounded-lg space-y-2">
           <p className="text-[10px] font-bold text-rose-500 uppercase tracking-wide">Wanita</p>
           <F label="Nama Orang Tua">
             <input className={ic} value={data.bride_parents ?? ''} onChange={e => onChange({ bride_parents: e.target.value })} placeholder="Bpk. Hendra & Ibu Dewi" />
@@ -453,7 +453,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
       <div className="flex rounded-lg overflow-hidden border border-gray-200 text-[10px] font-semibold">
         {MODES.map(m => (
           <button key={m.id} onClick={() => setMode(m.id)}
-            className={`flex-1 py-1.5 transition-colors ${mode === m.id ? 'bg-rose-500 text-white' : 'bg-white text-gray-400 hover:text-gray-600'}`}>
+            className={`flex-1 py-1.5 transition-colors ${mode === m.id ? 'bg-gold-500 text-white' : 'bg-white text-gray-400 hover:text-gray-600'}`}>
             {m.label}
           </button>
         ))}
@@ -477,7 +477,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
         <div className="space-y-1.5">
           <p className="text-[9px] text-gray-400">Tambah poin perjalanan sebanyak yang kamu mau.</p>
           {timeline.map((item, i) => (
-            <div key={i} className={`rounded-lg border overflow-hidden transition-all ${expandedIdx === i ? 'border-rose-200' : 'border-gray-100'}`}>
+            <div key={i} className={`rounded-lg border overflow-hidden transition-all ${expandedIdx === i ? 'border-gold-200' : 'border-gray-100'}`}>
               <div className="flex items-center h-8 px-2 gap-1.5 bg-white">
                 <div className="flex flex-col gap-0.5">
                   <button onClick={() => moveItem(i, -1)} disabled={i === 0} className="text-gray-300 hover:text-gray-500 disabled:opacity-20"><ChevronUp size={10} /></button>
@@ -527,7 +527,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
         <div className="space-y-1.5">
           <p className="text-[9px] text-gray-400">Tiap bab = layar penuh. Foto atau video sebagai background.</p>
           {chapters.map((ch, i) => (
-            <div key={i} className={`rounded-lg border overflow-hidden transition-all ${expandedIdx === i ? 'border-rose-200' : 'border-gray-100'}`}>
+            <div key={i} className={`rounded-lg border overflow-hidden transition-all ${expandedIdx === i ? 'border-gold-200' : 'border-gray-100'}`}>
               {/* header */}
               <div className="flex items-center h-8 px-2 gap-1.5 bg-white">
                 <div className="flex flex-col gap-0.5">
@@ -982,7 +982,7 @@ function SectionRow({
         <div className={`absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl transition-all duration-200 ${isExpanded ? 'bg-rose-400' : 'bg-transparent'}`} />
 
         {/* Row header */}
-        <div className={`flex items-center h-10 pl-4 pr-2.5 gap-2 transition-colors ${isExpanded ? 'bg-rose-50/70' : ''}`}>
+        <div className={`flex items-center h-10 pl-4 pr-2.5 gap-2 transition-colors ${isExpanded ? 'bg-gold-50/70' : ''}`}>
           {/* Drag handle */}
           <div
             className={`flex items-center justify-center w-4 h-4 cursor-grab active:cursor-grabbing shrink-0 touch-none transition-colors ${on ? 'text-gray-300 hover:text-gray-500' : 'text-gray-200'}`}
@@ -996,7 +996,7 @@ function SectionRow({
 
           {/* Label */}
           <button className="flex items-center gap-1.5 flex-1 min-w-0 text-left" onClick={onToggleExpand}>
-            <span className={`text-xs font-medium truncate transition-colors ${isExpanded ? 'text-rose-700' : on ? 'text-gray-700' : 'text-gray-400'}`}>
+            <span className={`text-xs font-medium truncate transition-colors ${isExpanded ? 'text-gold-700' : on ? 'text-gray-700' : 'text-gray-400'}`}>
               {SLABELS[section.type] ?? section.type}
             </span>
             {!on && (
@@ -1007,7 +1007,7 @@ function SectionRow({
           {/* Toggle ON/OFF — prominent */}
           <button
             title={on ? 'Nonaktifkan section' : 'Aktifkan section'}
-            className={`shrink-0 flex items-center rounded-full transition-all px-1 ${on ? 'hover:bg-rose-50' : 'hover:bg-gray-100'}`}
+            className={`shrink-0 flex items-center rounded-full transition-all px-1 ${on ? 'hover:bg-gold-50' : 'hover:bg-gray-100'}`}
             onClick={e => { e.stopPropagation(); onToggle() }}
           >
             {on
@@ -1039,7 +1039,7 @@ function SectionRow({
                     Section ini <strong>tidak aktif</strong> dan tidak akan tampil di undangan.
                   </p>
                   <button onClick={onToggle}
-                    className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-500 hover:text-rose-600 transition-colors">
+                    className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-500 hover:text-gold-600 transition-colors">
                     <ToggleRight size={14} /> Aktifkan section ini
                   </button>
                 </div>

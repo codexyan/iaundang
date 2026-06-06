@@ -50,7 +50,7 @@ export default function SettingsPanel({ invitation }: Props) {
           <p className="text-sm text-gray-500 mt-2">Slug undangan ini akan digunakan di semua modul terkait.</p>
           <div className="mt-4 rounded-2xl bg-gray-50 border border-gray-200 p-4">
             <p className="text-xs text-gray-500">Link undangan</p>
-            <p className="text-sm font-medium text-rose-600 mt-1">https://{invitation.slug}.akundang.id</p>
+            <p className="text-sm font-medium text-gold-600 mt-1">https://{invitation.slug}.akundang.id</p>
           </div>
         </div>
 

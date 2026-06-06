@@ -231,7 +231,7 @@ export default function NewInvitationWizard({ invitation, onSaved }: Props) {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                       done
-                        ? 'bg-rose-500 text-white'
+                        ? 'bg-gold-500 text-white'
                         : active
                         ? `bg-gradient-to-br ${s.color} text-white shadow-lg shadow-rose-200`
                         : 'bg-gray-100 text-gray-300'
@@ -321,7 +321,7 @@ export default function NewInvitationWizard({ invitation, onSaved }: Props) {
               <button
                 onClick={goNext}
                 disabled={saving}
-                className="flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl disabled:opacity-50 transition-colors shadow-sm"
+                className="flex items-center gap-2 px-6 py-2.5 bg-gold-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl disabled:opacity-50 transition-colors shadow-sm"
               >
                 Lanjut
                 <ChevronRight size={16} />
@@ -340,7 +340,7 @@ export default function NewInvitationWizard({ invitation, onSaved }: Props) {
                 href={`/invitation/${invitation.slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
+                className="flex items-center gap-2 px-6 py-2.5 bg-gold-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
               >
                 <Eye size={16} />
                 Lihat Undangan
@@ -383,8 +383,8 @@ function StepCouple({ data, set, errors }: { data: WizardData; set: (k: keyof Wi
         </div>
 
         {/* Mempelai Wanita */}
-        <div className="space-y-4 p-5 rounded-2xl bg-rose-50 border border-rose-100">
-          <div className="flex items-center gap-2 text-rose-600 font-semibold text-sm">
+        <div className="space-y-4 p-5 rounded-2xl bg-gold-50 border border-rose-100">
+          <div className="flex items-center gap-2 text-gold-600 font-semibold text-sm">
             <User size={15} /> Mempelai Wanita
           </div>
           <Field label="Nama Lengkap" required error={errors.bride_name}>
@@ -801,13 +801,13 @@ function StepSelesai({ data, invitation }: { data: WizardData; invitation: Invit
       <div className="bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-100 rounded-2xl p-5">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Link Undangan Kamu</p>
         <div className="flex items-center gap-2">
-          <div className="flex-1 bg-white border border-rose-200 rounded-xl px-4 py-2.5 flex items-center gap-2">
+          <div className="flex-1 bg-white border border-gold-200 rounded-xl px-4 py-2.5 flex items-center gap-2">
             <Link2 size={14} className="text-rose-400 shrink-0" />
             <span className="text-sm font-mono font-semibold text-gray-800 truncate">{invUrl}</span>
           </div>
           <button
             onClick={() => { navigator.clipboard.writeText(`https://${invUrl}`); toast.success('Link disalin!') }}
-            className="p-2.5 bg-white border border-rose-200 rounded-xl text-rose-400 hover:text-rose-600 transition-colors"
+            className="p-2.5 bg-white border border-gold-200 rounded-xl text-rose-400 hover:text-gold-600 transition-colors"
           >
             <Copy size={16} />
           </button>

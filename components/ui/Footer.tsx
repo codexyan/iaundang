@@ -1,14 +1,15 @@
 ﻿import Link from 'next/link'
 import { Instagram, Mail, MessageCircle, Github, Twitter } from 'lucide-react'
+import Logo from './Logo'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-stone-300">
+    <footer className="relative bg-dark-gradient text-stone-300">
 
       {/* Decorative top border */}
-      <div className="h-1 bg-gradient-to-r from-rose-500 via-amber-500 to-pink-500" />
+      <div className="h-1 bg-gradient-to-r from-gold-500 via-champagne-500 to-gold-400" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
 
@@ -17,12 +18,9 @@ export default function Footer() {
 
           {/* Brand Section */}
           <div className="lg:col-span-4">
-            <Link href="/" className="inline-block group">
-              <h3 className="text-2xl font-bold tracking-tight mb-3">
-                <span className="text-gold-500 group-hover:text-gold-400 transition-colors">ak</span>
-                <span className="text-white group-hover:text-stone-100 transition-colors">undang</span>
-              </h3>
-            </Link>
+            <div className="mb-3">
+              <Logo variant="light" size="lg" href="/" />
+            </div>
             <p className="text-stone-400 text-sm leading-relaxed mb-6 max-w-sm">
               Platform undangan digital premium untuk pasangan modern. Buat undangan cantik tanpa coding, kirim ke tamu dengan satu klik.
             </p>
@@ -157,7 +155,7 @@ export default function Footer() {
             {/* Mini CTA */}
             <Link
               href="/register"
-              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r bg-gold-gradient text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center px-4 py-2 bg-gold-gradient text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-all shadow-lg hover:shadow-xl"
             >
               Mulai Gratis
             </Link>

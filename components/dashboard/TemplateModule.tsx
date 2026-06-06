@@ -32,7 +32,7 @@ function PackageBadge({ tier }: { tier: PackageTier }) {
   const pkg = getPackage(tier)
   const colors: Record<PackageTier, string> = {
     starter: 'bg-blue-50 text-blue-700 border-blue-200',
-    premium: 'bg-rose-50 text-rose-700 border-rose-200',
+    premium: 'bg-gold-50 text-gold-700 border-gold-200',
     ultimate: 'bg-amber-50 text-amber-700 border-amber-200',
   }
   return (
@@ -95,13 +95,13 @@ function BuyTemplateModal({ allTemplates, currentId, onClose }: {
           {/* Template list */}
           <div className="grid grid-cols-2 gap-3">
             {otherTemplates.map(t => (
-              <div key={t.id} className="border border-gray-100 rounded-2xl overflow-hidden hover:border-rose-200 transition-colors group">
+              <div key={t.id} className="border border-gray-100 rounded-2xl overflow-hidden hover:border-gold-200 transition-colors group">
                 <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative">
                   {t.thumbnailUrl && (
                     <img src={t.thumbnailUrl} alt={t.name} className="w-full h-full object-cover" />
                   )}
                   {t.isNew && (
-                    <span className="absolute top-2 right-2 text-[9px] bg-rose-500 text-white px-1.5 py-0.5 rounded-full font-bold">NEW</span>
+                    <span className="absolute top-2 right-2 text-[9px] bg-gold-500 text-white px-1.5 py-0.5 rounded-full font-bold">NEW</span>
                   )}
                   <a
                     href={t.demoUrl}
@@ -118,7 +118,7 @@ function BuyTemplateModal({ allTemplates, currentId, onClose }: {
                 <div className="p-3">
                   <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
                   <p className="text-xs text-gray-400 capitalize mb-2">{t.category}</p>
-                  <button className="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                  <button className="w-full py-2 bg-gold-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5">
                     <ShoppingBag size={11} />
                     Beli — Rp 149.000
                   </button>
@@ -186,7 +186,7 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
                   {currentTemplate?.name ?? invitation.template_id.replace(/-/g, ' ')}
                 </h2>
                 {currentTemplate?.isNew && (
-                  <span className="text-[10px] bg-rose-500 text-white px-1.5 py-0.5 rounded-full font-bold">NEW</span>
+                  <span className="text-[10px] bg-gold-500 text-white px-1.5 py-0.5 rounded-full font-bold">NEW</span>
                 )}
               </div>
               <div className="flex items-center gap-2">
@@ -206,14 +206,14 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
                 href={currentTemplate.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:border-rose-300 hover:text-rose-600 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:border-rose-300 hover:text-gold-600 transition-colors"
               >
                 <Eye size={12} /> Preview
               </a>
             )}
             <button
               onClick={() => setShowBuyModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl text-xs text-rose-700 font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 bg-gold-50 hover:bg-gold-100 border border-gold-200 rounded-xl text-xs text-gold-700 font-semibold transition-colors"
             >
               <ShoppingBag size={12} /> Beli Template Lain
             </button>

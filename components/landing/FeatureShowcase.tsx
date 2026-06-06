@@ -147,7 +147,7 @@ function VisualMusic() {
         <p className="text-[8px] font-bold text-stone-400 uppercase tracking-wide px-1">Pilih lagu lain</p>
         {['Perfect · Ed Sheeran', 'All of Me · John Legend', 'Upload lagumu sendiri'].map((s, i) => (
           <div key={s} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${i === 2 ? 'border border-dashed border-stone-200' : 'hover:bg-stone-50'}`}>
-            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] ${i === 2 ? 'bg-rose-50' : 'bg-stone-100'}`}>
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] ${i === 2 ? 'bg-gold-50' : 'bg-stone-100'}`}>
               {i === 2 ? '＋' : '♪'}
             </div>
             <p className="text-[9px] text-stone-600 font-medium">{s}</p>

@@ -162,7 +162,7 @@ export default function GuestManager({ invitation }: Props) {
           { label: 'Total Tamu', value: contacts.length, icon: Users, color: 'bg-blue-50 text-blue-600 border-blue-100' },
           { label: 'Sudah Dikirimi', value: sentCount, icon: CheckCircle2, color: 'bg-green-50 text-green-600 border-green-100' },
           { label: 'Belum Dikirimi', value: unsentCount, icon: Clock, color: 'bg-amber-50 text-amber-600 border-amber-100' },
-          { label: 'Batas Paket', value: maxGuests === -1 ? '∞' : maxGuests, icon: Crown, color: 'bg-rose-50 text-rose-600 border-rose-100' },
+          { label: 'Batas Paket', value: maxGuests === -1 ? '∞' : maxGuests, icon: Crown, color: 'bg-gold-50 text-gold-600 border-rose-100' },
         ].map(s => (
           <div key={s.label} className={`rounded-2xl border p-4 ${s.color}`}>
             <s.icon size={16} className="mb-2 opacity-70" />
@@ -190,7 +190,7 @@ export default function GuestManager({ invitation }: Props) {
           <button
             onClick={() => setShowAddForm(p => !p)}
             disabled={isAtLimit}
-            className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 bg-gold-600 hover:bg-rose-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition-colors"
           >
             <Plus size={16} /> Tambah Tamu
           </button>
@@ -232,7 +232,7 @@ export default function GuestManager({ invitation }: Props) {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <div className="border border-rose-100 rounded-2xl p-4 bg-rose-50/30 mb-4 space-y-3">
+              <div className="border border-rose-100 rounded-2xl p-4 bg-gold-50/30 mb-4 space-y-3">
                 <h4 className="font-bold text-gray-900 text-sm">Tambah Tamu Baru</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -275,7 +275,7 @@ export default function GuestManager({ invitation }: Props) {
                 <div className="flex gap-2 pt-1">
                   <button
                     onClick={addGuest}
-                    className="flex-1 py-2.5 bg-rose-600 text-white text-sm font-bold rounded-xl hover:bg-rose-700 transition-colors"
+                    className="flex-1 py-2.5 bg-gold-600 text-white text-sm font-bold rounded-xl hover:bg-rose-700 transition-colors"
                   >
                     Tambah
                   </button>
@@ -359,7 +359,7 @@ export default function GuestManager({ invitation }: Props) {
           <p className="text-sm text-gray-500 mb-4">Tambah daftar tamu dan kirim undangan personal via WhatsApp.</p>
           <button
             onClick={() => setShowAddForm(true)}
-            className="px-5 py-2.5 bg-rose-600 text-white text-sm font-semibold rounded-xl hover:bg-rose-700"
+            className="px-5 py-2.5 bg-gold-600 text-white text-sm font-semibold rounded-xl hover:bg-rose-700"
           >
             + Tambah Tamu Pertama
           </button>
@@ -387,7 +387,7 @@ export default function GuestManager({ invitation }: Props) {
                   className="px-5 py-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors"
                 >
                   {/* Avatar */}
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold-400 to-champagne-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
                     {contact.name[0]?.toUpperCase()}
                   </div>
 

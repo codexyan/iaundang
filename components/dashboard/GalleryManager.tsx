@@ -127,7 +127,7 @@ export default function GalleryManager({ invitation }: Props) {
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
               <motion.div
                 className={`h-full rounded-full transition-colors ${
-                  isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-amber-400' : 'bg-rose-500'
+                  isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-amber-400' : 'bg-gold-500'
                 }`}
                 initial={{ width: 0 }}
                 animate={{ width: `${limitPercent}%` }}
@@ -149,10 +149,10 @@ export default function GalleryManager({ invitation }: Props) {
             {...getRootProps()}
             className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
               isDragActive
-                ? 'border-rose-400 bg-rose-50'
+                ? 'border-rose-400 bg-gold-50'
                 : uploading
                 ? 'border-gray-200 bg-gray-50 cursor-not-allowed'
-                : 'border-gray-200 hover:border-rose-300 hover:bg-rose-50/30'
+                : 'border-gray-200 hover:border-rose-300 hover:bg-gold-50/30'
             }`}
           >
             <input {...getInputProps()} />
@@ -164,11 +164,11 @@ export default function GalleryManager({ invitation }: Props) {
             ) : isDragActive ? (
               <div className="flex flex-col items-center gap-2">
                 <Upload size={28} className="text-rose-500" />
-                <p className="text-sm font-semibold text-rose-600">Lepaskan file di sini!</p>
+                <p className="text-sm font-semibold text-gold-600">Lepaskan file di sini!</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
-                <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gold-50 rounded-2xl flex items-center justify-center">
                   <ImagePlus size={22} className="text-rose-400" />
                 </div>
                 <div>
