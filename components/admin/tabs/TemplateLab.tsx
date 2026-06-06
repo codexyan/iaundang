@@ -613,10 +613,9 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
   }, [draggingSectionId])
 
   // ── JSON tab handlers ─────────────────────────────────────────
+  // JSON tab removed - function kept for compatibility but does nothing
   function openJsonTab() {
-    setJsonText(JSON.stringify(config.config, null, 2))
-    setJsonError('')
-    setActiveTab('json')
+    // No-op: JSON tab has been replaced with Musik tab
   }
 
   function applyJson() {
