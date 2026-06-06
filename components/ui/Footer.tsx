@@ -19,7 +19,7 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-4">
             <div className="mb-3">
-              <Logo variant="light" size="lg" href="/" />
+              <Logo variant="horizontal" size="lg" href="/" className="brightness-0 invert" />
             </div>
             <p className="text-stone-400 text-sm leading-relaxed mb-6 max-w-sm">
               Platform undangan digital premium untuk pasangan modern. Buat undangan cantik tanpa coding, kirim ke tamu dengan satu klik.

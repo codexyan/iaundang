@@ -10,41 +10,41 @@
        AKUNDANG PREMIUM COLOR PALETTE - DARK ELEGANT THEME
        ═══════════════════════════════════════════════════════════════════ */
 
-    /* Primary - Elegant Gold */
+    /* Primary - Logo Gold (extracted from actual logo) */
     --color-primary-50: #fefce8;
-    --color-primary-100: #fef9c3;
-    --color-primary-200: #fef08a;
-    --color-primary-300: #fde047;
-    --color-primary-400: #d4af37;  /* Main Gold */
-    --color-primary-500: #b8860b;  /* Deep Gold */
-    --color-primary-600: #92690a;
-    --color-primary-700: #6b4e08;
-    --color-primary-800: #453306;
-    --color-primary-900: #1f1803;
+    --color-primary-100: #f9f3e3;
+    --color-primary-200: #f0e5c8;
+    --color-primary-300: #e4d5a8;
+    --color-primary-400: #d4c589;  /* Logo gold highlight */
+    --color-primary-500: #c9a961;  /* Main logo gold */
+    --color-primary-600: #b8954d;  /* Logo gold mid */
+    --color-primary-700: #8f7339;  /* Logo gold dark */
+    --color-primary-800: #6b5528;
+    --color-primary-900: #4a3918;
 
-    /* Secondary - Deep Forest Green */
-    --color-secondary-50: #f0fdf4;
-    --color-secondary-100: #dcfce7;
-    --color-secondary-200: #bbf7d0;
-    --color-secondary-300: #86efac;
-    --color-secondary-400: #4ade80;
-    --color-secondary-500: #1a3320;  /* Deep Green */
-    --color-secondary-600: #0f1a12;  /* Darker Green */
-    --color-secondary-700: #0a1109;
-    --color-secondary-800: #050805;
-    --color-secondary-900: #020402;
+    /* Secondary - Logo Forest Green (extracted from actual logo) */
+    --color-secondary-50: #f0f7f2;
+    --color-secondary-100: #d9ebe0;
+    --color-secondary-200: #b3d7c1;
+    --color-secondary-300: #7db896;
+    --color-secondary-400: #4a9368;
+    --color-secondary-500: #2c4a34;  /* Main logo green */
+    --color-secondary-600: #23392a;  /* Logo green mid */
+    --color-secondary-700: #1a2b20;  /* Logo green dark */
+    --color-secondary-800: #131f18;
+    --color-secondary-900: #0d1510;
 
-    /* Accent - Soft Champagne */
-    --color-accent-50: #fef7ee;
-    --color-accent-100: #fdecd6;
-    --color-accent-200: #fbd5a8;
-    --color-accent-300: #f7b96f;
-    --color-accent-400: #f39a47;
-    --color-accent-500: #c9952d;  /* Champagne Gold */
-    --color-accent-600: #a77823;
-    --color-accent-700: #85591c;
-    --color-accent-800: #644115;
-    --color-accent-900: #3d280e;
+    /* Accent - Warm complementary tones */
+    --color-accent-50: #fdf9f3;
+    --color-accent-100: #f7ede1;
+    --color-accent-200: #ead9c3;
+    --color-accent-300: #dbc39d;
+    --color-accent-400: #c9a961;  /* Matches logo gold */
+    --color-accent-500: #b8954d;
+    --color-accent-600: #9d7d3e;
+    --color-accent-700: #7d6230;
+    --color-accent-800: #5e4a24;
+    --color-accent-900: #3f3119;
 
     /* Neutral - Warm Stone */
     --color-neutral-50: #fafaf9;
@@ -297,21 +297,29 @@
     color: var(--color-primary-500);
   }
 
-  /* ─── BACKGROUND UTILITIES - GREEN-GOLD COMBINATION ───────────────── */
+  /* ─── BACKGROUND UTILITIES - LOGO-BASED HARMONIOUS COLORS ──────── */
   .bg-primary-gradient {
-    background: linear-gradient(135deg, #1a3320 0%, #2d5a3d 30%, #b8860b 60%, #d4af37 100%);
+    background: linear-gradient(135deg, #2c4a34 0%, #4a9368 40%, #b8954d 70%, #c9a961 100%);
   }
 
-  .bg-green-gold-gradient {
-    background: linear-gradient(135deg, #0f1a12 0%, #1a3320 25%, #2d5a3d 50%, #b8860b 75%, #d4af37 100%);
+  .bg-logo-gradient {
+    background: linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #b8954d 70%, #c9a961 100%);
+  }
+
+  .bg-green-gold {
+    background: linear-gradient(135deg, #2c4a34 0%, #23392a 25%, #4a9368 50%, #b8954d 75%, #c9a961 100%);
   }
 
   .bg-dark-gradient {
-    background: linear-gradient(135deg, var(--color-secondary-600) 0%, var(--color-secondary-500) 50%, var(--color-secondary-600) 100%);
+    background: linear-gradient(135deg, #0d1510 0%, #2c4a34 50%, #0d1510 100%);
+  }
+
+  .bg-warm-gradient {
+    background: linear-gradient(135deg, #2c4a34 0%, #c9a961 100%);
   }
 
   .bg-hero-text {
-    background: linear-gradient(135deg, #1a3320 0%, #2d5a3d 20%, #4a7c59 40%, #b8860b 70%, #d4af37 100%);
+    background: linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #7db896 50%, #b8954d 75%, #c9a961 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

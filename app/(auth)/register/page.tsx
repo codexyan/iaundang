@@ -98,9 +98,9 @@ function RegisterContent() {
           <div className="p-6 sm:p-8">
 
             {/* Logo - Compact */}
-            <div className="text-center mb-6">
-              <Logo size="md" animated />
-              <p className="text-xs text-stone-500 mt-1">Undangan digital praktis</p>
+            <div className="text-center mb-6 flex flex-col items-center">
+              <Logo variant="horizontal" size="sm" animated />
+              <p className="text-xs text-stone-500 mt-3">Undangan digital praktis</p>
             </div>
 
             {/* Heading - Compact */}

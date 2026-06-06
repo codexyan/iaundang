@@ -151,7 +151,7 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
       `}>
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-stone-200/50">
-          <Logo size="sm" showIcon={true} />
+          <Logo variant="horizontal" size="sm" />
           <button onClick={() => setSidebarOpen(false)} className="md:hidden text-stone-400">
             <X size={18} />
           </button>
@@ -244,7 +244,7 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
           <button onClick={() => setSidebarOpen(true)} className="text-stone-500">
             <Menu size={20} />
           </button>
-          <Logo size="sm" showIcon={true} />
+          <Logo variant="horizontal" size="sm" />
           <div className="w-8" />
         </header>
 

@@ -13,44 +13,44 @@ const config: Config = {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Primary - Elegant Gold
+        // Primary - Logo Gold (from actual logo)
         gold: {
           50: '#fefce8',
-          100: '#fef9c3',
-          200: '#fef08a',
-          300: '#fde047',
-          400: '#d4af37',  // Main Gold
-          500: '#b8860b',  // Deep Gold
-          600: '#92690a',
-          700: '#6b4e08',
-          800: '#453306',
-          900: '#1f1803',
+          100: '#f9f3e3',
+          200: '#f0e5c8',
+          300: '#e4d5a8',
+          400: '#d4c589',  // Logo gold highlight
+          500: '#c9a961',  // Main logo gold
+          600: '#b8954d',  // Logo gold mid
+          700: '#8f7339',  // Logo gold dark
+          800: '#6b5528',
+          900: '#4a3918',
         },
-        // Secondary - Deep Forest Green
+        // Secondary - Logo Forest Green (from actual logo)
         forest: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#1a3320',  // Deep Green
-          600: '#0f1a12',  // Darker Green
-          700: '#0a1109',
-          800: '#050805',
-          900: '#020402',
+          50: '#f0f7f2',
+          100: '#d9ebe0',
+          200: '#b3d7c1',
+          300: '#7db896',
+          400: '#4a9368',
+          500: '#2c4a34',  // Main logo green
+          600: '#23392a',  // Logo green mid
+          700: '#1a2b20',  // Logo green dark
+          800: '#131f18',
+          900: '#0d1510',
         },
-        // Accent - Soft Champagne
-        champagne: {
-          50: '#fef7ee',
-          100: '#fdecd6',
-          200: '#fbd5a8',
-          300: '#f7b96f',
-          400: '#f39a47',
-          500: '#c9952d',  // Champagne Gold
-          600: '#a77823',
-          700: '#85591c',
-          800: '#644115',
-          900: '#3d280e',
+        // Accent - Warm Earth Tones (complement logo)
+        warmGold: {
+          50: '#fdf9f3',
+          100: '#f7ede1',
+          200: '#ead9c3',
+          300: '#dbc39d',
+          400: '#c9a961',  // Matches logo gold
+          500: '#b8954d',
+          600: '#9d7d3e',
+          700: '#7d6230',
+          800: '#5e4a24',
+          900: '#3f3119',
         },
         // Keep rose for backward compatibility
         rose: {
@@ -67,11 +67,13 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        'gold-gradient': 'linear-gradient(135deg, #1a3320 0%, #2d5a3d 30%, #b8860b 60%, #d4af37 100%)',
-        'green-gold-gradient': 'linear-gradient(135deg, #0f1a12 0%, #1a3320 25%, #2d5a3d 50%, #b8860b 75%, #d4af37 100%)',
-        'dark-gradient': 'linear-gradient(135deg, #0f1a12 0%, #1a3320 50%, #0f1a12 100%)',
-        'champagne-gradient': 'linear-gradient(135deg, #1a3320 0%, #c9952d 50%, #d4af37 100%)',
-        'hero-text-gradient': 'linear-gradient(135deg, #1a3320 0%, #2d5a3d 20%, #4a7c59 40%, #b8860b 70%, #d4af37 100%)',
+        // Based on logo ribbon colors
+        'logo-gradient': 'linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #b8954d 70%, #c9a961 100%)',
+        'gold-gradient': 'linear-gradient(135deg, #2c4a34 0%, #4a9368 40%, #b8954d 70%, #c9a961 100%)',
+        'green-gold': 'linear-gradient(135deg, #2c4a34 0%, #23392a 25%, #4a9368 50%, #b8954d 75%, #c9a961 100%)',
+        'dark-gradient': 'linear-gradient(135deg, #0d1510 0%, #2c4a34 50%, #0d1510 100%)',
+        'warm-gradient': 'linear-gradient(135deg, #2c4a34 0%, #c9a961 100%)',
+        'hero-text': 'linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #7db896 50%, #b8954d 75%, #c9a961 100%)',
       },
       animation: {
         'fade-in': 'fadeIn 0.8s ease-in-out',
