@@ -49,7 +49,7 @@
   }
 
   .text-display-lg {
-    font-size: clamp(1.875rem, 5vw, 4rem);
+    font-size: clamp(1.625rem, 5vw, 4rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
     font-weight: 700;
@@ -246,18 +246,40 @@
 
   /* ─── MOBILE OPTIMIZATIONS (< 640px) ──────────────────────────────── */
   @media (max-width: 640px) {
-    /* Reduce line-height for better mobile spacing */
-    .text-display-2xl,
-    .text-display-xl,
-    .text-display-lg,
-    .text-display-md {
-      line-height: 1.15;
+    /* Aggressively reduce display sizes for mobile */
+    .text-display-2xl {
+      font-size: clamp(2rem, 6vw, 2.5rem);
+      line-height: 1.2;
     }
 
-    .text-h1,
-    .text-h2,
-    .text-h3 {
+    .text-display-xl {
+      font-size: clamp(1.875rem, 5.5vw, 2.25rem);
+      line-height: 1.2;
+    }
+
+    .text-display-lg {
+      font-size: clamp(1.5rem, 5vw, 1.875rem);
+      line-height: 1.25;
+      letter-spacing: -0.005em;
+    }
+
+    .text-display-md {
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
       line-height: 1.3;
+    }
+
+    /* Reduce heading sizes */
+    .text-h1 {
+      font-size: clamp(1.5rem, 3.5vw, 1.75rem);
+    }
+
+    .text-h2 {
+      font-size: clamp(1.375rem, 3vw, 1.5rem);
+    }
+
+    .text-h3 {
+      font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+      line-height: 1.35;
     }
 
     /* Increase body line-height for thumb-scrolling */
@@ -265,17 +287,6 @@
     .text-body-base,
     .text-body-sm {
       line-height: 1.65;
-    }
-
-    /* Reduce letter-spacing on mobile for better fit */
-    .text-display-2xl,
-    .text-display-xl {
-      letter-spacing: -0.015em;
-    }
-
-    .text-display-lg,
-    .text-display-md {
-      letter-spacing: -0.005em;
     }
   }
 

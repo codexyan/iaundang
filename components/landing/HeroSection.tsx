@@ -471,15 +471,23 @@ export default function HeroSection() {
                   />
 
                   {/* Screen */}
-                  <div className="rounded-[42px] overflow-hidden bg-black" style={{ aspectRatio: '9/19.5' }}>
+                  <div className="rounded-[42px] overflow-hidden bg-black relative" style={{ aspectRatio: '9/19.5' }}>
+                    {/* Placeholder background gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-rose-900 via-pink-800 to-purple-900" />
+
                     <Image
                       src={COUPLE_PHOTO}
-                      alt="Preview undangan"
+                      alt="Preview undangan pernikahan digital"
                       fill
-                      className="object-cover object-center absolute inset-0"
-                      sizes="280px"
-                      unoptimized
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 280px, 320px"
+                      quality={85}
                       priority
+                      onError={(e) => {
+                        // Hide image on error, show gradient background
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
                     />
 
                     {/* Premium overlay gradient */}
