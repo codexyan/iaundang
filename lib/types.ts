@@ -153,10 +153,10 @@ export type OpeningType =
   | 'scroll-reveal'
 
 export interface BackgroundConfig {
-  type: 'image' | 'color' | 'gradient'
-  url?: string
-  value?: string
-  overlay_opacity?: number
+  type: 'image' | 'video' | 'color' | 'gradient'
+  url?: string              // untuk image dan video
+  value?: string            // untuk color dan gradient
+  overlay_opacity?: number  // 0–1, gelap overlay di atas foto/video
 }
 
 export type SectionPaddingY  = 'compact' | 'normal' | 'spacious'
@@ -184,6 +184,12 @@ export interface SectionConfig {
   body_weight?: number              // Ketebalan teks: 300 | 400 | 500 | 600 | 700
   heading_scale?: number            // Ukuran judul/heading: 0.7 – 1.8 (default 1.0)
   body_scale?: number               // Ukuran teks isi/body: 0.7 – 1.5 (default 1.0)
+
+  // ── Gift section controls ─────────────────────────────────
+  gift_card_layout?: 'stack' | 'grid'  // Tata letak kartu: satu kolom atau dua kolom
+  gift_show_logo?: boolean              // Tampilkan logo brand pada kartu (default true)
+  gift_proof_enabled?: boolean          // Tampilkan tombol & form upload bukti transfer (default true)
+  gift_thankyou_text?: string           // Pesan terima kasih kustom setelah kirim bukti
 
   // ── Hero section controls ─────────────────────────────────
   hero_bismillah?: 'none' | 'text' | 'arabic'
@@ -273,6 +279,8 @@ export interface ColorScheme {
 export interface FontConfig {
   heading: string
   body: string
+  heading_scale?: number  // 0.6 – 2.0, default 1.0 — ukuran default semua judul
+  body_scale?: number     // 0.6 – 1.6, default 1.0 — ukuran default semua teks
 }
 
 export interface TemplateMeta {
@@ -343,6 +351,7 @@ export interface EventDetail {
   venue_name: string
   venue_address: string
   maps_url?: string
+  venue_photo_url?: string
 }
 
 export interface GiftAccount {

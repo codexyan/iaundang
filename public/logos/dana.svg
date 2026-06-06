@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 40">
+  <!-- D-circle mark -->
+  <path d="M6,6 L6,34 L20,34 C34,34 42,27 42,20 C42,13 34,6 20,6 Z" fill="rgba(255,255,255,0.22)" stroke="white" stroke-width="1.5"/>
+  <path d="M14,12 L14,28 L20,28 C29,28 34,24 34,20 C34,16 29,12 20,12 Z" fill="white" opacity="0.9"/>
+  <!-- ANA -->
+  <text x="48" y="28" font-family="Arial Black,sans-serif" font-size="22" font-weight="900" fill="white" letter-spacing="1">ANA</text>
+</svg>

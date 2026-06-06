@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 40">
+  <!-- BSI wordmark -->
+  <text x="4" y="29" font-family="Arial Black,Arial,sans-serif" font-size="28" font-weight="900" fill="white" letter-spacing="2">BSI</text>
+  <!-- Crescent moon symbol -->
+  <path d="M84,8 A13,13 0 1,1 84,32 A9,9 0 1,0 84,8" fill="white" opacity="0.85"/>
+</svg>

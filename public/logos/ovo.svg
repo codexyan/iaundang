@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40">
+  <!-- OVO wordmark with characteristic oval O's -->
+  <text x="4" y="29" font-family="Arial Black,Arial,sans-serif" font-size="28" font-weight="900" fill="white" letter-spacing="3">OVO</text>
+  <!-- Subtle glow dots under O's -->
+  <circle cx="16" cy="35" r="2.5" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="80" cy="35" r="2.5" fill="rgba(255,255,255,0.4)"/>
+</svg>

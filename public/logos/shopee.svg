@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 40">
+  <!-- Shopping bag icon (Shopee's signature) -->
+  <path d="M8,16 L10,8 C10.5,5.5 12,4 14,4 C16,4 17.5,5.5 18,8 L20,16" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="5" y="15" width="19" height="18" rx="3" fill="rgba(255,255,255,0.22)" stroke="white" stroke-width="1.8"/>
+  <!-- Small handle dots -->
+  <circle cx="10" cy="15" r="1.5" fill="white"/>
+  <circle cx="19" cy="15" r="1.5" fill="white"/>
+  <!-- ShopeePay text -->
+  <text x="30" y="17" font-family="Arial Black,sans-serif" font-size="12" font-weight="900" fill="white">Shopee</text>
+  <text x="30" y="32" font-family="Arial Black,sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.75)">Pay</text>
+</svg>

@@ -11,9 +11,10 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { getTransitionVariants } from '@/components/renderer/transitions/useTransition'
 import type { TransitionType, TemplateMeta, ColorScheme, OpeningConfig, TemplateCategory, ColorPalette } from '@/lib/types'
-import type { TemplateRecord, NewInvitationData, Wish, SectionType } from '@/lib/types'
+import type { TemplateRecord, NewInvitationData, Wish, SectionType, GiftAccount } from '@/lib/types'
 import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
 import ImageUploadField from '@/components/admin/ImageUploadField'
+import VideoUploadField from '@/components/admin/VideoUploadField'
 
 // Dynamic import — hindari SSR issue
 const InvitationPreview = dynamic(() => import('@/components/renderer/InvitationPreview'), { ssr: false })
@@ -74,6 +75,26 @@ const PREVIEW_WISHES: Wish[] = [
   { id: '1', invitation_id: 'lab', name: 'Reza', message: 'Selamat menempuh hidup baru! 💕', created_at: new Date().toISOString() },
   { id: '2', invitation_id: 'lab', name: 'Sari', message: 'Semoga menjadi keluarga sakinah mawaddah warahmah!', created_at: new Date().toISOString() },
 ]
+
+// ─── Gift section lab data ─────────────────────────────────────
+interface GiftLabBrand { g: [string, string]; type: 'bank' | 'ewallet'; num: string; name: string; logo: string }
+const GIFT_LAB_BRANDS: Record<string, GiftLabBrand> = {
+  'BRI':       { g: ['#003B8E', '#00529B'], type: 'bank',    num: '123456789012',  name: 'BUDI SANTOSO',  logo: '/logos/bri.svg' },
+  'BCA':       { g: ['#003087', '#00509E'], type: 'bank',    num: '1234567890',    name: 'BUDI SANTOSO',  logo: '/logos/bca.svg' },
+  'BNI':       { g: ['#003087', '#0050A0'], type: 'bank',    num: '9876543210',    name: 'BUDI SANTOSO',  logo: '/logos/bni.svg' },
+  'Mandiri':   { g: ['#003368', '#005099'], type: 'bank',    num: '1400123456789', name: 'BUDI SANTOSO',  logo: '/logos/mandiri.svg' },
+  'BSI':       { g: ['#006633', '#00884A'], type: 'bank',    num: '7123456789',    name: 'BUDI SANTOSO',  logo: '/logos/bsi.svg' },
+  'Blu':       { g: ['#0077CC', '#00AAFF'], type: 'bank',    num: '8881234567',    name: 'BUDI SANTOSO',  logo: '/logos/blu.svg' },
+  'GoPay':     { g: ['#00880F', '#00AA15'], type: 'ewallet', num: '08123456789',   name: 'Budi Santoso',  logo: '/logos/gopay.svg' },
+  'DANA':      { g: ['#118EEA', '#1565C0'], type: 'ewallet', num: '08234567890',   name: 'Budi Santoso',  logo: '/logos/dana.svg' },
+  'ShopeePay': { g: ['#D73211', '#EE4D2D'], type: 'ewallet', num: '08345678901',   name: 'Budi Santoso',  logo: '/logos/shopee.svg' },
+  'OVO':       { g: ['#4B0080', '#6A1B9A'], type: 'ewallet', num: '08456789012',   name: 'Budi Santoso',  logo: '/logos/ovo.svg' },
+}
+function makeGiftAccount(name: string, b: GiftLabBrand): GiftAccount {
+  return b.type === 'bank'
+    ? { type: 'bank',    bank: name,     number: b.num, name: b.name }
+    : { type: 'ewallet', platform: name, number: b.num, name: b.name }
+}
 
 // ─── Constants ─────────────────────────────────────────────────
 const SECTION_TYPES = ['hero', 'profiles', 'countdown', 'events', 'story', 'gallery', 'rsvp', 'wishes', 'closing', 'gift', 'livestream', 'quote', 'video', 'gift-registry', 'ig-story', 'qrcode'] as const
@@ -302,22 +323,27 @@ const SECTION_VARIANTS: Record<string, { value: string; label: string; desc: str
     { value: 'minimal', label: 'Minimal',  desc: 'Tipografi, tanpa foto bg' },
   ],
   profiles: [
-    { value: 'default',  label: 'Side by Side', desc: 'Foto bulat berdampingan' },
-    { value: 'card',     label: 'Card',          desc: 'Setiap profil dalam kartu' },
+    { value: 'default',  label: 'Portrait',  desc: 'Frame portrait berdampingan, badge &' },
+    { value: 'card',    label: 'Full Panel', desc: 'Setiap profil satu panel penuh' },
     { value: 'vertical', label: 'Vertical',      desc: 'Susun atas-bawah' },
   ],
   events: [
-    { value: 'default',  label: 'Cards',    desc: 'Kartu berdampingan' },
-    { value: 'timeline', label: 'Timeline', desc: 'Tampilan garis waktu' },
-    { value: 'compact',  label: 'Compact',  desc: 'Ringkas tanpa kartu' },
+    { value: 'default',  label: 'Cards',    desc: 'Kartu premium dengan gradien' },
+    { value: 'photo',    label: 'Foto',     desc: 'Foto lokasi + info di bawah' },
+    { value: 'timeline', label: 'Timeline', desc: 'Garis waktu dengan titik' },
+    { value: 'compact',  label: 'Kompak',   desc: 'Ringkas, info essensial' },
   ],
   countdown: [
-    { value: 'default', label: 'Kotak',   desc: 'Angka dalam kotak' },
-    { value: 'minimal', label: 'Minimal', desc: 'Angka besar tanpa kotak' },
+    { value: 'boxes',   label: 'Kotak',       desc: 'Angka dalam kotak bergradien' },
+    { value: 'minimal', label: 'Minimal',     desc: 'Angka besar bersih tanpa kotak' },
+    { value: 'rings',   label: 'Lingkaran',   desc: 'Progress ring SVG animasi' },
+    { value: 'elegant', label: 'Elegan',      desc: 'Hari besar + jam/menit/detik kecil' },
   ],
   gift: [
-    { value: 'default',  label: 'List',    desc: 'Daftar rekening + salin' },
-    { value: 'envelope', label: 'Amplop',  desc: 'Gaya amplop' },
+    { value: 'default', label: 'Stack',  desc: 'Kartu vertikal penuh' },
+    { value: 'swipe',   label: 'Swipe',  desc: 'Geser horizontal, 1 kartu tampil' },
+    { value: 'grid',    label: 'Grid 2×', desc: '2 kartu kompak per baris' },
+    { value: 'list',    label: 'List',   desc: 'Baris ringkas dengan logo' },
   ],
   closing: [
     { value: 'default',  label: 'Simple',  desc: 'Teks penutup sederhana' },
@@ -378,19 +404,48 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
   const [previewMode, setPreviewMode] = useState<'invitation' | 'cover'>('invitation')
   const [previewGuestName, setPreviewGuestName] = useState('Bapak Budi dan Keluarga')
   const [jsonText, setJsonText] = useState('')
-  const [previewData, setPreviewData]               = useState<NewInvitationData>(PREVIEW_DATA_DEFAULT)
-  // Categories & palettes: utamakan props dari Manajemen. Fallback ke hardcoded
-  // built-in supaya Studio Desain tetap punya pilihan saat dibuka standalone.
-  const categoryList: TemplateCategory[] = useMemo(() => {
-    if (categoriesProp && categoriesProp.length > 0) return categoriesProp
-    return [
-      { slug: 'modern',      label: 'Modern',      is_built_in: true },
-      { slug: 'tradisional', label: 'Tradisional', is_built_in: true },
-      { slug: 'minimalis',   label: 'Minimalis',   is_built_in: true },
-      { slug: 'floral',      label: 'Floral',      is_built_in: true },
-      { slug: 'rustic',      label: 'Rustic',      is_built_in: true },
-    ]
-  }, [categoriesProp])
+  const [previewData, setPreviewData] = useState<NewInvitationData>(PREVIEW_DATA_DEFAULT)
+  const [showHowTo, setShowHowTo] = useState(false)
+  // ── Categories: mutable state + inline CRUD ────────────────
+  const BUILT_IN_CATS: TemplateCategory[] = [
+    { slug: 'modern',      label: 'Modern',      is_built_in: true },
+    { slug: 'tradisional', label: 'Tradisional', is_built_in: true },
+    { slug: 'minimalis',   label: 'Minimalis',   is_built_in: true },
+    { slug: 'floral',      label: 'Floral',      is_built_in: true },
+    { slug: 'rustic',      label: 'Rustic',      is_built_in: true },
+  ]
+  const [categoryList, setCategoryList] = useState<TemplateCategory[]>(
+    (categoriesProp && categoriesProp.length > 0) ? categoriesProp : BUILT_IN_CATS
+  )
+  const [catAddLabel,  setCatAddLabel]  = useState('')
+  const [catAdding,    setCatAdding]    = useState(false)
+  const [catEditSlug,  setCatEditSlug]  = useState<string | null>(null)
+  const [catEditLabel, setCatEditLabel] = useState('')
+  const [catBusy,      setCatBusy]      = useState(false)
+
+  async function catAdd() {
+    const label = catAddLabel.trim(); if (!label || catBusy) return
+    const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    setCatBusy(true)
+    try {
+      const res = await fetch('/api/admin/categories', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ label, slug }) })
+      if (res.ok) { const { category } = await res.json(); setCategoryList(cs => [...cs, category]); setCatAddLabel(''); setCatAdding(false) }
+    } finally { setCatBusy(false) }
+  }
+  async function catDelete(slug: string) {
+    if (catBusy) return; setCatBusy(true)
+    try {
+      const res = await fetch(`/api/admin/categories/${slug}`, { method: 'DELETE' })
+      if (res.ok) { setCategoryList(cs => cs.filter(c => c.slug !== slug)); if (cfg.meta.category === slug) updateMeta({ category: '' }) }
+    } finally { setCatBusy(false) }
+  }
+  async function catEdit(slug: string) {
+    const label = catEditLabel.trim(); if (!label || catBusy) return; setCatBusy(true)
+    try {
+      const res = await fetch(`/api/admin/categories/${slug}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ label }) })
+      if (res.ok) { setCategoryList(cs => cs.map(c => c.slug === slug ? { ...c, label } : c)); setCatEditSlug(null) }
+    } finally { setCatBusy(false) }
+  }
 
   // Konversi COLOR_PALETTES (hardcoded) ke shape ColorPalette kalau tidak ada prop.
   const paletteList: { name: string; cat: string; p: string; a: string; t: string; bg: string }[] = useMemo(() => {
@@ -722,24 +777,34 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
           {activeTab === 'identity' && (
             <div className="space-y-5">
 
-              {/* Info: alur kerja Template Lab */}
-              <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 p-4">
-                <p className="text-xs font-bold text-indigo-700 mb-2">Cara Kerja Template Lab</p>
-                <div className="space-y-2">
-                  {[
-                    { step: '1', icon: '✏️', title: 'Edit & Eksperimen', desc: 'Desain template bebas di sini. Klik "Simpan Eksperimen" untuk menyimpan sementara di browser.' },
-                    { step: '2', icon: '🚀', title: 'Rilis ke Manajemen', desc: 'Klik "Rilis Template" untuk mengirim ke modul Manajemen, lalu atur harga & paket akses.' },
-                    { step: '3', icon: '👤', title: 'Tersedia ke User', desc: 'Setelah diaktifkan di Manajemen, user bisa memilih template ini saat buat undangan.' },
-                  ].map(s => (
-                    <div key={s.step} className="flex gap-2.5 items-start">
-                      <span className="text-base shrink-0">{s.icon}</span>
-                      <div>
-                        <p className="text-[11px] font-semibold text-indigo-800">{s.title}</p>
-                        <p className="text-[10px] text-indigo-500 leading-relaxed">{s.desc}</p>
+              {/* Info: alur kerja Template Lab — collapsible */}
+              <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 overflow-hidden">
+                <button
+                  onClick={() => setShowHowTo(s => !s)}
+                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-50/50 transition-colors">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">💡</span>
+                    <p className="text-xs font-bold text-indigo-700">Cara Kerja Template Lab</p>
+                  </div>
+                  <ChevronDown size={14} className={`text-indigo-400 transition-transform duration-200 ${showHowTo ? 'rotate-180' : ''}`} />
+                </button>
+                {showHowTo && (
+                  <div className="px-4 pb-4 space-y-2.5 border-t border-indigo-100">
+                    {[
+                      { icon: '✏️', title: 'Edit & Eksperimen', desc: 'Desain template bebas di sini. Klik "Simpan Eksperimen" untuk menyimpan sementara di browser.' },
+                      { icon: '🚀', title: 'Rilis ke Manajemen', desc: 'Klik "Rilis Template" untuk mengirim ke modul Manajemen, lalu atur harga & paket akses.' },
+                      { icon: '👤', title: 'Tersedia ke User', desc: 'Setelah diaktifkan di Manajemen, user bisa memilih template ini saat buat undangan.' },
+                    ].map(s => (
+                      <div key={s.icon} className="flex gap-2.5 items-start pt-2">
+                        <span className="text-sm shrink-0">{s.icon}</span>
+                        <div>
+                          <p className="text-[11px] font-semibold text-indigo-800">{s.title}</p>
+                          <p className="text-[10px] text-indigo-500 leading-relaxed">{s.desc}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Identity fields */}
@@ -777,41 +842,87 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                 </div>
               </div>
 
-              {/* Kategori — read-only dari Manajemen tab */}
+              {/* Kategori — inline CRUD */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Kategori</p>
-                  {onGoToManagement && (
-                    <button onClick={onGoToManagement} className="text-[10px] font-semibold text-indigo-600 hover:text-indigo-700">
-                      Kelola di Manajemen &rarr;
-                    </button>
-                  )}
+                  <button onClick={() => { setCatAdding(a => !a); setCatAddLabel('') }}
+                    className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5">
+                    {catAdding ? '✕ Batal' : '+ Tambah'}
+                  </button>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {categoryList.map(c => (
-                    <button key={c.slug}
-                      onClick={() => updateMeta({ category: c.slug as typeof cfg.meta.category })}
-                      className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center justify-between gap-1 ${
-                        cfg.meta.category === c.slug
-                          ? 'bg-indigo-600 text-white border-indigo-600'
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
-                      }`}
-                    >
-                      <span className="truncate">{c.label}</span>
-                      {!c.is_built_in && (
-                        <span className={`text-[9px] px-1 rounded ${cfg.meta.category === c.slug ? 'bg-white/20' : 'bg-gray-100 text-gray-400'}`}>kustom</span>
-                      )}
+
+                {/* Add form */}
+                {catAdding && (
+                  <div className="flex gap-1.5 mb-2.5">
+                    <input
+                      value={catAddLabel}
+                      onChange={e => setCatAddLabel(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && catAdd()}
+                      placeholder="Nama kategori baru..."
+                      className="flex-1 text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                      autoFocus
+                    />
+                    <button onClick={catAdd} disabled={!catAddLabel.trim() || catBusy}
+                      className="px-3 py-2 bg-indigo-600 text-white text-[10px] font-bold rounded-xl disabled:opacity-40 hover:bg-indigo-700 transition-colors">
+                      Simpan
                     </button>
+                  </div>
+                )}
+
+                {/* Category list */}
+                <div className="space-y-1.5">
+                  {categoryList.map(c => (
+                    <div key={c.slug}
+                      className={`flex items-center gap-2 rounded-xl border px-3 py-2 transition-all ${
+                        cfg.meta.category === c.slug ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-gray-100 hover:border-indigo-200'
+                      }`}>
+
+                      {/* Select radio dot */}
+                      <button onClick={() => updateMeta({ category: c.slug as typeof cfg.meta.category })}
+                        className="shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors"
+                        style={{ borderColor: cfg.meta.category === c.slug ? '#4f46e5' : '#d1d5db' }}>
+                        {cfg.meta.category === c.slug && <div className="w-2 h-2 rounded-full bg-indigo-600" />}
+                      </button>
+
+                      {/* Label (editable for non-built-in) */}
+                      {catEditSlug === c.slug ? (
+                        <input
+                          value={catEditLabel}
+                          onChange={e => setCatEditLabel(e.target.value)}
+                          onKeyDown={e => { if (e.key === 'Enter') catEdit(c.slug); if (e.key === 'Escape') setCatEditSlug(null) }}
+                          className="flex-1 text-xs px-2 py-0.5 border border-indigo-300 rounded-lg focus:outline-none"
+                          autoFocus
+                          onBlur={() => catEdit(c.slug)}
+                        />
+                      ) : (
+                        <span className="flex-1 text-xs font-semibold text-gray-700 truncate">{c.label}</span>
+                      )}
+
+                      {/* Actions — all categories can be edited & deleted */}
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <button onClick={() => { setCatEditSlug(c.slug); setCatEditLabel(c.label) }}
+                          className="text-[9px] text-indigo-400 hover:text-indigo-700 font-semibold px-1.5 py-0.5 rounded-md hover:bg-indigo-50 transition-colors">
+                          Edit
+                        </button>
+                        <button onClick={() => catDelete(c.slug)} disabled={catBusy}
+                          className="p-1 text-gray-300 hover:text-red-400 rounded-md hover:bg-red-50 transition-colors disabled:opacity-30">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              {/* Tipografi dengan preview */}
+              {/* Tipografi dengan preview + ukuran */}
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Tipografi</p>
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
+                <div className="space-y-4">
+
+                  {/* Font Judul */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
                       <p className="text-xs font-semibold text-gray-600">Font Judul</p>
                       <span className="text-xs italic" style={{ fontFamily: `'${cfg.meta.font.heading}', serif`, color: cfg.meta.color_scheme.accent }}>
                         {cfg.meta.font.heading}
@@ -820,14 +931,39 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                     <select value={cfg.meta.font.heading} onChange={e => updateFont('heading', e.target.value)} className={inputCls}>
                       {HEADING_FONTS.map(f => <option key={f} value={f}>{f}</option>)}
                     </select>
-                    <div className="mt-1.5 px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
-                      <p className="text-base font-bold" style={{ fontFamily: `'${cfg.meta.font.heading}', serif`, color: cfg.meta.color_scheme.text, backgroundColor: cfg.meta.color_scheme.primary, padding: '4px 8px', borderRadius: 6, display: 'inline-block' }}>
+                    {/* Ukuran judul */}
+                    <div className="flex items-center gap-2">
+                      <p className="text-[10px] text-gray-500 shrink-0">Ukuran</p>
+                      <input type="range" min={0.6} max={2.0} step={0.05}
+                        value={cfg.meta.font.heading_scale ?? 1.0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, heading_scale: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <span className="text-[10px] font-mono text-indigo-500 w-9 text-right shrink-0">
+                        {((cfg.meta.font.heading_scale ?? 1.0) * 100).toFixed(0)}%
+                      </span>
+                      {(cfg.meta.font.heading_scale ?? 1.0) !== 1.0 && (
+                        <button onClick={() => updateMeta({ font: { ...cfg.meta.font, heading_scale: 1.0 } })}
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
+                      )}
+                    </div>
+                    {/* Preview */}
+                    <div className="px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
+                      <p style={{
+                        fontFamily: `'${cfg.meta.font.heading}', serif`,
+                        color: cfg.meta.color_scheme.text,
+                        backgroundColor: cfg.meta.color_scheme.primary,
+                        fontSize: `calc(16px * ${cfg.meta.font.heading_scale ?? 1.0})`,
+                        fontWeight: 700,
+                        padding: '4px 8px', borderRadius: 6, display: 'inline-block',
+                      }}>
                         Aa — Ikhwal &amp; Fani
                       </p>
                     </div>
                   </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
+
+                  {/* Font Teks */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
                       <p className="text-xs font-semibold text-gray-600">Font Teks</p>
                       <span className="text-xs" style={{ fontFamily: `'${cfg.meta.font.body}', sans-serif`, color: '#666' }}>
                         {cfg.meta.font.body}
@@ -836,12 +972,34 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                     <select value={cfg.meta.font.body} onChange={e => updateFont('body', e.target.value)} className={inputCls}>
                       {BODY_FONTS.map(f => <option key={f} value={f}>{f}</option>)}
                     </select>
-                    <div className="mt-1.5 px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
-                      <p className="text-xs leading-relaxed" style={{ fontFamily: `'${cfg.meta.font.body}', sans-serif`, color: '#444' }}>
-                        Dengan penuh kebahagiaan kami mengundang kehadiran Bapak/Ibu/Saudara/i
+                    {/* Ukuran teks */}
+                    <div className="flex items-center gap-2">
+                      <p className="text-[10px] text-gray-500 shrink-0">Ukuran</p>
+                      <input type="range" min={0.6} max={1.6} step={0.05}
+                        value={cfg.meta.font.body_scale ?? 1.0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, body_scale: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <span className="text-[10px] font-mono text-indigo-500 w-9 text-right shrink-0">
+                        {((cfg.meta.font.body_scale ?? 1.0) * 100).toFixed(0)}%
+                      </span>
+                      {(cfg.meta.font.body_scale ?? 1.0) !== 1.0 && (
+                        <button onClick={() => updateMeta({ font: { ...cfg.meta.font, body_scale: 1.0 } })}
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
+                      )}
+                    </div>
+                    {/* Preview */}
+                    <div className="px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
+                      <p style={{
+                        fontFamily: `'${cfg.meta.font.body}', sans-serif`,
+                        color: '#444',
+                        fontSize: `calc(11px * ${cfg.meta.font.body_scale ?? 1.0})`,
+                        lineHeight: 1.6,
+                      }}>
+                        Dengan penuh kebahagiaan kami mengundang kehadiran Bapak/Ibu
                       </p>
                     </div>
                   </div>
+
                 </div>
               </div>
 
@@ -1078,15 +1236,58 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                     />
                   </Field>
 
-                  <Field label="Teks Undangan">
-                    <textarea
-                      value={cfg.opening.invitation_text ?? ''}
-                      onChange={e => updateOpening({ invitation_text: e.target.value || undefined })}
-                      rows={3}
-                      className={inputCls + ' resize-none text-xs leading-relaxed'}
-                      placeholder="Dengan penuh kebahagiaan, kami mengundang..."
-                    />
-                  </Field>
+                  {/* Teks Undangan: preset + kustom */}
+                  {(() => {
+                    const PRESETS = [
+                      { key: 'bahagia',   label: '🎉 Bahagia',     text: 'Dengan penuh kebahagiaan, kami mengundang kehadiran Bapak/Ibu/Saudara/i' },
+                      { key: 'islami',    label: '🤲 Islami',      text: 'Bismillahirrahmanirrahim. Dengan memohon rahmat dan ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i' },
+                      { key: 'formal',    label: '🎩 Formal',      text: 'Merupakan suatu kehormatan dan kebahagiaan bagi kami untuk mengundang kehadiran Bapak/Ibu/Saudara/i' },
+                      { key: 'rendah',    label: '🙏 Rendah Hati', text: 'Dengan segala kerendahan hati, kami mengundang kehadiran Bapak/Ibu/Saudara/i' },
+                      { key: 'sukacita',  label: '💫 Sukacita',    text: 'Dengan penuh sukacita, kami mengundang kehadiran Bapak/Ibu/Saudara/i untuk turut merayakan momen bahagia kami' },
+                      { key: 'custom',    label: '✏️ Kustom',      text: null },
+                    ] as const
+                    const current = cfg.opening.invitation_text ?? ''
+                    const matchedPreset = PRESETS.slice(0, -1).find(p => p.text === current)
+                    const isCustom = !matchedPreset && current !== ''
+                    const showCustom = isCustom || matchedPreset === undefined
+
+                    return (
+                      <div>
+                        <p className="text-xs font-semibold text-gray-600 mb-2">Teks Undangan</p>
+                        {/* Preset chips */}
+                        <div className="flex flex-wrap gap-1.5 mb-2.5">
+                          {PRESETS.map(p => {
+                            const active = p.key === 'custom' ? isCustom : matchedPreset?.key === p.key
+                            return (
+                              <button key={p.key} type="button"
+                                onClick={() => {
+                                  if (p.key === 'custom') updateOpening({ invitation_text: '' })
+                                  else updateOpening({ invitation_text: p.text })
+                                }}
+                                className={`px-2.5 py-1.5 rounded-xl text-[10px] font-semibold transition-all border ${
+                                  active
+                                    ? 'bg-indigo-600 text-white border-indigo-600'
+                                    : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                                }`}>
+                                {p.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                        {/* Textarea (always visible untuk edit / kustom) */}
+                        <textarea
+                          value={current}
+                          onChange={e => updateOpening({ invitation_text: e.target.value || undefined })}
+                          rows={3}
+                          className={inputCls + ' resize-none text-xs leading-relaxed'}
+                          placeholder="Tulis teks undangan kustom..."
+                        />
+                        {!isCustom && matchedPreset && (
+                          <p className="text-[9px] text-gray-400 mt-1">Edit textarea untuk membuat variasi kustom dari preset ini</p>
+                        )}
+                      </div>
+                    )
+                  })()}
 
                   <Field label="Teks Tombol">
                     <input
@@ -1528,23 +1729,37 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                       </div>
 
                       {/* Background type */}
-                      <div className="px-3 py-2 flex gap-2 items-end">
-                        <div className="flex-1">
-                          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Tipe Background</p>
-                          <select
-                            value={s.background.type}
-                            onChange={e => updateSection(s.id, { background: { ...s.background, type: e.target.value as 'color' | 'gradient' | 'image' } })}
-                            className="w-full text-xs border border-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-400">
-                            <option value="color">Warna Solid</option>
-                            <option value="gradient">Gradient</option>
-                            <option value="image">Foto</option>
-                          </select>
+                      <div className="px-3 py-2 space-y-2">
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Latar Belakang Section</p>
+                        <div className="grid grid-cols-4 gap-1">
+                          {([
+                            ['color',    '🎨', 'Warna'],
+                            ['gradient', '🌈', 'Gradient'],
+                            ['image',    '🖼️',  'Foto'],
+                            ['video',    '🎬', 'Video'],
+                          ] as const).map(([t, icon, lbl]) => (
+                            <button key={t} type="button"
+                              onClick={() => updateSection(s.id, { background: { ...s.background, type: t } })}
+                              className={`flex flex-col items-center gap-0.5 py-2 rounded-xl text-[9px] font-semibold transition-all border ${
+                                s.background.type === t
+                                  ? 'bg-indigo-600 text-white border-indigo-600'
+                                  : 'bg-gray-50 text-gray-500 border-gray-100 hover:border-indigo-200 hover:bg-indigo-50'
+                              }`}>
+                              <span className="text-base leading-none">{icon}</span>
+                              {lbl}
+                            </button>
+                          ))}
                         </div>
                         {s.background.type === 'color' && (
-                          <input type="color" value={s.background.value ?? '#000000'}
-                            onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
-                            className="w-9 h-7 rounded cursor-pointer border border-gray-200 shrink-0"
-                          />
+                          <div className="flex items-center gap-2 mt-1">
+                            <input type="color" value={s.background.value ?? '#000000'}
+                              onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
+                              className="w-9 h-8 rounded cursor-pointer border border-gray-200 shrink-0" />
+                            <input type="text" value={s.background.value ?? ''}
+                              onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
+                              className="flex-1 text-xs border border-gray-100 rounded-lg px-2 py-1.5 font-mono focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                              placeholder="#000000" />
+                          </div>
                         )}
                       </div>
 
@@ -1608,24 +1823,44 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
 
                       {s.background.type === 'image' && (
                         <div className="px-3 py-2 space-y-2">
-                          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">URL Foto Background</p>
-                          <input
-                            value={s.background.url ?? ''}
-                            onChange={e => updateSection(s.id, { background: { ...s.background, url: e.target.value } })}
-                            className="w-full text-xs border border-gray-100 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-400"
-                            placeholder="https://..."
+                          <ImageUploadField
+                            value={s.background.url}
+                            onChange={url => updateSection(s.id, { background: { ...s.background, url } })}
+                            hint="Foto akan menutupi seluruh section sebagai latar belakang"
                           />
-                          <div className="flex items-center gap-2">
-                            <p className="text-[9px] text-gray-400 shrink-0">Overlay:</p>
+                          <div className="flex items-center gap-2 pt-1">
+                            <p className="text-[9px] text-gray-500 shrink-0 font-medium">Gelap overlay</p>
                             <input type="range" min={0} max={0.9} step={0.05}
                               value={s.background.overlay_opacity ?? 0}
                               onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
-                              className="flex-1 accent-indigo-600 h-1"
-                            />
-                            <span className="text-[9px] text-gray-400 w-8 text-right">
+                              className="flex-1 accent-indigo-600 h-1.5 rounded-full" />
+                            <span className="text-[9px] font-mono text-gray-500 w-8 text-right shrink-0">
                               {Math.round((s.background.overlay_opacity ?? 0) * 100)}%
                             </span>
                           </div>
+                        </div>
+                      )}
+
+                      {s.background.type === 'video' && (
+                        <div className="px-3 py-2 space-y-2">
+                          <VideoUploadField
+                            value={s.background.url}
+                            onChange={url => updateSection(s.id, { background: { ...s.background, url } })}
+                            hint="Video akan loop otomatis tanpa suara sebagai latar belakang section"
+                          />
+                          <div className="flex items-center gap-2 pt-1">
+                            <p className="text-[9px] text-gray-500 shrink-0 font-medium">Gelap overlay</p>
+                            <input type="range" min={0} max={0.9} step={0.05}
+                              value={s.background.overlay_opacity ?? 0}
+                              onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
+                              className="flex-1 accent-indigo-600 h-1.5 rounded-full" />
+                            <span className="text-[9px] font-mono text-gray-500 w-8 text-right shrink-0">
+                              {Math.round((s.background.overlay_opacity ?? 0) * 100)}%
+                            </span>
+                          </div>
+                          <p className="text-[9px] text-amber-500 bg-amber-50 px-2 py-1.5 rounded-lg">
+                            Tips: gunakan video pendek (5–15 detik) agar loading cepat di HP tamu
+                          </p>
                         </div>
                       )}
 
@@ -1800,16 +2035,88 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
 
                         {/* EVENTS */}
                         {s.type === 'events' && (
-                          <div className="space-y-2">
-                            <p className="text-[9px] font-semibold text-gray-500 mt-1">Akad Nikah</p>
-                            <SectionField label="Tanggal"><input type="date" className={miniInput} value={previewData.akad?.date ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, date: e.target.value } }))} /></SectionField>
-                            <SectionField label="Jam"><input className={miniInput} placeholder="08:00" value={previewData.akad?.time ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, time: e.target.value } }))} /></SectionField>
-                            <SectionField label="Venue"><input className={miniInput} value={previewData.akad?.venue_name ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_name: e.target.value } }))} /></SectionField>
-                            <SectionField label="Alamat"><input className={miniInput} value={previewData.akad?.venue_address ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_address: e.target.value } }))} /></SectionField>
-                            <p className="text-[9px] font-semibold text-gray-500 mt-2">Resepsi</p>
-                            <SectionField label="Tanggal"><input type="date" className={miniInput} value={previewData.resepsi?.date ?? ''} onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, date: e.target.value } }))} /></SectionField>
-                            <SectionField label="Jam"><input className={miniInput} placeholder="11:00" value={previewData.resepsi?.time ?? ''} onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, time: e.target.value } }))} /></SectionField>
-                            <SectionField label="Venue"><input className={miniInput} value={previewData.resepsi?.venue_name ?? ''} onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_name: e.target.value } }))} /></SectionField>
+                          <div className="space-y-4">
+
+                            {/* ── Akad Nikah ── */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2 pb-1 border-b border-violet-100">
+                                <div className="w-2 h-2 rounded-full bg-violet-500" />
+                                <p className="text-[9px] font-bold text-violet-600 uppercase tracking-widest">Akad Nikah</p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <SectionField label="Tanggal">
+                                  <input type="date" className={miniInput} value={previewData.akad?.date ?? ''}
+                                    onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, date: e.target.value } }))} />
+                                </SectionField>
+                                <SectionField label="Jam">
+                                  <input type="time" className={miniInput} value={previewData.akad?.time ?? ''}
+                                    onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, time: e.target.value } }))} />
+                                </SectionField>
+                              </div>
+                              <SectionField label="Nama Tempat">
+                                <input className={miniInput} placeholder="Masjid Al-Ikhlas"
+                                  value={previewData.akad?.venue_name ?? ''}
+                                  onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_name: e.target.value } }))} />
+                              </SectionField>
+                              <SectionField label="Alamat">
+                                <textarea className={miniInput + ' resize-none'} rows={2} placeholder="Jl. Mawar No. 12..."
+                                  value={previewData.akad?.venue_address ?? ''}
+                                  onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_address: e.target.value } }))} />
+                              </SectionField>
+                              <SectionField label="Google Maps URL">
+                                <input className={miniInput} placeholder="https://maps.app.goo.gl/..."
+                                  value={previewData.akad?.maps_url ?? ''}
+                                  onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, maps_url: e.target.value || undefined } }))} />
+                              </SectionField>
+                              <SectionField label="Foto Lokasi">
+                                <ImageUploadField
+                                  value={previewData.akad?.venue_photo_url}
+                                  onChange={url => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_photo_url: url } }))}
+                                  hint="Foto masjid/gedung untuk variant Foto"
+                                />
+                              </SectionField>
+                            </div>
+
+                            {/* ── Resepsi ── */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2 pb-1 border-b border-emerald-100">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                                <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Resepsi</p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <SectionField label="Tanggal">
+                                  <input type="date" className={miniInput} value={previewData.resepsi?.date ?? ''}
+                                    onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, date: e.target.value } }))} />
+                                </SectionField>
+                                <SectionField label="Jam">
+                                  <input type="time" className={miniInput} value={previewData.resepsi?.time ?? ''}
+                                    onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, time: e.target.value } }))} />
+                                </SectionField>
+                              </div>
+                              <SectionField label="Nama Tempat">
+                                <input className={miniInput} placeholder="Ballroom Grand Hotel"
+                                  value={previewData.resepsi?.venue_name ?? ''}
+                                  onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_name: e.target.value } }))} />
+                              </SectionField>
+                              <SectionField label="Alamat">
+                                <textarea className={miniInput + ' resize-none'} rows={2} placeholder="Jl. Sudirman No. 86..."
+                                  value={previewData.resepsi?.venue_address ?? ''}
+                                  onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_address: e.target.value } }))} />
+                              </SectionField>
+                              <SectionField label="Google Maps URL">
+                                <input className={miniInput} placeholder="https://maps.app.goo.gl/..."
+                                  value={previewData.resepsi?.maps_url ?? ''}
+                                  onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, maps_url: e.target.value || undefined } }))} />
+                              </SectionField>
+                              <SectionField label="Foto Lokasi">
+                                <ImageUploadField
+                                  value={previewData.resepsi?.venue_photo_url}
+                                  onChange={url => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_photo_url: url } }))}
+                                  hint="Foto ballroom/gedung untuk variant Foto"
+                                />
+                              </SectionField>
+                            </div>
+
                           </div>
                         )}
 
@@ -1829,8 +2136,117 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                           </div>
                         )}
 
+                        {/* GIFT — amplop digital settings */}
+                        {s.type === 'gift' && (() => {
+                          const activeSet = new Set(
+                            (previewData.gift_accounts ?? []).map(a => a.type === 'bank' ? a.bank : a.platform)
+                          )
+                          function toggleProvider(name: string) {
+                            const b = GIFT_LAB_BRANDS[name]; if (!b) return
+                            const cur = previewData.gift_accounts ?? []
+                            if (activeSet.has(name)) {
+                              setPreviewData(d => ({ ...d, gift_accounts: cur.filter(a => (a.type === 'bank' ? a.bank : a.platform) !== name) }))
+                            } else {
+                              setPreviewData(d => ({ ...d, gift_accounts: [...cur, makeGiftAccount(name, b)] }))
+                            }
+                          }
+                          return (
+                            <div className="space-y-3">
+
+                              {/* ── Provider preview picker ── */}
+                              <div className="space-y-1.5">
+                                <div className="flex items-center justify-between">
+                                  <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Preview Provider</p>
+                                  <div className="flex gap-1.5">
+                                    <button type="button"
+                                      onClick={() => setPreviewData(d => ({ ...d, gift_accounts: Object.entries(GIFT_LAB_BRANDS).map(([n, b]) => makeGiftAccount(n, b)) }))}
+                                      className="text-[7px] font-bold text-violet-500 hover:text-violet-700 transition-colors">
+                                      Semua
+                                    </button>
+                                    <span className="text-[7px] text-gray-300">·</span>
+                                    <button type="button"
+                                      onClick={() => setPreviewData(d => ({ ...d, gift_accounts: [] }))}
+                                      className="text-[7px] font-bold text-gray-400 hover:text-red-400 transition-colors">
+                                      Reset
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Mini card grid — 5 per row */}
+                                <div className="grid grid-cols-5 gap-1.5">
+                                  {Object.entries(GIFT_LAB_BRANDS).map(([name, b]) => {
+                                    const active = activeSet.has(name)
+                                    return (
+                                      <button key={name} type="button" onClick={() => toggleProvider(name)}
+                                        title={name}
+                                        className="relative overflow-hidden rounded-lg transition-all"
+                                        style={{
+                                          background: `linear-gradient(135deg, ${b.g[0]}, ${b.g[1]})`,
+                                          aspectRatio: '1 / 1',
+                                          boxShadow: active ? `0 0 0 2px white, 0 0 0 3.5px ${b.g[0]}` : `0 1px 4px ${b.g[0]}44`,
+                                          opacity: active ? 1 : 0.45,
+                                          transform: active ? 'scale(1)' : 'scale(0.93)',
+                                          transition: 'all 0.15s ease',
+                                        }}>
+                                        <div className="absolute inset-0 flex items-center justify-center p-1">
+                                          <img src={b.logo} alt={name}
+                                            style={{ height: 13, width: 'auto', maxWidth: '90%', objectFit: 'contain', filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.35))' }} />
+                                        </div>
+                                        {active && (
+                                          <div className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-white flex items-center justify-center">
+                                            <svg width="6" height="6" viewBox="0 0 10 10" fill="none">
+                                              <path d="M2 5l2.5 2.5L8 2.5" stroke={b.g[0]} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                          </div>
+                                        )}
+                                      </button>
+                                    )
+                                  })}
+                                </div>
+                                <p className="text-[7px] text-gray-400">Klik provider untuk tampilkan / sembunyi di preview</p>
+                              </div>
+
+                              {/* ── Toggles ── */}
+                              {([
+                                ['gift_show_logo',    'Logo Brand',           'Tampilkan logo pada kartu'],
+                                ['gift_proof_enabled','Upload Bukti Transfer', 'Tombol & form kirim bukti'],
+                              ] as const).map(([key, label, desc]) => (
+                                <div key={key} className="flex items-center justify-between border-t border-violet-50 pt-2.5">
+                                  <div>
+                                    <p className="text-[9px] font-semibold text-gray-600">{label}</p>
+                                    <p className="text-[7px] text-gray-400">{desc}</p>
+                                  </div>
+                                  <button type="button"
+                                    onClick={() => updateSection(s.id, { [key]: !(s[key] ?? true) })}
+                                    style={{ color: (s[key] ?? true) ? '#7c3aed' : '#d1d5db' }}>
+                                    {(s[key] ?? true)
+                                      ? <svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16" fill="currentColor"><rect width="28" height="16" rx="8"/><circle cx="20" cy="8" r="6" fill="white"/></svg>
+                                      : <svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16" fill="currentColor"><rect width="28" height="16" rx="8" fill="#e5e7eb"/><circle cx="8" cy="8" r="6" fill="white"/></svg>
+                                    }
+                                  </button>
+                                </div>
+                              ))}
+
+                              {/* ── Thank you text ── */}
+                              {(s.gift_proof_enabled ?? true) && (
+                                <div className="border-t border-violet-50 pt-2.5 space-y-1">
+                                  <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Pesan Terima Kasih</p>
+                                  <textarea
+                                    value={s.gift_thankyou_text ?? ''}
+                                    onChange={e => updateSection(s.id, { gift_thankyou_text: e.target.value || undefined })}
+                                    className="w-full text-[10px] border border-gray-100 rounded-lg px-2 py-1.5 resize-none focus:outline-none focus:ring-1 focus:ring-violet-400 text-gray-600"
+                                    rows={4}
+                                    placeholder="Terima kasih telah memberikan hadiah... (kosong = pesan default)"
+                                  />
+                                </div>
+                              )}
+
+                            </div>
+                          )
+                        })()}
+
                         {/* HERO/PROFILES/STORY: no extra content beyond above */}
-                        {!['hero','profiles','story','events','countdown','closing'].includes(s.type) && (
+                        {!['hero','profiles','story','events','countdown','closing','gift'].includes(s.type) && (
                           <p className="text-[9px] text-gray-400 italic">Konten section ini diisi oleh user saat membuat undangan.</p>
                         )}
                       </div>

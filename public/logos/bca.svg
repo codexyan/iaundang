@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 40">
+  <!-- BCA wordmark -->
+  <text x="4" y="29" font-family="Arial Black,Arial,sans-serif" font-size="28" font-weight="900" fill="white" letter-spacing="2">BCA</text>
+  <!-- Thin blue underline accent -->
+  <rect x="4" y="33" width="66" height="2.5" fill="rgba(255,255,255,0.5)" rx="1.25"/>
+</svg>

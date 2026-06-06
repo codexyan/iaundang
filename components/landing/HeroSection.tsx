@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, Play, Sparkles, Star } from 'lucide-react'
+import { ArrowRight, Play, Sparkles, Star, MousePointerClick, Zap, Heart, Check } from 'lucide-react'
 
 const COUPLE_PHOTO = '/uploads/c13e2da0-d952-471c-b411-302bbfa0d71b-1780155627570.jpg'
 const PROMO_END    = new Date('2026-08-31T23:59:59')
@@ -20,329 +20,613 @@ function useDaysLeft(target: Date) {
   return days
 }
 
-// ─── Floating badges ──────────────────────────────────────────
-const BADGES = [
-  { delay: 0.9,  side: 'left',  top: '12%',  emoji: '✅', title: 'RSVP diterima',    sub: 'Andi Sanjaya · hadir',          x: -52 },
-  { delay: 1.15, side: 'left',  top: '64%',  emoji: '🎵', title: 'Musik diputar',     sub: 'A Thousand Years · Christina',  x: -52 },
-  { delay: 1.35, side: 'right', top: '28%',  emoji: '💌', title: 'Ucapan baru',       sub: '"Bahagia selalu ya! 💕"',         x: -52 },
-  { delay: 1.5,  side: 'right', top: '70%',  emoji: '👁️', title: '128 dilihat hari ini', sub: 'link sudah viral',             x: -52 },
+// ─── Floating Interactive Cards ──────────────────────────────────────────
+const FEATURE_CARDS = [
+  {
+    delay: 0.8, side: 'left', top: '15%',
+    icon: Check, iconColor: '#10b981', bgGradient: 'from-emerald-500/10 to-green-500/5',
+    title: 'RSVP Confirmed',
+    value: '+12',
+    subtitle: 'baru saja',
+    x: -60
+  },
+  {
+    delay: 1.0, side: 'left', top: '55%',
+    icon: Heart, iconColor: '#ec4899', bgGradient: 'from-pink-500/10 to-rose-500/5',
+    title: 'Ucapan Hangat',
+    value: '284',
+    subtitle: 'ucapan masuk',
+    x: -60
+  },
+  {
+    delay: 1.2, side: 'right', top: '25%',
+    icon: MousePointerClick, iconColor: '#8b5cf6', bgGradient: 'from-purple-500/10 to-violet-500/5',
+    title: 'Views Hari Ini',
+    value: '1.2K',
+    subtitle: 'pengunjung aktif',
+    x: 60
+  },
+  {
+    delay: 1.4, side: 'right', top: '65%',
+    icon: Zap, iconColor: '#f59e0b', bgGradient: 'from-amber-500/10 to-yellow-500/5',
+    title: 'Load Speed',
+    value: '0.8s',
+    subtitle: 'super cepat',
+    x: 60
+  },
 ]
+
+// ─── 3D Floating Element ──────────────────────────────────────────
+function FloatingOrb({ delay = 0, size = 100, gradient }: { delay?: number; size?: number; gradient: string }) {
+  const orbRef = useRef<HTMLDivElement>(null)
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  const springConfig = { damping: 25, stiffness: 150 }
+  const orbX = useSpring(mouseX, springConfig)
+  const orbY = useSpring(mouseY, springConfig)
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!orbRef.current) return
+      const rect = orbRef.current.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+      const distanceX = (e.clientX - centerX) / 25
+      const distanceY = (e.clientY - centerY) / 25
+      mouseX.set(distanceX)
+      mouseY.set(distanceY)
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [mouseX, mouseY])
+
+  return (
+    <motion.div
+      ref={orbRef}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+      style={{ x: orbX, y: orbY }}
+      className="absolute pointer-events-none"
+    >
+      <div
+        className={`rounded-full blur-3xl ${gradient}`}
+        style={{ width: size, height: size }}
+      />
+    </motion.div>
+  )
+}
 
 export default function HeroSection() {
   const daysLeft = useDaysLeft(PROMO_END)
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '10%'])
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+
+  // Animated number counter
+  const [activeUsers, setActiveUsers] = useState(0)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let current = 0
+      const target = 128
+      const increment = target / 30
+      const interval = setInterval(() => {
+        current += increment
+        if (current >= target) {
+          setActiveUsers(target)
+          clearInterval(interval)
+        } else {
+          setActiveUsers(Math.floor(current))
+        }
+      }, 30)
+      return () => clearInterval(interval)
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <section ref={ref} className="relative overflow-hidden" style={{ minHeight: '100svh' }}>
+    <section ref={ref} className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-stone-50" style={{ minHeight: '100svh' }}>
 
-      {/* ── Background: luxury gradient ── */}
-      <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
-        {/* Base warm cream */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #fdf8f0 0%, #faf4e8 40%, #f5ede0 70%, #efe5d5 100%)' }} />
+      {/* ── Animated Background Orbs (3D Parallax) ── */}
+      <motion.div className="absolute inset-0 z-0" style={{ y: bgY, opacity }}>
+        <FloatingOrb delay={0.2} size={400} gradient="bg-gradient-to-br from-rose-200/40 to-pink-100/20" />
+        <div className="absolute top-1/4 left-1/4">
+          <FloatingOrb delay={0.4} size={300} gradient="bg-gradient-to-br from-amber-200/30 to-orange-100/15" />
+        </div>
+        <div className="absolute bottom-1/4 right-1/4">
+          <FloatingOrb delay={0.6} size={350} gradient="bg-gradient-to-br from-emerald-200/25 to-teal-100/15" />
+        </div>
 
-        {/* Radial glow — warm gold center */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 60% at 70% 50%, rgba(212,175,55,0.12) 0%, transparent 70%)' }} />
-
-        {/* Top-left rose */}
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] pointer-events-none" style={{ background: 'radial-gradient(circle at 0% 0%, rgba(244,194,194,0.18) 0%, transparent 65%)' }} />
-
-        {/* Bottom-right sage */}
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] pointer-events-none" style={{ background: 'radial-gradient(circle at 100% 100%, rgba(180,200,180,0.15) 0%, transparent 65%)' }} />
-
-        {/* Decorative lines — subtle */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#78716c" strokeWidth="0.5"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </motion.div>
 
-      {/* ── Content ── */}
+      {/* ── Main Content ── */}
       <motion.div
         style={{ y: contentY }}
-        className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-20 pb-16 lg:pt-24 lg:pb-20"
+        className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-24 pb-20 lg:pt-32 lg:pb-24"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
 
-          {/* ── Left: Copy ── */}
-          <div className="max-w-xl">
+          {/* ── Left: Premium Copy ── */}
+          <div className="max-w-2xl">
 
-            {/* Launch badge */}
+            {/* 🎯 Promo Badge dengan Glassmorphism */}
             <motion.div
-              initial={{ opacity: 0, y: -14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="inline-flex items-center gap-2.5 mb-8 rounded-full border text-xs font-medium px-4 py-2"
-              style={{ backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)', borderColor: 'rgba(212,175,55,0.35)', color: '#78716c' }}
+              initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="inline-flex items-center gap-3 mb-10 rounded-full border px-5 py-3 backdrop-blur-xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)',
+                borderColor: 'rgba(212,175,55,0.3)',
+                boxShadow: '0 8px 32px rgba(212,175,55,0.15), inset 0 1px 0 rgba(255,255,255,0.8)'
+              }}
             >
-              <Sparkles size={12} className="text-amber-500" />
-              <span>Harga Launching</span>
-              <span className="font-bold text-stone-800">Rp 129.000</span>
-              <span className="text-stone-400">·</span>
-              <span className="text-amber-700 font-semibold">{daysLeft} hari lagi</span>
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500">
+                <Sparkles size={14} className="text-white" />
+              </div>
+              <span className="text-label-base text-secondary">Promo Launching</span>
+              <div className="h-4 w-px bg-stone-300" />
+              <span className="text-button-base font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                Rp 129K
+              </span>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200">
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                <span className="text-caption font-semibold text-orange-700">{daysLeft} hari lagi</span>
+              </div>
             </motion.div>
 
-            {/* Headline */}
+            {/* 🎯 Headline - POWER STATEMENT */}
             <motion.h1
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="font-serif leading-[1.1] tracking-tight text-stone-900"
-              style={{ fontSize: 'clamp(36px, 5.5vw, 58px)', fontWeight: 700 }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="font-serif text-display-lg text-primary"
             >
-              Undangan pernikahan{' '}
-              <span style={{
-                background: 'linear-gradient(135deg, #b8860b 0%, #d4af37 45%, #c9952d 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}>
-                yang bikin tamu kagum
-              </span>{' '}
-              sejak pertama dibuka
+              <span className="block">
+                Undangan digital
+              </span>
+              <span className="relative inline-block mt-2">
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: 'linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #f4d03f 100%)',
+                  }}
+                >
+                  yang bikin tamu kagum
+                </span>
+                {/* Animated underline */}
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.8, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 rounded-full origin-left"
+                  style={{ transformOrigin: 'left' }}
+                />
+              </span>
+              <span className="block mt-2">
+                sejak klik pertama
+              </span>
             </motion.h1>
 
-            {/* Subheadline */}
+            {/* 🎯 Subheadline dengan better readability */}
             <motion.p
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 text-stone-500 leading-relaxed"
-              style={{ fontSize: 'clamp(15px, 1.8vw, 18px)', maxWidth: 440 }}
+              transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-7 text-body-lg text-secondary max-w-xl text-no-orphan"
             >
-              Tamu cukup tap link di WhatsApp, langsung disambut halaman indah
-              dengan nama mereka, musik yang mengalun, dan foto kenangan kalian.
-              Siap dalam hitungan menit.
+              Tamu klik link → musik langsung mengalir → nama mereka muncul → foto kalian tersaji cantik.
+              <span className="text-primary font-semibold"> Terpukau sejak detik pertama</span>,
+              tanpa ribet scroll atau cari tombol.
             </motion.p>
 
-            {/* CTA buttons */}
+            {/* 🎯 Stats Bar - Social Proof */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-8 flex flex-col sm:flex-row gap-3"
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mt-8 flex items-center gap-6 flex-wrap"
             >
-              <Link href="/templates">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl text-white font-semibold text-[15px] shadow-lg transition-shadow hover:shadow-xl"
-                  style={{ background: 'linear-gradient(135deg, #1a3320 0%, #2d5a3d 100%)', boxShadow: '0 8px 30px rgba(26,51,32,0.35)' }}
-                >
-                  Mulai Buat Undangan
-                  <ArrowRight size={16} />
-                </motion.button>
-              </Link>
-              <Link href="/demo/modern-white">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-stone-700 font-semibold text-[15px] border bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
-                  style={{ borderColor: 'rgba(120,113,108,0.2)' }}
-                >
-                  <Play size={13} className="fill-current text-amber-600" />
-                  Lihat Demo
-                </motion.button>
-              </Link>
-            </motion.div>
-
-            {/* Social proof */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.65 }}
-              className="mt-8 flex items-center gap-4"
-            >
-              {/* Avatars */}
-              <div className="flex -space-x-2">
-                {['🤵', '👰', '🤵', '👰', '🤵'].map((e, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-stone-100 flex items-center justify-center text-xs"
-                    style={{ zIndex: 5 - i }}>{e}</div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={12} className="fill-amber-400 text-amber-400" />)}
-                  <span className="text-xs font-semibold text-stone-700 ml-1">4.9</span>
+              {/* Avatars dengan better design */}
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-3">
+                  {['🤵🏻', '👰🏻', '🤵🏽', '👰🏽', '🤵🏿'].map((e, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.6 + i * 0.08, type: 'spring', stiffness: 300 }}
+                      className="w-10 h-10 rounded-full border-3 border-white bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center shadow-lg"
+                      style={{ zIndex: 5 - i }}
+                    >
+                      <span className="text-lg">{e}</span>
+                    </motion.div>
+                  ))}
                 </div>
-                <p className="text-xs text-stone-400 mt-0.5">dari 500+ pasangan yang sudah membuat</p>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    {[...Array(5)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, scale: 0, rotate: -180 }}
+                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                        transition={{ delay: 1 + i * 0.05, type: 'spring', stiffness: 200 }}
+                      >
+                        <Star size={14} className="fill-amber-400 text-amber-400 drop-shadow-sm" />
+                      </motion.div>
+                    ))}
+                    <span className="text-button-base font-bold text-primary ml-1">4.9</span>
+                  </div>
+                  <p className="text-caption text-tertiary font-medium">dari <strong className="text-secondary">500+</strong> pasangan</p>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden sm:block w-px h-10 bg-gradient-to-b from-transparent via-stone-300 to-transparent" />
+
+              {/* Active users counter */}
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <div className="absolute inset-0 w-2 h-2 rounded-full bg-green-400 animate-ping" />
+                </div>
+                <div>
+                  <p className="text-h5 font-bold text-primary leading-none">{activeUsers}</p>
+                  <p className="text-caption-sm text-tertiary">sedang online</p>
+                </div>
               </div>
             </motion.div>
 
-            {/* Feature pills */}
+            {/* 🎯 CTA Buttons - Premium Design */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-10 flex flex-col sm:flex-row gap-4"
+            >
+              <Link href="/templates" className="group">
+                <motion.button
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative w-full sm:w-auto px-8 py-4 rounded-2xl text-white text-button-lg overflow-hidden shadow-2xl"
+                  style={{
+                    background: 'linear-gradient(135deg, #1a3320 0%, #2d5a3d 50%, #1a3320 100%)',
+                  }}
+                >
+                  {/* Animated gradient overlay */}
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'linear-gradient(135deg, #2d5a3d 0%, #3d6f4d 100%)' }}
+                  />
+
+                  {/* Shine effect */}
+                  <motion.div
+                    className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)'
+                    }}
+                  />
+
+                  <span className="relative flex items-center justify-center gap-2">
+                    Mulai Buat Undangan
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+              </Link>
+
+              <Link href="/demo/modern-white" className="group">
+                <motion.button
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl text-button-lg backdrop-blur-xl border-2 transition-all text-stone-700"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))',
+                    borderColor: 'rgba(120,113,108,0.2)',
+                  }}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                      <Play size={11} className="fill-white text-white ml-0.5" />
+                    </div>
+                    Lihat Demo Live
+                  </span>
+                </motion.button>
+              </Link>
+            </motion.div>
+
+            {/* 🎯 Feature Pills - Redesigned */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              className="mt-6 flex flex-wrap gap-2"
+              transition={{ duration: 0.6, delay: 0.85 }}
+              className="mt-8 flex flex-wrap gap-2.5"
             >
               {[
-                { icon: '🎵', text: 'Musik otomatis' },
-                { icon: '📍', text: 'Nama tamu personal' },
-                { icon: '📸', text: 'Galeri foto' },
-                { icon: '✅', text: 'RSVP digital' },
-                { icon: '💌', text: 'Ucapan tamu' },
-              ].map(({ icon, text }) => (
-                <span key={text}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-stone-600"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.8)', border: '1px solid rgba(120,113,108,0.12)' }}>
-                  <span>{icon}</span> {text}
-                </span>
+                { icon: '🎵', text: 'Musik auto-play' },
+                { icon: '✨', text: 'Nama tamu personal' },
+                { icon: '📸', text: 'Galeri unlimited' },
+                { icon: '✅', text: 'RSVP realtime' },
+                { icon: '💬', text: 'Ucapan langsung' },
+              ].map(({ icon, text }, i) => (
+                <motion.span
+                  key={text}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.9 + i * 0.06, type: 'spring', stiffness: 200 }}
+                  className="group flex items-center gap-2 px-4 py-2 rounded-full text-body-sm font-medium text-secondary backdrop-blur-md border hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-default"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5))',
+                    borderColor: 'rgba(120,113,108,0.15)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+                  }}
+                >
+                  <span className="text-base group-hover:scale-110 transition-transform">{icon}</span>
+                  {text}
+                </motion.span>
               ))}
             </motion.div>
           </div>
 
-          {/* ── Right: Phone mockup ── */}
+          {/* ── Right: Enhanced Phone Mockup ── */}
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.85, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="flex justify-center lg:justify-end"
+            initial={{ opacity: 0, y: 60, scale: 0.9, rotateY: -15 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateY: 0 }}
+            transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex justify-center lg:justify-end perspective-1000"
           >
-            <div className="relative select-none">
-              {/* Glow behind phone */}
-              <div className="absolute -inset-16 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(212,175,55,0.18) 0%, transparent 70%)' }} />
+            <div className="relative select-none" style={{ transformStyle: 'preserve-3d' }}>
 
-              {/* Floating badges */}
-              {BADGES.map((b, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, x: b.side === 'left' ? -24 : 24, scale: 0.9 }}
+              {/* Enhanced glow */}
+              <div className="absolute -inset-20 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-radial from-amber-200/40 via-transparent to-transparent blur-3xl" />
+                <div className="absolute inset-0 bg-gradient-radial from-rose-200/30 via-transparent to-transparent blur-3xl animate-pulse" />
+              </div>
+
+              {/* Floating feature cards - Glassmorphism */}
+              {FEATURE_CARDS.map((card, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: card.side === 'left' ? -30 : 30, scale: 0.8 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  transition={{ delay: b.delay, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute z-20 flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5"
+                  transition={{ delay: card.delay, duration: 0.6, type: 'spring', stiffness: 100 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className={`absolute z-20 ${card.bgGradient} backdrop-blur-xl rounded-2xl p-4 border border-white/20`}
                   style={{
-                    [b.side === 'left' ? 'left' : 'right']: '-14px',
-                    top: b.top,
-                    transform: `translateX(${b.side === 'left' ? '-100%' : '100%'})`,
-                    backgroundColor: 'rgba(255,255,255,0.96)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(120,113,108,0.12)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
-                    maxWidth: 170,
+                    [card.side === 'left' ? 'left' : 'right']: '-20px',
+                    top: card.top,
+                    transform: `translateX(${card.side === 'left' ? '-100%' : '100%'})`,
+                    background: 'rgba(255,255,255,0.95)',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
+                    maxWidth: 180,
                   }}
                 >
-                  <div className="w-7 h-7 rounded-full bg-stone-50 border border-stone-100 flex items-center justify-center text-sm shrink-0">{b.emoji}</div>
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-semibold text-stone-800 leading-none truncate">{b.title}</p>
-                    <p className="text-[9px] text-stone-400 mt-0.5 truncate">{b.sub}</p>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-inner"
+                      style={{
+                        background: `linear-gradient(135deg, ${card.iconColor}15, ${card.iconColor}05)`,
+                        border: `1px solid ${card.iconColor}20`
+                      }}
+                    >
+                      <card.icon size={18} style={{ color: card.iconColor }} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-caption font-semibold text-primary leading-tight mb-0.5">{card.title}</p>
+                      <div className="flex items-baseline gap-1.5">
+                        <p className="text-h4 font-bold leading-none" style={{ color: card.iconColor }}>{card.value}</p>
+                        <p className="text-caption-sm text-muted truncate">{card.subtitle}</p>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               ))}
 
-              {/* Phone — float animation */}
+              {/* Premium Phone Mockup */}
               <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+                animate={{
+                  y: [0, -12, 0],
+                  rotateY: [0, 2, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
                 className="relative"
-                style={{ width: 248 }}
+                style={{
+                  width: 280,
+                  transformStyle: 'preserve-3d',
+                }}
               >
-                {/* Phone shell */}
+                {/* iPhone 15 Pro Max style */}
                 <div
-                  className="relative rounded-[46px] overflow-hidden"
+                  className="relative rounded-[52px] overflow-hidden"
                   style={{
-                    padding: 10,
-                    background: 'linear-gradient(145deg, #1c1c1e 0%, #2c2c2e 50%, #1c1c1e 100%)',
-                    boxShadow: '0 40px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.08)',
+                    padding: 12,
+                    background: 'linear-gradient(145deg, #2c2c2e 0%, #1c1c1e 50%, #0a0a0a 100%)',
+                    boxShadow: `
+                      0 50px 100px rgba(0,0,0,0.4),
+                      0 0 0 1px rgba(255,255,255,0.05),
+                      inset 0 0 0 1.5px rgba(255,255,255,0.1),
+                      inset 0 2px 4px rgba(255,255,255,0.15)
+                    `,
                   }}
                 >
-                  {/* Dynamic island */}
-                  <div className="absolute left-1/2 -translate-x-1/2 z-30" style={{ top: 13, width: 76, height: 22, backgroundColor: '#0a0a0a', borderRadius: 20 }} />
+                  {/* Dynamic Island */}
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full"
+                    style={{
+                      top: 15,
+                      width: 95,
+                      height: 26,
+                      backgroundColor: '#000',
+                      boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.1)'
+                    }}
+                  />
 
                   {/* Screen */}
-                  <div className="rounded-[38px] overflow-hidden bg-stone-900" style={{ aspectRatio: '9/19.5' }}>
+                  <div className="rounded-[42px] overflow-hidden bg-black" style={{ aspectRatio: '9/19.5' }}>
                     <Image
                       src={COUPLE_PHOTO}
-                      alt="Foto pasangan"
+                      alt="Preview undangan"
                       fill
-                      className="object-cover object-top absolute inset-0"
-                      sizes="248px"
+                      className="object-cover object-center absolute inset-0"
+                      sizes="280px"
                       unoptimized
                       priority
                     />
 
-                    {/* Multi-layer overlay */}
-                    <div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,.1) 55%, rgba(0,0,0,.85) 100%)' }} />
+                    {/* Premium overlay gradient */}
+                    <div className="absolute inset-0 z-10"
+                      style={{
+                        background: `
+                          linear-gradient(180deg,
+                            rgba(0,0,0,0.6) 0%,
+                            rgba(0,0,0,0) 25%,
+                            rgba(0,0,0,0.05) 50%,
+                            rgba(0,0,0,0.3) 75%,
+                            rgba(0,0,0,0.9) 100%)
+                        `
+                      }}
+                    />
 
-                    {/* Status bar */}
-                    <div className="absolute top-0 inset-x-0 h-9 flex items-end justify-between px-5 pb-1.5 z-20">
-                      <span className="text-[8px] font-semibold text-white/70">18:20</span>
-                      <div className="flex items-center gap-0.5">
-                        {[3,4,5,4,5].map((h, i) => <div key={i} style={{ width: 2.5, height: h, borderRadius: 1, backgroundColor: 'rgba(255,255,255,0.6)' }} />)}
-                        <div className="ml-1 text-[6px] text-white/60">WiFi</div>
-                        <div className="ml-1 w-4 h-2 rounded-sm border border-white/50 flex items-center px-0.5">
-                          <div className="h-full rounded-sm bg-white/80" style={{ width: '70%' }} />
+                    {/* Status bar - iOS 18 style */}
+                    <div className="absolute top-0 inset-x-0 h-11 flex items-end justify-between px-7 pb-2 z-20">
+                      <span className="text-caption-sm font-semibold text-white/80">9:41</span>
+                      <div className="flex items-center gap-1">
+                        <div className="flex items-end gap-0.5">
+                          {[4,5,6,5,6].map((h, i) => (
+                            <div key={i} style={{ width: 2.5, height: h, borderRadius: 1, backgroundColor: 'rgba(255,255,255,0.7)' }} />
+                          ))}
+                        </div>
+                        <div className="ml-1.5 w-5 h-2.5 rounded-sm border border-white/60 flex items-center px-0.5 relative">
+                          <div className="h-full rounded-sm bg-white/90" style={{ width: '75%' }} />
+                          <div className="absolute -right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-1.5 bg-white/60 rounded-r-sm" />
                         </div>
                       </div>
                     </div>
 
-                    {/* Label undangan */}
-                    <p className="absolute z-20 inset-x-0 text-center text-white/55"
-                      style={{ top: 44, fontSize: 7, letterSpacing: '0.26em', textTransform: 'uppercase' }}>
+                    {/* Label */}
+                    <p className="absolute z-20 inset-x-0 text-center text-white/60 text-eyebrow font-medium"
+                      style={{ top: 52 }}>
                       Undangan Pernikahan
                     </p>
 
-                    {/* Couple names — center */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-4">
-                      <p className="font-serif italic text-white text-center leading-none"
-                        style={{ fontSize: 30, textShadow: '0 2px 20px rgba(0,0,0,.9)' }}>
+                    {/* Couple names - Enhanced */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-5">
+                      <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.5, duration: 0.8 }}
+                        className="font-serif italic text-white text-center leading-none drop-shadow-2xl text-display-md"
+                        style={{ textShadow: '0 4px 24px rgba(0,0,0,1)' }}
+                      >
                         Ikhwal
-                      </p>
-                      <div className="flex items-center gap-4 my-3">
-                        <div style={{ width: 36, height: 0.5, backgroundColor: 'rgba(212,175,55,0.6)' }} />
-                        <p className="font-serif" style={{ fontSize: 16, color: '#d4af37', textShadow: '0 1px 8px rgba(0,0,0,.7)' }}>&amp;</p>
-                        <div style={{ width: 36, height: 0.5, backgroundColor: 'rgba(212,175,55,0.6)' }} />
+                      </motion.p>
+
+                      <div className="flex items-center gap-5 my-4">
+                        <motion.div
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ delay: 1.7, duration: 0.5 }}
+                          style={{ width: 40, height: 1, background: 'linear-gradient(90deg, transparent, #d4af37, transparent)' }}
+                        />
+                        <motion.p
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 1.8, type: 'spring', stiffness: 200 }}
+                          className="font-serif text-h3"
+                          style={{ color: '#d4af37', textShadow: '0 2px 12px rgba(212,175,55,0.8)' }}
+                        >
+                          &amp;
+                        </motion.p>
+                        <motion.div
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ delay: 1.7, duration: 0.5 }}
+                          style={{ width: 40, height: 1, background: 'linear-gradient(90deg, transparent, #d4af37, transparent)' }}
+                        />
                       </div>
-                      <p className="font-serif italic text-white text-center leading-none"
-                        style={{ fontSize: 30, textShadow: '0 2px 20px rgba(0,0,0,.9)' }}>
+
+                      <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.9, duration: 0.8 }}
+                        className="font-serif italic text-white text-center leading-none drop-shadow-2xl text-display-md"
+                        style={{ textShadow: '0 4px 24px rgba(0,0,0,1)' }}
+                      >
                         Fani
-                      </p>
-                      <p className="mt-3 text-white/60" style={{ fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                      </motion.p>
+
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 2.1, duration: 0.6 }}
+                        className="mt-4 text-white/70 text-eyebrow font-medium"
+                      >
                         Sabtu · 12 April 2026
-                      </p>
+                      </motion.p>
                     </div>
 
-                    {/* Bottom section */}
-                    <div className="absolute bottom-0 inset-x-0 z-20 px-5 pb-6">
-                      {/* Guest name */}
-                      <div className="text-center mb-3">
-                        <p className="text-white/45" style={{ fontSize: 7, letterSpacing: '0.12em' }}>Kepada Yth.</p>
-                        <p className="text-white font-semibold mt-0.5" style={{ fontSize: 9, textShadow: '0 1px 4px rgba(0,0,0,.7)' }}>
+                    {/* Bottom section - Enhanced */}
+                    <div className="absolute bottom-0 inset-x-0 z-20 px-6 pb-7">
+                      <div className="text-center mb-4">
+                        <p className="text-white/50 text-caption-sm tracking-wider mb-1">Kepada Yth.</p>
+                        <p className="text-white text-caption font-semibold" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
                           Bapak Andi dan Keluarga
                         </p>
                       </div>
 
-                      {/* Open button */}
-                      <button className="w-full py-2.5 rounded-full text-white text-[9px] font-semibold tracking-widest uppercase"
-                        style={{ background: 'rgba(255,255,255,0.13)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)' }}>
-                        Masuk Sekarang
-                      </button>
+                      {/* CTA Button - Glassmorphism */}
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full py-3 rounded-full text-white text-button-sm tracking-widest uppercase backdrop-blur-xl"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1))',
+                          border: '1px solid rgba(255,255,255,0.3)',
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
+                        }}
+                      >
+                        Buka Undangan
+                      </motion.button>
 
-                      {/* Progress bar */}
-                      <div className="mt-2 mx-auto relative overflow-hidden rounded-full" style={{ width: 48, height: 1.5, backgroundColor: 'rgba(255,255,255,0.15)' }}>
-                        <motion.div className="absolute inset-y-0 left-0 rounded-full" style={{ backgroundColor: 'rgba(212,175,55,0.8)' }}
-                          animate={{ width: ['0%', '100%', '0%'] }} transition={{ duration: 4, repeat: Infinity, ease: 'linear' }} />
+                      {/* Progress indicator */}
+                      <div className="mt-3 mx-auto relative overflow-hidden rounded-full" style={{ width: 56, height: 2, backgroundColor: 'rgba(255,255,255,0.2)' }}>
+                        <motion.div
+                          className="absolute inset-y-0 left-0 rounded-full"
+                          style={{ background: 'linear-gradient(90deg, #d4af37, #f4d03f)' }}
+                          animate={{ width: ['0%', '100%', '0%'] }}
+                          transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Reflection */}
-                <div className="absolute inset-x-2 -bottom-3 h-8 rounded-b-3xl opacity-20 blur-sm"
-                  style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), transparent)', transform: 'scaleY(-1) translateY(-100%)' }} />
+                {/* Enhanced reflection */}
+                <div className="absolute inset-x-3 -bottom-4 h-12 rounded-b-3xl opacity-25 blur-xl"
+                  style={{
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.5), transparent)',
+                    transform: 'scaleY(-1) translateY(-100%)',
+                    filter: 'blur(20px)'
+                  }}
+                />
               </motion.div>
             </div>
           </motion.div>
         </div>
       </motion.div>
 
-      {/* ── Bottom fade ── */}
-      <div className="absolute bottom-0 inset-x-0 h-24 pointer-events-none z-10"
-        style={{ background: 'linear-gradient(to bottom, transparent, rgba(253,248,240,0.8))' }} />
+      {/* ── Bottom gradient fade ── */}
+      <div className="absolute bottom-0 inset-x-0 h-32 pointer-events-none z-10"
+        style={{ background: 'linear-gradient(to bottom, transparent, rgba(248,250,252,0.9))' }}
+      />
     </section>
   )
 }

@@ -29,7 +29,13 @@ interface Props {
 export default function SectionRenderer({
   sectionConfig, invitationData, templateMeta, invitationId, initialWishes,
 }: Props) {
-  const shared = { section: sectionConfig, data: invitationData, meta: templateMeta }
+  // Merge template-level font scales as section defaults (section overrides take priority)
+  const augmentedSection: SectionConfig = {
+    ...sectionConfig,
+    heading_scale: sectionConfig.heading_scale ?? templateMeta.font.heading_scale,
+    body_scale:    sectionConfig.body_scale    ?? templateMeta.font.body_scale,
+  }
+  const shared = { section: augmentedSection, data: invitationData, meta: templateMeta }
 
   switch (sectionConfig.type) {
     case 'hero':          return <HeroSection          {...shared} />
@@ -38,7 +44,7 @@ export default function SectionRenderer({
     case 'story':         return <StorySection         {...shared} />
     case 'events':        return <EventsSection        {...shared} />
     case 'gallery':       return <GallerySection       {...shared} />
-    case 'gift':          return <GiftSection          {...shared} />
+    case 'gift':          return <GiftSection          {...shared} invitationId={invitationId} />
     case 'rsvp':          return <RSVPSection          {...shared} invitationId={invitationId} />
     case 'wishes':        return <WishesSection        {...shared} invitationId={invitationId} initialWishes={initialWishes} />
     case 'livestream':    return <LivestreamSection    {...shared} />

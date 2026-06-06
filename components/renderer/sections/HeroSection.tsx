@@ -391,8 +391,12 @@ export default function HeroSection({ section, data, meta }: Props) {
         </>
       )}
 
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 2, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      {/* Content — bottom variant must stretch to fill the full section height */}
+      <div style={{
+        position: 'relative', zIndex: 2, width: '100%',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        ...(variant === 'bottom' ? { flex: 1, alignSelf: 'stretch' } : {}),
+      }}>
         {variant === 'default' && <HeroDefault {...sharedProps} />}
         {variant === 'bottom'  && <HeroBottom  {...sharedProps} primary={primary} />}
         {variant === 'minimal' && <HeroMinimal {...sharedProps} />}

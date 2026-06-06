@@ -43,6 +43,7 @@ model Invitation {
   guests        Guest[]
   wishes        Wish[]
   paymentProofs PaymentProof[]
+  giftProofs    GiftProof[]
 
   @@index([userId])
   @@map("invitations")
@@ -131,6 +132,20 @@ model PaymentProof {
   @@index([userId])
   @@index([invitationId])
   @@map("payment_proofs")
+}
+
+// ─── GIFT PROOFS ──────────────────────────────────────────────
+model GiftProof {
+  id           String   @id @default(cuid())
+  invitationId String   @map("invitation_id")
+  name         String
+  proofUrl     String   @map("proof_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId])
+  @@map("gift_proofs")
 }
 
 // ─── APP SETTINGS (single row, key = "main") ─────────────────

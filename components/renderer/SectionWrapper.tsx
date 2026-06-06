@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import type { SectionConfig, TemplateMeta } from '@/lib/types'
+import type { SectionConfig, TemplateMeta, FontConfig } from '@/lib/types'
 import { getTransitionVariants } from './transitions/useTransition'
 import { usePreviewContext } from './PreviewContext'
 
@@ -10,6 +10,10 @@ interface Props {
   section: SectionConfig
   children: React.ReactNode
   className?: string
+  /** Renders inside <section> but outside the motion.div — use for in-section modals/overlays */
+  overlay?: React.ReactNode
+  /** Template-level font config — provides default scale fallback before section overrides */
+  fontConfig?: FontConfig
 }
 
 /**
@@ -52,7 +56,7 @@ export function fontW(type: 'heading' | 'body'): string {
   return type === 'heading' ? 'var(--hw, 700)' : 'var(--bw, 400)'
 }
 
-export default function SectionWrapper({ section, children, className = '' }: Props) {
+export default function SectionWrapper({ section, children, className = '', overlay, fontConfig }: Props) {
   const { isPreview, replaySectionId, replaySectionKey } = usePreviewContext()
 
   const isReplay  = isPreview && replaySectionId === section.id
@@ -79,6 +83,7 @@ export default function SectionWrapper({ section, children, className = '' }: Pr
     bgStyle.backgroundPosition = 'center'
     bgStyle.backgroundRepeat = 'no-repeat'
   }
+  // video: rendered as <video> element below, not bgStyle
 
   // Setiap section penuh layar — snap ke setiap section
   // Preview: 845px (= 736 / (340/390)) agar pas di phone mockup setelah zoom
@@ -97,12 +102,12 @@ export default function SectionWrapper({ section, children, className = '' }: Pr
     ? { alignSelf: 'stretch', flex: 1, display: 'flex', flexDirection: 'column' }
     : {}
 
-  // CSS variables — dibaca semua child section via inline style calc()
+  // CSS variables — section overrides > template defaults > hardcoded fallback
   const fontVars = {
-    '--hs': section.heading_scale ?? 1,   // heading size scale
-    '--bs': section.body_scale    ?? 1,   // body size scale
-    '--hw': section.heading_weight ?? 700, // heading weight
-    '--bw': section.body_weight    ?? 400, // body weight
+    '--hs': section.heading_scale ?? fontConfig?.heading_scale ?? 1,
+    '--bs': section.body_scale    ?? fontConfig?.body_scale    ?? 1,
+    '--hw': section.heading_weight ?? 700,
+    '--bw': section.body_weight    ?? 400,
   } as React.CSSProperties
 
   return (
@@ -121,12 +126,24 @@ export default function SectionWrapper({ section, children, className = '' }: Pr
       }}
       className={className}
     >
-      {bg.type === 'image' && bg.overlay_opacity != null && (
-        <div
-          className="absolute inset-0 z-0"
-          style={{ backgroundColor: `rgba(0,0,0,${bg.overlay_opacity})` }}
+      {/* Video background — sits at z-0 behind overlay and content */}
+      {bg.type === 'video' && bg.url && (
+        <video
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+          src={bg.url}
         />
       )}
+
+      {/* Dark overlay for photo and video backgrounds */}
+      {(bg.type === 'image' || bg.type === 'video') && (bg.overlay_opacity ?? 0) > 0 && (
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: `rgba(0,0,0,${bg.overlay_opacity})`, zIndex: 1 }}
+        />
+      )}
+
       <motion.div
         key={replayKey}
         className={`relative z-10 flex flex-col ${alignCls} w-full ${isFullBleed ? '' : 'max-w-lg mx-auto px-6'}`}
@@ -142,6 +159,9 @@ export default function SectionWrapper({ section, children, className = '' }: Pr
       >
         {children}
       </motion.div>
+
+      {/* Section-scoped overlay — absolute, clipped by section's overflow:hidden */}
+      {overlay}
     </section>
   )
 }

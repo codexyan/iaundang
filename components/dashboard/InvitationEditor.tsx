@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import type { Invitation, NewInvitationData, TemplateRecord, GiftAccount, SectionType, StoryChapter } from '@/lib/types'
 import InvitationPreview from '@/components/renderer/InvitationPreview'
+import ImageUploadField from '@/components/admin/ImageUploadField'
 
 // ── Types ──────────────────────────────────────────────────────
 
@@ -129,7 +130,7 @@ function SectionForm({ type, data, onChange }: {
             <F label="URL Foto">
               <div className="flex gap-1.5">
                 <input className={ic} value={data.groom_photo_url ?? ''} onChange={e => onChange({ groom_photo_url: e.target.value })} placeholder="https://..." />
-                {data.groom_photo_url && <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0"><img src={data.groom_photo_url} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.display = 'none' }} /></div>}
+                {data.groom_photo_url && <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0"><img src={data.groom_photo_url} alt="Foto mempelai pria" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.display = 'none' }} /></div>}
               </div>
             </F>
             <F label="Bio (opsional)">
@@ -146,7 +147,7 @@ function SectionForm({ type, data, onChange }: {
             <F label="URL Foto">
               <div className="flex gap-1.5">
                 <input className={ic} value={data.bride_photo_url ?? ''} onChange={e => onChange({ bride_photo_url: e.target.value })} placeholder="https://..." />
-                {data.bride_photo_url && <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0"><img src={data.bride_photo_url} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.display = 'none' }} /></div>}
+                {data.bride_photo_url && <div className="w-7 h-7 rounded-full overflow-hidden border shrink-0"><img src={data.bride_photo_url} alt="Foto mempelai wanita" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.display = 'none' }} /></div>}
               </div>
             </F>
             <F label="Bio (opsional)">
@@ -171,7 +172,14 @@ function SectionForm({ type, data, onChange }: {
           </div>
           <F label="Nama Tempat *"><input className={ic} value={akad.venue_name} onChange={e => onChange({ akad: { ...akad, venue_name: e.target.value } })} placeholder="Masjid Al-Ikhlas" /></F>
           <F label="Alamat *"><textarea className={`${ic} resize-none`} rows={2} value={akad.venue_address} onChange={e => onChange({ akad: { ...akad, venue_address: e.target.value } })} placeholder="Jl. Mawar No. 12..." /></F>
-          <F label="Google Maps"><input className={ic} value={akad.maps_url ?? ''} onChange={e => onChange({ akad: { ...akad, maps_url: e.target.value } })} placeholder="https://maps.google.com/..." /></F>
+          <F label="Google Maps URL"><input className={ic} value={akad.maps_url ?? ''} onChange={e => onChange({ akad: { ...akad, maps_url: e.target.value } })} placeholder="https://maps.app.goo.gl/..." /></F>
+          <F label="Foto Lokasi (opsional)">
+            <ImageUploadField
+              value={akad.venue_photo_url}
+              onChange={url => onChange({ akad: { ...akad, venue_photo_url: url } })}
+              hint="Foto gedung / masjid — tampil di kartu acara"
+            />
+          </F>
         </div>
         <div className="border-t border-gray-100 pt-3 space-y-2">
           <div className="flex items-center gap-3">
@@ -187,7 +195,14 @@ function SectionForm({ type, data, onChange }: {
           </div>
           <F label="Nama Tempat *"><input className={ic} value={resepsi.venue_name} onChange={e => onChange({ resepsi: { ...resepsi, venue_name: e.target.value } })} placeholder="Ballroom Hotel Grand" /></F>
           <F label="Alamat *"><textarea className={`${ic} resize-none`} rows={2} value={resepsi.venue_address} onChange={e => onChange({ resepsi: { ...resepsi, venue_address: e.target.value } })} placeholder="Jl. Sudirman No. 86..." /></F>
-          <F label="Google Maps"><input className={ic} value={resepsi.maps_url ?? ''} onChange={e => onChange({ resepsi: { ...resepsi, maps_url: e.target.value } })} placeholder="https://maps.google.com/..." /></F>
+          <F label="Google Maps URL"><input className={ic} value={resepsi.maps_url ?? ''} onChange={e => onChange({ resepsi: { ...resepsi, maps_url: e.target.value } })} placeholder="https://maps.app.goo.gl/..." /></F>
+          <F label="Foto Lokasi (opsional)">
+            <ImageUploadField
+              value={resepsi.venue_photo_url}
+              onChange={url => onChange({ resepsi: { ...resepsi, venue_photo_url: url } })}
+              hint="Foto gedung / ballroom — tampil di kartu acara"
+            />
+          </F>
         </div>
       </div>
     )
@@ -299,7 +314,7 @@ function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
           </div>
         ) : hasPhoto ? (
           <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16/7' }}>
-            <img src={data.couple_photo_url} alt="" className="w-full h-full object-cover" />
+            <img src={data.couple_photo_url} alt="Foto pasangan" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center gap-2 opacity-0 hover:opacity-100 transition-opacity">
               <button onClick={() => photoRef.current?.click()}
                 className="flex items-center gap-1 bg-white/90 text-gray-800 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
@@ -523,7 +538,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
                   {ch.video_url
                     ? <span className="w-5 h-5 rounded bg-gray-900 flex items-center justify-center shrink-0 text-[8px] text-white font-bold">▶</span>
                     : ch.photo_url
-                      ? <img src={ch.photo_url} alt="" className="w-5 h-5 rounded object-cover border border-gray-200 shrink-0" />
+                      ? <img src={ch.photo_url} alt="Foto bab kisah" className="w-5 h-5 rounded object-cover border border-gray-200 shrink-0" />
                       : <div className="w-5 h-5 rounded bg-gray-100 shrink-0 flex items-center justify-center"><Image size={9} className="text-gray-400" /></div>
                   }
                   <span className="text-[10px] font-medium text-gray-600 truncate">
@@ -567,7 +582,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
                           </div>
                         ) : ch.photo_url ? (
                           <div className="relative rounded-lg overflow-hidden" style={{ aspectRatio: '16/7' }}>
-                            <img src={ch.photo_url} alt="" className="w-full h-full object-cover" />
+                            <img src={ch.photo_url} alt="Preview foto bab" className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                               <button onClick={() => fileRefs.current[i]?.click()}
                                 className="flex items-center gap-1 bg-white/90 text-gray-800 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
@@ -631,49 +646,266 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
 
 // ── Gift Form ──────────────────────────────────────────────────
 
+// ── Provider data ──────────────────────────────────────────────
+const BANKS = ['BRI', 'BCA', 'BNI', 'Mandiri', 'BSI', 'Blu', 'Bank lainnya']
+const EWALLETS = ['GoPay', 'DANA', 'ShopeePay', 'OVO', 'E-wallet lainnya']
+
+interface ProviderBrand { gradient: [string, string]; logoText: string; accent: string }
+const PROVIDER_BRANDS: Record<string, ProviderBrand> = {
+  'BRI':       { gradient: ['#003B8E', '#00529B'], logoText: 'BRI',     accent: '#64B5F6' },
+  'BCA':       { gradient: ['#003087', '#00509E'], logoText: 'BCA',     accent: '#90CAF9' },
+  'BNI':       { gradient: ['#003087', '#0050A0'], logoText: 'BNI',     accent: '#F47920' },
+  'Mandiri':   { gradient: ['#003368', '#005099'], logoText: 'mandiri', accent: '#F4A020' },
+  'BSI':       { gradient: ['#006633', '#00884A'], logoText: 'BSI',     accent: '#A5D6A7' },
+  'Blu':       { gradient: ['#0077CC', '#00AAFF'], logoText: 'blu',     accent: '#B3E5FC' },
+  'GoPay':     { gradient: ['#00880F', '#00AA15'], logoText: 'GoPay',   accent: '#CCFF99' },
+  'DANA':      { gradient: ['#118EEA', '#1565C0'], logoText: 'DANA',    accent: '#90CAF9' },
+  'ShopeePay': { gradient: ['#D73211', '#EE4D2D'], logoText: 'Shopee',  accent: '#FFCCBC' },
+  'OVO':       { gradient: ['#4B0080', '#6A1B9A'], logoText: 'OVO',     accent: '#E1BEE7' },
+}
+
+const BRAND_COLORS: Record<string, string> = {
+  bri: '#003B8E', bca: '#003087', bni: '#003087', mandiri: '#003368',
+  bsi: '#006633', blu: '#0077CC',
+  gopay: '#00880F', dana: '#118EEA', shopee: '#EE4D2D', shopeepay: '#EE4D2D', ovo: '#4B0080',
+}
+
+function getBrandColor(name: string): string {
+  const key = name.toLowerCase().replace(/\s/g, '').replace('pay', '').replace('bank', '')
+  return BRAND_COLORS[key] || BRAND_COLORS[name.toLowerCase()] || '#374151'
+}
+
+const PROVIDER_LOGO_FILES: Record<string, string> = {
+  'BRI': '/logos/bri.svg', 'BCA': '/logos/bca.svg', 'BNI': '/logos/bni.svg',
+  'Mandiri': '/logos/mandiri.svg', 'BSI': '/logos/bsi.svg', 'Blu': '/logos/blu.svg',
+  'GoPay': '/logos/gopay.svg', 'DANA': '/logos/dana.svg',
+  'ShopeePay': '/logos/shopee.svg', 'OVO': '/logos/ovo.svg',
+}
+
+function ProviderCard({ name, isSelected, onClick }: { name: string; isSelected: boolean; onClick: () => void }) {
+  const brand = PROVIDER_BRANDS[name]
+  if (!brand) return (
+    <button type="button" onClick={onClick}
+      className={`rounded-xl py-2.5 px-1 text-[9px] font-semibold transition-all border ${isSelected ? 'bg-gray-800 text-white border-gray-700' : 'bg-gray-50 text-gray-400 border-dashed border-gray-200 hover:border-gray-300 hover:text-gray-500'}`}>
+      {name}
+    </button>
+  )
+  const [g1, g2] = brand.gradient
+  const logoFile = PROVIDER_LOGO_FILES[name]
+  const isEwallet = name === 'GoPay' || name === 'DANA' || name === 'ShopeePay' || name === 'OVO'
+  return (
+    <button type="button" onClick={onClick}
+      className="relative overflow-hidden rounded-xl transition-all group"
+      style={{
+        background: `linear-gradient(135deg, ${g1} 0%, ${g2} 100%)`,
+        aspectRatio: '1.6 / 1',
+        boxShadow: isSelected
+          ? `0 0 0 2.5px white, 0 0 0 4.5px ${g1}, 0 6px 20px ${g1}55`
+          : `0 2px 12px ${g1}40`,
+        transform: isSelected ? 'scale(0.94)' : 'scale(1)',
+        transition: 'all 0.18s ease',
+      }}>
+      {/* Decorative pattern */}
+      <div style={{ position: 'absolute', right: -14, top: -14, width: 52, height: 52, borderRadius: '50%', border: `10px solid ${brand.accent}25` }} />
+      <div style={{ position: 'absolute', left: -8, bottom: -10, width: 36, height: 36, borderRadius: '50%', background: `${brand.accent}18` }} />
+      {/* Mini chip */}
+      <div style={{ position: 'absolute', top: 7, left: 8, width: 14, height: 10, borderRadius: 2, background: `${brand.accent}35`, border: `1px solid ${brand.accent}40` }} />
+      {/* Logo image or text */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ paddingTop: 4 }}>
+        {logoFile ? (
+          <img src={logoFile} alt={name}
+            style={{ height: 18, width: 'auto', maxWidth: '78%', objectFit: 'contain', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))' }} />
+        ) : (
+          <p style={{ fontSize: 11, fontWeight: 900, color: 'white', letterSpacing: '0.05em', textShadow: '0 1px 4px rgba(0,0,0,0.35)', lineHeight: 1 }}>
+            {brand.logoText}
+          </p>
+        )}
+        <p style={{ fontSize: 5.5, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', marginTop: 3 }}>
+          {isEwallet ? 'E-WALLET' : 'BANK'}
+        </p>
+      </div>
+      {/* Selected badge */}
+      {isSelected && (
+        <div className="absolute top-1.5 right-1.5 rounded-full flex items-center justify-center"
+          style={{ width: 14, height: 14, background: 'white', boxShadow: `0 1px 4px ${g1}80` }}>
+          <Check size={8} color={g1} strokeWidth={3} />
+        </div>
+      )}
+    </button>
+  )
+}
+
 function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: Partial<NewInvitationData>) => void }) {
   const [adding, setAdding] = useState(false)
-  const [form, setForm] = useState<GiftAccount>({ type: 'bank', bank: '', number: '', name: '' })
+  const [form, setForm] = useState<GiftAccount>({ type: 'bank', bank: 'BCA', number: '', name: '' })
   const accounts = data.gift_accounts ?? []
 
   function add() {
     if (!form.number.trim() || !form.name.trim()) return
     onChange({ gift_accounts: [...accounts, { ...form }] })
-    setForm({ type: 'bank', bank: '', number: '', name: '' })
+    setForm({ type: 'bank', bank: 'BCA', number: '', name: '' })
     setAdding(false)
   }
 
+  const providerName = form.type === 'bank' ? (form.bank ?? '') : (form.platform ?? '')
+  const brandColor = getBrandColor(providerName)
+
   return (
     <div className="space-y-1.5">
-      {accounts.map((acc, i) => (
-        <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-lg px-2.5 py-1.5">
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-bold text-gray-500 uppercase">{acc.type === 'bank' ? acc.bank : acc.platform}</p>
-            <p className="text-xs font-mono text-gray-800 truncate">{acc.number}</p>
-            <p className="text-[10px] text-gray-400">a.n. {acc.name}</p>
+      {/* Existing accounts */}
+      {accounts.map((acc, i) => {
+        const name = acc.type === 'bank' ? acc.bank : acc.platform
+        const color = getBrandColor(name ?? '')
+        return (
+          <div key={i} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5"
+            style={{ background: `linear-gradient(135deg, ${color}18, ${color}08)`, border: `1px solid ${color}33` }}>
+            {/* Color swatch */}
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-white text-[9px] font-black"
+              style={{ background: `linear-gradient(135deg, ${color}, ${color}cc)` }}>
+              {(name ?? '?').slice(0, 3).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase" style={{ color }}>{name}</p>
+              <p className="text-xs font-mono text-gray-700 truncate tracking-wider">{acc.number}</p>
+              <p className="text-[9px] text-gray-400">a.n. {acc.name}</p>
+            </div>
+            <button onClick={() => onChange({ gift_accounts: accounts.filter((_, j) => j !== i) })}
+              className="text-gray-200 hover:text-red-400 transition-colors shrink-0">
+              <Trash2 size={12} />
+            </button>
           </div>
-          <button onClick={() => onChange({ gift_accounts: accounts.filter((_, j) => j !== i) })} className="text-gray-300 hover:text-red-400 text-[10px] shrink-0">✕</button>
-        </div>
-      ))}
+        )
+      })}
+
+      {/* Add form */}
       {adding ? (
-        <div className="border border-gray-200 rounded-lg p-2.5 bg-gray-50 space-y-2">
+        <div className="border border-gray-200 rounded-xl p-3 bg-white space-y-2.5 shadow-sm">
+
+          {/* Type toggle */}
           <div className="flex gap-1">
             {(['bank', 'ewallet'] as const).map(t => (
-              <button key={t} onClick={() => setForm(f => ({ ...f, type: t }))} className={`flex-1 py-1 text-[10px] font-semibold rounded transition-all ${form.type === t ? 'bg-gray-800 text-white' : 'bg-white border border-gray-200 text-gray-500'}`}>
-                {t === 'bank' ? 'Bank' : 'E-Wallet'}
+              <button key={t} onClick={() => setForm(f => ({
+                ...f, type: t,
+                bank: t === 'bank' ? 'BCA' : undefined,
+                platform: t === 'ewallet' ? 'GoPay' : undefined,
+              }))}
+                className={`flex-1 py-1.5 text-[10px] font-semibold rounded-lg transition-all ${form.type === t ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
+                {t === 'bank' ? '🏦 Bank' : '📱 E-Wallet'}
               </button>
             ))}
           </div>
-          <input className={ic} placeholder={form.type === 'bank' ? 'BCA / Mandiri' : 'GoPay / OVO'} value={form.type === 'bank' ? (form.bank ?? '') : (form.platform ?? '')} onChange={e => setForm(f => form.type === 'bank' ? { ...f, bank: e.target.value } : { ...f, platform: e.target.value })} />
-          <input className={ic} placeholder="No. rekening / HP" value={form.number} onChange={e => setForm(f => ({ ...f, number: e.target.value }))} />
-          <input className={ic} placeholder="Nama pemilik" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-          <div className="flex gap-1.5">
-            <button onClick={add} className="flex-1 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg">Tambah</button>
-            <button onClick={() => setAdding(false)} className="px-2 text-[10px] text-gray-400">Batal</button>
+
+          {/* Provider grid selector */}
+          <div>
+            <p className="text-[9px] text-gray-400 mb-2">Pilih provider</p>
+            <div className="grid grid-cols-3 gap-2">
+              {(form.type === 'bank' ? BANKS : EWALLETS).map(name => {
+                const isSelected = (form.type === 'bank' ? form.bank : form.platform) === name
+                return (
+                  <ProviderCard key={name} name={name} isSelected={isSelected}
+                    onClick={() => setForm(f => f.type === 'bank' ? { ...f, bank: name } : { ...f, platform: name })} />
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Custom provider name for "lainnya" */}
+          {(providerName.includes('lainnya') || providerName.includes('Lainnya')) && (
+            <F label={form.type === 'bank' ? 'Nama Bank' : 'Nama E-Wallet'}>
+              <input className={ic}
+                value={form.type === 'bank' ? (form.bank ?? '') : (form.platform ?? '')}
+                onChange={e => setForm(f => f.type === 'bank' ? { ...f, bank: e.target.value } : { ...f, platform: e.target.value })}
+                placeholder={form.type === 'bank' ? 'contoh: Bank Jago' : 'contoh: LinkAja'} />
+            </F>
+          )}
+
+          {/* Preview card — live debit card mockup */}
+          {providerName && !providerName.includes('lainnya') && (() => {
+            const pb = PROVIDER_BRANDS[providerName]
+            const [g1, g2] = pb ? pb.gradient : [brandColor, `${brandColor}cc`]
+            const accent = pb?.accent ?? '#ffffff'
+            const logoFile = PROVIDER_LOGO_FILES[providerName]
+            const formatted = form.number.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim()
+            return (
+              <div className="relative overflow-hidden rounded-2xl"
+                style={{ background: `linear-gradient(135deg, ${g1} 0%, ${g2} 100%)`, boxShadow: `0 8px 28px ${g1}55, 0 2px 8px rgba(0,0,0,0.2)`, aspectRatio: '1.75 / 1' }}>
+                {/* Pattern: large ring top-right */}
+                <div style={{ position: 'absolute', right: -24, top: -24, width: 110, height: 110, borderRadius: '50%', border: `22px solid ${accent}20` }} />
+                <div style={{ position: 'absolute', right: 18, bottom: -30, width: 80, height: 80, borderRadius: '50%', border: `16px solid ${accent}15` }} />
+                <div style={{ position: 'absolute', left: -20, bottom: -10, width: 70, height: 70, borderRadius: '50%', background: `${accent}12` }} />
+
+                {/* Chip + contactless row */}
+                <div className="absolute flex items-center gap-2" style={{ top: 16, left: 16 }}>
+                  {/* EMV chip */}
+                  <div style={{ width: 28, height: 20, borderRadius: 3, background: `${accent}44`, border: `1px solid ${accent}50`, position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: '33%', left: 0, right: 0, height: 1, background: `${accent}60` }} />
+                    <div style={{ position: 'absolute', left: '38%', top: 0, bottom: 0, width: 1, background: `${accent}60` }} />
+                  </div>
+                  {/* Contactless */}
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C9.5 4.5 8 7.6 8 12s1.5 7.5 4 10" stroke={`${accent}70`} strokeWidth="2.2" strokeLinecap="round"/>
+                    <path d="M16 5.5C14.2 7.3 13 9.5 13 12s1.2 4.7 3 6.5" stroke={`${accent}70`} strokeWidth="2.2" strokeLinecap="round"/>
+                    <path d="M20 8.5C19 9.5 18.3 10.7 18.3 12s.7 2.5 1.7 3.5" stroke={`${accent}70`} strokeWidth="2.2" strokeLinecap="round"/>
+                  </svg>
+                </div>
+
+                {/* Logo top-right */}
+                <div className="absolute" style={{ top: 14, right: 14 }}>
+                  {logoFile ? (
+                    <img src={logoFile} alt={providerName}
+                      style={{ height: 22, width: 'auto', maxWidth: 80, objectFit: 'contain', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }} />
+                  ) : (
+                    <p style={{ fontSize: 13, fontWeight: 900, color: 'white', letterSpacing: '0.06em', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+                      {pb?.logoText ?? providerName.slice(0, 3)}
+                    </p>
+                  )}
+                  <p style={{ fontSize: 6, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.14em', textAlign: 'right', marginTop: 2 }}>
+                    {form.type === 'bank' ? 'BANK' : 'E-WALLET'}
+                  </p>
+                </div>
+
+                {/* Card number */}
+                <p style={{ position: 'absolute', bottom: 30, left: 16, fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.95)', fontFamily: 'monospace', textShadow: '0 1px 6px rgba(0,0,0,0.45)' }}>
+                  {formatted || '•••• •••• ••••'}
+                </p>
+
+                {/* Name + type */}
+                <div className="absolute flex items-end justify-between" style={{ bottom: 10, left: 16, right: 14 }}>
+                  <div>
+                    <p style={{ fontSize: 6, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>
+                      {form.type === 'bank' ? 'Atas Nama' : 'Akun'}
+                    </p>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.92)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                      {form.name || 'NAMA PEMILIK'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
+
+          <F label="No. Rekening / No. HP">
+            <input className={`${ic} font-mono tracking-widest`} placeholder="0123 4567 8901"
+              value={form.number} onChange={e => setForm(f => ({ ...f, number: e.target.value }))} />
+          </F>
+          <F label="Nama Pemilik">
+            <input className={`${ic} uppercase`} placeholder="BUDI SANTOSO"
+              value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value.toUpperCase() }))} />
+          </F>
+
+          <div className="flex gap-1.5 pt-0.5">
+            <button onClick={add}
+              disabled={!form.number.trim() || !form.name.trim()}
+              className="flex-1 py-2 text-[11px] font-bold rounded-lg text-white transition-all disabled:opacity-40"
+              style={{ background: `linear-gradient(135deg, ${brandColor}, ${brandColor}cc)` }}>
+              Tambah
+            </button>
+            <button onClick={() => setAdding(false)} className="px-3 text-[10px] text-gray-400 hover:text-gray-600">Batal</button>
           </div>
         </div>
       ) : (
-        <button onClick={() => setAdding(true)} className="w-full py-1.5 border border-dashed border-gray-200 rounded-lg text-[10px] text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-all">
+        <button onClick={() => setAdding(true)}
+          className="w-full py-2 border border-dashed border-gray-200 rounded-xl text-[10px] font-medium text-gray-400 hover:border-rose-300 hover:text-rose-500 transition-all">
           + Tambah rekening / e-wallet
         </button>
       )}

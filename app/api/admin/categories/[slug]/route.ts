@@ -29,7 +29,11 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   const s = await settings.get()
   const target = s.categories.find((c) => c.slug === params.slug)
   if (!target) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  if (target.is_built_in) return NextResponse.json({ error: 'Kategori bawaan tidak bisa dihapus' }, { status: 403 })
+
+  // Prevent deletion of built-in categories
+  if (target.is_built_in) {
+    return NextResponse.json({ error: 'Kategori bawaan tidak dapat dihapus' }, { status: 400 })
+  }
 
   s.categories = s.categories.filter((c) => c.slug !== params.slug)
   await settings.save(s)

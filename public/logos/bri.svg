@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 40">
+  <!-- BRI wordmark -->
+  <text x="4" y="29" font-family="Arial Black,Arial,sans-serif" font-size="28" font-weight="900" fill="white" letter-spacing="2">BRI</text>
+  <!-- Iconic orange accent bar -->
+  <rect x="4" y="33" width="66" height="4" fill="#FF8C30" rx="2" opacity="0.9"/>
+</svg>

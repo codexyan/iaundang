@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 40">
+  <!-- blu lowercase rounded wordmark -->
+  <text x="4" y="30" font-family="Arial Rounded MT Bold,Arial,sans-serif" font-size="28" font-weight="700" fill="white">blu</text>
+  <!-- "by BCA" micro label -->
+  <text x="6" y="38" font-family="Arial,sans-serif" font-size="7" font-weight="400" fill="rgba(255,255,255,0.55)" letter-spacing="0.5">by BCA</text>
+</svg>

@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
+import { Sparkles, ArrowRight } from 'lucide-react'
 
 const schema = z.object({
   email: z.string().email('Email tidak valid'),
@@ -50,123 +51,167 @@ function LoginContent() {
       body: JSON.stringify(data),
     })
     setLoading(false)
-    if (!res.ok) { toast.error('Email atau password salah'); return }
+    if (!res.ok) {
+      toast.error('Email atau password salah. Coba lagi ya!', {
+        icon: '🔐',
+        style: { background: '#1f2937', color: '#fff' }
+      })
+      return
+    }
     const { user } = await res.json()
+    toast.success('Selamat datang kembali! 🎉', {
+      style: { background: '#059669', color: '#fff' }
+    })
     const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@akundang.id'
     router.push(user?.email === adminEmail ? '/admin' : redirect)
     router.refresh()
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#080810]">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-stone-50">
 
-      {/* subtle ambient glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full opacity-30"
-          style={{ background: 'radial-gradient(ellipse, rgba(244,63,94,0.18) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] opacity-20"
-          style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.2) 0%, transparent 70%)' }} />
+      {/* Enhanced gradient orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(244,63,94,0.2) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full opacity-25 blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full opacity-20 blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%)' }} />
       </div>
 
-      {/* fine dot texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-40"
-        style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_110%)]" />
 
-      {/* back to home */}
+      {/* Back to home button */}
       <motion.div
-        initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.6, duration: 0.4 }}
-        className="absolute top-7 left-7"
+        initial={{ opacity: 0, x: -12 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="absolute top-6 left-6"
       >
-        <Link href="/" className="flex items-center gap-1.5 text-white/25 hover:text-white/55 text-[12.5px] transition-colors duration-200">
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <Link
+          href="/"
+          className="group flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all backdrop-blur-xl border"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))',
+            borderColor: 'rgba(120,113,108,0.2)',
+          }}
+        >
+          <svg className="w-4 h-4 text-stone-600 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Beranda
+          <span className="text-body-sm font-medium text-stone-700">Kembali</span>
         </Link>
       </motion.div>
 
-      {/* ── Card ── */}
+      {/* Main Card */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease }}
-        className="relative w-full max-w-[400px] mx-4"
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.7, ease }}
+        className="relative w-full max-w-[440px] mx-4 z-10"
       >
-        {/* card glow ring */}
-        <div className="absolute -inset-[1px] rounded-[26px] pointer-events-none"
-          style={{ background: 'linear-gradient(135deg, rgba(244,63,94,0.35) 0%, rgba(139,92,246,0.15) 50%, transparent 100%)' }} />
+        {/* Card glow effect */}
+        <div className="absolute -inset-4 rounded-3xl opacity-20 blur-2xl"
+          style={{ background: 'linear-gradient(135deg, rgba(244,63,94,0.4), rgba(139,92,246,0.3))' }} />
 
-        <div className="relative rounded-[25px] overflow-hidden"
-          style={{ background: 'rgba(14,14,22,0.92)', backdropFilter: 'blur(24px)' }}>
+        {/* Glassmorphism card */}
+        <div
+          className="relative rounded-3xl overflow-hidden border shadow-2xl"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9))',
+            borderColor: 'rgba(255,255,255,0.5)',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)'
+          }}
+        >
+          {/* Top gradient accent */}
+          <div className="h-1 w-full"
+            style={{ background: 'linear-gradient(90deg, transparent, #f43f5e 30%, #a78bfa 70%, transparent)' }} />
 
-          {/* top gradient line */}
-          <div className="h-[1.5px] w-full"
-            style={{ background: 'linear-gradient(90deg, transparent, #f43f5e 40%, #a78bfa 80%, transparent)' }} />
+          <div className="px-8 sm:px-10 pt-10 pb-10">
 
-          <div className="px-8 pt-9 pb-10">
-
-            {/* Logo */}
+            {/* Logo + Tagline */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5, ease }}
-              className="flex justify-center mb-9"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.6, ease }}
+              className="text-center mb-8"
             >
-              <Link href="/" className="group">
-                <span className="text-[21px] font-bold tracking-tight">
-                  <span className="text-rose-400 group-hover:text-rose-300 transition-colors">ak</span>
-                  <span className="text-white/90">undang</span>
-                </span>
+              <Link href="/" className="group inline-block">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg">
+                    <Sparkles size={20} className="text-white" />
+                  </div>
+                  <span className="text-h3 font-bold tracking-tight">
+                    <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">ak</span>
+                    <span className="text-primary">undang</span>
+                  </span>
+                </div>
               </Link>
+              <p className="text-caption text-muted">Undangan digital yang bikin tamu kagum</p>
             </motion.div>
 
-            {/* Heading */}
+            {/* Heading with better UX copy */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.18, duration: 0.5, ease }}
-              className="mb-8"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.6, ease }}
+              className="mb-8 text-center"
             >
-              <h1 className="text-[1.75rem] font-semibold text-white leading-snug tracking-[-0.02em]">
-                Selamat datang<br />kembali
+              <h1 className="text-h2 font-bold text-primary mb-2">
+                Selamat Datang Kembali! 👋
               </h1>
-              <p className="text-[13px] text-white/35 mt-1.5 font-normal">Masuk untuk kelola undanganmu</p>
+              <p className="text-body-sm text-secondary">
+                Lanjutkan buat undangan impianmu
+              </p>
             </motion.div>
 
             {/* Form */}
             <motion.form
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ delay: 0.26, duration: 0.45, ease }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4"
+              className="space-y-5"
             >
-              {/* Email */}
+              {/* Email field */}
               <div className="space-y-2">
-                <label className="text-[11.5px] font-medium text-white/40 tracking-widest uppercase">
+                <label className="text-label-sm text-secondary block">
                   Email
                 </label>
                 <input
                   type="email"
                   autoComplete="email"
-                  placeholder="kamu@email.com"
-                  className="w-full rounded-xl px-4 py-3 text-[13.5px] text-white/90 placeholder-white/20 outline-none transition-all duration-200 bg-white/[0.05] border border-white/[0.08] focus:border-rose-500/50 focus:bg-white/[0.07] focus:shadow-[0_0_0_3px_rgba(244,63,94,0.12)]"
+                  placeholder="nama@email.com"
+                  className="w-full rounded-xl px-4 py-3.5 text-body-base text-primary placeholder-muted outline-none transition-all duration-200 bg-white border-2 border-stone-200 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
                   {...register('email')}
                 />
                 {errors.email && (
-                  <motion.p initial={{ opacity: 0, y: -3 }} animate={{ opacity: 1, y: 0 }}
-                    className="text-[11.5px] text-rose-400/80 flex items-center gap-1">
-                    <span>⚠</span> {errors.email.message}
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-caption text-red-600 flex items-center gap-1.5"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    {errors.email.message}
                   </motion.p>
                 )}
               </div>
 
-              {/* Password */}
+              {/* Password field */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11.5px] font-medium text-white/40 tracking-widest uppercase">
+                  <label className="text-label-sm text-secondary">
                     Password
                   </label>
-                  <Link href="/reset-password"
-                    className="text-[11.5px] text-rose-400/70 hover:text-rose-400 transition-colors">
+                  <Link
+                    href="/reset-password"
+                    className="text-caption font-semibold text-rose-600 hover:text-rose-700 transition-colors"
+                  >
                     Lupa password?
                   </Link>
                 </div>
@@ -174,71 +219,106 @@ function LoginContent() {
                   <input
                     type={showPass ? 'text' : 'password'}
                     autoComplete="current-password"
-                    placeholder="••••••••"
-                    className="w-full rounded-xl px-4 py-3 pr-11 text-[13.5px] text-white/90 placeholder-white/20 outline-none transition-all duration-200 bg-white/[0.05] border border-white/[0.08] focus:border-rose-500/50 focus:bg-white/[0.07] focus:shadow-[0_0_0_3px_rgba(244,63,94,0.12)]"
+                    placeholder="Masukkan password kamu"
+                    className="w-full rounded-xl px-4 py-3.5 pr-12 text-body-base text-primary placeholder-muted outline-none transition-all duration-200 bg-white border-2 border-stone-200 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
                     {...register('password')}
                   />
-                  <button type="button" tabIndex={-1} onClick={() => setShowPass(v => !v)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => setShowPass(v => !v)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors"
+                  >
                     <EyeIcon open={showPass} />
                   </button>
                 </div>
                 {errors.password && (
-                  <motion.p initial={{ opacity: 0, y: -3 }} animate={{ opacity: 1, y: 0 }}
-                    className="text-[11.5px] text-rose-400/80 flex items-center gap-1">
-                    <span>⚠</span> {errors.password.message}
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-caption text-red-600 flex items-center gap-1.5"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    {errors.password.message}
                   </motion.p>
                 )}
               </div>
 
-              {/* Submit */}
-              <div className="pt-1">
+              {/* Submit button with better UX copy */}
+              <div className="pt-2">
                 <motion.button
                   type="submit"
                   disabled={loading}
-                  whileHover={loading ? {} : { y: -1 }}
-                  whileTap={loading ? {} : { scale: 0.99 }}
-                  className="w-full py-3.5 px-6 rounded-xl text-[13.5px] font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  whileHover={loading ? {} : { scale: 1.02, y: -2 }}
+                  whileTap={loading ? {} : { scale: 0.98 }}
+                  className="group w-full py-4 px-6 rounded-xl text-button-lg text-white font-semibold flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                   style={{
                     background: loading
-                      ? 'rgba(244,63,94,0.4)'
+                      ? 'linear-gradient(135deg, rgba(244,63,94,0.6), rgba(225,29,72,0.6))'
                       : 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)',
-                    boxShadow: loading ? 'none' : '0 4px 24px -4px rgba(244,63,94,0.5), inset 0 1px 0 rgba(255,255,255,0.12)',
+                    boxShadow: loading
+                      ? 'none'
+                      : '0 8px 24px rgba(244,63,94,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
                   }}
                 >
                   {loading ? (
                     <>
-                      <svg className="animate-spin h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Memproses...
+                      <span>Sedang masuk...</span>
                     </>
                   ) : (
                     <>
-                      Masuk
-                      <svg className="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
+                      <span>Masuk Sekarang</span>
+                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </motion.button>
               </div>
             </motion.form>
 
-            {/* Footer */}
+            {/* Divider */}
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-stone-200" />
+              </div>
+              <div className="relative flex justify-center text-caption">
+                <span className="px-4 bg-white text-muted">atau</span>
+              </div>
+            </div>
+
+            {/* Register CTA with persuasive copy */}
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ delay: 0.42, duration: 0.4, ease }}
-              className="mt-7 pt-6 border-t border-white/[0.06] text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="text-center space-y-4"
             >
-              <p className="text-[12.5px] text-white/30">
+              <p className="text-body-sm text-secondary">
                 Belum punya akun?{' '}
-                <Link href={templateId ? `/register?template=${templateId}` : '/register'}
-                  className="text-rose-400 hover:text-rose-300 font-medium transition-colors">
-                  Daftar gratis
+                <Link
+                  href={templateId ? `/register?template=${templateId}` : '/register'}
+                  className="font-semibold text-rose-600 hover:text-rose-700 transition-colors"
+                >
+                  Daftar gratis sekarang
                 </Link>
               </p>
+
+              {/* Social proof micro-copy */}
+              <div className="flex items-center justify-center gap-2 text-caption text-muted">
+                <div className="flex -space-x-2">
+                  {['🤵🏻', '👰🏻', '🤵🏽'].map((e, i) => (
+                    <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-stone-100 to-stone-50 border-2 border-white flex items-center justify-center text-xs shadow-sm">
+                      {e}
+                    </div>
+                  ))}
+                </div>
+                <span>500+ pasangan sudah percaya</span>
+              </div>
             </motion.div>
 
           </div>
