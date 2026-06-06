@@ -22,6 +22,10 @@ import InvitationPreview from '@/components/renderer/InvitationPreview'
 
 // New modular components
 import StudioHeader from './StudioHeader'
+import ColorPaletteForm from './forms/ColorPaletteForm'
+import OpeningForm from './forms/OpeningForm'
+import MusicForm from './forms/MusicForm'
+import QuoteForm from './forms/QuoteForm'
 import BasicInfoForm from './forms/BasicInfoForm'
 import EventDetailsForm from './forms/EventDetailsForm'
 import ProfilesForm from './forms/ProfilesForm'
@@ -40,6 +44,7 @@ interface Props {
 function initData(inv: Invitation): NewInvitationData {
   const d = inv.data as unknown as NewInvitationData
   return {
+    // Identity
     groom_name: d.groom_name ?? '',
     bride_name: d.bride_name ?? '',
     groom_parents: d.groom_parents ?? '',
@@ -50,18 +55,51 @@ function initData(inv: Invitation): NewInvitationData {
     groom_bio: d.groom_bio ?? '',
     bride_bio: d.bride_bio ?? '',
     couple_photo_url: d.couple_photo_url ?? '',
-    hero_video_url: '', // REMOVED: Video upload feature
+
+    // Colors (NEW)
+    primary_color: d.primary_color ?? '#2c4a34',
+    accent_color: d.accent_color ?? '#c9a961',
+    text_color: d.text_color ?? '#1a1a1a',
+    background_color: d.background_color ?? '#fefdf8',
+
+    // Opening (NEW)
+    opening_greeting: d.opening_greeting ?? 'Assalamualaikum Warahmatullahi Wabarakatuh',
+    opening_subtitle: d.opening_subtitle ?? 'Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.',
+
+    // Music (NEW)
+    music_url: d.music_url ?? '',
+    music_title: d.music_title ?? '',
+
+    // Quote (NEW)
+    quote_arabic: d.quote_arabic ?? '',
+    quote_translation: d.quote_translation ?? '',
+    quote_source: d.quote_source ?? '',
+
+    // Events
     akad: d.akad ?? { date: '', time: '08:00', venue_name: '', venue_address: '' },
     resepsi: d.resepsi ?? { date: '', time: '11:00', venue_name: '', venue_address: '' },
+
+    // Story
     story_title: d.story_title ?? '',
     story_text: d.story_text ?? '',
+    story_chapters: d.story_chapters ?? [],
+    story_timeline: d.story_timeline ?? [],
+
+    // Gift
+    gift_accounts: d.gift_accounts ?? [],
+
+    // Gallery
+    gallery_photos: d.gallery_photos ?? [],
+
+    // Closing
     closing_text: d.closing_text ?? '',
     thank_you_message: d.thank_you_message ?? '',
-    gift_accounts: d.gift_accounts ?? [],
-    gallery_photos: d.gallery_photos ?? [],
-    story_chapters: d.story_chapters ?? [],
-    music_url: d.music_url ?? '',
+
+    // Other
+    hero_video_url: '', // REMOVED: Video upload feature
     livestream_url: d.livestream_url ?? '',
+    video_embed_url: d.video_embed_url ?? '',
+    video_caption: d.video_caption ?? '',
   }
 }
 
@@ -179,7 +217,21 @@ export default function InvitationStudio({ invitation, template, onSaved }: Prop
         <div className="flex gap-8">
           {/* Left: Forms */}
           <div className="flex-1 min-w-0 space-y-6">
-            {/* REQUIRED SECTION 1: Basic Info */}
+            {/* ━━━ DASAR (Required) ━━━ */}
+
+            {/* REQUIRED: Color Palette */}
+            <ColorPaletteForm
+              primaryColor={(data as any).primary_color || '#2c4a34'}
+              accentColor={(data as any).accent_color || '#c9a961'}
+              textColor={(data as any).text_color || '#1a1a1a'}
+              backgroundColor={(data as any).background_color || '#fefdf8'}
+              onPrimaryColorChange={(val) => updateData({ ...data, primary_color: val } as any)}
+              onAccentColorChange={(val) => updateData({ ...data, accent_color: val } as any)}
+              onTextColorChange={(val) => updateData({ ...data, text_color: val } as any)}
+              onBackgroundColorChange={(val) => updateData({ ...data, background_color: val } as any)}
+            />
+
+            {/* REQUIRED: Basic Info */}
             <BasicInfoForm
               groomName={data.groom_name}
               brideName={data.bride_name}
@@ -191,13 +243,43 @@ export default function InvitationStudio({ invitation, template, onSaved }: Prop
               onTaglineChange={(val) => updateData({ tagline: val })}
             />
 
-            {/* REQUIRED SECTION 2: Event Details */}
+            {/* REQUIRED: Event Details */}
             <EventDetailsForm
               akad={data.akad}
               resepsi={data.resepsi}
               onAkadChange={(patch) => updateData({ akad: { ...data.akad, ...patch } })}
               onResepsiChange={(patch) => updateData({ resepsi: { ...data.resepsi, ...patch } })}
             />
+
+            {/* ━━━ SUASANA (Atmosphere) ━━━ */}
+
+            {/* Opening Settings */}
+            <OpeningForm
+              openingGreeting={(data as any).opening_greeting || ''}
+              openingSubtitle={(data as any).opening_subtitle || ''}
+              onOpeningGreetingChange={(val) => updateData({ ...data, opening_greeting: val } as any)}
+              onOpeningSubtitleChange={(val) => updateData({ ...data, opening_subtitle: val } as any)}
+            />
+
+            {/* Music */}
+            <MusicForm
+              musicUrl={(data as any).music_url || ''}
+              musicTitle={(data as any).music_title || ''}
+              onMusicUrlChange={(val) => updateData({ ...data, music_url: val } as any)}
+              onMusicTitleChange={(val) => updateData({ ...data, music_title: val } as any)}
+            />
+
+            {/* Quote & Doa */}
+            <QuoteForm
+              quoteArabic={(data as any).quote_arabic || ''}
+              quoteTranslation={(data as any).quote_translation || ''}
+              quoteSource={(data as any).quote_source || ''}
+              onQuoteArabicChange={(val) => updateData({ ...data, quote_arabic: val } as any)}
+              onQuoteTranslationChange={(val) => updateData({ ...data, quote_translation: val } as any)}
+              onQuoteSourceChange={(val) => updateData({ ...data, quote_source: val } as any)}
+            />
+
+            {/* ━━━ CERITA (Story) ━━━ */}
 
             {/* OPTIONAL: Countdown */}
             <InfoCard
