@@ -404,7 +404,6 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
   const [activeTab, setActiveTab] = useState<ConfigTab>('identity')
   const [previewMode, setPreviewMode] = useState<'invitation' | 'cover' | 'loading'>('invitation')
   const [previewGuestName, setPreviewGuestName] = useState('Bapak Budi dan Keluarga')
-  const [jsonText, setJsonText] = useState('')
   const [previewData, setPreviewData] = useState<NewInvitationData>(PREVIEW_DATA_DEFAULT)
   const [showHowTo, setShowHowTo] = useState(false)
   // ── Categories: mutable state + inline CRUD ────────────────
@@ -618,16 +617,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
     // No-op: JSON tab has been replaced with Musik tab
   }
 
-  function applyJson() {
-    try {
-      const parsed = JSON.parse(jsonText)
-      setConfig(prev => ({ ...prev, config: parsed }))
-      setJsonError('')
-      toast.success('Konfigurasi JSON diterapkan')
-    } catch (e) {
-      setJsonError('JSON tidak valid: ' + (e as Error).message)
-    }
-  }
+  // applyJson removed - JSON tab replaced with Musik tab
 
   // ── Save/Load lab ─────────────────────────────────────────────
   function saveLab() {

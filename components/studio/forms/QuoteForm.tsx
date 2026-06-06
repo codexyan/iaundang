@@ -111,7 +111,7 @@ export default function QuoteForm({
               className="w-full p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
             >
               <p className="text-xs text-stone-700 italic leading-relaxed line-clamp-2">
-                "{quote.text}"
+                &ldquo;{quote.text}&rdquo;
               </p>
               <p className="text-xs text-stone-500 mt-1">— {quote.author}</p>
             </button>
