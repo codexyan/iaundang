@@ -6,7 +6,7 @@ import { Lock, Crown, Check, ExternalLink, ShoppingBag, Eye, X, Sparkles } from 
 import type { Invitation, NewInvitationData } from '@/lib/types'
 import { LEGACY_TEMPLATE_IDS } from '@/lib/types'
 import { getPackage, formatPrice, PACKAGES, type PackageTier } from '@/lib/packages'
-import InvitationEditor from './InvitationEditor'
+import InvitationStudio from '../studio/InvitationStudio'
 import InvitationWizard from './InvitationWizard'
 
 // ── Types ──────────────────────────────────────────────────────
@@ -149,7 +149,7 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
   const currentTemplate = allTemplates.find(t => t.id === invitation.template_id)
 
   // Find the TemplateRecord for new templates (for the editor)
-  // We need to pass this to InvitationEditor which uses it for preview
+  // We need to pass this to InvitationStudio which uses it for preview
   const [templateRecord, setTemplateRecord] = useState<import('@/lib/types').TemplateRecord | null>(null)
 
   // For new templates, we need the full TemplateRecord from templateRecords store
@@ -252,7 +252,7 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
         </div>
       ) : templateRecord ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
-          <InvitationEditor
+          <InvitationStudio
             invitation={invitation}
             template={templateRecord}
             onSaved={onInvitationUpdate}
