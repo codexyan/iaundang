@@ -1492,6 +1492,28 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                   </Field>
                 </div>
               </div>
+
+              {/* ── Musik Latar ── */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  Musik Latar
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-gray-500">Putar Musik Otomatis</label>
+                    <button
+                      onClick={() => updateOpening({ music_autoplay: !cfg.opening.music_autoplay })}
+                      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
+                        cfg.opening.music_autoplay ? 'bg-indigo-600' : 'bg-gray-200'
+                      }`}
+                    >
+                      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
+                        cfg.opening.music_autoplay ? 'translate-x-[18px]' : 'translate-x-0.5'
+                      }`} />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
