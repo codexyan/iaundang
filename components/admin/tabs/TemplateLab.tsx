@@ -655,12 +655,6 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
     localStorage.setItem('akundang-labs', JSON.stringify(updated))
   }
 
-  function resetToBase() {
-    if (!confirm('Reset ke Javanese Gold?')) return
-    setConfig({ ...deepClone(JAVANESE_GOLD), id: makeId(), name: 'Template Baru', slug: 'template-baru' })
-    setPreviewKey(k => k + 1)
-  }
-
   function openReleaseModal() {
     setReleaseForm({
       name: config.name || 'Template Baru',
