@@ -27,7 +27,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-stone-200/50 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Logo variant="horizontal" size="md" />
+        <Logo variant="horizontal" size="sm" />
 
         <div className="flex items-center gap-1 min-w-[160px] justify-end">
           {!loaded ? (
