@@ -19,6 +19,10 @@ import {
   Zap,
   Heart,
   Check,
+  Music,
+  Images,
+  CheckCircle2,
+  MessageCircle,
 } from "lucide-react";
 
 const COUPLE_PHOTO =
@@ -453,42 +457,40 @@ export default function HeroSection() {
               </Link>
             </motion.div>
 
-            {/* 🎯 Feature Pills - Compact Mobile */}
+            {/* 🎯 Feature Pills - Modern Icons */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.85 }}
-              className="mt-5 sm:mt-8 flex flex-wrap gap-1.5 sm:gap-2.5"
+              className="mt-5 sm:mt-8 flex flex-wrap gap-2 sm:gap-2.5"
             >
               {[
-                { icon: "🎵", text: "Musik auto-play" },
-                { icon: "✨", text: "Nama tamu personal" },
-                { icon: "📸", text: "Galeri unlimited" },
-                { icon: "✅", text: "RSVP realtime" },
-                { icon: "💬", text: "Ucapan langsung" },
-              ].map(({ icon, text }, i) => (
-                <motion.span
+                { Icon: Music, text: "Musik auto-play", color: "from-purple-500 to-pink-500" },
+                { Icon: Sparkles, text: "Nama tamu personal", color: "from-amber-500 to-orange-500" },
+                { Icon: Images, text: "Galeri unlimited", color: "from-blue-500 to-cyan-500" },
+                { Icon: CheckCircle2, text: "RSVP realtime", color: "from-green-500 to-emerald-500" },
+                { Icon: MessageCircle, text: "Ucapan langsung", color: "from-rose-500 to-pink-500" },
+              ].map(({ Icon, text, color }, i) => (
+                <motion.div
                   key={text}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    delay: 0.9 + i * 0.06,
+                    delay: 0.9 + i * 0.08,
                     type: "spring",
-                    stiffness: 200,
+                    stiffness: 150,
                   }}
-                  className="group flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-body-sm font-medium text-secondary backdrop-blur-md border hover:border-amber-300 hover:bg-amber-50/50 transition-all cursor-default"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5))",
-                    borderColor: "rgba(120,113,108,0.15)",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                  }}
+                  className="group relative"
                 >
-                  <span className="text-base group-hover:scale-110 transition-transform">
-                    {icon}
-                  </span>
-                  {text}
-                </motion.span>
+                  <div className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/80 backdrop-blur-sm border border-stone-200/50 shadow-sm hover:shadow-md hover:scale-105 transition-all duration-300 cursor-default">
+                    <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-gradient-to-br ${color} p-1 flex items-center justify-center shadow-sm`}>
+                      <Icon className="w-full h-full text-white" strokeWidth={2.5} />
+                    </div>
+                    <span className="text-[11px] sm:text-sm font-medium text-stone-700">
+                      {text}
+                    </span>
+                  </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
