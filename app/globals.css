@@ -49,7 +49,7 @@
   }
 
   .text-display-lg {
-    font-size: clamp(1.625rem, 5vw, 4rem);
+    font-size: clamp(1.375rem, 4.5vw, 3rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
     font-weight: 700;
@@ -248,23 +248,23 @@
   @media (max-width: 640px) {
     /* Aggressively reduce display sizes for mobile */
     .text-display-2xl {
-      font-size: clamp(2rem, 6vw, 2.5rem);
+      font-size: clamp(1.75rem, 5.5vw, 2rem);
       line-height: 1.2;
     }
 
     .text-display-xl {
-      font-size: clamp(1.875rem, 5.5vw, 2.25rem);
+      font-size: clamp(1.625rem, 5vw, 1.875rem);
       line-height: 1.2;
     }
 
     .text-display-lg {
-      font-size: clamp(1.5rem, 5vw, 1.875rem);
+      font-size: clamp(1.25rem, 4.5vw, 1.5rem);
       line-height: 1.25;
       letter-spacing: -0.005em;
     }
 
     .text-display-md {
-      font-size: clamp(1.25rem, 4vw, 1.5rem);
+      font-size: clamp(1.125rem, 4vw, 1.25rem);
       line-height: 1.3;
     }
 

@@ -392,36 +392,36 @@ export default function HeroSection() {
               {FEATURE_CARDS.map((card, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: card.side === 'left' ? -30 : 30, scale: 0.8 }}
+                  initial={{ opacity: 0, x: card.side === 'left' ? -20 : 20, scale: 0.9 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ delay: card.delay, duration: 0.6, type: 'spring', stiffness: 100 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className={`absolute z-20 ${card.bgGradient} backdrop-blur-xl rounded-2xl p-3 sm:p-4 border border-white/20 hidden lg:block`}
+                  whileHover={{ scale: 1.03, y: -3 }}
+                  className={`absolute z-20 ${card.bgGradient} backdrop-blur-xl rounded-xl p-2.5 border border-white/20 hidden xl:block`}
                   style={{
-                    [card.side === 'left' ? 'left' : 'right']: '-10px',
+                    [card.side === 'left' ? 'left' : 'right']: '-5px',
                     top: card.top,
                     transform: `translateX(${card.side === 'left' ? '-100%' : '100%'})`,
                     background: 'rgba(255,255,255,0.98)',
-                    boxShadow: '0 12px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
-                    maxWidth: 180,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.9)',
+                    maxWidth: 140,
                     willChange: 'transform',
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-inner"
+                      className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-inner"
                       style={{
                         background: `linear-gradient(135deg, ${card.iconColor}15, ${card.iconColor}05)`,
                         border: `1px solid ${card.iconColor}20`
                       }}
                     >
-                      <card.icon size={18} style={{ color: card.iconColor }} />
+                      <card.icon size={14} style={{ color: card.iconColor }} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-caption font-semibold text-primary leading-tight mb-0.5">{card.title}</p>
-                      <div className="flex items-baseline gap-1.5">
-                        <p className="text-h4 font-bold leading-none" style={{ color: card.iconColor }}>{card.value}</p>
-                        <p className="text-caption-sm text-muted truncate">{card.subtitle}</p>
+                      <p className="text-[10px] font-semibold text-primary leading-tight mb-0.5">{card.title}</p>
+                      <div className="flex items-baseline gap-1">
+                        <p className="text-sm font-bold leading-none" style={{ color: card.iconColor }}>{card.value}</p>
+                        <p className="text-[9px] text-muted truncate">{card.subtitle}</p>
                       </div>
                     </div>
                   </div>
