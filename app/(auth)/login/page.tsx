@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
@@ -86,7 +86,7 @@ function LoginContent() {
         <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-stone-200/50 overflow-hidden">
 
           {/* Accent bar */}
-          <div className="h-1 bg-gradient-to-r from-rose-500 to-pink-500" />
+          <div className="h-1 bg-gradient-to-r from-gold-500 to-champagne-500" />
 
           <div className="p-6 sm:p-8">
 
@@ -94,7 +94,7 @@ function LoginContent() {
             <div className="text-center mb-6">
               <Link href="/" className="inline-block">
                 <h2 className="text-xl font-bold">
-                  <span className="text-rose-600">ak</span>
+                  <span className="text-gold-600">ak</span>
                   <span className="text-stone-900">undang</span>
                 </h2>
               </Link>
@@ -119,7 +119,7 @@ function LoginContent() {
                   type="email"
                   autoComplete="email"
                   placeholder="nama@email.com"
-                  className="w-full px-3 py-2.5 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-100 transition-all"
+                  className="w-full px-3 py-2.5 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all"
                   {...register('email')}
                 />
                 {errors.email && (
@@ -140,7 +140,7 @@ function LoginContent() {
                   </label>
                   <Link
                     href="/reset-password"
-                    className="text-xs font-medium text-rose-600 hover:text-rose-700"
+                    className="text-xs font-medium text-gold-600 hover:text-gold-600"
                   >
                     Lupa?
                   </Link>
@@ -150,7 +150,7 @@ function LoginContent() {
                     type={showPass ? 'text' : 'password'}
                     autoComplete="current-password"
                     placeholder="Masukkan password"
-                    className="w-full px-3 py-2.5 pr-10 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-100 transition-all"
+                    className="w-full px-3 py-2.5 pr-10 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all"
                     {...register('password')}
                   />
                   <button
@@ -176,7 +176,7 @@ function LoginContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-gradient-to-r bg-gold-gradient text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -211,7 +211,7 @@ function LoginContent() {
                 Belum punya akun?{' '}
                 <Link
                   href={templateId ? `/register?template=${templateId}` : '/register'}
-                  className="font-semibold text-rose-600 hover:text-rose-700"
+                  className="font-semibold text-gold-600 hover:text-gold-600"
                 >
                   Daftar gratis
                 </Link>

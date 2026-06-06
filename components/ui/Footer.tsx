@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { Instagram, Mail, MessageCircle, Github, Twitter } from 'lucide-react'
 
 export default function Footer() {
@@ -19,7 +19,7 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <Link href="/" className="inline-block group">
               <h3 className="text-2xl font-bold tracking-tight mb-3">
-                <span className="text-rose-500 group-hover:text-rose-400 transition-colors">ak</span>
+                <span className="text-gold-500 group-hover:text-gold-400 transition-colors">ak</span>
                 <span className="text-white group-hover:text-stone-100 transition-colors">undang</span>
               </h3>
             </Link>
@@ -33,7 +33,7 @@ export default function Footer() {
                 href="https://instagram.com/akundang.id"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-stone-800/50 border border-stone-700/50 flex items-center justify-center hover:bg-rose-500 hover:border-rose-500 transition-all duration-300 group"
+                className="w-9 h-9 rounded-lg bg-stone-800/50 border border-stone-700/50 flex items-center justify-center hover:bg-gold-500 hover:border-gold-500 transition-all duration-300 group"
               >
                 <Instagram className="w-4 h-4 text-stone-400 group-hover:text-white transition-colors" />
               </a>
@@ -77,7 +77,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-stone-400 hover:text-rose-400 transition-colors duration-200"
+                    className="text-sm text-stone-400 hover:text-gold-400 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-stone-400 hover:text-rose-400 transition-colors duration-200"
+                    className="text-sm text-stone-400 hover:text-gold-400 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -121,7 +121,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-stone-400 hover:text-rose-400 transition-colors duration-200"
+                    className="text-sm text-stone-400 hover:text-gold-400 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -137,7 +137,7 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:halo@akundang.id"
-                  className="text-sm text-stone-400 hover:text-rose-400 transition-colors duration-200 flex items-center gap-2"
+                  className="text-sm text-stone-400 hover:text-gold-400 transition-colors duration-200 flex items-center gap-2"
                 >
                   <Mail className="w-4 h-4" />
                   halo@akundang.id
@@ -146,7 +146,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.me/628123456789"
-                  className="text-sm text-stone-400 hover:text-rose-400 transition-colors duration-200 flex items-center gap-2"
+                  className="text-sm text-stone-400 hover:text-gold-400 transition-colors duration-200 flex items-center gap-2"
                 >
                   <MessageCircle className="w-4 h-4" />
                   WhatsApp
@@ -157,7 +157,7 @@ export default function Footer() {
             {/* Mini CTA */}
             <Link
               href="/register"
-              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r bg-gold-gradient text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
             >
               Mulai Gratis
             </Link>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
@@ -92,7 +92,7 @@ function RegisterContent() {
         <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-stone-200/50 overflow-hidden">
 
           {/* Accent bar */}
-          <div className="h-1 bg-gradient-to-r from-rose-500 to-pink-500" />
+          <div className="h-1 bg-gradient-to-r from-gold-500 to-champagne-500" />
 
           <div className="p-6 sm:p-8">
 
@@ -100,7 +100,7 @@ function RegisterContent() {
             <div className="text-center mb-6">
               <Link href="/" className="inline-block">
                 <h2 className="text-xl font-bold">
-                  <span className="text-rose-600">ak</span>
+                  <span className="text-gold-600">ak</span>
                   <span className="text-stone-900">undang</span>
                 </h2>
               </Link>
@@ -120,7 +120,7 @@ function RegisterContent() {
             {/* Template badge - Compact */}
             {selectedTemplate && (
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-rose-50 border border-rose-200 mb-4">
-                <div className="w-3.5 h-3.5 rounded-full bg-rose-500 flex items-center justify-center shrink-0">
+                <div className="w-3.5 h-3.5 rounded-full bg-gold-500 flex items-center justify-center shrink-0">
                   <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
@@ -143,7 +143,7 @@ function RegisterContent() {
                   type="email"
                   autoComplete="email"
                   placeholder="kamu@email.com"
-                  className="w-full px-3 py-2.5 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-100 transition-all"
+                  className="w-full px-3 py-2.5 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all"
                   {...register('email')}
                 />
                 {errors.email && (
@@ -166,7 +166,7 @@ function RegisterContent() {
                     type={showPass ? 'text' : 'password'}
                     autoComplete="new-password"
                     placeholder="Min. 6 karakter"
-                    className="w-full px-3 py-2.5 pr-10 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-100 transition-all"
+                    className="w-full px-3 py-2.5 pr-10 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all"
                     {...register('password')}
                   />
                   <button
@@ -198,7 +198,7 @@ function RegisterContent() {
                     type={showConfirm ? 'text' : 'password'}
                     autoComplete="new-password"
                     placeholder="Ulangi password"
-                    className="w-full px-3 py-2.5 pr-10 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-100 transition-all"
+                    className="w-full px-3 py-2.5 pr-10 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all"
                     {...register('confirmPassword')}
                   />
                   <button
@@ -224,7 +224,7 @@ function RegisterContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-gradient-to-r bg-gold-gradient text-white text-sm font-semibold rounded-lg hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -259,7 +259,7 @@ function RegisterContent() {
                 Sudah punya akun?{' '}
                 <Link
                   href={templateId ? `/login?template=${templateId}` : '/login'}
-                  className="font-semibold text-rose-600 hover:text-rose-700"
+                  className="font-semibold text-gold-600 hover:text-gold-600"
                 >
                   Masuk
                 </Link>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -469,7 +469,7 @@ export default function HeroSection() {
                 { Icon: Sparkles, text: "Nama tamu personal", color: "from-amber-500 to-orange-500" },
                 { Icon: Images, text: "Galeri unlimited", color: "from-blue-500 to-cyan-500" },
                 { Icon: CheckCircle2, text: "RSVP realtime", color: "from-green-500 to-emerald-500" },
-                { Icon: MessageCircle, text: "Ucapan langsung", color: "from-rose-500 to-pink-500" },
+                { Icon: MessageCircle, text: "Ucapan langsung", color: "from-gold-500 to-champagne-500" },
               ].map(({ Icon, text, color }, i) => (
                 <motion.div
                   key={text}
