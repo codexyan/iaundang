@@ -246,47 +246,78 @@
 
   /* ─── MOBILE OPTIMIZATIONS (< 640px) ──────────────────────────────── */
   @media (max-width: 640px) {
-    /* Aggressively reduce display sizes for mobile */
+    /* Better mobile hierarchy with smooth progression */
     .text-display-2xl {
-      font-size: clamp(1.75rem, 5.5vw, 2rem);
-      line-height: 1.2;
+      font-size: 1.75rem;  /* 28px fixed */
+      line-height: 1.25;
     }
 
     .text-display-xl {
-      font-size: clamp(1.625rem, 5vw, 1.875rem);
-      line-height: 1.2;
+      font-size: 1.625rem;  /* 26px fixed */
+      line-height: 1.25;
     }
 
     .text-display-lg {
-      font-size: clamp(1.25rem, 4.5vw, 1.5rem);
-      line-height: 1.25;
+      font-size: 1.5rem;  /* 24px fixed */
+      line-height: 1.3;
       letter-spacing: -0.005em;
     }
 
     .text-display-md {
-      font-size: clamp(1.125rem, 4vw, 1.25rem);
-      line-height: 1.3;
-    }
-
-    /* Reduce heading sizes */
-    .text-h1 {
-      font-size: clamp(1.5rem, 3.5vw, 1.75rem);
-    }
-
-    .text-h2 {
-      font-size: clamp(1.375rem, 3vw, 1.5rem);
-    }
-
-    .text-h3 {
-      font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+      font-size: 1.25rem;  /* 20px fixed */
       line-height: 1.35;
     }
 
-    /* Increase body line-height for thumb-scrolling */
-    .text-body-lg,
-    .text-body-base,
+    /* Smooth heading progression */
+    .text-h1 {
+      font-size: 1.375rem;  /* 22px */
+      line-height: 1.35;
+    }
+
+    .text-h2 {
+      font-size: 1.25rem;  /* 20px */
+      line-height: 1.4;
+    }
+
+    .text-h3 {
+      font-size: 1.125rem;  /* 18px */
+      line-height: 1.4;
+    }
+
+    .text-h4 {
+      font-size: 1rem;  /* 16px */
+      line-height: 1.45;
+    }
+
+    .text-h5 {
+      font-size: 0.9375rem;  /* 15px */
+      line-height: 1.45;
+    }
+
+    /* Body text optimization */
+    .text-body-lg {
+      font-size: 0.9375rem;  /* 15px */
+      line-height: 1.6;
+    }
+
+    .text-body-base {
+      font-size: 0.875rem;  /* 14px */
+      line-height: 1.6;
+    }
+
     .text-body-sm {
-      line-height: 1.65;
+      font-size: 0.8125rem;  /* 13px */
+      line-height: 1.55;
+    }
+
+    /* Labels & UI */
+    .text-label-base {
+      font-size: 0.6875rem;  /* 11px */
+      line-height: 1.4;
+    }
+
+    .text-button-lg {
+      font-size: 0.9375rem;  /* 15px */
     }
   }
 
