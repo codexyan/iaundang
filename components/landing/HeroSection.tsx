@@ -13,30 +13,14 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Play,
-  Sparkles,
   Star,
   Heart,
   Check,
 } from "lucide-react";
 
-const COUPLE_PHOTO = "/images/templates/traditional.jpg"; // Default template preview
-const PROMO_END = new Date("2026-08-31T23:59:59");
+const COUPLE_PHOTO = "/logos/foto-mockup.png"; // User's uploaded mockup photo
 
-function useDaysLeft(target: Date) {
-  const [days, setDays] = useState(0);
-  useEffect(() => {
-    const calc = () =>
-      setDays(
-        Math.max(0, Math.floor((target.getTime() - Date.now()) / 86400000)),
-      );
-    calc();
-    const t = setInterval(calc, 60000);
-    return () => clearInterval(t);
-  }, [target]);
-  return days;
-}
-
-// ─── Subtle Floating Indicators (Redesigned - Minimal & Clean) ────────
+// ─── Subtle Floating Indicators (Minimal & Clean) ────────
 const SUBTLE_INDICATORS = [
   {
     delay: 1.2,
@@ -107,7 +91,6 @@ function FloatingOrb({
 }
 
 export default function HeroSection() {
-  const daysLeft = useDaysLeft(PROMO_END);
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -179,39 +162,6 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
           {/* ── Left: Premium Copy ── */}
           <div className="max-w-2xl">
-            {/* 🎯 Promo Badge - Compact */}
-            <motion.div
-              initial={{ opacity: 0, y: -20, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="inline-flex items-center gap-2 sm:gap-3 mb-6 sm:mb-10 rounded-full border px-3 py-1.5 sm:px-5 sm:py-3 backdrop-blur-xl text-[10px] sm:text-xs"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)",
-                borderColor: "rgba(201,169,97,0.3)",
-                boxShadow:
-                  "0 8px 32px rgba(201,169,97,0.15), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
-              <div className="flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-gold-500 to-warmGold-500">
-                <Sparkles size={10} className="sm:hidden text-white" />
-                <Sparkles size={14} className="hidden sm:block text-white" />
-              </div>
-              <span className="text-secondary font-medium">
-                Promo Launching
-              </span>
-              <div className="h-3 sm:h-4 w-px bg-stone-300" />
-              <span className="font-bold bg-gradient-to-r from-gold-600 to-warmGold-600 bg-clip-text text-transparent">
-                Rp 129K
-              </span>
-              <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-gold-50 border border-gold-200">
-                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-gold-500 animate-pulse" />
-                <span className="text-caption font-semibold text-gold-700">
-                  {daysLeft} hari lagi
-                </span>
-              </div>
-            </motion.div>
-
             {/* 🎯 Headline - POWER STATEMENT */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -229,7 +179,7 @@ export default function HeroSection() {
                   className="bg-clip-text text-transparent"
                   style={{
                     backgroundImage:
-                      "linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #7db896 50%, #b8954d 75%, #c9a961 100%)",
+                      "linear-gradient(135deg, #2c4a34 0%, #3a4e44 15%, #5d7a6a 30%, #8fa99a 50%, #b8954d 75%, #c9a961 100%)",
                   }}
                 >
                   yang bikin tamu kagum
@@ -246,7 +196,7 @@ export default function HeroSection() {
                   className="absolute -bottom-2 left-0 right-0 h-1 rounded-full origin-left"
                   style={{
                     transformOrigin: "left",
-                    background: "linear-gradient(90deg, #2c4a34 0%, #4a9368 30%, #b8954d 60%, #c9a961 100%)"
+                    background: "linear-gradient(90deg, #2c4a34 0%, #4a6355 25%, #8fa99a 50%, #b8954d 75%, #c9a961 100%)"
                   }}
                 />
               </span>
@@ -366,7 +316,7 @@ export default function HeroSection() {
                   className="relative w-full sm:w-auto px-8 py-4 rounded-2xl text-white text-button-lg overflow-hidden shadow-2xl"
                   style={{
                     background:
-                      "linear-gradient(135deg, #2c4a34 0%, #4a9368 40%, #b8954d 75%, #c9a961 100%)",
+                      "linear-gradient(135deg, #2c4a34 0%, #3a4e44 15%, #5d7a6a 40%, #8fa99a 65%, #b8954d 85%, #c9a961 100%)",
                   }}
                 >
                   {/* Animated gradient overlay */}
@@ -374,7 +324,7 @@ export default function HeroSection() {
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
                       background:
-                        "linear-gradient(135deg, #4a9368 0%, #7db896 50%, #c9a961 100%)",
+                        "linear-gradient(135deg, #4a6355 0%, #6fa88a 35%, #b8954d 70%, #c9a961 100%)",
                     }}
                   />
 
@@ -422,7 +372,7 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* ── Right: Clean Phone Mockup ── */}
+          {/* ── Right: Elegant Phone Mockup with Invitation Cover ── */}
           <motion.div
             initial={{ opacity: 0, y: 60, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -435,7 +385,7 @@ export default function HeroSection() {
                 <div className="absolute inset-0 bg-gradient-radial from-gold-200/30 via-transparent to-transparent blur-3xl" />
               </div>
 
-              {/* Subtle floating indicators - repositioned to not cover mockup */}
+              {/* Subtle floating indicators */}
               {SUBTLE_INDICATORS.map((indicator, i) => (
                 <motion.div
                   key={i}
@@ -513,40 +463,117 @@ export default function HeroSection() {
                     className="rounded-[42px] overflow-hidden bg-black relative"
                     style={{ aspectRatio: "9/19.5" }}
                   >
+                    {/* Background Photo */}
                     <Image
                       src={COUPLE_PHOTO}
                       alt="Preview undangan"
                       fill
                       className="object-cover"
                       sizes="280px"
-                      quality={90}
+                      quality={95}
                       priority
                     />
 
-                    {/* Overlay gradient */}
+                    {/* Elegant Overlay Gradient */}
                     <div
                       className="absolute inset-0 z-10"
                       style={{
                         background: `linear-gradient(180deg,
-                          rgba(0,0,0,0.5) 0%,
-                          transparent 30%,
-                          transparent 70%,
-                          rgba(0,0,0,0.8) 100%)`,
+                          rgba(0,0,0,0.7) 0%,
+                          rgba(0,0,0,0.4) 15%,
+                          rgba(0,0,0,0.1) 35%,
+                          rgba(0,0,0,0.1) 65%,
+                          rgba(0,0,0,0.5) 85%,
+                          rgba(0,0,0,0.9) 100%)`,
                       }}
                     />
 
-                    {/* Simple preview content */}
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center px-6">
-                      <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.5 }}
-                        className="font-serif text-white text-3xl text-center drop-shadow-2xl"
-                      >
-                        Undangan
-                        <br />
-                        Pernikahan
-                      </motion.p>
+                    {/* Elegant Invitation Cover Content */}
+                    <div className="absolute inset-0 z-20 flex flex-col">
+                      {/* Top Section - Greeting */}
+                      <div className="flex-shrink-0 pt-16 px-6 text-center">
+                        <motion.p
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1.2 }}
+                          className="font-serif text-gold-200 text-[10px] tracking-[0.3em] uppercase mb-3"
+                        >
+                          The Wedding Of
+                        </motion.p>
+                        <motion.h2
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 1.4 }}
+                          className="font-serif text-white text-2xl leading-tight drop-shadow-2xl mb-1"
+                        >
+                          Rizky &amp; Aulia
+                        </motion.h2>
+                        <motion.div
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ delay: 1.6, duration: 0.6 }}
+                          className="w-16 h-px mx-auto"
+                          style={{
+                            background: "linear-gradient(90deg, transparent, #c9a961, transparent)"
+                          }}
+                        />
+                      </div>
+
+                      {/* Middle Section - Spacer */}
+                      <div className="flex-1" />
+
+                      {/* Bottom Section - Guest Name & CTA */}
+                      <div className="flex-shrink-0 pb-8 px-5">
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1.8 }}
+                          className="text-center mb-4"
+                        >
+                          <p className="text-white/70 text-[9px] tracking-[0.2em] uppercase mb-2.5">
+                            Kepada Yth.
+                          </p>
+                          <div
+                            className="px-4 py-2.5 rounded-xl backdrop-blur-md mx-auto inline-block"
+                            style={{
+                              background: "rgba(255,255,255,0.12)",
+                              border: "1px solid rgba(255,255,255,0.2)",
+                              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+                            }}
+                          >
+                            <p className="text-white font-semibold text-sm">
+                              Bapak Andi &amp; Keluarga
+                            </p>
+                          </div>
+                        </motion.div>
+
+                        <motion.button
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 2.0 }}
+                          className="w-full py-3 rounded-xl font-semibold text-sm text-white relative overflow-hidden"
+                          style={{
+                            background: "linear-gradient(135deg, #2c4a34 0%, #4a6355 50%, #c9a961 100%)",
+                            boxShadow: "0 4px 20px rgba(201,169,97,0.4)",
+                          }}
+                        >
+                          <span className="relative z-10">BUKA UNDANGAN</span>
+                          <motion.div
+                            animate={{
+                              x: ["-100%", "100%"],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                            className="absolute inset-0 z-0"
+                            style={{
+                              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                            }}
+                          />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -297,32 +297,40 @@
     color: var(--color-primary-500);
   }
 
-  /* ─── BACKGROUND UTILITIES - LOGO-BASED HARMONIOUS COLORS ──────── */
+  /* ─── SMOOTH ELEGANT GRADIENTS - REFINED COLOR TRANSITIONS ──────── */
   .bg-primary-gradient {
-    background: linear-gradient(135deg, #2c4a34 0%, #4a9368 40%, #b8954d 70%, #c9a961 100%);
+    background: linear-gradient(135deg, #2c4a34 0%, #3a4e44 15%, #5d7a6a 35%, #8fa99a 55%, #b8954d 75%, #c9a961 100%);
   }
 
   .bg-logo-gradient {
-    background: linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #b8954d 70%, #c9a961 100%);
+    background: linear-gradient(135deg, #2c4a34 0%, #4a6355 20%, #6fa88a 40%, #b8954d 70%, #c9a961 100%);
   }
 
   .bg-green-gold {
-    background: linear-gradient(135deg, #2c4a34 0%, #23392a 25%, #4a9368 50%, #b8954d 75%, #c9a961 100%);
+    background: linear-gradient(135deg, #1c2e22 0%, #2c4a34 20%, #4a6355 40%, #6fa88a 60%, #b8954d 80%, #c9a961 100%);
   }
 
   .bg-dark-gradient {
-    background: linear-gradient(135deg, #0d1510 0%, #2c4a34 50%, #0d1510 100%);
+    background: linear-gradient(135deg, #0f1a14 0%, #15231a 20%, #2c4a34 50%, #15231a 80%, #0f1a14 100%);
   }
 
   .bg-warm-gradient {
-    background: linear-gradient(135deg, #2c4a34 0%, #c9a961 100%);
+    background: linear-gradient(135deg, #2c4a34 0%, #4a6355 25%, #8fa99a 50%, #c9a961 100%);
   }
 
   .bg-hero-text {
-    background: linear-gradient(135deg, #2c4a34 0%, #4a9368 30%, #7db896 50%, #b8954d 75%, #c9a961 100%);
+    background: linear-gradient(135deg, #2c4a34 0%, #3a4e44 15%, #5d7a6a 30%, #8fa99a 50%, #b8954d 75%, #c9a961 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .bg-elegant-cream {
+    background: linear-gradient(135deg, #fefdf8 0%, #faf6ed 50%, #f4eddc 100%);
+  }
+
+  .bg-soft-sage {
+    background: linear-gradient(135deg, #f8faf9 0%, #ecf1ee 50%, #dae3dd 100%);
   }
 
   /* ─── HELPER UTILITIES ─────────────────────────────────────────────── */
