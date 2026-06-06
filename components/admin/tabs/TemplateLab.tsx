@@ -2525,20 +2525,33 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                   </div>
                 </div>
 
-                {/* ── Loading screen preview (inside mockup only) ── */}
+                {/* ── Loading screen preview (static mode) ── */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  visibility: previewMode === 'loading' && !previewPlaying && !previewLoading ? 'visible' : 'hidden',
+                  pointerEvents: previewMode === 'loading' && !previewPlaying && !previewLoading ? 'auto' : 'none',
+                  overflow: 'hidden',
+                }}>
+                  <LoadingScreen
+                    config={cfg.loading}
+                    onDone={() => {}} // No auto-transition in static preview
+                  />
+                </div>
+
+                {/* ── Loading screen (flow preview - when triggered) ── */}
                 {previewLoading && (
                   <div style={{
                     position: 'absolute',
                     inset: 0,
                     zIndex: 50,
                     overflow: 'hidden',
-                    borderRadius: '2rem' // Match phone mockup radius
+                    borderRadius: '2rem'
                   }}>
                     <LoadingScreen
                       config={cfg.loading}
                       onDone={() => {
                         setPreviewLoading(false)
-                        // After loading, show main invitation
                         setPreviewPlaying(false)
                       }}
                     />
@@ -2575,8 +2588,42 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
               </div>
             </div>
 
-            <p className="text-center text-xs text-slate-400 mt-3 font-medium">
-              {previewMode === 'cover' ? 'Cover · ' : 'Undangan · '}{config.name}
+            {/* Preview Mode Tabs */}
+            <div className="mt-3 flex items-center gap-1.5 bg-white rounded-xl p-1.5 shadow-sm border border-gray-200">
+              <button
+                onClick={() => setPreviewMode('cover')}
+                className={`flex-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                  previewMode === 'cover'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Cover
+              </button>
+              <button
+                onClick={() => setPreviewMode('loading')}
+                className={`flex-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                  previewMode === 'loading'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Loading
+              </button>
+              <button
+                onClick={() => setPreviewMode('invitation')}
+                className={`flex-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                  previewMode === 'invitation'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Undangan
+              </button>
+            </div>
+
+            <p className="text-center text-xs text-slate-400 mt-2 font-medium">
+              {config.name}
             </p>
           </div>
         </div>
