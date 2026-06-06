@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import {
   FlaskConical, Save, RefreshCw, Maximize2,
   ChevronUp, ChevronDown, Eye, EyeOff, Palette, Type,
-  LayoutTemplate, Code2, Sparkles, Plus, Trash2, Rocket, X, GripVertical, Play, Check,
+  LayoutTemplate, Code2, Sparkles, Loader2, Plus, Trash2, Rocket, X, GripVertical, Play, Check,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { getTransitionVariants } from '@/components/renderer/transitions/useTransition'
@@ -494,6 +494,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
   // Auto-switch preview ke Cover saat tab Opening aktif
   useEffect(() => {
     if (activeTab === 'opening') setPreviewMode('cover')
+    else if (activeTab === 'loading') setPreviewMode('loading')
     else if (activeTab !== 'json') setPreviewMode('invitation')
   }, [activeTab])
 
@@ -741,10 +742,17 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
           </div>
           <input
             value={config.name}
-            onChange={e => setConfig(prev => ({ ...prev, name: e.target.value }))}
+            onChange={e => {
+              const name = e.target.value
+              const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+              setConfig(prev => ({ ...prev, name, slug }))
+            }}
             className="w-full px-3 py-2 text-sm font-medium border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Nama template..."
           />
+          <p className="text-[9px] text-gray-400 mt-1">
+            Slug otomatis: <span className="font-mono font-semibold text-indigo-600">{config.slug || 'template-baru'}</span>
+          </p>
         </div>
 
         {/* Tabs */}
@@ -753,6 +761,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
             ['identity', LayoutTemplate, 'Identitas'],
             ['colors',   Palette,        'Warna'],
             ['opening',  Sparkles,       'Opening'],
+            ['loading',  Loader2,        'Loading'],
             ['sections', Type,           'Sections'],
             ['json',     Code2,          'JSON'],
           ] as [ConfigTab, React.ElementType, string][]).map(([id, Icon, label]) => (
@@ -812,25 +821,6 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Identitas Template</p>
                 <div className="space-y-3">
-                  <Field label="Slug (ID Unik)">
-                    <div className="flex gap-1.5">
-                      <input
-                        value={config.slug}
-                        onChange={e => setConfig(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))}
-                        className={inputCls + ' flex-1 font-mono text-xs'}
-                        placeholder="contoh: jawa-emas-modern"
-                      />
-                      <button
-                        onClick={() => setConfig(prev => ({ ...prev, slug: prev.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') }))}
-                        className="px-2.5 py-2 text-[10px] font-semibold bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors text-gray-600 shrink-0"
-                        title="Generate dari nama"
-                      >
-                        Auto
-                      </button>
-                    </div>
-                    <p className="text-[9px] text-gray-400 mt-1">Huruf kecil + strip. Dipakai sebagai ID unik template.</p>
-                  </Field>
-
                   <Field label="Deskripsi">
                     <textarea
                       value={templateDesc}
@@ -1418,60 +1408,6 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                 )}
               </div>
 
-              {/* ── Loading Screen Settings ── */}
-              <div className="pt-4 border-t border-gray-100">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">
-                    Loading Screen
-                  </p>
-                  <button
-                    onClick={() => setPreviewMode('loading')}
-                    className="flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg px-2 py-1 transition-colors"
-                  >
-                    <Play className="w-2.5 h-2.5 fill-current" /> Preview
-                  </button>
-                </div>
-                <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 mb-3">
-                  <p className="text-[9px] text-blue-700 leading-relaxed">
-                    <strong>Info:</strong> Loading screen TIDAK muncul di undangan live (langsung masuk).
-                    Setting ini hanya untuk preview di mockup admin.
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  <Field label="Teks Loading">
-                    <input
-                      value={cfg.loading.text}
-                      onChange={e => setConfig(prev => ({
-                        ...prev,
-                        config: { ...prev.config, loading: { ...prev.config.loading, text: e.target.value } },
-                      }))}
-                      className={inputCls}
-                    />
-                  </Field>
-                  <Field label="Warna Background Loading">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="color"
-                        value={cfg.loading.background_color}
-                        onChange={e => setConfig(prev => ({
-                          ...prev,
-                          config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
-                        }))}
-                        className="w-10 h-9 rounded-lg cursor-pointer border border-gray-200"
-                      />
-                      <input
-                        value={cfg.loading.background_color}
-                        onChange={e => setConfig(prev => ({
-                          ...prev,
-                          config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
-                        }))}
-                        className={inputCls + ' font-mono flex-1'}
-                      />
-                    </div>
-                  </Field>
-                </div>
-              </div>
-
               {/* ── Musik Latar ── */}
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
@@ -1494,6 +1430,87 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                 </div>
               </div>
             </div>
+            </div>
+          )}
+
+          {/* ── Loading ── */}
+          {activeTab === 'loading' && (
+            <div className="space-y-5">
+              <p className="text-xs text-gray-500">
+                Konfigurasi loading screen untuk preview admin. Loading screen TIDAK muncul di undangan live.
+              </p>
+
+              {/* Info box */}
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">ℹ️</div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-blue-900 mb-1">
+                      Preview Admin Saja
+                    </p>
+                    <p className="text-xs text-blue-700 leading-relaxed">
+                      Loading screen TIDAK muncul di undangan live (langsung masuk).
+                      Setting ini hanya untuk preview di mockup admin saat klik tab &quot;Loading&quot;.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Teks Loading */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5">
+                  Teks Loading
+                </label>
+                <input
+                  value={cfg.loading.text}
+                  onChange={e => setConfig(prev => ({
+                    ...prev,
+                    config: { ...prev.config, loading: { ...prev.config.loading, text: e.target.value } },
+                  }))}
+                  className={inputCls}
+                  placeholder="MEMBUKA UNDANGAN..."
+                />
+              </div>
+
+              {/* Warna Background */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5">
+                  Warna Background Loading
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={cfg.loading.background_color}
+                    onChange={e => setConfig(prev => ({
+                      ...prev,
+                      config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
+                    }))}
+                    className="w-10 h-9 rounded-lg cursor-pointer border border-gray-200"
+                  />
+                  <input
+                    value={cfg.loading.background_color}
+                    onChange={e => setConfig(prev => ({
+                      ...prev,
+                      config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
+                    }))}
+                    className={inputCls + ' font-mono flex-1'}
+                    placeholder="#2c4a34"
+                  />
+                </div>
+              </div>
+
+              {/* Preview Button */}
+              <div>
+                <button
+                  onClick={() => setPreviewMode('loading')}
+                  className="flex items-center gap-2 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl px-4 py-2.5 transition-colors"
+                >
+                  <Play className="w-4 h-4 fill-current" /> Preview Loading di Mockup
+                </button>
+                <p className="text-[9px] text-gray-400 mt-2">
+                  Klik untuk melihat loading screen di mockup preview (kanan).
+                </p>
+              </div>
             </div>
           )}
 
