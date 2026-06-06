@@ -1181,11 +1181,11 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                   <div className="text-2xl">⚡</div>
                   <div>
                     <p className="text-sm font-semibold text-amber-900 mb-1">
-                      Cover Page & Loading Dinonaktifkan
+                      Cover Page Dinonaktifkan (Loading Tetap Bisa Di-preview)
                     </p>
                     <p className="text-xs text-amber-700 leading-relaxed">
-                      Untuk UX yang lebih cepat, halaman cover dan loading screen telah dihapus permanen.
-                      Undangan langsung terbuka tanpa delay (0.4s fade-in saja).
+                      Halaman cover dihapus untuk UX lebih cepat. Loading screen TIDAK muncul di undangan live,
+                      tapi tetap bisa di-preview di mockup untuk melihat desain.
                     </p>
                   </div>
                 </div>
@@ -2540,12 +2540,16 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                   </div>
                 </div>
 
-                {/* ── Loading screen preview ── */}
+                {/* ── Loading screen preview (inside mockup only) ── */}
                 {previewLoading && (
-                  <div style={{ position: 'absolute', inset: 0, zIndex: 40, overflow: 'hidden' }}>
-                    <div style={{ width: 390, zoom: 340 / 390, height: 845 }}>
-                      <LoadingScreen config={cfg.loading} onDone={() => setPreviewLoading(false)} />
-                    </div>
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    zIndex: 50,
+                    overflow: 'hidden',
+                    borderRadius: '2rem' // Match phone mockup radius
+                  }}>
+                    <LoadingScreen config={cfg.loading} onDone={() => setPreviewLoading(false)} />
                   </div>
                 )}
 
