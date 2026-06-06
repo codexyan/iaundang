@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -8,7 +8,7 @@ import { PRICE_FORMATTED } from '@/lib/types'
 const PROMO_END = '31 Agustus 2026'
 
 const features = [
-  { icon: Link2,         text: 'Domain nama pasangan kalian',       sub: 'ikhwal-fani.akundang.id — mudah diingat, enak dibagikan' },
+  { icon: Link2,         text: 'Domain nama pasangan kalian',       sub: 'ikhwal-fani.akundang.id, mudah diingat, enak dibagikan' },
   { icon: CalendarCheck, text: 'Undangan personal per tamu',        sub: 'Nama tamu tampil di undangan, bukan sekadar link biasa' },
   { icon: Music2,        text: 'Musik pengiring pilihan sendiri',   sub: 'Upload lagu favorit kalian sebagai pengiring halaman' },
   { icon: Images,        text: 'RSVP online hingga 500 tamu',       sub: 'Kelola konfirmasi kehadiran tanpa tanya satu per satu' },

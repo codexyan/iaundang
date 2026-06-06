@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -8,7 +8,7 @@ const steps = [
     number: '01',
     emoji: '👀',
     title: 'Coba dulu, gratis',
-    desc: 'Masukkan nama kalian berdua dan pilih gaya yang paling cocok. Lihat sendiri hasilnya — tidak perlu daftar, tidak perlu bayar dulu.',
+    desc: 'Masukkan nama kalian berdua dan pilih gaya yang paling cocok. Lihat sendiri hasilnya, tidak perlu daftar, tidak perlu bayar dulu.',
     highlight: 'Bebas, tanpa komitmen',
   },
   {
@@ -22,7 +22,7 @@ const steps = [
     number: '03',
     emoji: '✉️',
     title: 'Isi detail & bagikan',
-    desc: 'Lengkapi info acara, upload foto pasangan, pilih musik. Selesai — salin link dan kirim ke tamu lewat WhatsApp.',
+    desc: 'Lengkapi info acara, upload foto pasangan, pilih musik. Selesai! Salin link dan kirim ke tamu lewat WhatsApp.',
     highlight: 'Siap dalam < 30 menit',
   },
 ]

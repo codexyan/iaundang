@@ -1,9 +1,9 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import type { Metadata } from 'next'
 import { TEMPLATES } from '@/lib/types'
 
 export const metadata: Metadata = {
-  title: 'Pilih Template Undangan — Akundang',
+  title: 'Pilih Template Undangan | Akundang',
   description: 'Lihat semua template undangan digital pernikahan. Coba gratis dengan nama kalian sebelum beli.',
 }
 
@@ -144,7 +144,7 @@ export default function TemplatesPage() {
                       href={`/demo/${tpl.id}`}
                       className={`block w-full text-center py-3 rounded-xl text-sm font-semibold transition-colors ${s.ctaBg} ${s.ctaText}`}
                     >
-                      Coba Gratis — Masukkan Namamu
+                      Coba Gratis: Masukkan Namamu
                     </Link>
                     <Link
                       href={`/register?template=${tpl.id}`}
@@ -162,7 +162,7 @@ export default function TemplatesPage() {
         {/* Footer note */}
         <div className="mt-12 text-center bg-white border border-gray-100 rounded-2xl px-6 py-6">
           <p className="text-sm text-gray-500">
-            Semua template bisa dikustomisasi — nama, tanggal, lokasi, foto, dan musik.
+            Semua template bisa dikustomisasi: nama, tanggal, lokasi, foto, dan musik.
           </p>
           <p className="text-xs text-gray-400 mt-1.5">
             Template baru akan terus ditambah. Sudah beli? Template lama tetap bisa dipakai.

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 
@@ -7,7 +7,7 @@ const reviews = [
     names: 'Rizky & Aulia',
     date: 'Maret 2026',
     template: 'Modern',
-    quote: 'Tamunya banyak yang nanya "link undangannya keren banget, pakai apa?" — langsung kami rekomendasiin Akundang. Setup-nya cepat banget, kurang dari 30 menit sudah jadi.',
+    quote: 'Tamunya banyak yang nanya "link undangannya keren banget, pakai apa?". Langsung kami rekomendasiin Akundang. Setup-nya cepat banget, kurang dari 30 menit sudah jadi.',
     initial: 'RA',
     color: '#1a3320',
   },
@@ -15,7 +15,7 @@ const reviews = [
     names: 'Dimas & Nadia',
     date: 'Februari 2026',
     template: 'Casual',
-    quote: 'Kami berdua kerja penuh waktu dan tidak ada waktu ngurusin undangan fisik. Akundang solusinya — simple, cantik, dan tamu bisa RSVP langsung dari HP mereka.',
+    quote: 'Kami berdua kerja penuh waktu dan tidak ada waktu ngurusin undangan fisik. Akundang solusinya: simple, cantik, dan tamu bisa RSVP langsung dari HP mereka.',
     initial: 'DN',
     color: '#7c2d12',
   },
@@ -54,7 +54,7 @@ export default function Testimonials() {
             Pasangan yang sudah merasakannya
           </h2>
           <p className="mt-3 text-stone-400 text-sm max-w-xs mx-auto">
-            Bukan dari kami — dari mereka yang sudah pakai.
+            Bukan dari kami, dari mereka yang sudah pakai.
           </p>
         </motion.div>
 

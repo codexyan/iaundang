@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -357,7 +357,7 @@ export default function FeatureShowcase() {
               Semua yang kalian butuhkan<br className="hidden sm:block" /> ada di sini
             </h2>
             <p className="mt-3 text-stone-400 text-sm max-w-sm mx-auto">
-              Bukan sekadar halaman undangan — tapi pengalaman digital yang bikin tamu terkesan.
+              Bukan sekadar halaman undangan, tapi pengalaman digital yang bikin tamu terkesan.
             </p>
           </motion.div>
         </div>
