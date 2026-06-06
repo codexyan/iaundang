@@ -2531,10 +2531,12 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                   pointerEvents: previewMode === 'loading' && !previewPlaying && !previewLoading ? 'auto' : 'none',
                   overflow: 'hidden',
                 }}>
-                  <LoadingScreen
-                    config={cfg.loading}
-                    onDone={() => {}} // No auto-transition in static preview
-                  />
+                  <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'relative' }}>
+                    <LoadingScreen
+                      config={cfg.loading}
+                      onDone={() => {}} // No auto-transition in static preview
+                    />
+                  </div>
                 </div>
 
                 {/* ── Loading screen (flow preview - when triggered) ── */}
@@ -2546,13 +2548,15 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
                     overflow: 'hidden',
                     borderRadius: '2rem'
                   }}>
-                    <LoadingScreen
-                      config={cfg.loading}
-                      onDone={() => {
-                        setPreviewLoading(false)
-                        setPreviewPlaying(false)
-                      }}
-                    />
+                    <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'relative' }}>
+                      <LoadingScreen
+                        config={cfg.loading}
+                        onDone={() => {
+                          setPreviewLoading(false)
+                          setPreviewPlaying(false)
+                        }}
+                      />
+                    </div>
                   </div>
                 )}
 
