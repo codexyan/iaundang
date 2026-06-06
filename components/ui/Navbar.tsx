@@ -7,7 +7,7 @@ import Logo from './Logo'
 
 export default function Navbar() {
   const router = useRouter()
-  const [user, setUser] = useState<{ email: string } | null>(null)
+  const [user, setUser] = useState<{ email: string; role?: string } | null>(null)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -41,10 +41,10 @@ export default function Navbar() {
                 {user.email}
               </span>
               <Link
-                href="/dashboard"
+                href={user.role === 'admin' ? '/admin' : '/dashboard'}
                 className="text-sm font-medium text-stone-700 hover:text-gold-600 px-3 py-1.5 rounded-xl hover:bg-gold-50 transition-colors"
               >
-                Dashboard
+                {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
               </Link>
               <button
                 onClick={handleLogout}
