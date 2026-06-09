@@ -420,7 +420,7 @@ export default function FeatureShowcase() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-xs font-semibold tracking-[.18em] uppercase text-stone-400 mb-3">Fitur lengkap</p>
+            <p className="text-xs font-semibold tracking-[.18em] uppercase text-forest-400 mb-3">Fitur lengkap</p>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 leading-snug">
               Semua yang kalian butuhkan<br className="hidden sm:block" /> ada di sini
             </h2>
@@ -445,8 +445,8 @@ export default function FeatureShowcase() {
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-rose-600 bg-rose-50 px-3 py-1 rounded-full mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block" />
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-forest-500 bg-forest-50 px-3 py-1 rounded-full mb-5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-forest-400 inline-block" />
                   {f.tag}
                 </span>
                 <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 leading-tight mb-4" style={{ whiteSpace: 'pre-line' }}>
@@ -458,7 +458,7 @@ export default function FeatureShowcase() {
                 <ul className="space-y-2.5">
                   {f.bullets.map(b => (
                     <li key={b} className="flex items-start gap-2.5">
-                      <div className="w-5 h-5 rounded-full bg-stone-900 flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-5 h-5 rounded-full bg-forest-500 flex items-center justify-center shrink-0 mt-0.5">
                         <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                         </svg>
@@ -498,8 +498,8 @@ export default function FeatureShowcase() {
               Semua fitur di atas tersedia dalam satu paket, satu harga.
             </p>
             <Link href="/templates"
-              className="inline-flex items-center gap-2 bg-stone-900 hover:bg-stone-800 text-white font-semibold px-8 py-3.5 rounded-2xl text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-stone-200">
-              Lihat semua template →
+              className="inline-flex items-center gap-2 bg-forest-500 hover:bg-forest-600 text-white font-semibold px-8 py-3.5 rounded-2xl text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-forest-200">
+              Lihat semua template
             </Link>
           </motion.div>
         </div>

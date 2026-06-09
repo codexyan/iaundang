@@ -61,7 +61,7 @@ export default function FAQ() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-16px' }}
               transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-2xl border border-stone-100 overflow-hidden hover:border-stone-200 transition-colors bg-stone-50"
+              className="rounded-2xl border border-stone-100 overflow-hidden hover:border-forest-200 transition-colors bg-stone-50"
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
@@ -108,7 +108,7 @@ export default function FAQ() {
             href="https://wa.me/628123456789"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors"
+            className="inline-flex items-center gap-2 bg-forest-500 hover:bg-forest-600 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors"
           >
             Chat via WhatsApp
           </a>

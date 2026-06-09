@@ -50,7 +50,7 @@ export default function TemplatePreview() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-14"
         >
-          <p className="text-xs font-semibold tracking-[.18em] uppercase text-stone-400 mb-3">Pilih Gaya</p>
+          <p className="text-xs font-semibold tracking-[.18em] uppercase text-forest-400 mb-3">Pilih Gaya</p>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
             Mana yang paling mencerminkan kalian?
           </h2>

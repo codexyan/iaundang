@@ -313,10 +313,10 @@ export default function HeroSection() {
                 <motion.button
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="relative w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-white text-button-lg overflow-hidden shadow-2xl"
+                  className="relative w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-white text-button-lg overflow-hidden shadow-2xl shadow-forest-300/30"
                   style={{
                     background:
-                      "linear-gradient(135deg, #2c4a34 0%, #3a4e44 15%, #5d7a6a 40%, #8fa99a 65%, #b8954d 85%, #c9a961 100%)",
+                      "linear-gradient(135deg, #2c4a34 0%, #3a5a40 50%, #4a6355 100%)",
                   }}
                 >
                   {/* Animated gradient overlay */}
@@ -324,7 +324,7 @@ export default function HeroSection() {
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
                       background:
-                        "linear-gradient(135deg, #4a6355 0%, #6fa88a 35%, #b8954d 70%, #c9a961 100%)",
+                        "linear-gradient(135deg, #3a5a40 0%, #4a6355 50%, #5d7a6a 100%)",
                     }}
                   />
 

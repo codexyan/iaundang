@@ -9,7 +9,7 @@ const reviews = [
     template: 'Modern',
     quote: 'Tamunya banyak yang nanya "link undangannya keren banget, pakai apa?". Langsung kami rekomendasiin Akundang. Setup-nya cepat banget, kurang dari 30 menit sudah jadi.',
     initial: 'RA',
-    color: '#1a3320',
+    color: '#2c4a34',
   },
   {
     names: 'Dimas & Nadia',
@@ -17,7 +17,7 @@ const reviews = [
     template: 'Casual',
     quote: 'Kami berdua kerja penuh waktu dan tidak ada waktu ngurusin undangan fisik. Akundang solusinya: simple, cantik, dan tamu bisa RSVP langsung dari HP mereka.',
     initial: 'DN',
-    color: '#7c2d12',
+    color: '#9a7d3f',
   },
   {
     names: 'Fajar & Syifa',
@@ -25,7 +25,7 @@ const reviews = [
     template: 'Traditional',
     quote: 'Yang paling suka fitur nama tamu personalnya. Tamu merasa diperhatikan karena nama mereka muncul langsung di undangan. Banyak yang WA bilang terkesan.',
     initial: 'FS',
-    color: '#1e3a5f',
+    color: '#4a6355',
   },
   {
     names: 'Hendra & Mita',
@@ -33,7 +33,7 @@ const reviews = [
     template: 'Modern',
     quote: 'Harga segini sudah dapat semua fitur lengkap, tidak ada tambahan biaya. Undangan kami masih bisa dibuka 6 bulan setelah nikah untuk kenangan.',
     initial: 'HM',
-    color: '#3b0764',
+    color: '#5d7a6a',
   },
 ]
 
@@ -49,7 +49,7 @@ export default function Testimonials() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-14"
         >
-          <p className="text-xs font-semibold tracking-[.18em] uppercase text-stone-400 mb-3">Kata mereka</p>
+          <p className="text-xs font-semibold tracking-[.18em] uppercase text-forest-400 mb-3">Kata mereka</p>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
             Pasangan yang sudah merasakannya
           </h2>
@@ -74,7 +74,7 @@ export default function Testimonials() {
               {/* Stars */}
               <div className="flex gap-0.5 mb-4">
                 {[...Array(5)].map((_, j) => (
-                  <svg key={j} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" viewBox="0 0 20 20">
+                  <svg key={j} className="w-3.5 h-3.5 fill-gold-500 text-gold-500" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ))}

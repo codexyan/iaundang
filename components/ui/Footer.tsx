@@ -66,7 +66,7 @@ export default function Footer() {
               <Link href="/" className="inline-block">
                 <Image
                   src="/logos/logo-horizontal.png"
-                  alt="Iaundang - Digital Wedding Invitation"
+                  alt="Akundang - Digital Wedding Invitation"
                   width={160}
                   height={46}
                   className="object-contain"

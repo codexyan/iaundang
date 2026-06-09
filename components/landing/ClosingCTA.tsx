@@ -31,7 +31,7 @@ export default function ClosingCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="text-xs font-semibold tracking-[.2em] uppercase mb-5"
-          style={{ color: 'rgba(212,175,55,0.7)' }}
+          style={{ color: 'rgba(201,169,97,0.7)' }}
         >
           Mulai sekarang
         </motion.p>
@@ -46,7 +46,7 @@ export default function ClosingCTA() {
         >
           Hari spesial kalian layak<br />
           <span style={{
-            background: 'linear-gradient(135deg, #b8860b 0%, #d4af37 45%, #c9952d 100%)',
+            background: 'linear-gradient(135deg, #b8954d 0%, #c9a961 45%, #d9c89a 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>dirayakan dengan indah</span>
@@ -76,8 +76,8 @@ export default function ClosingCTA() {
               whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2.5 px-8 py-4 rounded-2xl text-stone-900 font-semibold text-[15px] transition-all"
               style={{
-                background: 'linear-gradient(135deg, #d4af37 0%, #b8860b 100%)',
-                boxShadow: '0 8px 32px rgba(212,175,55,0.35)',
+                background: 'linear-gradient(135deg, #c9a961 0%, #b8954d 100%)',
+                boxShadow: '0 8px 32px rgba(201,169,97,0.35)',
               }}
             >
               Pilih Template Sekarang
