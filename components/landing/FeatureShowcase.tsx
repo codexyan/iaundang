@@ -10,20 +10,20 @@ function VisualPersonal() {
   const p = '#0f2d0f', a = '#d4af37', t = '#ffffff'
   return (
     <div className="relative w-full max-w-[280px] mx-auto">
-      {/* Phone shell */}
+      {/* Phone shell — slim bezel */}
       <div
-        className="relative rounded-[40px] sm:rounded-[44px] overflow-hidden shadow-2xl shadow-stone-200/80"
+        className="relative rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-2xl shadow-stone-200/80"
         style={{
-          padding: 10,
-          background: 'linear-gradient(145deg, #2c2c2e 0%, #1c1c1e 50%, #0a0a0a 100%)',
-          boxShadow: '0 40px 80px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1.5px rgba(255,255,255,0.1)',
+          padding: 4,
+          background: 'linear-gradient(145deg, #1c1c1e 0%, #111 50%, #000 100%)',
+          boxShadow: '0 40px 80px rgba(0,0,0,0.3), inset 0 0 0 0.5px rgba(255,255,255,0.12)',
         }}
       >
         {/* Dynamic Island */}
-        <div className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full" style={{ top: 13, width: 80, height: 22, backgroundColor: '#000' }} />
+        <div className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full" style={{ top: 7, width: 60, height: 16, backgroundColor: '#000' }} />
 
-        {/* Screen — FadeReveal Opening */}
-        <div className="rounded-[32px] sm:rounded-[36px] overflow-hidden relative" style={{ aspectRatio: '9/19.5', backgroundColor: p }}>
+        {/* Screen */}
+        <div className="rounded-[21px] sm:rounded-[25px] overflow-hidden relative" style={{ aspectRatio: '9/19.5', backgroundColor: p }}>
           {/* Background Photo — dark moody bouquet */}
           <Image src="/images/templates/wedding-bg.jpg" alt="Preview undangan personalisasi" fill className="object-cover" sizes="280px" quality={90} style={{ opacity: 0.45 }} />
           {/* Heavy dark scrim */}

@@ -10,15 +10,15 @@ import { ArrowRight } from 'lucide-react'
 function PhoneMockup({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="relative rounded-[32px] sm:rounded-[38px] overflow-hidden"
+      className="relative rounded-[18px] sm:rounded-[22px] overflow-hidden"
       style={{
-        padding: 8,
-        background: 'linear-gradient(145deg, #2c2c2e 0%, #1c1c1e 50%, #0a0a0a 100%)',
-        boxShadow: '0 30px 60px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08)',
+        padding: 3,
+        background: 'linear-gradient(145deg, #1c1c1e 0%, #111 50%, #000 100%)',
+        boxShadow: '0 24px 48px rgba(0,0,0,0.3), inset 0 0 0 0.5px rgba(255,255,255,0.12)',
       }}
     >
-      <div className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full" style={{ top: 11, width: 48, height: 14, backgroundColor: '#000' }} />
-      <div className="rounded-[25px] sm:rounded-[31px] overflow-hidden relative" style={{ aspectRatio: '9/19.5' }}>
+      <div className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full" style={{ top: 5, width: 36, height: 10, backgroundColor: '#000' }} />
+      <div className="rounded-[16px] sm:rounded-[20px] overflow-hidden relative" style={{ aspectRatio: '9/19.5' }}>
         {children}
       </div>
     </div>

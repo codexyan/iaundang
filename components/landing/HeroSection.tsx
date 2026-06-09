@@ -432,17 +432,16 @@ export default function HeroSection() {
                 }}
                 className="relative w-[220px] sm:w-[280px]"
               >
-                {/* iPhone frame */}
+                {/* iPhone frame — slim bezel */}
                 <div
-                  className="relative rounded-[40px] sm:rounded-[52px] overflow-hidden"
+                  className="relative rounded-[24px] sm:rounded-[28px] overflow-hidden"
                   style={{
-                    padding: 12,
+                    padding: 4,
                     background:
-                      "linear-gradient(145deg, #2c2c2e 0%, #1c1c1e 50%, #0a0a0a 100%)",
+                      "linear-gradient(145deg, #1c1c1e 0%, #111 50%, #000 100%)",
                     boxShadow: `
-                      0 50px 100px rgba(0,0,0,0.4),
-                      0 0 0 1px rgba(255,255,255,0.05),
-                      inset 0 0 0 1.5px rgba(255,255,255,0.1)
+                      0 40px 80px rgba(0,0,0,0.35),
+                      inset 0 0 0 0.5px rgba(255,255,255,0.12)
                     `,
                   }}
                 >
@@ -450,16 +449,16 @@ export default function HeroSection() {
                   <div
                     className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full"
                     style={{
-                      top: 15,
-                      width: 95,
-                      height: 26,
+                      top: 6,
+                      width: 60,
+                      height: 16,
                       backgroundColor: "#000",
                     }}
                   />
 
-                  {/* Screen — FadeReveal Opening mockup */}
+                  {/* Screen */}
                   <div
-                    className="rounded-[32px] sm:rounded-[42px] overflow-hidden relative"
+                    className="rounded-[21px] sm:rounded-[25px] overflow-hidden relative"
                     style={{ aspectRatio: "9/19.5", backgroundColor: '#0f2d0f' }}
                   >
                     {/* Dark wedding photo — natural vignette */}
