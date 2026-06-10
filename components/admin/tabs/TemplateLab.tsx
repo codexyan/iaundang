@@ -1551,10 +1551,10 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
               {/* ── Pilih Gaya Opening ── */}
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                  Gaya Opening
+                  Gaya Tampilan
                 </p>
                 <p className="text-[9px] text-gray-400 mb-3">
-                  Pilih animasi yang tampil saat tamu pertama kali membuka undangan
+                  Pilih gaya tampilan animasi saat tamu pertama kali membuka undangan
                 </p>
                 <div className="grid grid-cols-3 gap-1.5">
                   {OPENING_TYPES.map(ot => {
