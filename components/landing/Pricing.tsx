@@ -5,32 +5,37 @@ import { motion } from 'framer-motion'
 import { Check, ArrowRight, ShieldCheck, MessageCircle } from 'lucide-react'
 import { PRICING_CONFIG } from '@/lib/pricing-config'
 
+type CardVariant = 'light' | 'dark' | 'gold'
+
 function PricingCard({
   name,
   badge,
-  badgeStyle,
   price,
+  originalPrice,
   duration,
   features,
   highlightedFeature,
   ctaLabel,
   ctaHint,
   variant,
+  popular,
   delay = 0,
 }: {
   name: string
   badge: string
-  badgeStyle: 'dark' | 'gold'
   price: string
+  originalPrice?: string
   duration: string
   features: readonly string[]
   highlightedFeature?: string
   ctaLabel: string
   ctaHint: string
-  variant: 'dark' | 'outline'
+  variant: CardVariant
+  popular?: boolean
   delay?: number
 }) {
   const isDark = variant === 'dark'
+  const isGold = variant === 'gold'
 
   return (
     <motion.div
@@ -38,61 +43,70 @@ function PricingCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative rounded-2xl h-full flex flex-col ${
+      className={`relative rounded-2xl h-full flex flex-col overflow-hidden ${
         isDark
-          ? 'bg-stone-900 text-white'
-          : 'bg-white border border-stone-200'
+          ? 'bg-stone-900 text-white ring-2 ring-forest-500/30'
+          : isGold
+            ? 'bg-gradient-to-b from-amber-50 to-white border-2 border-amber-200'
+            : 'bg-white border border-stone-200'
       }`}
     >
+      {popular && (
+        <div className="absolute top-0 inset-x-0 h-1 bg-forest-500" />
+      )}
+
       {/* Header */}
-      <div className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-stone-200/10">
+      <div className={`px-5 pt-5 pb-4 ${isDark ? 'border-b border-white/10' : 'border-b border-stone-100'}`}>
         <span
-          className={`inline-block text-[10px] font-bold tracking-[0.12em] uppercase px-2.5 py-1 rounded-full mb-3 ${
-            badgeStyle === 'dark'
-              ? 'bg-white/10 text-white/80 border border-white/15'
-              : 'bg-gold-500 text-white'
+          className={`inline-block text-[10px] font-bold tracking-[0.14em] uppercase px-2.5 py-1 rounded-full mb-3 ${
+            isDark
+              ? 'bg-forest-500 text-white'
+              : isGold
+                ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                : 'bg-stone-100 text-stone-500'
           }`}
         >
           {badge}
         </span>
 
-        <div className="flex items-baseline gap-1.5">
-          <span className={`text-2xl sm:text-[28px] font-bold tracking-tight ${
-            isDark ? 'text-white' : 'text-stone-900'
-          }`}>
+        <p className={`text-sm font-semibold mb-1 ${isDark ? 'text-white/70' : 'text-stone-500'}`}>{name}</p>
+
+        <div className="flex items-baseline gap-2">
+          <span className={`text-3xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-stone-900'}`}>
             {price}
           </span>
+          {originalPrice && (
+            <span className="text-sm text-stone-400 line-through">{originalPrice}</span>
+          )}
         </div>
-        <p className={`text-xs mt-1 ${isDark ? 'text-white/50' : 'text-stone-400'}`}>
+        <p className={`text-xs mt-1.5 ${isDark ? 'text-white/40' : 'text-stone-400'}`}>
           sekali bayar · aktif {duration}
         </p>
       </div>
 
       {/* Features */}
-      <div className="px-5 sm:px-6 py-4 flex-1">
-        <ul className="space-y-2.5">
+      <div className="px-5 py-4 flex-1">
+        <ul className="space-y-2">
           {features.map((feature) => {
             const isHL = feature === highlightedFeature
             return (
               <li
                 key={feature}
                 className={`flex items-start gap-2.5 ${
-                  isHL ? 'bg-gold-500/10 rounded-lg px-2.5 py-1.5 -mx-2.5' : ''
+                  isHL
+                    ? `rounded-lg px-2.5 py-1.5 -mx-2.5 ${isDark ? 'bg-forest-500/15' : 'bg-amber-50'}`
+                    : ''
                 }`}
               >
                 <div className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${
-                  isDark ? 'bg-white/10' : 'bg-forest-500/10'
+                  isDark ? 'bg-forest-500/20' : 'bg-forest-500/10'
                 }`}>
-                  <Check
-                    size={10}
-                    strokeWidth={3}
-                    className={isDark ? 'text-white/80' : 'text-forest-500'}
-                  />
+                  <Check size={10} strokeWidth={3} className={isDark ? 'text-forest-400' : 'text-forest-500'} />
                 </div>
                 <span className={`text-[13px] leading-snug ${
                   isHL
-                    ? 'font-semibold ' + (isDark ? 'text-gold-400' : 'text-stone-900')
-                    : isDark ? 'text-white/75' : 'text-stone-600'
+                    ? `font-semibold ${isDark ? 'text-forest-300' : 'text-amber-700'}`
+                    : isDark ? 'text-white/70' : 'text-stone-600'
                 }`}>
                   {feature}
                 </span>
@@ -103,20 +117,20 @@ function PricingCard({
       </div>
 
       {/* CTA */}
-      <div className="px-5 sm:px-6 pb-5 sm:pb-6">
+      <div className="px-5 pb-5">
         <Link href="/templates">
-          <button className={`w-full font-semibold py-3 px-5 rounded-xl text-[13px] transition-all flex items-center justify-center gap-1.5 ${
+          <button className={`w-full font-semibold py-3 rounded-xl text-[13px] transition-all flex items-center justify-center gap-1.5 ${
             isDark
-              ? 'bg-white text-stone-900 hover:bg-stone-100 shadow-sm'
-              : 'bg-forest-500 text-white hover:bg-forest-600 shadow-sm'
+              ? 'bg-forest-500 text-white hover:bg-forest-600'
+              : isGold
+                ? 'bg-stone-900 text-white hover:bg-stone-800'
+                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
           }`}>
             {ctaLabel}
             <ArrowRight size={14} />
           </button>
         </Link>
-        <p className={`text-[11px] mt-2.5 text-center ${
-          isDark ? 'text-white/40' : 'text-stone-400'
-        }`}>
+        <p className={`text-[11px] mt-2 text-center ${isDark ? 'text-white/35' : 'text-stone-400'}`}>
           {ctaHint}
         </p>
       </div>
@@ -127,7 +141,7 @@ function PricingCard({
 export default function Pricing() {
   return (
     <section id="harga" className="py-14 sm:py-20 lg:py-24 bg-stone-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8">
 
         {/* Header */}
         <motion.div
@@ -139,41 +153,53 @@ export default function Pricing() {
         >
           <p className="text-xs font-semibold tracking-[.18em] uppercase text-forest-400 mb-3">Harga</p>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
-            Satu harga, tanpa kejutan
+            Pilih paket yang pas untuk kalian
           </h2>
-          <p className="mt-3 text-stone-400 text-sm max-w-sm mx-auto">
-            Bayar sekali, tidak ada tagihan bulanan. Coba gratis dulu sebelum memutuskan.
+          <p className="mt-3 text-stone-400 text-sm max-w-md mx-auto">
+            Bayar sekali saja, tidak ada biaya bulanan. Coba gratis dulu sebelum memutuskan.
           </p>
         </motion.div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 max-w-3xl mx-auto">
+        {/* 3 Pricing Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-4xl mx-auto items-stretch">
 
           <PricingCard
-            name="Premium"
-            badge={PRICING_CONFIG.premium.badge}
-            badgeStyle="dark"
-            price={PRICING_CONFIG.premium.priceFormatted}
-            duration={PRICING_CONFIG.premium.durationLabel}
-            features={PRICING_CONFIG.premium.features}
-            ctaLabel="Pilih Premium"
-            ctaHint="Coba dulu gratis, bayar kalau cocok"
-            variant="dark"
+            name="Paket Starter"
+            badge={PRICING_CONFIG.starter.badge}
+            price={PRICING_CONFIG.starter.priceFormatted}
+            duration={PRICING_CONFIG.starter.durationLabel}
+            features={PRICING_CONFIG.starter.features}
+            ctaLabel="Mulai Gratis"
+            ctaHint="Coba dulu, bayar kalau cocok"
+            variant="light"
             delay={0}
           />
 
           <PricingCard
-            name="Pro"
+            name="Paket Premium"
+            badge={PRICING_CONFIG.premium.badge}
+            price={PRICING_CONFIG.premium.priceFormatted}
+            duration={PRICING_CONFIG.premium.durationLabel}
+            features={PRICING_CONFIG.premium.features}
+            highlightedFeature={PRICING_CONFIG.premium.highlightedFeature}
+            ctaLabel="Pilih Premium"
+            ctaHint="Pilihan terpopuler pasangan"
+            variant="dark"
+            popular
+            delay={0.1}
+          />
+
+          <PricingCard
+            name="Paket Pro"
             badge={PRICING_CONFIG.pro.badge}
-            badgeStyle="gold"
             price={PRICING_CONFIG.pro.priceFormatted}
             duration={PRICING_CONFIG.pro.durationLabel}
             features={PRICING_CONFIG.pro.features}
             highlightedFeature={PRICING_CONFIG.pro.highlightedFeature}
             ctaLabel="Pilih Pro"
-            ctaHint="Ideal untuk pernikahan dengan tamu besar"
-            variant="outline"
-            delay={0.1}
+            ctaHint="Untuk acara besar & eksklusif"
+            variant="gold"
+            delay={0.2}
           />
 
         </div>
@@ -210,7 +236,6 @@ export default function Pricing() {
           </div>
         </motion.div>
 
-        {/* Bottom link */}
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}

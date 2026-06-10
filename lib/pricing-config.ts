@@ -1,61 +1,71 @@
-// ═══════════════════════════════════════════════════════════════════
-// PRICING CONFIGURATION - ADMIN EDITABLE
-// ═══════════════════════════════════════════════════════════════════
-// All prices and limits are dynamically managed from admin dashboard
-// This config ensures consistency across all pages
-
 export const PRICING_CONFIG = {
+  starter: {
+    price: 79000,
+    priceFormatted: 'Rp 79.000',
+    duration: 3,
+    durationLabel: '3 bulan',
+    rsvpLimit: 100,
+    badge: 'STARTER',
+    features: [
+      'Domain nama pasangan',
+      'Undangan personal per tamu',
+      'Musik pengiring bawaan',
+      'RSVP online hingga 100 tamu',
+      'Galeri foto (max 10)',
+      'Countdown hari H',
+      'Ucapan & doa dari tamu',
+      'Aktif 3 bulan',
+    ],
+  },
   premium: {
-    price: 129000,
-    priceFormatted: 'Rp 129.000',
-    duration: 6, // months
+    price: 149000,
+    priceFormatted: 'Rp 149.000',
+    duration: 6,
     durationLabel: '6 bulan',
     rsvpLimit: 300,
     badge: 'PALING POPULER',
     features: [
-      'Domain nama pasangan kalian',
-      'Undangan personal per tamu',
-      'Musik pengiring pilihan sendiri',
+      'Semua fitur Starter',
+      'Upload musik sendiri (MP3)',
       'RSVP online hingga 300 tamu',
-      'Galeri foto & album kenangan',
-      'Countdown hari H otomatis',
+      'Galeri foto (max 20)',
+      'Pilihan 12 gaya opening',
+      'Amplop digital & gift registry',
       'Ucapan & doa dari tamu',
       'Aktif 6 bulan penuh',
     ],
+    highlightedFeature: 'Pilihan 12 gaya opening',
   },
   pro: {
-    price: 219000,
-    priceFormatted: 'Rp 219.000',
-    duration: 12, // months
+    price: 249000,
+    priceFormatted: 'Rp 249.000',
+    duration: 12,
     durationLabel: '12 bulan',
     rsvpLimit: 1000,
     badge: 'TERLENGKAP',
-    badgeColor: '#C9A84C', // Gold/amber accent
+    badgeColor: '#C9A84C',
     features: [
-      'Semua fitur Paket Premium',
-      'RSVP online hingga 1.000 tamu', // Highlighted feature
+      'Semua fitur Premium',
+      'RSVP online hingga 1.000 tamu',
       'QR Code tiket per tamu',
-      'Embed live streaming (YouTube / IG Live)',
-      'Amplop digital & gift registry',
+      'Embed live streaming',
       'Akses tema eksklusif',
+      'Custom domain sendiri',
       'Aktif 12 bulan penuh',
     ],
-    highlightedFeature: 'RSVP online hingga 1.000 tamu', // Feature to highlight
+    highlightedFeature: 'RSVP online hingga 1.000 tamu',
   },
-  // Theme colors
   colors: {
-    background: '#F5F0EB', // Warm cream
-    darkOlive: '#3D4A2E', // Forest green for CTA
-    darkCharcoal: '#1C1C1C', // Premium card bg
-    gold: '#C9A84C', // Pro badge accent
+    background: '#F5F0EB',
+    darkOlive: '#3D4A2E',
+    darkCharcoal: '#1C1C1C',
+    gold: '#C9A84C',
   },
 } as const;
 
-// Type-safe pricing access
-export type PricingPackage = 'premium' | 'pro';
+export type PricingPackage = 'starter' | 'premium' | 'pro';
 export type PricingConfig = typeof PRICING_CONFIG;
 
-// Helper functions
 export function getPackagePrice(pkg: PricingPackage): number {
   return PRICING_CONFIG[pkg].price;
 }

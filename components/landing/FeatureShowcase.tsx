@@ -27,18 +27,26 @@ function VisualPersonal() {
           <Image src="/images/templates/wedding-bg.jpg" alt="Preview undangan personalisasi" fill className="object-cover" sizes="280px" quality={90} style={{ opacity: 0.5 }} />
           <div className="absolute inset-0 z-[2]" style={{ background: 'radial-gradient(ellipse at center 40%, rgba(10,20,10,0.25) 0%, rgba(10,20,10,0.8) 100%)' }} />
 
-          {/* Content — centered, minimal */}
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-5">
-            <p className="text-[10px] tracking-[0.35em] uppercase mb-6" style={{ color: a }}>The Wedding of</p>
+          {/* Content — vertically distributed */}
+          <div className="absolute inset-0 z-20 flex flex-col text-center">
+            {/* Top section — "The Wedding of" */}
+            <div className="pt-14 px-5">
+              <p className="text-[10px] tracking-[0.35em] uppercase" style={{ color: a }}>The Wedding of</p>
+            </div>
 
-            <h3 className="text-[36px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Rizky</h3>
-            <p className="text-[22px] my-1" style={{ color: a, fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
-            <h3 className="text-[36px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Aulia</h3>
+            {/* Center — couple names */}
+            <div className="flex-1 flex flex-col items-center justify-center px-5">
+              <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Rizky</h3>
+              <p className="text-[20px] my-1" style={{ color: a, fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
+              <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Aulia</h3>
+            </div>
 
-            {/* Personalized guest name — the hero of this feature */}
-            <div className="mt-7 px-4 py-2.5 rounded-lg" style={{ backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-              <p className="text-[8px] tracking-[0.3em] uppercase mb-0.5" style={{ color: `${a}aa` }}>Kepada Yth.</p>
-              <p className="text-[14px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif" }}>Bapak Andi &amp; Keluarga</p>
+            {/* Bottom — personalized guest card */}
+            <div className="pb-8 px-5">
+              <div className="inline-block px-5 py-3 rounded-xl" style={{ backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', backdropFilter: 'blur(8px)' }}>
+                <p className="text-[8px] tracking-[0.3em] uppercase mb-0.5" style={{ color: `${a}aa` }}>Kepada Yth.</p>
+                <p className="text-[14px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif" }}>Bapak Andi &amp; Keluarga</p>
+              </div>
             </div>
           </div>
         </div>
