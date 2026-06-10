@@ -52,18 +52,6 @@ function VisualPersonal() {
         </div>
       </div>
 
-      {/* Floating badge */}
-      <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute right-0 sm:-right-4 top-1/4 bg-white rounded-2xl px-3 py-2 shadow-xl shadow-stone-200 border border-stone-100 flex items-center gap-2 max-sm:scale-90"
-      >
-        <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center text-xs">✅</div>
-        <div>
-          <p className="text-[9px] font-bold text-stone-800 leading-none">RSVP Masuk</p>
-          <p className="text-[8px] text-stone-400 mt-0.5">128 tamu konfirmasi</p>
-        </div>
-      </motion.div>
     </div>
   )
 }
