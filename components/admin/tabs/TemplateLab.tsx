@@ -803,7 +803,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
     slug: 'template-baru',
   }))
   const [activeTab, setActiveTab] = useState<ConfigTab>('identity')
-  const [previewMode, setPreviewMode] = useState<'invitation' | 'cover' | 'loading'>('invitation')
+  const [previewMode, setPreviewMode] = useState<'invitation' | 'cover' | 'opening' | 'loading'>('invitation')
   const [previewGuestName, setPreviewGuestName] = useState('Bapak Budi dan Keluarga')
   const [previewData, setPreviewData] = useState<NewInvitationData>(PREVIEW_DATA_DEFAULT)
   const [showHowTo, setShowHowTo] = useState(false)
@@ -898,7 +898,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
 
   // Auto-switch preview ke Cover saat tab Opening aktif
   useEffect(() => {
-    if (activeTab === 'opening') setPreviewMode('cover')
+    if (activeTab === 'opening') setPreviewMode('opening')
     else if (activeTab === 'loading') setPreviewMode('loading')
     else { setPreviewMode('invitation'); setDecorEditMode(false); setSelectedAssetId(null) }
   }, [activeTab])
@@ -2898,6 +2898,24 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
               <div className="rounded-[44px] overflow-hidden bg-gray-900"
                 style={{ width: 340, height: 736, position: 'relative' }}>
 
+                {/* ── Opening style preview — static, no click handler ── */}
+                <div style={{
+                  position: 'absolute', inset: 0, overflow: 'hidden',
+                  visibility: previewMode === 'opening' && !previewPlaying && !previewLoading ? 'visible' : 'hidden',
+                  pointerEvents: previewMode === 'opening' && !previewPlaying && !previewLoading ? 'auto' : 'none',
+                }}>
+                  <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'relative' }}>
+                    <OpeningScene
+                      key={`opening-preview-${cfg.opening.type}`}
+                      config={{ ...cfg.opening, show_opening: true }}
+                      data={previewData}
+                      meta={cfg.meta}
+                      positionMode="absolute"
+                      onOpen={() => {}}
+                    />
+                  </div>
+                </div>
+
                 {/* ── Cover preview — position absolute, visibility toggle ── */}
                 <div style={{
                   position: 'absolute', inset: 0, overflow: 'hidden',
@@ -3023,10 +3041,20 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
             </div>
 
             {/* Preview Mode Tabs */}
-            <div className="mt-3 flex items-center gap-1.5 bg-white rounded-xl p-1.5 shadow-sm border border-gray-200">
+            <div className="mt-3 flex items-center gap-1 bg-white rounded-xl p-1.5 shadow-sm border border-gray-200">
+              <button
+                onClick={() => setPreviewMode('opening')}
+                className={`flex-1 px-2 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                  previewMode === 'opening'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Opening
+              </button>
               <button
                 onClick={() => setPreviewMode('cover')}
-                className={`flex-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                className={`flex-1 px-2 py-2 rounded-lg text-[10px] font-semibold transition-all ${
                   previewMode === 'cover'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-gray-600 hover:bg-gray-50'
@@ -3036,7 +3064,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
               </button>
               <button
                 onClick={() => setPreviewMode('loading')}
-                className={`flex-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                className={`flex-1 px-2 py-2 rounded-lg text-[10px] font-semibold transition-all ${
                   previewMode === 'loading'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-gray-600 hover:bg-gray-50'
@@ -3046,7 +3074,7 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
               </button>
               <button
                 onClick={() => setPreviewMode('invitation')}
-                className={`flex-1 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all ${
+                className={`flex-1 px-2 py-2 rounded-lg text-[10px] font-semibold transition-all ${
                   previewMode === 'invitation'
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-gray-600 hover:bg-gray-50'
