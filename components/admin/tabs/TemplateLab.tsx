@@ -1548,17 +1548,49 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
           {activeTab === 'opening' && (
             <div className="space-y-5">
 
-
-              {/* ── Opening Content (Still configurable for future use) ── */}
+              {/* ── Pilih Gaya Opening ── */}
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
-                  Konten Opening (Tidak Ditampilkan di Cover)
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                  Gaya Opening
                 </p>
-                <p className="text-[9px] text-gray-400 mb-4 italic">
-                  Setting ini untuk konten saja. Cover page tidak akan muncul karena sudah dinonaktifkan.
+                <p className="text-[9px] text-gray-400 mb-3">
+                  Pilih animasi yang tampil saat tamu pertama kali membuka undangan
+                </p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {OPENING_TYPES.map(ot => {
+                    const m = OPENING_META[ot]
+                    const active = cfg.opening.type === ot
+                    return (
+                      <button key={ot} type="button"
+                        onClick={() => updateOpening({ type: ot as any })}
+                        className={`relative p-2.5 rounded-xl text-center transition-all ${
+                          active
+                            ? 'bg-indigo-50 border-2 border-indigo-500 ring-1 ring-indigo-500/20'
+                            : 'bg-gray-50 border border-gray-200 hover:border-gray-300 hover:bg-gray-100'
+                        }`}
+                      >
+                        <span className="text-lg block mb-0.5">{m?.icon}</span>
+                        <p className={`text-[10px] font-semibold leading-tight ${active ? 'text-indigo-700' : 'text-gray-600'}`}>
+                          {m?.label ?? ot}
+                        </p>
+                        {active && (
+                          <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-indigo-500 flex items-center justify-center">
+                            <Check className="w-2 h-2 text-white" />
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* ── Opening Content ── */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  Konten Opening
                 </p>
 
-                <div className="space-y-4 opacity-60">
+                <div className="space-y-4">
 
                   <Field label="Salam Pembuka">
                     <input
@@ -1891,66 +1923,109 @@ export default function TemplateLab({ onGoToManagement, categories: categoriesPr
           {/* ── Loading ── */}
           {activeTab === 'loading' && (
             <div className="space-y-5">
-              <p className="text-xs text-gray-500">
-                Konfigurasi loading screen untuk preview admin. Loading screen TIDAK muncul di undangan live.
-              </p>
 
-              {/* Info box */}
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl">ℹ️</div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-blue-900 mb-1">
-                      Preview Admin Saja
-                    </p>
-                    <p className="text-xs text-blue-700 leading-relaxed">
-                      Loading screen TIDAK muncul di undangan live (langsung masuk).
-                      Setting ini hanya untuk preview di mockup admin saat klik tab &quot;Loading&quot;.
-                    </p>
-                  </div>
+              {/* ── Pilih Gaya Loading ── */}
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                  Gaya Loading
+                </p>
+                <p className="text-[9px] text-gray-400 mb-3">
+                  Pilih animasi loading yang tampil setelah opening
+                </p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {([
+                    { id: 'dual-ring',       icon: '💫', label: 'Dual Ring' },
+                    { id: 'heartbeat',       icon: '💗', label: 'Heartbeat' },
+                    { id: 'elegant-spinner', icon: '🌀', label: 'Spinner' },
+                    { id: 'petal-cascade',   icon: '🌸', label: 'Kelopak' },
+                    { id: 'wave-dots',       icon: '🔵', label: 'Wave Dots' },
+                    { id: 'letter-reveal',   icon: '✍️', label: 'Letter' },
+                    { id: 'arch-gate',       icon: '🕌', label: 'Arch Gate' },
+                    { id: 'candle-glow',     icon: '🕯️', label: 'Lilin' },
+                    { id: 'infinity-ribbon', icon: '♾️', label: 'Infinity' },
+                    { id: 'shimmer-bar',     icon: '▬', label: 'Shimmer' },
+                    { id: 'orbit-rings',     icon: '🪐', label: 'Orbit' },
+                    { id: 'ripple-pulse',    icon: '🔘', label: 'Ripple' },
+                    { id: 'diamond-spin',    icon: '💎', label: 'Diamond' },
+                    { id: 'hourglass',       icon: '⏳', label: 'Hourglass' },
+                    { id: 'crescent-moon',   icon: '🌙', label: 'Bulan Sabit' },
+                    { id: 'spiral-gold',     icon: '🌀', label: 'Spiral Gold' },
+                  ] as const).map(lv => {
+                    const active = (cfg.loading.variant ?? 'dual-ring') === lv.id
+                    return (
+                      <button key={lv.id} type="button"
+                        onClick={() => setConfig(prev => ({
+                          ...prev,
+                          config: { ...prev.config, loading: { ...prev.config.loading, variant: lv.id as any } },
+                        }))}
+                        className={`relative p-2.5 rounded-xl text-center transition-all ${
+                          active
+                            ? 'bg-indigo-50 border-2 border-indigo-500 ring-1 ring-indigo-500/20'
+                            : 'bg-gray-50 border border-gray-200 hover:border-gray-300 hover:bg-gray-100'
+                        }`}
+                      >
+                        <span className="text-lg block mb-0.5">{lv.icon}</span>
+                        <p className={`text-[10px] font-semibold leading-tight ${active ? 'text-indigo-700' : 'text-gray-600'}`}>
+                          {lv.label}
+                        </p>
+                        {active && (
+                          <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-indigo-500 flex items-center justify-center">
+                            <Check className="w-2 h-2 text-white" />
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
 
-              {/* Teks Loading */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5">
-                  Teks Loading
-                </label>
-                <input
-                  value={cfg.loading.text}
-                  onChange={e => setConfig(prev => ({
-                    ...prev,
-                    config: { ...prev.config, loading: { ...prev.config.loading, text: e.target.value } },
-                  }))}
-                  className={inputCls}
-                  placeholder="MEMBUKA UNDANGAN..."
-                />
-              </div>
+              {/* ── Settings ── */}
+              <div className="pt-4 border-t border-gray-100 space-y-4">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                  Pengaturan
+                </p>
 
-              {/* Warna Background */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5">
-                  Warna Background Loading
-                </label>
-                <div className="flex items-center gap-2">
+                {/* Teks Loading */}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5">
+                    Teks Loading
+                  </label>
                   <input
-                    type="color"
-                    value={cfg.loading.background_color}
+                    value={cfg.loading.text}
                     onChange={e => setConfig(prev => ({
                       ...prev,
-                      config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
+                      config: { ...prev.config, loading: { ...prev.config.loading, text: e.target.value } },
                     }))}
-                    className="w-10 h-9 rounded-lg cursor-pointer border border-gray-200"
+                    className={inputCls}
+                    placeholder="MEMBUKA UNDANGAN..."
                   />
-                  <input
-                    value={cfg.loading.background_color}
-                    onChange={e => setConfig(prev => ({
-                      ...prev,
-                      config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
-                    }))}
-                    className={inputCls + ' font-mono flex-1'}
-                    placeholder="#2c4a34"
-                  />
+                </div>
+
+                {/* Warna Background */}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5">
+                    Warna Background
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={cfg.loading.background_color}
+                      onChange={e => setConfig(prev => ({
+                        ...prev,
+                        config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
+                      }))}
+                      className="w-10 h-9 rounded-lg cursor-pointer border border-gray-200"
+                    />
+                    <input
+                      value={cfg.loading.background_color}
+                      onChange={e => setConfig(prev => ({
+                        ...prev,
+                        config: { ...prev.config, loading: { ...prev.config.loading, background_color: e.target.value } },
+                      }))}
+                      className={inputCls + ' font-mono flex-1'}
+                      placeholder="#2c4a34"
+                    />
+                  </div>
                 </div>
               </div>
 
