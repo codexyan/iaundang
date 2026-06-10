@@ -17,7 +17,7 @@
 import { useState, useRef, useCallback } from 'react'
 import toast from 'react-hot-toast'
 import { Clock, Image as ImageIcon, Gift, CheckSquare, MessageSquare, BookOpen } from 'lucide-react'
-import type { Invitation, NewInvitationData, TemplateRecord, GiftAccount, LoadingConfig } from '@/lib/types'
+import type { Invitation, NewInvitationData, TemplateRecord, GiftAccount, LoadingConfig, OpeningType } from '@/lib/types'
 import InvitationPreview from '@/components/renderer/InvitationPreview'
 
 // New modular components
@@ -65,6 +65,7 @@ function initData(inv: Invitation): NewInvitationData {
     background_color: d.background_color ?? '#fefdf8',
 
     // Opening (NEW)
+    opening_type: d.opening_type ?? 'fade-reveal',
     opening_greeting: d.opening_greeting ?? 'Assalamualaikum Warahmatullahi Wabarakatuh',
     opening_subtitle: d.opening_subtitle ?? 'Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.',
 
@@ -257,8 +258,10 @@ export default function InvitationStudio({ invitation, template, onSaved }: Prop
 
             {/* Opening Settings */}
             <OpeningForm
+              openingType={(data.opening_type as OpeningType) || 'fade-reveal'}
               openingGreeting={(data as any).opening_greeting || ''}
               openingSubtitle={(data as any).opening_subtitle || ''}
+              onOpeningTypeChange={(val) => updateData({ opening_type: val })}
               onOpeningGreetingChange={(val) => updateData({ ...data, opening_greeting: val } as any)}
               onOpeningSubtitleChange={(val) => updateData({ ...data, opening_subtitle: val } as any)}
             />

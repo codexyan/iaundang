@@ -1,58 +1,39 @@
-/**
- * OpeningForm - Opening animation & greeting settings (TIER 1 CRITICAL)
- * Customize first impression of the invitation
- */
-
 'use client'
 
 import { DoorOpen } from 'lucide-react'
 import FormField, { inputClass, textareaClass } from '../ui/FormField'
 import SectionCard from '../ui/SectionCard'
+import type { OpeningType } from '@/lib/types'
 
 interface OpeningFormProps {
+  openingType: OpeningType
   openingGreeting: string
   openingSubtitle: string
+  onOpeningTypeChange: (value: OpeningType) => void
   onOpeningGreetingChange: (value: string) => void
   onOpeningSubtitleChange: (value: string) => void
 }
 
-// Opening animation types
-const ANIMATION_TYPES = [
-  {
-    id: 'envelope',
-    name: 'Amplop',
-    icon: '💌',
-    description: 'Klasik & formal',
-  },
-  {
-    id: 'curtain',
-    name: 'Tirai',
-    icon: '🎭',
-    description: 'Elegan & mewah',
-  },
-  {
-    id: 'flower-bloom',
-    name: 'Bunga Mekar',
-    icon: '🌸',
-    description: 'Romantis & feminin',
-  },
-  {
-    id: 'slide-up',
-    name: 'Geser Atas',
-    icon: '⬆️',
-    description: 'Modern & simpel',
-  },
-  {
-    id: 'fade',
-    name: 'Fade In',
-    icon: '✨',
-    description: 'Minimalis & halus',
-  },
+const OPENING_STYLES: { id: OpeningType; name: string; icon: string; desc: string }[] = [
+  { id: 'fade-reveal',    name: 'Fade Reveal',    icon: '✨', desc: 'Muncul perlahan, elegan' },
+  { id: 'envelope',       name: 'Amplop',         icon: '💌', desc: 'Klasik & formal' },
+  { id: 'curtain',        name: 'Tirai',          icon: '🎭', desc: 'Elegan & mewah' },
+  { id: 'gate-open',      name: 'Gerbang',        icon: '🚪', desc: 'Megah terbuka' },
+  { id: 'flower-bloom',   name: 'Bunga Mekar',    icon: '🌸', desc: 'Romantis & feminin' },
+  { id: 'scroll-reveal',  name: 'Gulungan',       icon: '📜', desc: 'Tradisional & unik' },
+  { id: 'diamond-split',  name: 'Berlian',        icon: '💎', desc: 'Geometris & modern' },
+  { id: 'book-open',      name: 'Buku',           icon: '📖', desc: 'Perspektif 3D' },
+  { id: 'lantern-rise',   name: 'Lentera',        icon: '🏮', desc: 'Hangat & sakral' },
+  { id: 'veil-lift',      name: 'Kerudung',       icon: '👰', desc: 'Lembut terangkat' },
+  { id: 'mosaic-reveal',  name: 'Mosaik',         icon: '🔷', desc: 'Pecah terurai' },
+  { id: 'ring-zoom',      name: 'Cincin',         icon: '💍', desc: 'Ikonik & bermakna' },
 ]
 
 export default function OpeningForm({
+  openingType,
   openingGreeting,
   openingSubtitle,
+  onOpeningTypeChange,
   onOpeningGreetingChange,
   onOpeningSubtitleChange,
 }: OpeningFormProps) {
@@ -60,13 +41,44 @@ export default function OpeningForm({
     <SectionCard
       title="Pembuka Undangan"
       icon={DoorOpen}
-      description="Sapaan dan teks pembuka saat tamu membuka undangan"
+      description="Gaya animasi dan teks pembuka saat tamu membuka undangan"
     >
-      {/* Animation Type Preview (Future Enhancement) */}
-      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-        <p className="text-xs text-amber-800">
-          <strong>Coming Soon:</strong> Pilihan animasi pembuka (envelope, curtain, flower bloom, dll) akan segera tersedia!
-        </p>
+      {/* Opening Style Selector */}
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-stone-700">Gaya Opening</p>
+        <p className="text-xs text-stone-400">Pilih animasi pembuka yang tampil pertama kali</p>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          {OPENING_STYLES.map((style) => {
+            const isSelected = openingType === style.id
+            return (
+              <button
+                key={style.id}
+                type="button"
+                onClick={() => onOpeningTypeChange(style.id)}
+                className={`relative p-3 rounded-xl text-center transition-all ${
+                  isSelected
+                    ? 'bg-forest-50 border-2 border-forest-500 ring-1 ring-forest-500/20'
+                    : 'bg-stone-50 border border-stone-200 hover:border-stone-300 hover:bg-stone-100'
+                }`}
+              >
+                <span className="text-xl block mb-1">{style.icon}</span>
+                <p className={`text-[11px] font-semibold leading-tight ${isSelected ? 'text-forest-700' : 'text-stone-700'}`}>
+                  {style.name}
+                </p>
+                <p className={`text-[9px] mt-0.5 leading-tight ${isSelected ? 'text-forest-500' : 'text-stone-400'}`}>
+                  {style.desc}
+                </p>
+                {isSelected && (
+                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-forest-500 flex items-center justify-center">
+                    <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                )}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Greeting Text */}
@@ -97,7 +109,7 @@ export default function OpeningForm({
         />
       </FormField>
 
-      {/* Common Greetings Quick Select */}
+      {/* Quick Select */}
       <div className="space-y-2">
         <p className="text-sm font-semibold text-stone-700">Pilih Cepat:</p>
         <div className="grid grid-cols-1 gap-2">
@@ -110,11 +122,8 @@ export default function OpeningForm({
             className="p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
           >
             <p className="text-xs font-semibold text-stone-700">☪️ Muslim (Formal)</p>
-            <p className="text-xs text-stone-600 mt-1">
-              Assalamualaikum Warahmatullahi Wabarakatuh
-            </p>
+            <p className="text-xs text-stone-600 mt-1">Assalamualaikum Warahmatullahi Wabarakatuh</p>
           </button>
-
           <button
             type="button"
             onClick={() => {
@@ -124,11 +133,8 @@ export default function OpeningForm({
             className="p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
           >
             <p className="text-xs font-semibold text-stone-700">🙏 Umum (Formal)</p>
-            <p className="text-xs text-stone-600 mt-1">
-              Dengan Memohon Rahmat dan Ridho Tuhan Yang Maha Esa
-            </p>
+            <p className="text-xs text-stone-600 mt-1">Dengan Memohon Rahmat dan Ridho Tuhan Yang Maha Esa</p>
           </button>
-
           <button
             type="button"
             onClick={() => {
@@ -138,9 +144,7 @@ export default function OpeningForm({
             className="p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
           >
             <p className="text-xs font-semibold text-stone-700">💑 Modern (Casual)</p>
-            <p className="text-xs text-stone-600 mt-1">
-              We Are Getting Married!
-            </p>
+            <p className="text-xs text-stone-600 mt-1">We Are Getting Married!</p>
           </button>
         </div>
       </div>
@@ -150,6 +154,9 @@ export default function OpeningForm({
         <div className="text-center space-y-3">
           <p className="text-xs font-semibold text-gold-600 uppercase tracking-wider">
             Preview Pembuka
+          </p>
+          <p className="text-xs text-stone-400">
+            Gaya: {OPENING_STYLES.find(s => s.id === openingType)?.icon} {OPENING_STYLES.find(s => s.id === openingType)?.name}
           </p>
           <p className="text-sm font-serif text-stone-700 leading-relaxed">
             {openingGreeting || 'Salam pembuka...'}

@@ -460,6 +460,7 @@ export interface NewInvitationData {
   text_color?: string
   background_color?: string
   // Opening
+  opening_type?: OpeningType
   opening_greeting?: string
   opening_subtitle?: string
   // Story
