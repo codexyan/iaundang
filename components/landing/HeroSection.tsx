@@ -482,92 +482,51 @@ export default function HeroSection() {
                       background: 'linear-gradient(to top, rgba(10,20,10,0.98) 0%, rgba(10,20,10,0.85) 40%, transparent 100%)',
                     }} />
 
-                    {/* Content */}
-                    <div className="absolute inset-0 z-20 flex flex-col justify-end">
-                      <div className="px-4 sm:px-5 pb-5 sm:pb-7 text-center">
-                        {/* Greeting */}
+                    {/* Content — minimal, premium feel */}
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                      <div className="text-center px-5">
+                        {/* The Wedding of */}
                         <motion.p
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 1.2, duration: 0.6 }}
-                          className="text-[10px] sm:text-xs italic mb-3 sm:mb-4"
-                          style={{ color: 'rgba(255,255,255,0.85)', fontFamily: "'Cormorant Garamond', serif", textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
+                          className="text-[10px] sm:text-xs tracking-[0.35em] uppercase mb-5 sm:mb-6"
+                          style={{ color: '#d4af37', fontWeight: 500 }}
                         >
-                          Assalamu&apos;alaikum Wr. Wb.
+                          The Wedding of
                         </motion.p>
 
-                        {/* Separator */}
-                        <motion.div
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ delay: 1.35, duration: 0.6 }}
-                          className="flex items-center gap-2 justify-center mb-3 sm:mb-4 mx-auto"
-                          style={{ width: '60%' }}
-                        >
-                          <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, #d4af3788)' }} />
-                          <div style={{ width: 5, height: 5, transform: 'rotate(45deg)', backgroundColor: '#d4af37', opacity: 0.9 }} />
-                          <div style={{ flex: 1, height: 1, background: 'linear-gradient(to left, transparent, #d4af3788)' }} />
-                        </motion.div>
-
-                        {/* Guest name */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 1.5, duration: 0.5 }}
-                          className="mb-4 sm:mb-5"
-                        >
-                          <p className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase mb-1" style={{ color: '#d4af37' }}>
-                            Kepada Yth.
-                          </p>
-                          <p className="text-sm sm:text-base font-semibold" style={{ color: '#ffffff', fontFamily: "'Playfair Display', serif", textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
-                            Bapak Andi &amp; Keluarga
-                          </p>
-                        </motion.div>
-
-                        {/* Couple names */}
+                        {/* Couple names — big and centered */}
                         <motion.div
                           initial={{ opacity: 0, y: 16 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 1.7, duration: 0.6 }}
-                          className="mb-4 sm:mb-5"
+                          transition={{ delay: 1.5, duration: 0.6 }}
                         >
-                          <h2 className="text-3xl sm:text-4xl font-bold leading-none" style={{
-                            color: '#ffffff', fontFamily: "'Playfair Display', serif",
-                            letterSpacing: '0.06em',
-                            textShadow: '0 3px 16px rgba(0,0,0,0.7), 0 6px 30px rgba(0,0,0,0.4)',
+                          <h2 className="text-4xl sm:text-5xl font-bold leading-[0.9]" style={{
+                            color: '#fff', fontFamily: "'Playfair Display', serif",
+                            textShadow: '0 4px 20px rgba(0,0,0,0.5)',
                           }}>
                             Rizky
                           </h2>
-                          <div className="flex items-center justify-center gap-3 my-2">
-                            <div style={{ width: 28, height: 1, backgroundColor: '#d4af3766' }} />
-                            <span className="text-xl sm:text-2xl" style={{ color: '#d4af37', fontFamily: "'Playfair Display', serif", fontWeight: 300, fontStyle: 'italic' }}>&amp;</span>
-                            <div style={{ width: 28, height: 1, backgroundColor: '#d4af3766' }} />
-                          </div>
-                          <h2 className="text-3xl sm:text-4xl font-bold leading-none" style={{
-                            color: '#ffffff', fontFamily: "'Playfair Display', serif",
-                            letterSpacing: '0.06em',
-                            textShadow: '0 3px 16px rgba(0,0,0,0.7), 0 6px 30px rgba(0,0,0,0.4)',
+                          <p className="text-2xl sm:text-3xl my-1" style={{ color: '#d4af37', fontFamily: "'Playfair Display', serif", fontWeight: 300, fontStyle: 'italic' }}>&amp;</p>
+                          <h2 className="text-4xl sm:text-5xl font-bold leading-[0.9]" style={{
+                            color: '#fff', fontFamily: "'Playfair Display', serif",
+                            textShadow: '0 4px 20px rgba(0,0,0,0.5)',
                           }}>
                             Aulia
                           </h2>
-                          <p className="text-[8px] sm:text-[9px] tracking-[0.2em] uppercase mt-2 sm:mt-3" style={{ color: '#d4af37cc' }}>
-                            Sabtu, 12 April 2026
-                          </p>
                         </motion.div>
 
-                        {/* Button */}
-                        <motion.div
+                        {/* Date */}
+                        <motion.p
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ delay: 2.0 }}
+                          transition={{ delay: 1.9, duration: 0.5 }}
+                          className="text-[9px] sm:text-[11px] tracking-[0.2em] uppercase mt-5 sm:mt-6"
+                          style={{ color: 'rgba(255,255,255,0.6)' }}
                         >
-                          <div className="inline-block px-5 sm:px-6 py-2 sm:py-2.5 text-[9px] sm:text-[10px] tracking-[0.25em] uppercase" style={{
-                            border: '1px solid #d4af3799', color: '#d4af37',
-                            backgroundColor: 'rgba(15,45,15,0.6)', backdropFilter: 'blur(4px)',
-                          }}>
-                            Buka Undangan
-                          </div>
-                        </motion.div>
+                          12 · 04 · 2026
+                        </motion.p>
                       </div>
                     </div>
                   </div>

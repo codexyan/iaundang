@@ -23,51 +23,22 @@ function VisualPersonal() {
         <div className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full" style={{ top: 7, width: 60, height: 16, backgroundColor: '#000' }} />
 
         {/* Screen */}
-        <div className="rounded-[21px] sm:rounded-[25px] overflow-hidden relative" style={{ aspectRatio: '9/19.5', backgroundColor: p }}>
-          {/* Background Photo — dark moody bouquet */}
-          <Image src="/images/templates/wedding-bg.jpg" alt="Preview undangan personalisasi" fill className="object-cover" sizes="280px" quality={90} style={{ opacity: 0.45 }} />
-          {/* Heavy dark scrim */}
-          <div className="absolute inset-0 z-[2]" style={{ backgroundColor: 'rgba(10,20,10,0.65)' }} />
-          {/* Solid bottom gradient for text zone */}
-          <div className="absolute inset-x-0 bottom-0 z-[5]" style={{ height: '65%', background: 'linear-gradient(to top, rgba(10,20,10,0.98) 0%, rgba(10,20,10,0.85) 40%, transparent 100%)' }} />
+        <div className="rounded-[21px] sm:rounded-[25px] overflow-hidden relative" style={{ aspectRatio: '9/19.5', backgroundColor: '#0a1a0a' }}>
+          <Image src="/images/templates/wedding-bg.jpg" alt="Preview undangan personalisasi" fill className="object-cover" sizes="280px" quality={90} style={{ opacity: 0.5 }} />
+          <div className="absolute inset-0 z-[2]" style={{ background: 'radial-gradient(ellipse at center 40%, rgba(10,20,10,0.25) 0%, rgba(10,20,10,0.8) 100%)' }} />
 
-          {/* Content */}
-          <div className="absolute inset-0 z-20 flex flex-col">
-            <div className="flex-1" />
-            <div className="px-5 pb-7 text-center">
-              <p className="text-[10px] italic mb-2" style={{ color: 'rgba(255,255,255,0.8)', textShadow: '0 1px 8px rgba(0,0,0,0.7)' }}>
-                Assalamu&apos;alaikum Wr. Wb.
-              </p>
-              <div className="flex items-center gap-1.5 justify-center mb-2.5 mx-auto" style={{ width: '60%' }}>
-                <div style={{ flex: 1, height: 0.5, background: `linear-gradient(to right, transparent, ${a}88)` }} />
-                <div style={{ width: 4, height: 4, transform: 'rotate(45deg)', backgroundColor: a, opacity: 0.8 }} />
-                <div style={{ flex: 1, height: 0.5, background: `linear-gradient(to left, transparent, ${a}88)` }} />
-              </div>
+          {/* Content — centered, minimal */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-5">
+            <p className="text-[10px] tracking-[0.35em] uppercase mb-6" style={{ color: a }}>The Wedding of</p>
 
-              {/* Guest name */}
-              <div className="mb-3">
-                <p className="text-[9px] tracking-[0.3em] uppercase mb-1" style={{ color: a }}>Kepada Yth.</p>
-                <div className="relative inline-block">
-                  <p className="text-[14px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 2px 12px rgba(0,0,0,0.7)' }}>
-                    Bapak Andi &amp; Keluarga
-                  </p>
-                  <div className="absolute -inset-x-3 -inset-y-1 rounded-lg -z-10" style={{ backgroundColor: `${a}10`, border: `0.5px solid ${a}22` }} />
-                </div>
-              </div>
+            <h3 className="text-[36px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Rizky</h3>
+            <p className="text-[22px] my-1" style={{ color: a, fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
+            <h3 className="text-[36px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Aulia</h3>
 
-              {/* Couple names */}
-              <h3 className="text-[32px] font-bold leading-none" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 2px 16px rgba(0,0,0,0.6)' }}>Rizky</h3>
-              <div className="flex items-center justify-center gap-2 my-1.5">
-                <div style={{ width: 24, height: 0.5, backgroundColor: `${a}66` }} />
-                <span className="text-[20px]" style={{ color: a, fontStyle: 'italic' }}>&amp;</span>
-                <div style={{ width: 24, height: 0.5, backgroundColor: `${a}66` }} />
-              </div>
-              <h3 className="text-[32px] font-bold leading-none" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 2px 16px rgba(0,0,0,0.6)' }}>Aulia</h3>
-              <p className="text-[8px] tracking-[0.2em] uppercase mt-2 mb-3" style={{ color: `${a}cc` }}>Sabtu, 12 April 2026</p>
-
-              <div className="inline-block px-5 py-2 text-[9px] tracking-[0.25em] uppercase" style={{ border: `1px solid ${a}88`, color: a, backgroundColor: 'rgba(15,45,15,0.5)' }}>
-                Buka Undangan
-              </div>
+            {/* Personalized guest name — the hero of this feature */}
+            <div className="mt-7 px-4 py-2.5 rounded-lg" style={{ backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <p className="text-[8px] tracking-[0.3em] uppercase mb-0.5" style={{ color: `${a}aa` }}>Kepada Yth.</p>
+              <p className="text-[14px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif" }}>Bapak Andi &amp; Keluarga</p>
             </div>
           </div>
         </div>

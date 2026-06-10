@@ -25,94 +25,58 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
   )
 }
 
-// ─── Opening Mini Previews ───────────────────────────────────────
+// ─── Opening Mini Previews — clean, minimal, premium ─────────────
 
 function FadeRevealMini() {
   return (
-    <div className="absolute inset-0" style={{ backgroundColor: '#0f2d0f' }}>
-      <Image src="/images/templates/wedding-bg.jpg" alt="" fill className="object-cover" sizes="200px" style={{ opacity: 0.4 }} />
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(10,20,10,0.6)' }} />
-      <div className="absolute inset-x-0 bottom-0" style={{ height: '60%', background: 'linear-gradient(to top, rgba(10,20,10,0.97) 0%, rgba(10,20,10,0.8) 50%, transparent 100%)' }} />
+    <div className="absolute inset-0" style={{ backgroundColor: '#0a1a0a' }}>
+      <Image src="/images/templates/wedding-bg.jpg" alt="" fill className="object-cover" sizes="200px" style={{ opacity: 0.5 }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center 40%, rgba(10,20,10,0.3) 0%, rgba(10,20,10,0.8) 100%)' }} />
 
-      <div className="absolute inset-0 z-10 flex flex-col justify-end px-3 pb-4 text-center">
-        <p className="text-[8px] italic mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>Assalamu&apos;alaikum Wr. Wb.</p>
-        <div className="flex items-center gap-1 justify-center mb-2 mx-auto" style={{ width: '55%' }}>
-          <div style={{ flex: 1, height: 0.5, background: 'linear-gradient(to right, transparent, #d4af3788)' }} />
-          <div style={{ width: 3, height: 3, transform: 'rotate(45deg)', backgroundColor: '#d4af37', opacity: 0.8 }} />
-          <div style={{ flex: 1, height: 0.5, background: 'linear-gradient(to left, transparent, #d4af3788)' }} />
-        </div>
-        <p className="text-[7px] tracking-[0.25em] uppercase mb-0.5" style={{ color: '#d4af37' }}>Kepada Yth.</p>
-        <p className="text-[11px] font-semibold mb-3" style={{ color: '#fff', fontFamily: "'Playfair Display', serif", textShadow: '0 2px 8px rgba(0,0,0,0.7)' }}>Bapak Budi &amp; Keluarga</p>
-        <h3 className="text-[22px] font-bold leading-none" style={{ color: '#fff', fontFamily: "'Playfair Display', serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>Rizky</h3>
-        <div className="flex items-center justify-center gap-1.5 my-1">
-          <div style={{ width: 16, height: 0.5, backgroundColor: '#d4af3766' }} />
-          <span className="text-[14px]" style={{ color: '#d4af37', fontStyle: 'italic' }}>&amp;</span>
-          <div style={{ width: 16, height: 0.5, backgroundColor: '#d4af3766' }} />
-        </div>
-        <h3 className="text-[22px] font-bold leading-none" style={{ color: '#fff', fontFamily: "'Playfair Display', serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>Aulia</h3>
-        <p className="text-[6px] tracking-[0.15em] uppercase mt-1.5 mb-2.5" style={{ color: '#d4af37cc' }}>Sabtu, 12 April 2026</p>
-        <div className="inline-block mx-auto px-3 py-1.5 text-[7px] tracking-[0.2em] uppercase" style={{ border: '1px solid #d4af3788', color: '#d4af37', backgroundColor: 'rgba(15,45,15,0.5)' }}>Buka Undangan</div>
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
+        <p className="text-[8px] tracking-[0.4em] uppercase mb-4" style={{ color: '#d4af37' }}>The Wedding of</p>
+        <h3 className="text-[28px] font-bold leading-[0.85]" style={{ color: '#fff', fontFamily: "'Playfair Display', serif", textShadow: '0 3px 16px rgba(0,0,0,0.5)' }}>Rizky</h3>
+        <p className="text-[18px] my-0.5" style={{ color: '#d4af37', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
+        <h3 className="text-[28px] font-bold leading-[0.85]" style={{ color: '#fff', fontFamily: "'Playfair Display', serif", textShadow: '0 3px 16px rgba(0,0,0,0.5)' }}>Aulia</h3>
+        <p className="text-[7px] tracking-[0.2em] mt-4" style={{ color: 'rgba(255,255,255,0.5)' }}>12 · 04 · 2026</p>
       </div>
     </div>
   )
 }
 
 function GateOpenMini() {
-  const p = '#0a192f', a = '#64ffda', t = '#ccd6f6'
   return (
-    <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: p }}>
-      <Image src="/images/templates/modern.jpg" alt="" fill className="object-cover" sizes="200px" style={{ opacity: 0.25 }} />
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(8,18,38,0.7)' }} />
-      {/* Left gate */}
-      <div className="absolute inset-y-0 left-0 w-1/2 z-10 flex items-center justify-end pr-2"
-        style={{ backgroundColor: `${p}f0`, borderRight: `1.5px solid ${a}55` }}>
-        <div className="flex flex-col items-center gap-2.5">
-          {[0,1,2,3].map(i => <div key={i} style={{ width: 1.5, height: 6, backgroundColor: `${a}55` }} />)}
-        </div>
-      </div>
-      {/* Right gate */}
-      <div className="absolute inset-y-0 right-0 w-1/2 z-10 flex items-center justify-start pl-2"
-        style={{ backgroundColor: `${p}f0`, borderLeft: `1.5px solid ${a}55` }}>
-        <div className="flex flex-col items-center gap-2.5">
-          {[0,1,2,3].map(i => <div key={i} style={{ width: 1.5, height: 6, backgroundColor: `${a}55` }} />)}
-        </div>
-      </div>
-      {/* Center content */}
-      <div className="relative z-0 text-center px-3 flex flex-col items-center gap-1">
-        <p className="text-[8px] italic" style={{ color: `${a}cc` }}>Assalamu&apos;alaikum Wr. Wb.</p>
-        <div className="py-1 px-3 my-1 rounded" style={{ backgroundColor: `${a}12` }}>
-          <p className="text-[7px] tracking-[0.2em] uppercase" style={{ color: `${t}bb` }}>Kepada Yth.</p>
-          <p className="text-[10px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif" }}>Ibu Sari &amp; Keluarga</p>
-        </div>
-        <h3 className="text-[20px] font-bold leading-none" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: `0 2px 10px ${p}` }}>Dimas</h3>
-        <p className="text-[14px]" style={{ color: a }}>&amp;</p>
-        <h3 className="text-[20px] font-bold leading-none" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: `0 2px 10px ${p}` }}>Anisa</h3>
-        <div className="mt-2 px-3 py-1.5 text-[7px] tracking-[0.2em] uppercase" style={{ border: `1px solid ${a}66`, color: a }}>Masuk Sekarang</div>
+    <div className="absolute inset-0" style={{ backgroundColor: '#060e1f' }}>
+      <Image src="/images/templates/modern.jpg" alt="" fill className="object-cover" sizes="200px" style={{ opacity: 0.35 }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center 40%, rgba(6,14,31,0.3) 0%, rgba(6,14,31,0.85) 100%)' }} />
+
+      {/* Subtle gate lines */}
+      <div className="absolute inset-y-0 left-1/2 z-[5] -translate-x-px" style={{ width: 1, background: 'linear-gradient(to bottom, transparent 20%, #64ffda33 50%, transparent 80%)' }} />
+
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
+        <p className="text-[8px] tracking-[0.4em] uppercase mb-4" style={{ color: '#64ffda' }}>The Wedding of</p>
+        <h3 className="text-[28px] font-bold leading-[0.85]" style={{ color: '#ccd6f6', fontFamily: "'Playfair Display', serif", textShadow: '0 3px 16px rgba(6,14,31,0.8)' }}>Dimas</h3>
+        <p className="text-[18px] my-0.5" style={{ color: '#64ffda', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
+        <h3 className="text-[28px] font-bold leading-[0.85]" style={{ color: '#ccd6f6', fontFamily: "'Playfair Display', serif", textShadow: '0 3px 16px rgba(6,14,31,0.8)' }}>Anisa</h3>
+        <p className="text-[7px] tracking-[0.2em] mt-4" style={{ color: 'rgba(204,214,246,0.4)' }}>12 · 04 · 2026</p>
       </div>
     </div>
   )
 }
 
 function EnvelopeMini() {
-  const p = '#3d1020', a = '#f5a0b5', t = '#fff0f5'
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ backgroundColor: p }}>
-      <Image src="/images/templates/casual.jpg" alt="" fill className="object-cover" sizes="200px" style={{ opacity: 0.15 }} />
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(40,10,22,0.75)' }} />
-      {/* Guest name above */}
-      <div className="relative z-10 text-center mb-3">
-        <p className="text-[7px] tracking-[0.2em] uppercase" style={{ color: `${t}aa` }}>Kepada Yth.</p>
-        <p className="text-[10px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif" }}>Bapak Ahmad &amp; Keluarga</p>
+    <div className="absolute inset-0" style={{ backgroundColor: '#1a0810' }}>
+      <Image src="/images/templates/casual.jpg" alt="" fill className="object-cover" sizes="200px" style={{ opacity: 0.3 }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center 40%, rgba(26,8,16,0.3) 0%, rgba(26,8,16,0.85) 100%)' }} />
+
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
+        <p className="text-[8px] tracking-[0.4em] uppercase mb-4" style={{ color: '#f5a0b5' }}>The Wedding of</p>
+        <h3 className="text-[28px] font-bold leading-[0.85]" style={{ color: '#fff0f5', fontFamily: "'Playfair Display', serif", textShadow: '0 3px 16px rgba(26,8,16,0.8)' }}>Fajar</h3>
+        <p className="text-[18px] my-0.5" style={{ color: '#f5a0b5', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
+        <h3 className="text-[28px] font-bold leading-[0.85]" style={{ color: '#fff0f5', fontFamily: "'Playfair Display', serif", textShadow: '0 3px 16px rgba(26,8,16,0.8)' }}>Mawar</h3>
+        <p className="text-[7px] tracking-[0.2em] mt-4" style={{ color: 'rgba(255,240,245,0.4)' }}>12 · 04 · 2026</p>
       </div>
-      {/* Envelope */}
-      <div className="relative z-10 w-[75%] rounded-lg overflow-hidden" style={{ aspectRatio: '3/2', backgroundColor: a }}>
-        <div className="absolute top-0 left-0 right-0" style={{ height: '50%', backgroundColor: `${a}dd`, clipPath: 'polygon(0 0, 50% 100%, 100% 0)' }} />
-        <div className="absolute bottom-3 inset-x-0 flex flex-col items-center">
-          <p className="text-[7px] tracking-[0.2em] uppercase" style={{ color: p }}>Undangan</p>
-          <p className="text-[12px] font-bold" style={{ color: p, fontFamily: "'Playfair Display', serif" }}>Fajar &amp; Mawar</p>
-        </div>
-      </div>
-      <div className="relative z-10 mt-3 px-3 py-1.5 text-[7px] tracking-[0.2em] uppercase" style={{ border: `1px solid ${a}88`, color: a }}>Buka Undangan</div>
     </div>
   )
 }
