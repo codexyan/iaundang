@@ -30,6 +30,7 @@ interface AdminUserInvitation {
   template_id: string
   is_published: boolean
   is_paid: boolean
+  package_tier: string | null
   expires_at: string | null
   created_at: string
 }
@@ -301,7 +302,13 @@ export default function AdminPanel({
           <DashboardTab stats={stats} users={users} invitations={invitations} pendingProofs={pendingProofs} onGoToTab={(t) => handleTabChange(t as NavTab)} />
         )}
         {activeTab === 'users' && (
-          <UsersTab users={users} adminEmail={adminEmail} onDelete={handleDeleteUser} />
+          <UsersTab
+            users={users}
+            adminEmail={adminEmail}
+            templates={appSettings.templates}
+            onDelete={handleDeleteUser}
+            onGoToTab={(t) => handleTabChange(t as NavTab)}
+          />
         )}
         {activeTab === 'invitations' && (
           <InvitationsTab

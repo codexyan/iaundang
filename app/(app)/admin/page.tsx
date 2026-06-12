@@ -15,16 +15,28 @@ export default async function AdminPage() {
   const appSettings = await settings.get()
   const allTemplateRecords = await templateRecords.findAll()
 
-  const usersWithInvitations = allUsers.map((u) => ({
-    id: u.id,
-    email: u.email,
-    created_at: u.created_at,
-    invitation: allInvitations.find((i) => i.user_id === u.id) ?? null,
-  }))
+  const usersWithInvitations = allUsers.map((u) => {
+    const inv = allInvitations.find((i) => i.user_id === u.id)
+    return {
+      id: u.id,
+      email: u.email,
+      created_at: u.created_at,
+      invitation: inv ? {
+        id: inv.id,
+        slug: inv.slug,
+        template_id: inv.template_id,
+        is_published: inv.is_published,
+        is_paid: inv.is_paid,
+        package_tier: inv.package_tier ?? null,
+        expires_at: inv.expires_at,
+        created_at: inv.created_at,
+      } : null,
+    }
+  })
 
   const invitationsWithUsers = allInvitations.map((inv) => ({
     ...inv,
-    user_email: allUsers.find((u) => u.id === inv.user_id)?.email ?? '—',
+    user_email: allUsers.find((u) => u.id === inv.user_id)?.email ?? '-',
   }))
 
   const paidCount = allInvitations.filter((i) => i.is_paid).length
@@ -50,6 +62,9 @@ export default async function AdminPage() {
         templates: appSettings.templates,
         categories: appSettings.categories,
         colorPalettes: appSettings.colorPalettes,
+        priceTiers: appSettings.priceTiers,
+        flashSales: appSettings.flashSales,
+        coupons: appSettings.coupons,
         bankAccounts: appSettings.bankAccounts,
         qrisImageUrl: appSettings.qrisImageUrl,
         paymentInstructions: appSettings.paymentInstructions,
@@ -62,6 +77,8 @@ export default async function AdminPage() {
         socialInstagram: appSettings.socialInstagram ?? 'akundang.id',
         socialTwitter: appSettings.socialTwitter ?? 'akundang',
         socialGithub: appSettings.socialGithub ?? 'akundang',
+        appDomain: appSettings.appDomain ?? 'akundang.id',
+        demoSubdomain: appSettings.demoSubdomain ?? 'demo',
       }}
       templateRecords={allTemplateRecords}
       adminEmail={session.email}
