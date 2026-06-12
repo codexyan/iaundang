@@ -304,7 +304,6 @@ export default function AdminPanel({
         {activeTab === 'users' && (
           <UsersTab
             users={users}
-            adminEmail={adminEmail}
             templates={appSettings.templates}
             onDelete={handleDeleteUser}
             onGoToTab={(t) => handleTabChange(t as NavTab)}

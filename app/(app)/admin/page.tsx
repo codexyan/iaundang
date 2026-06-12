@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/session-server'
-import { isAdmin } from '@/lib/auth'
+import { isAdmin, getAdminEmail } from '@/lib/auth'
 import { invitations, orders, users, settings, paymentProofs, templateRecords } from '@/lib/db'
 import AdminPanel from '@/components/admin/AdminPanel'
 
@@ -8,6 +8,7 @@ export default async function AdminPage() {
   const session = await getSession()
   if (!session || !isAdmin(session)) redirect('/dashboard')
 
+  const adminEmail = getAdminEmail()
   const allUsers = await users.findAll()
   const allInvitations = await invitations.findAll()
   const allOrders = await orders.findAll() as unknown as Record<string, unknown>[]
@@ -15,7 +16,9 @@ export default async function AdminPage() {
   const appSettings = await settings.get()
   const allTemplateRecords = await templateRecords.findAll()
 
-  const usersWithInvitations = allUsers.map((u) => {
+  const regularUsers = allUsers.filter((u) => u.email !== adminEmail)
+
+  const usersWithInvitations = regularUsers.map((u) => {
     const inv = allInvitations.find((i) => i.user_id === u.id)
     return {
       id: u.id,
@@ -48,7 +51,7 @@ export default async function AdminPage() {
       orders={allOrders}
       proofs={allProofs}
       stats={{
-        totalUsers: allUsers.length,
+        totalUsers: regularUsers.length,
         totalInvitations: allInvitations.length,
         totalActive: allInvitations.filter((i) => i.is_published && i.is_paid).length,
         totalPaid: paidCount,

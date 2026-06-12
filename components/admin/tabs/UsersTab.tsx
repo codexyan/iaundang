@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import {
   Users, Search, Trash2, Crown, UserPlus, ChevronLeft, ChevronRight,
-  Filter, ArrowUpDown, ExternalLink, Shield, Mail, ChevronDown,
+  Filter, ArrowUpDown, ExternalLink, ChevronDown,
   KeyRound, Eye, Calendar, Package, Palette, Clock, Globe,
-  CheckCircle2, XCircle, Loader2,
+  CheckCircle2, XCircle, Loader2, Mail, AlertTriangle,
+  Copy, Hash, X, EyeOff, Info,
 } from 'lucide-react'
 
 // ─── Types ───────────────────────────────────────────────────
@@ -35,7 +36,6 @@ interface AdminUser {
 
 interface UsersTabProps {
   users: AdminUser[]
-  adminEmail: string
   templates: TemplateInfo[]
   onDelete: (id: string) => Promise<void>
   onGoToTab: (tab: string) => void
@@ -69,6 +69,12 @@ function formatDate(dateString: string | null): string {
   })
 }
 
+function formatDateTime(dateString: string): string {
+  return new Date(dateString).toLocaleDateString('id-ID', {
+    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+}
+
 function isExpired(dateString: string | null): boolean {
   if (!dateString) return false
   return new Date(dateString).getTime() < Date.now()
@@ -85,33 +91,61 @@ const TIER_LABELS: Record<string, { label: string; color: string; bg: string }> 
   exclusive: { label: 'Exclusive', color: 'text-amber-700', bg: 'bg-amber-100' },
 }
 
-type FilterKey = 'all' | 'paid' | 'unpaid' | 'no-invitation'
-type SortKey = 'newest' | 'oldest'
+type FilterKey = 'all' | 'paid' | 'unpaid' | 'no-invitation' | 'expired'
+type SortKey = 'newest' | 'oldest' | 'email-asc'
 
 const FILTERS: { key: FilterKey; label: string }[] = [
   { key: 'all', label: 'Semua' },
   { key: 'paid', label: 'Sudah Bayar' },
   { key: 'unpaid', label: 'Belum Bayar' },
-  { key: 'no-invitation', label: 'Belum Buat Undangan' },
+  { key: 'no-invitation', label: 'Belum Buat' },
+  { key: 'expired', label: 'Kedaluwarsa' },
 ]
 
 const ITEMS_PER_PAGE = 20
 
+// ─── Modal Backdrop ──────────────────────────────────────────
+
+function ModalBackdrop({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+  const backdropRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function onEsc(e: KeyboardEvent) { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onEsc)
+    return () => document.removeEventListener('keydown', onEsc)
+  }, [onClose])
+
+  return (
+    <div
+      ref={backdropRef}
+      onClick={(e) => { if (e.target === backdropRef.current) onClose() }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+    >
+      {children}
+    </div>
+  )
+}
+
 // ─── Component ───────────────────────────────────────────────
 
-export default function UsersTab({ users, adminEmail, templates, onDelete, onGoToTab }: UsersTabProps) {
+export default function UsersTab({ users, templates, onDelete, onGoToTab }: UsersTabProps) {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<FilterKey>('all')
   const [sort, setSort] = useState<SortKey>('newest')
   const [page, setPage] = useState(1)
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [confirmId, setConfirmId] = useState<string | null>(null)
-  const [deleting, setDeleting] = useState(false)
-  const [resetId, setResetId] = useState<string | null>(null)
+
+  // Modals
+  const [resetModal, setResetModal] = useState<AdminUser | null>(null)
+  const [deleteModal, setDeleteModal] = useState<AdminUser | null>(null)
   const [resetPassword, setResetPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [resetting, setResetting] = useState(false)
   const [resetSuccess, setResetSuccess] = useState<string | null>(null)
   const [resetError, setResetError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const templateMap = useMemo(() => {
     const m = new Map<string, string>()
@@ -119,13 +153,14 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
     return m
   }, [templates])
 
-  // ── Stats ────────────────────────────────────────────────
+  // ── Stats (admin already excluded from server) ───────────
   const stats = useMemo(() => {
     const total = users.length
     const withInvitation = users.filter((u) => u.invitation).length
     const paid = users.filter((u) => u.invitation?.is_paid).length
     const noInvitation = total - withInvitation
-    return { total, withInvitation, paid, noInvitation }
+    const expired = users.filter((u) => u.invitation?.expires_at && isExpired(u.invitation.expires_at)).length
+    return { total, withInvitation, paid, noInvitation, expired }
   }, [users])
 
   // ── Filtered + sorted list ───────────────────────────────
@@ -135,14 +170,17 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
       const q = search.toLowerCase()
       list = list.filter((u) =>
         u.email.toLowerCase().includes(q) ||
-        u.invitation?.slug?.toLowerCase().includes(q)
+        u.invitation?.slug?.toLowerCase().includes(q) ||
+        u.id.toLowerCase().includes(q)
       )
     }
     if (filter === 'paid') list = list.filter((u) => u.invitation?.is_paid)
     else if (filter === 'unpaid') list = list.filter((u) => u.invitation && !u.invitation.is_paid)
     else if (filter === 'no-invitation') list = list.filter((u) => !u.invitation)
+    else if (filter === 'expired') list = list.filter((u) => u.invitation?.expires_at && isExpired(u.invitation.expires_at))
 
     list.sort((a, b) => {
+      if (sort === 'email-asc') return a.email.localeCompare(b.email)
       const ta = new Date(a.created_at).getTime()
       const tb = new Date(b.created_at).getTime()
       return sort === 'newest' ? tb - ta : ta - tb
@@ -156,14 +194,17 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
   const paginated = filtered.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE)
   const resetPage = () => setPage(1)
 
-  // ── Delete ───────────────────────────────────────────────
-  async function doDelete(id: string) {
-    setDeleting(true)
-    try { await onDelete(id) } finally { setDeleting(false); setConfirmId(null) }
+  // ── Reset password (modal) ───────────────────────────────
+  function openResetModal(user: AdminUser) {
+    setResetModal(user)
+    setResetPassword('')
+    setShowPassword(false)
+    setResetError(null)
+    setResetSuccess(null)
   }
 
-  // ── Reset password ───────────────────────────────────────
-  async function doResetPassword(userId: string) {
+  async function doResetPassword() {
+    if (!resetModal) return
     if (resetPassword.length < 6) {
       setResetError('Password minimal 6 karakter')
       return
@@ -171,7 +212,7 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
     setResetting(true)
     setResetError(null)
     try {
-      const res = await fetch(`/api/admin/users/${userId}/reset-password`, {
+      const res = await fetch(`/api/admin/users/${resetModal.id}/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: resetPassword }),
@@ -181,24 +222,59 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
         setResetError(data.error || 'Gagal reset password')
         return
       }
-      setResetSuccess(userId)
+      setResetSuccess(resetModal.id)
+      setResetModal(null)
       setResetPassword('')
-      setResetId(null)
-      setTimeout(() => setResetSuccess(null), 3000)
+      setTimeout(() => setResetSuccess(null), 4000)
     } finally {
       setResetting(false)
     }
   }
 
+  // ── Delete (modal with confirmation) ─────────────────────
+  function openDeleteModal(user: AdminUser) {
+    setDeleteModal(user)
+    setDeleteConfirmText('')
+  }
+
+  async function doDelete() {
+    if (!deleteModal) return
+    setDeleting(true)
+    try {
+      await onDelete(deleteModal.id)
+      setDeleteModal(null)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  // ── Copy ID ──────────────────────────────────────────────
+  function copyId(id: string) {
+    navigator.clipboard.writeText(id)
+    setCopiedId(id)
+    setTimeout(() => setCopiedId(null), 2000)
+  }
+
   // ── Avatar color ─────────────────────────────────────────
   function avatarColor(user: AdminUser): string {
-    if (user.invitation?.is_paid) return 'bg-emerald-100 text-emerald-700'
-    if (user.invitation) return 'bg-amber-100 text-amber-700'
+    if (user.invitation) {
+      if (user.invitation.expires_at && isExpired(user.invitation.expires_at)) return 'bg-red-100 text-red-600'
+      if (user.invitation.is_paid) return 'bg-emerald-100 text-emerald-700'
+      return 'bg-amber-100 text-amber-700'
+    }
     return 'bg-stone-100 text-stone-500'
   }
 
+  function statusLabel(user: AdminUser): { text: string; color: string } {
+    if (!user.invitation) return { text: 'Belum buat undangan', color: 'text-stone-400' }
+    if (user.invitation.expires_at && isExpired(user.invitation.expires_at)) return { text: 'Kedaluwarsa', color: 'text-red-500' }
+    if (user.invitation.is_paid && user.invitation.is_published) return { text: 'Aktif & Live', color: 'text-emerald-600' }
+    if (user.invitation.is_paid) return { text: 'Lunas, Draft', color: 'text-blue-600' }
+    return { text: 'Belum Bayar', color: 'text-amber-600' }
+  }
+
   const summaryCards = [
-    { icon: Users, label: 'Total Terdaftar', value: stats.total, color: 'text-stone-600', bg: 'bg-stone-50' },
+    { icon: Users, label: 'Total Pengguna', value: stats.total, color: 'text-stone-600', bg: 'bg-stone-50' },
     { icon: Mail, label: 'Punya Undangan', value: stats.withInvitation, color: 'text-blue-600', bg: 'bg-blue-50' },
     { icon: Crown, label: 'Sudah Bayar', value: stats.paid, color: 'text-emerald-600', bg: 'bg-emerald-50' },
     { icon: UserPlus, label: 'Belum Buat', value: stats.noInvitation, color: 'text-amber-600', bg: 'bg-amber-50' },
@@ -210,7 +286,8 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
       <div className="px-8 py-5 border-b border-stone-200 bg-white">
         <h1 className="text-lg font-bold text-stone-900 tracking-tight">Pengguna</h1>
         <p className="text-xs text-stone-400 mt-0.5">
-          {stats.total} terdaftar, {stats.withInvitation} sudah buat undangan, {stats.paid} sudah bayar
+          {stats.total} pengguna terdaftar &middot; {stats.paid} aktif berbayar
+          {stats.expired > 0 && <span className="text-red-500"> &middot; {stats.expired} kedaluwarsa</span>}
         </p>
       </div>
 
@@ -234,19 +311,27 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Filter className="w-3.5 h-3.5 text-stone-400 mr-1 hidden sm:block" />
-            {FILTERS.map((f) => (
-              <button
-                key={f.key}
-                onClick={() => { setFilter(f.key); resetPage() }}
-                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
-                  filter === f.key
-                    ? 'bg-stone-900 text-white border-stone-900'
-                    : 'bg-white text-stone-600 border-stone-200 hover:border-stone-300 hover:bg-stone-50'
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
+            {FILTERS.map((f) => {
+              const count = f.key === 'all' ? stats.total
+                : f.key === 'paid' ? stats.paid
+                : f.key === 'unpaid' ? stats.withInvitation - stats.paid
+                : f.key === 'expired' ? stats.expired
+                : stats.noInvitation
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => { setFilter(f.key); resetPage() }}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
+                    filter === f.key
+                      ? 'bg-stone-900 text-white border-stone-900'
+                      : 'bg-white text-stone-600 border-stone-200 hover:border-stone-300 hover:bg-stone-50'
+                  }`}
+                >
+                  {f.label}
+                  {count > 0 && <span className="ml-1 opacity-70">{count}</span>}
+                </button>
+              )
+            })}
           </div>
 
           <div className="flex items-center gap-2 sm:ml-auto w-full sm:w-auto">
@@ -254,10 +339,10 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
               <input
                 type="text"
-                placeholder="Cari email atau slug..."
+                placeholder="Cari email, slug, atau ID..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); resetPage() }}
-                className="w-full sm:w-56 pl-9 pr-4 py-2 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 bg-white"
+                className="w-full sm:w-60 pl-9 pr-4 py-2 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 bg-white"
               />
             </div>
             <div className="relative">
@@ -269,6 +354,7 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
               >
                 <option value="newest">Terbaru</option>
                 <option value="oldest">Terlama</option>
+                <option value="email-asc">Email A-Z</option>
               </select>
               <ChevronRight className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400 pointer-events-none rotate-90" />
             </div>
@@ -279,19 +365,18 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
         {paginated.length > 0 ? (
           <div className="space-y-2">
             {paginated.map((user) => {
-              const isAdminUser = user.email === adminEmail
               const isExpanded = expandedId === user.id
-              const isConfirming = confirmId === user.id
               const inv = user.invitation
               const tierInfo = inv?.package_tier ? TIER_LABELS[inv.package_tier] || { label: inv.package_tier, color: 'text-stone-600', bg: 'bg-stone-100' } : null
               const expired = inv ? isExpired(inv.expires_at) : false
               const daysLeft = inv ? daysUntilExpiry(inv.expires_at) : null
+              const status = statusLabel(user)
 
               return (
                 <div
                   key={user.id}
-                  className={`bg-white border rounded-xl transition-colors ${
-                    isConfirming ? 'border-red-200' : isExpanded ? 'border-stone-300 shadow-sm' : 'border-stone-200 hover:border-stone-300'
+                  className={`bg-white border rounded-xl transition-all ${
+                    isExpanded ? 'border-stone-300 shadow-sm' : 'border-stone-200 hover:border-stone-300'
                   }`}
                 >
                   {/* ── Main row (clickable) ─────────────────── */}
@@ -305,15 +390,11 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-stone-900 truncate">{user.email}</span>
-                        {isAdminUser && (
-                          <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium flex-shrink-0">
-                            <Shield className="w-3 h-3" /> Admin
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-stone-400 mt-0.5">Bergabung {timeAgo(user.created_at)}</p>
+                      <span className="text-sm font-semibold text-stone-900 truncate block">{user.email}</span>
+                      <p className="text-xs text-stone-400 mt-0.5">
+                        Bergabung {timeAgo(user.created_at)}
+                        <span className={`ml-2 font-medium ${status.color}`}>&middot; {status.text}</span>
+                      </p>
                     </div>
 
                     {/* Quick badges (desktop) */}
@@ -328,55 +409,84 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
                               {tierInfo.label}
                             </span>
                           )}
-                          <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full ${
-                            inv.is_paid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                          }`}>
-                            {inv.is_paid ? 'Lunas' : 'Belum Bayar'}
-                          </span>
+                          {expired && (
+                            <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-red-100 text-red-600">
+                              Expired
+                            </span>
+                          )}
                         </>
                       ) : (
-                        <span className="text-xs text-stone-400">Belum buat undangan</span>
+                        <span className="text-xs text-stone-400 italic">Belum buat undangan</span>
                       )}
                     </div>
 
                     <ChevronDown className={`w-4 h-4 text-stone-400 transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
                   </button>
 
-                  {/* Quick badges (mobile) */}
+                  {/* Quick badges (mobile, collapsed only) */}
                   {!isExpanded && inv && (
                     <div className="flex sm:hidden items-center gap-2 px-5 pb-3 flex-wrap">
                       <span className="inline-flex items-center gap-1 text-xs font-mono bg-stone-100 text-stone-600 px-2.5 py-1 rounded-lg">
                         <Globe className="w-3 h-3" />/{inv.slug}
                       </span>
-                      <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full ${
-                        inv.is_paid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                      }`}>
-                        {inv.is_paid ? 'Lunas' : 'Belum Bayar'}
-                      </span>
+                      {tierInfo && (
+                        <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full ${tierInfo.bg} ${tierInfo.color}`}>
+                          {tierInfo.label}
+                        </span>
+                      )}
                     </div>
                   )}
 
                   {/* ── Expanded detail panel ────────────────── */}
                   {isExpanded && (
                     <div className="border-t border-stone-100">
+                      {/* Account info (always shown) */}
+                      <div className="px-5 pt-4 pb-2">
+                        <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">Informasi Akun</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="flex items-center gap-2.5 p-2.5 bg-stone-50 rounded-lg">
+                            <Hash className="w-4 h-4 text-stone-400 flex-shrink-0" />
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs text-stone-400">User ID</p>
+                              <div className="flex items-center gap-1.5">
+                                <p className="text-xs font-mono text-stone-600 truncate">{user.id}</p>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); copyId(user.id) }}
+                                  className="flex-shrink-0 text-stone-400 hover:text-stone-600 transition-colors"
+                                  title="Salin ID"
+                                >
+                                  {copiedId === user.id
+                                    ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                    : <Copy className="w-3.5 h-3.5" />}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <DetailItem icon={Mail} label="Email" value={user.email} />
+                          <DetailItem icon={Clock} label="Terdaftar" value={formatDateTime(user.created_at)} />
+                        </div>
+                      </div>
+
                       {inv ? (
-                        <div className="px-5 py-4 space-y-4">
-                          {/* Detail grid */}
+                        <div className="px-5 py-3 space-y-4">
+                          <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Detail Undangan</p>
                           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                             <DetailItem icon={Globe} label="Subdomain" value={`/${inv.slug}`} mono />
-                            <DetailItem icon={Palette} label="Desain" value={templateMap.get(inv.template_id) || inv.template_id} />
-                            <DetailItem icon={Package} label="Paket" value={tierInfo?.label || 'Belum dipilih'} />
+                            <DetailItem icon={Palette} label="Desain Template" value={templateMap.get(inv.template_id) || inv.template_id} />
+                            <DetailItem icon={Package} label="Paket" value={tierInfo?.label || 'Belum dipilih'} valueColor={tierInfo?.color} />
                             <DetailItem
                               icon={Calendar}
                               label="Masa Aktif"
-                              value={inv.expires_at ? formatDate(inv.expires_at) : 'Tidak ada'}
+                              value={inv.expires_at ? formatDate(inv.expires_at) : 'Selamanya'}
                               extra={
                                 inv.expires_at
                                   ? expired
-                                    ? <span className="text-red-500 text-xs font-medium">Kedaluwarsa</span>
+                                    ? <span className="text-red-500 text-xs font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> Kedaluwarsa</span>
                                     : daysLeft !== null && daysLeft <= 30
                                       ? <span className="text-amber-600 text-xs font-medium">{daysLeft} hari lagi</span>
-                                      : null
+                                      : daysLeft !== null
+                                        ? <span className="text-emerald-600 text-xs">{daysLeft} hari tersisa</span>
+                                        : null
                                   : null
                               }
                             />
@@ -388,11 +498,11 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
                             />
                             <DetailItem
                               icon={Eye}
-                              label="Status"
-                              value={inv.is_published ? 'Live' : 'Draft'}
+                              label="Status Publish"
+                              value={inv.is_published ? 'Live (Publik)' : 'Draft (Privat)'}
                               valueColor={inv.is_published ? 'text-blue-600' : 'text-stone-500'}
                             />
-                            <DetailItem icon={Clock} label="Dibuat" value={formatDate(inv.created_at)} />
+                            <DetailItem icon={Clock} label="Undangan Dibuat" value={formatDate(inv.created_at)} />
                           </div>
 
                           {/* Action buttons */}
@@ -402,166 +512,68 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
                                 href={`/${inv.slug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors"
+                                className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 px-3 py-2 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors"
                               >
-                                <ExternalLink className="w-3.5 h-3.5" /> Lihat Undangan
+                                <ExternalLink className="w-3.5 h-3.5" /> Lihat Undangan Live
                               </a>
                             )}
                             <button
                               onClick={(e) => { e.stopPropagation(); onGoToTab('invitations') }}
-                              className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-600 hover:text-stone-800 px-3 py-1.5 rounded-lg border border-stone-200 hover:bg-stone-50 transition-colors"
+                              className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-600 hover:text-stone-800 px-3 py-2 rounded-lg border border-stone-200 hover:bg-stone-50 transition-colors"
                             >
-                              <ExternalLink className="w-3.5 h-3.5" /> Kelola di Undangan
+                              <Info className="w-3.5 h-3.5" /> Kelola di Undangan
                             </button>
-
-                            {!isAdminUser && (
-                              <>
-                                {resetId === user.id ? (
-                                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                    <input
-                                      type="password"
-                                      placeholder="Password baru (min. 6)"
-                                      value={resetPassword}
-                                      onChange={(e) => { setResetPassword(e.target.value); setResetError(null) }}
-                                      className="w-44 px-3 py-1.5 text-xs border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
-                                      autoFocus
-                                    />
-                                    <button
-                                      onClick={() => doResetPassword(user.id)}
-                                      disabled={resetting}
-                                      className="inline-flex items-center gap-1 text-xs font-medium bg-amber-600 text-white px-3 py-1.5 rounded-lg hover:bg-amber-700 disabled:opacity-50 transition-colors"
-                                    >
-                                      {resetting ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
-                                      Simpan
-                                    </button>
-                                    <button
-                                      onClick={() => { setResetId(null); setResetPassword(''); setResetError(null) }}
-                                      className="text-xs text-stone-500 hover:text-stone-700 px-2 py-1.5 transition-colors"
-                                    >
-                                      Batal
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    onClick={(e) => { e.stopPropagation(); setResetId(user.id); setResetPassword('') }}
-                                    className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors"
-                                  >
-                                    <KeyRound className="w-3.5 h-3.5" /> Reset Password
-                                  </button>
-                                )}
-                              </>
-                            )}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openResetModal(user) }}
+                              className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 px-3 py-2 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors"
+                            >
+                              <KeyRound className="w-3.5 h-3.5" /> Reset Password
+                            </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openDeleteModal(user) }}
+                              className="inline-flex items-center gap-1.5 text-xs font-medium text-red-500 hover:text-red-600 px-3 py-2 rounded-lg border border-red-200 hover:bg-red-50 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Hapus Pengguna
+                            </button>
                           </div>
 
-                          {resetError && (
-                            <p className="flex items-center gap-1.5 text-xs text-red-600">
-                              <XCircle className="w-3.5 h-3.5" /> {resetError}
-                            </p>
-                          )}
                           {resetSuccess === user.id && (
-                            <p className="flex items-center gap-1.5 text-xs text-emerald-600">
+                            <p className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                               <CheckCircle2 className="w-3.5 h-3.5" /> Password berhasil direset
                             </p>
                           )}
                         </div>
                       ) : (
-                        /* No invitation */
-                        <div className="px-5 py-4 space-y-3">
-                          <div className="flex items-center gap-3 p-3 bg-stone-50 rounded-lg">
-                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-stone-100">
-                              <Mail className="w-4 h-4 text-stone-400" />
+                        <div className="px-5 py-3 space-y-4">
+                          <div className="flex items-center gap-3 p-4 bg-stone-50 rounded-lg border border-stone-100">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-stone-200/60">
+                              <Mail className="w-5 h-5 text-stone-400" />
                             </div>
                             <div>
                               <p className="text-sm text-stone-600 font-medium">Belum membuat undangan</p>
-                              <p className="text-xs text-stone-400">User terdaftar tapi belum membuat undangan digital</p>
+                              <p className="text-xs text-stone-400 mt-0.5">User terdaftar sejak {formatDateTime(user.created_at)} tapi belum membuat undangan digital</p>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            <DetailItem icon={Clock} label="Bergabung" value={formatDate(user.created_at)} />
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openResetModal(user) }}
+                              className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 px-3 py-2 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors"
+                            >
+                              <KeyRound className="w-3.5 h-3.5" /> Reset Password
+                            </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openDeleteModal(user) }}
+                              className="inline-flex items-center gap-1.5 text-xs font-medium text-red-500 hover:text-red-600 px-3 py-2 rounded-lg border border-red-200 hover:bg-red-50 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Hapus Pengguna
+                            </button>
                           </div>
 
-                          {!isAdminUser && (
-                            <div className="flex items-center gap-2 pt-1">
-                              {resetId === user.id ? (
-                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                  <input
-                                    type="password"
-                                    placeholder="Password baru (min. 6)"
-                                    value={resetPassword}
-                                    onChange={(e) => { setResetPassword(e.target.value); setResetError(null) }}
-                                    className="w-44 px-3 py-1.5 text-xs border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
-                                    autoFocus
-                                  />
-                                  <button
-                                    onClick={() => doResetPassword(user.id)}
-                                    disabled={resetting}
-                                    className="inline-flex items-center gap-1 text-xs font-medium bg-amber-600 text-white px-3 py-1.5 rounded-lg hover:bg-amber-700 disabled:opacity-50 transition-colors"
-                                  >
-                                    {resetting ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
-                                    Simpan
-                                  </button>
-                                  <button
-                                    onClick={() => { setResetId(null); setResetPassword(''); setResetError(null) }}
-                                    className="text-xs text-stone-500 hover:text-stone-700 px-2 py-1.5 transition-colors"
-                                  >
-                                    Batal
-                                  </button>
-                                </div>
-                              ) : (
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); setResetId(user.id); setResetPassword('') }}
-                                  className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors"
-                                >
-                                  <KeyRound className="w-3.5 h-3.5" /> Reset Password
-                                </button>
-                              )}
-                            </div>
-                          )}
-
-                          {resetError && (
-                            <p className="flex items-center gap-1.5 text-xs text-red-600">
-                              <XCircle className="w-3.5 h-3.5" /> {resetError}
-                            </p>
-                          )}
                           {resetSuccess === user.id && (
-                            <p className="flex items-center gap-1.5 text-xs text-emerald-600">
+                            <p className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                               <CheckCircle2 className="w-3.5 h-3.5" /> Password berhasil direset
                             </p>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Delete (inside expanded, non-admin only) */}
-                      {!isAdminUser && (
-                        <div className="px-5 pb-4">
-                          {isConfirming ? (
-                            <div className="flex items-center justify-between gap-3 px-4 py-3 bg-red-50 border border-red-100 rounded-lg">
-                              <p className="text-xs text-red-700 font-medium">Hapus user ini beserta semua datanya?</p>
-                              <div className="flex items-center gap-2 flex-shrink-0">
-                                <button
-                                  onClick={() => setConfirmId(null)}
-                                  disabled={deleting}
-                                  className="text-xs text-stone-600 hover:text-stone-800 px-3 py-1.5 rounded-lg hover:bg-white transition-colors font-medium"
-                                >
-                                  Batal
-                                </button>
-                                <button
-                                  onClick={() => doDelete(user.id)}
-                                  disabled={deleting}
-                                  className="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors font-medium"
-                                >
-                                  {deleting ? 'Menghapus...' : 'Ya, Hapus'}
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); setConfirmId(user.id) }}
-                              className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-red-500 transition-colors"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" /> Hapus pengguna
-                            </button>
                           )}
                         </div>
                       )}
@@ -598,7 +610,9 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
         {/* ── Pagination ──────────────────────────────────────── */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between pt-2">
-            <p className="text-xs text-stone-400">Halaman {safePage} dari {totalPages}</p>
+            <p className="text-xs text-stone-400">
+              Menampilkan {(safePage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(safePage * ITEMS_PER_PAGE, filtered.length)} dari {filtered.length} pengguna
+            </p>
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -607,6 +621,24 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const start = Math.max(1, Math.min(safePage - 2, totalPages - 4))
+                const pageNum = start + i
+                if (pageNum > totalPages) return null
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setPage(pageNum)}
+                    className={`flex items-center justify-center w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
+                      pageNum === safePage
+                        ? 'bg-stone-900 text-white'
+                        : 'border border-stone-200 bg-white text-stone-600 hover:bg-stone-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )
+              })}
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={safePage >= totalPages}
@@ -618,6 +650,162 @@ export default function UsersTab({ users, adminEmail, templates, onDelete, onGoT
           </div>
         )}
       </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          MODAL: Reset Password
+         ══════════════════════════════════════════════════════════ */}
+      {resetModal && (
+        <ModalBackdrop onClose={() => setResetModal(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-100">
+                  <KeyRound className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-stone-900">Reset Password</h3>
+                  <p className="text-xs text-stone-400">{resetModal.email}</p>
+                </div>
+              </div>
+              <button onClick={() => setResetModal(null)} className="p-1.5 rounded-lg hover:bg-stone-100 transition-colors">
+                <X className="w-4 h-4 text-stone-400" />
+              </button>
+            </div>
+
+            <div className="px-6 py-5 space-y-4">
+              <div className="p-3 bg-amber-50 border border-amber-100 rounded-lg">
+                <p className="text-xs text-amber-700 leading-relaxed">
+                  <strong>Perhatian:</strong> Password lama user akan diganti. Pastikan untuk menginformasikan password baru ke user melalui email atau chat.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-stone-700 mb-1.5">Password Baru</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Minimal 6 karakter"
+                    value={resetPassword}
+                    onChange={(e) => { setResetPassword(e.target.value); setResetError(null) }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') doResetPassword() }}
+                    className="w-full px-4 py-2.5 pr-10 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {resetPassword.length > 0 && resetPassword.length < 6 && (
+                  <p className="text-xs text-amber-600 mt-1.5">Minimal 6 karakter ({6 - resetPassword.length} lagi)</p>
+                )}
+              </div>
+
+              {resetError && (
+                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-100 rounded-lg">
+                  <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                  <p className="text-xs text-red-700">{resetError}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-stone-100 bg-stone-50 rounded-b-2xl">
+              <button
+                onClick={() => setResetModal(null)}
+                className="px-4 py-2 text-xs font-medium text-stone-600 hover:text-stone-800 rounded-lg hover:bg-stone-100 transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                onClick={doResetPassword}
+                disabled={resetting || resetPassword.length < 6}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {resetting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <KeyRound className="w-3.5 h-3.5" />}
+                {resetting ? 'Menyimpan...' : 'Reset Password'}
+              </button>
+            </div>
+          </div>
+        </ModalBackdrop>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════
+          MODAL: Delete User Confirmation
+         ══════════════════════════════════════════════════════════ */}
+      {deleteModal && (
+        <ModalBackdrop onClose={() => setDeleteModal(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-100">
+                  <AlertTriangle className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-stone-900">Hapus Pengguna</h3>
+                  <p className="text-xs text-stone-400">{deleteModal.email}</p>
+                </div>
+              </div>
+              <button onClick={() => setDeleteModal(null)} className="p-1.5 rounded-lg hover:bg-stone-100 transition-colors">
+                <X className="w-4 h-4 text-stone-400" />
+              </button>
+            </div>
+
+            <div className="px-6 py-5 space-y-4">
+              <div className="p-4 bg-red-50 border border-red-100 rounded-lg space-y-2">
+                <p className="text-xs text-red-800 font-semibold">Tindakan ini tidak dapat dibatalkan! Data berikut akan dihapus permanen:</p>
+                <ul className="text-xs text-red-700 space-y-1 ml-4 list-disc">
+                  <li>Akun pengguna <strong>{deleteModal.email}</strong></li>
+                  {deleteModal.invitation && (
+                    <>
+                      <li>Subdomain undangan <strong className="font-mono">/{deleteModal.invitation.slug}</strong> tidak bisa diakses lagi</li>
+                      <li>Seluruh data undangan (tamu, ucapan, galeri, RSVP)</li>
+                      <li>Riwayat pembayaran terkait akun ini</li>
+                    </>
+                  )}
+                  {!deleteModal.invitation && (
+                    <li>Seluruh data akun pengguna</li>
+                  )}
+                </ul>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-stone-700 mb-1.5">
+                  Ketik <strong className="text-red-600 font-mono">{deleteModal.email}</strong> untuk konfirmasi
+                </label>
+                <input
+                  type="text"
+                  placeholder={deleteModal.email}
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && deleteConfirmText === deleteModal.email) doDelete() }}
+                  className="w-full px-4 py-2.5 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-400 font-mono"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-stone-100 bg-stone-50 rounded-b-2xl">
+              <button
+                onClick={() => setDeleteModal(null)}
+                className="px-4 py-2 text-xs font-medium text-stone-600 hover:text-stone-800 rounded-lg hover:bg-stone-100 transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                onClick={doDelete}
+                disabled={deleting || deleteConfirmText !== deleteModal.email}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                {deleting ? 'Menghapus...' : 'Hapus Permanen'}
+              </button>
+            </div>
+          </div>
+        </ModalBackdrop>
+      )}
     </div>
   )
 }
