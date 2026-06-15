@@ -3,8 +3,13 @@ import { articles } from '@/lib/db'
 import { ArrowRight, FileText, Clock, Eye } from 'lucide-react'
 
 export default async function BlogShowcase() {
-  const list = await articles.findPublished()
-  const latest = list.slice(0, 3)
+  let latest: Awaited<ReturnType<typeof articles.findPublished>> = []
+  try {
+    const list = await articles.findPublished()
+    latest = list.slice(0, 3)
+  } catch {
+    return null
+  }
 
   if (latest.length === 0) return null
 
