@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-playfair)', "'Playfair Display'", 'Georgia', 'serif'],
+      },
       colors: {
         // Primary - Smooth Gold Palette (refined & elegant)
         gold: {

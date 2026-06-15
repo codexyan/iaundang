@@ -1,6 +1,19 @@
 import type { Metadata } from 'next'
+import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -26,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="id">
+    <html lang="id" className={`${inter.variable} ${playfair.variable}`}>
       <body>
         {children}
         <Toaster position="top-center" />

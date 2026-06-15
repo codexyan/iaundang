@@ -36,16 +36,16 @@ function VisualPersonal() {
 
             {/* Center — couple names */}
             <div className="flex-1 flex flex-col items-center justify-center px-5">
-              <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Rizky</h3>
-              <p className="text-[20px] my-1" style={{ color: a, fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
-              <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Aulia</h3>
+              <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "var(--font-playfair), 'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Rizky</h3>
+              <p className="text-[20px] my-1" style={{ color: a, fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
+              <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "var(--font-playfair), 'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>Aulia</h3>
             </div>
 
             {/* Bottom — personalized guest card */}
             <div className="pb-8 px-5">
               <div className="inline-block px-5 py-3 rounded-xl" style={{ backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', backdropFilter: 'blur(8px)' }}>
                 <p className="text-[8px] tracking-[0.3em] uppercase mb-0.5" style={{ color: `${a}aa` }}>Kepada Yth.</p>
-                <p className="text-[14px] font-semibold" style={{ color: t, fontFamily: "'Playfair Display', serif" }}>Bapak Andi &amp; Keluarga</p>
+                <p className="text-[14px] font-semibold" style={{ color: t, fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}>Bapak Andi &amp; Keluarga</p>
               </div>
             </div>
           </div>
