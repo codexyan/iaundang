@@ -242,6 +242,9 @@ export const invitations = {
       return null
     }
   },
+  async delete(id: string): Promise<void> {
+    await prisma.invitation.delete({ where: { id } })
+  },
   async slugExists(slug: string, excludeId?: string): Promise<boolean> {
     const count = await prisma.invitation.count({ where: { slug, ...(excludeId && { id: { not: excludeId } }) } })
     return count > 0

@@ -7,6 +7,24 @@ export const dynamic = 'force-dynamic'
 
 interface Params { params: { id: string } }
 
+export async function DELETE(_req: NextRequest, { params }: Params) {
+  try {
+    const session = await getSession()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    const inv = await invitations.findById(params.id)
+    if (!inv || inv.user_id !== session.userId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    }
+
+    await invitations.delete(params.id)
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Invitation delete error:', error)
+    return NextResponse.json({ error: 'Gagal menghapus undangan' }, { status: 500 })
+  }
+}
+
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const session = await getSession()

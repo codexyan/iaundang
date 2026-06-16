@@ -313,7 +313,7 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
                 {tab === 'rsvp' && <RSVPList invitationId={inv.id} />}
                 {tab === 'transactions' && <TransactionHistory invitation={inv} />}
                 {tab === 'support' && <SupportTickets />}
-                {tab === 'settings' && <SettingsPanel invitation={inv} userEmail={user.email} />}
+                {tab === 'settings' && <SettingsPanel invitation={inv} userEmail={user.email} onDeleted={() => { setInv(null); setTab('overview') }} />}
               </>
             )}
           </div>
