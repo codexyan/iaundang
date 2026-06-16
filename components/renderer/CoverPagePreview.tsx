@@ -6,6 +6,7 @@ import type { TemplateRecord, NewInvitationData, LoadingConfig } from '@/lib/typ
 import DecorationAssetLayer from './DecorationAssetLayer'
 import LoadingScreen from './LoadingScreen'
 import { getComponentStyle, btnStyle } from '@/lib/component-styles'
+import SeparatorOrnament from './SeparatorOrnament'
 import { MailOpen } from 'lucide-react'
 
 interface Props {
@@ -39,6 +40,18 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
   const display     = opening.cover_photo_display ?? 'background'
   const gradH       = opening.cover_gradient_height ?? 75
   const gradColor   = opening.cover_gradient_color ?? primary
+  const nameFontSize = opening.couple_name_font_size ?? 32
+  const nameSpacing  = opening.couple_name_letter_spacing ?? 0.08
+  const nameTransform = opening.couple_name_text_transform ?? (opening.couple_name_uppercase !== false ? 'uppercase' : 'none')
+  const btnSize      = opening.button_size ?? 'lg'
+  const padX         = opening.content_padding_x ?? 28
+  const padBottom    = opening.content_padding_bottom ?? 48
+  const greetingSize = opening.greeting_font_size ?? 11
+  const guestLabel   = opening.guest_label ?? 'KEPADA YTH.'
+  const guestLabelSize = opening.guest_label_font_size ?? 8.5
+  const showTopSep   = opening.show_top_separator !== false
+  const showBottomSep = opening.show_bottom_separator !== false
+  const sepStyle     = opening.separator_style ?? 'diamond'
 
   useEffect(() => {
     const heading = meta.font.heading.replace(/ /g, '+')
@@ -177,7 +190,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
               position: 'relative', zIndex: 10,
               marginTop: 'auto',
               display: 'flex', flexDirection: 'column', alignItems: 'center',
-              padding: '0 24px', paddingBottom: '9vh',
+              padding: `0 ${padX}px`, paddingBottom: padBottom,
             }}>
               {/* Portrait photo */}
               {bgPhoto && display === 'portrait' && (
@@ -192,13 +205,20 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
 
               {/* Greeting */}
               <p style={{
-                fontSize: 11, fontStyle: 'italic',
+                fontSize: greetingSize, fontStyle: 'italic',
                 color: `${text}cc`, marginBottom: 10, textAlign: 'center',
                 fontFamily: `'${meta.font.body}', serif`,
                 textShadow: `0 1px 8px ${primary}88`,
               }}>
                 {greeting}
               </p>
+
+              {/* Top separator */}
+              {showTopSep && (
+                <div style={{ marginBottom: 10 }}>
+                  <SeparatorOrnament style={sepStyle} accent={accent} primary={primary} width={160} />
+                </div>
+              )}
 
               {/* Guest name */}
               {showGuest && (
@@ -208,12 +228,12 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
                   padding: '7px 0',
                 }}>
                   <p style={{
-                    fontSize: 8, letterSpacing: '0.3em', textTransform: 'uppercase',
+                    fontSize: guestLabelSize, letterSpacing: '0.3em', textTransform: 'uppercase',
                     color: `${accent}bb`, marginBottom: 2,
                     fontFamily: `'${meta.font.body}', serif`,
                     textShadow: `0 1px 4px ${primary}88`,
                   }}>
-                    Kepada Yth.
+                    {guestLabel}
                   </p>
                   {guestName ? (
                     <p style={{
@@ -245,19 +265,20 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
               </p>
 
               {/* Ornament separator */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14, width: 180 }}>
-                <div style={{ flex: 1, height: 1, backgroundColor: `${accent}66` }} />
-                <div style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: accent, opacity: 0.8 }} />
-                <div style={{ flex: 1, height: 1, backgroundColor: `${accent}66` }} />
-              </div>
+              {showBottomSep && (
+                <div style={{ marginBottom: 14 }}>
+                  <SeparatorOrnament style={sepStyle} accent={accent} primary={primary} width={200} />
+                </div>
+              )}
 
               {/* Couple names */}
               <div style={{ textAlign: 'center', marginBottom: 18 }}>
                 <h1 style={{
-                  fontSize: 32, fontWeight: 700, lineHeight: 1.15,
+                  fontSize: nameFontSize, fontWeight: 900, lineHeight: 1.1,
                   color: text,
                   fontFamily: `'${meta.font.heading}', serif`,
-                  margin: 0, letterSpacing: '-0.01em',
+                  margin: 0, letterSpacing: `${nameSpacing}em`,
+                  textTransform: nameTransform,
                   textShadow: `0 2px 16px ${primary}cc, 0 4px 32px ${primary}66`,
                 }}>
                   {data.groom_name}
@@ -271,10 +292,11 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
                   &amp;
                 </p>
                 <h1 style={{
-                  fontSize: 32, fontWeight: 700, lineHeight: 1.15,
+                  fontSize: nameFontSize, fontWeight: 900, lineHeight: 1.1,
                   color: text,
                   fontFamily: `'${meta.font.heading}', serif`,
-                  margin: 0, letterSpacing: '-0.01em',
+                  margin: 0, letterSpacing: `${nameSpacing}em`,
+                  textTransform: nameTransform,
                   textShadow: `0 2px 16px ${primary}cc, 0 4px 32px ${primary}66`,
                 }}>
                   {data.bride_name}
@@ -287,7 +309,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 style={{
-                  ...btnStyle(cs.button, cs.border, accent, text, { size: 'lg', icon: true }),
+                  ...btnStyle(cs.button, cs.border, accent, text, { size: btnSize, icon: true }),
                   fontFamily: `'${meta.font.body}', serif`,
                   marginBottom: 8,
                   cursor: (onEnter || previewMode === 'exit' || previewMode === 'full-flow') ? 'pointer' : 'default',
@@ -303,18 +325,6 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
                 </p>
               )}
 
-              {/* Progress bar */}
-              <div style={{ width: 90, height: '0.5px', backgroundColor: `${accent}33`, position: 'relative', overflow: 'hidden', marginBottom: 4 }}>
-                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '45%', backgroundColor: `${accent}88` }} />
-              </div>
-              <p style={{
-                fontSize: 8, color: `${text}55`,
-                fontFamily: `'${meta.font.body}', serif`,
-                letterSpacing: '0.1em',
-                textShadow: `0 1px 4px ${primary}88`,
-              }}>
-                terbuka otomatis
-              </p>
 
               {opening.music_autoplay && (
                 <p style={{ marginTop: 8, fontSize: 9, color: `${text}66`, textShadow: `0 1px 4px ${primary}88` }}>

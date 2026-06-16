@@ -7,7 +7,7 @@ import {
   FlaskConical, Save, RefreshCw, Maximize2, Move, Music, Volume2,
   ChevronUp, ChevronDown, Eye, EyeOff, Palette, Type,
   LayoutTemplate, Code2, Sparkles, Loader2, Plus, Trash2, Rocket, X, GripVertical, Play, Check, Lock, Unlock,
-  Paintbrush, ImageIcon, Undo2, Redo2, FileCheck, FileClock, PenLine, ArrowLeft,
+  Paintbrush, ImageIcon, Undo2, Redo2, FileCheck, FileClock, PenLine, ArrowLeft, Upload,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { getTransitionVariants } from '@/components/renderer/transitions/useTransition'
@@ -21,7 +21,7 @@ import VideoUploadField from '@/components/admin/VideoUploadField'
 
 // Dynamic import — hindari SSR issue
 const InvitationPreview = dynamic(() => import('@/components/renderer/InvitationPreview'), { ssr: false })
-const CoverPagePreview  = dynamic(() => import('@/components/renderer/CoverPagePreview'),  { ssr: false })
+// CoverPagePreview replaced by direct OpeningScene in live preview
 const OpeningScene      = dynamic(() => import('@/components/renderer/OpeningScene'),      { ssr: false })
 const LoadingScreen     = dynamic(() => import('@/components/renderer/LoadingScreen'),     { ssr: false })
 const FloatingMusicPlayer = dynamic(() => import('@/components/renderer/FloatingMusicPlayer'), { ssr: false })
@@ -767,8 +767,20 @@ const ANIM_LABEL: Record<string, string> = {
   'slide-right': 'Geser Kanan', 'slide-up': 'Naik', 'slide-down': 'Turun',
   'zoom-in': 'Zoom In', 'rotate-in': 'Putar Masuk', 'float': 'Melayang',
 }
-const HEADING_FONTS = ['Playfair Display', 'Cinzel', 'Cormorant Garamond', 'Great Vibes', 'Dancing Script', 'Libre Baskerville', 'EB Garamond']
-const BODY_FONTS = ['Lato', 'Raleway', 'Nunito', 'Cormorant Garamond', 'Roboto', 'Inter', 'Jost']
+const HEADING_FONTS = [
+  'Playfair Display', 'Cinzel', 'Cormorant Garamond', 'Great Vibes', 'Dancing Script',
+  'Libre Baskerville', 'EB Garamond', 'Cinzel Decorative', 'Bodoni Moda', 'Italiana',
+  'Tenor Sans', 'Marcellus', 'Yeseva One', 'Poiret One', 'Antic Didone',
+  'Gilda Display', 'Cormorant SC', 'Spectral', 'Lora', 'Merriweather',
+  'Josefin Sans', 'Montserrat', 'Prata', 'Forum', 'Philosopher',
+  'Alex Brush', 'Allura', 'Sacramento', 'Parisienne', 'Tangerine',
+]
+const BODY_FONTS = [
+  'Lato', 'Raleway', 'Nunito', 'Cormorant Garamond', 'Roboto', 'Inter', 'Jost',
+  'Spectral', 'Source Serif 4', 'Crimson Text', 'Lora', 'Merriweather',
+  'Josefin Sans', 'Montserrat', 'Poppins', 'DM Sans', 'Work Sans',
+  'Libre Caslon Text', 'Gentium Book Plus', 'EB Garamond',
+]
 
 type ConfigTab = 'identity' | 'colors' | 'style' | 'opening' | 'loading' | 'sections' | 'music'
 
@@ -917,6 +929,41 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   const [deleteLabConfirm, setDeleteLabConfirm] = useState<{ id: string; name: string } | null>(null)
   const [changeCount, setChangeCount] = useState(0)
   useEffect(() => { onDirtyChange?.(changeCount > 0) }, [changeCount, onDirtyChange])
+
+  useEffect(() => {
+    const allFonts = Array.from(new Set([...HEADING_FONTS, ...BODY_FONTS]))
+    const families = allFonts.map(f => `family=${f.replace(/ /g, '+')}:wght@300;400;600;700`).join('&')
+    const href = `https://fonts.googleapis.com/css2?${families}&display=swap`
+    if (document.querySelector('link[data-gf-lab]')) return
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = href
+    link.setAttribute('data-gf-lab', '1')
+    document.head.appendChild(link)
+  }, [])
+
+  useEffect(() => {
+    const customs = config.config.meta.font.custom_fonts ?? []
+    customs.forEach(cf => {
+      const id = `cf-${cf.name.replace(/\s+/g, '-')}`
+      if (document.querySelector(`[data-cf="${id}"]`)) return
+      if (cf.url.includes('googleapis')) {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = cf.url
+        link.setAttribute('data-cf', id)
+        document.head.appendChild(link)
+      } else {
+        const ext = cf.url.split('.').pop()?.toLowerCase()
+        const format = ext === 'woff2' ? 'woff2' : ext === 'woff' ? 'woff' : ext === 'ttf' ? 'truetype' : 'opentype'
+        const style = document.createElement('style')
+        style.textContent = `@font-face { font-family: '${cf.name}'; src: url('${cf.url}') format('${format}'); font-display: swap; }`
+        style.setAttribute('data-cf', id)
+        document.head.appendChild(style)
+      }
+    })
+  }, [config.config.meta.font.custom_fonts])
+
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null)
   const [previewKey, setPreviewKey] = useState(0)
   const [showFullscreen, setShowFullscreen] = useState(false)
@@ -1320,10 +1367,11 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
       onTemplateReleased?.(savedRecord)
       setShowRelease(false)
       if (isEditMode) {
-        toast.success('Perubahan tersimpan')
+        toast.success('Perubahan berhasil disimpan!', { duration: 4000, icon: '✅' })
         setShowSetup(true)
         setIsEditMode(false)
       } else {
+        toast.success(`"${useName}" berhasil dirilis!`, { duration: 4000, icon: '🎉' })
         setReleaseSuccess(useName)
       }
       setChangeCount(0)
@@ -1889,9 +1937,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         value={cfg.meta.font.heading_scale ?? 1.0}
                         onChange={e => updateMeta({ font: { ...cfg.meta.font, heading_scale: Number(e.target.value) } })}
                         className="flex-1 accent-indigo-600 h-1.5" />
-                      <span className="text-[10px] font-mono text-indigo-500 w-9 text-right shrink-0">
-                        {((cfg.meta.font.heading_scale ?? 1.0) * 100).toFixed(0)}%
-                      </span>
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={60} max={200} step={5}
+                          value={Math.round((cfg.meta.font.heading_scale ?? 1.0) * 100)}
+                          onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0.6 && v <= 2.0) updateMeta({ font: { ...cfg.meta.font, heading_scale: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">%</span>
+                      </div>
                       {(cfg.meta.font.heading_scale ?? 1.0) !== 1.0 && (
                         <button onClick={() => updateMeta({ font: { ...cfg.meta.font, heading_scale: 1.0 } })}
                           className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
@@ -1930,9 +1982,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         value={cfg.meta.font.body_scale ?? 1.0}
                         onChange={e => updateMeta({ font: { ...cfg.meta.font, body_scale: Number(e.target.value) } })}
                         className="flex-1 accent-indigo-600 h-1.5" />
-                      <span className="text-[10px] font-mono text-indigo-500 w-9 text-right shrink-0">
-                        {((cfg.meta.font.body_scale ?? 1.0) * 100).toFixed(0)}%
-                      </span>
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={60} max={160} step={5}
+                          value={Math.round((cfg.meta.font.body_scale ?? 1.0) * 100)}
+                          onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0.6 && v <= 1.6) updateMeta({ font: { ...cfg.meta.font, body_scale: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">%</span>
+                      </div>
                       {(cfg.meta.font.body_scale ?? 1.0) !== 1.0 && (
                         <button onClick={() => updateMeta({ font: { ...cfg.meta.font, body_scale: 1.0 } })}
                           className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
@@ -2345,8 +2401,377 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 </div>
               </div>
 
-              {/* Button Variant */}
+              {/* ── Font Pairing ── */}
               <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                  Pasangan Font
+                </p>
+                <p className="text-[9px] text-gray-400 mb-3">
+                  Kombinasi font heading + body yang sudah dikurasi untuk hasil elegan
+                </p>
+                <div className="grid grid-cols-1 gap-2 mb-4">
+                  {([
+                    { heading: 'Playfair Display', body: 'Lato',                name: 'Classic Elegance',   desc: 'Serif mewah + sans-serif bersih' },
+                    { heading: 'Cinzel',           body: 'Raleway',             name: 'Royal Formal',       desc: 'Romawi agung + modern ringan' },
+                    { heading: 'Cormorant Garamond', body: 'Montserrat',        name: 'Refined Modern',     desc: 'Garamond halus + geometris tegas' },
+                    { heading: 'Great Vibes',      body: 'Lato',                name: 'Romantic Script',    desc: 'Kaligrafi romantis + body netral' },
+                    { heading: 'Bodoni Moda',      body: 'DM Sans',             name: 'High Fashion',       desc: 'Editorial mode + sans-serif kontemporer' },
+                    { heading: 'Cinzel Decorative', body: 'EB Garamond',        name: 'Grand Luxury',       desc: 'Dekoratif megah + serif klasik' },
+                    { heading: 'Alex Brush',       body: 'Cormorant Garamond',  name: 'Calligraphy Suite',  desc: 'Kaligrafi anggun + serif elegan' },
+                    { heading: 'Italiana',         body: 'Spectral',            name: 'Italian Romance',    desc: 'Italia dramatis + serif hangat' },
+                    { heading: 'Marcellus',        body: 'Lora',                name: 'Timeless Grace',     desc: 'Serif klasik + serif lembut' },
+                    { heading: 'Prata',            body: 'Josefin Sans',        name: 'Chic Contrast',      desc: 'Didone tajam + sans geometris' },
+                    { heading: 'Sacramento',       body: 'Work Sans',           name: 'Garden Party',       desc: 'Script kasual elegan + sans modern' },
+                    { heading: 'Allura',           body: 'Crimson Text',        name: 'Dreamy Vintage',     desc: 'Script bermimpi + serif klasik' },
+                    { heading: 'Gilda Display',    body: 'Nunito',              name: 'Art Deco',           desc: 'Display 1920-an + sans-serif lunak' },
+                    { heading: 'Tenor Sans',       body: 'Gentium Book Plus',   name: 'Understated Luxe',   desc: 'Sans elegan + serif sastra' },
+                    { heading: 'Cormorant SC',     body: 'Raleway',             name: 'Monumental',         desc: 'Small caps formal + sans ringan' },
+                    { heading: 'Philosopher',      body: 'Source Serif 4',      name: 'Intellectual',       desc: 'Unik intelektual + serif modern' },
+                  ] as const).map(pair => {
+                    const active = cfg.meta.font.heading === pair.heading && cfg.meta.font.body === pair.body
+                    return (
+                      <button key={pair.name} type="button"
+                        onClick={() => {
+                          updateFont('heading', pair.heading)
+                          updateFont('body', pair.body)
+                          setPreviewKey(k => k + 1)
+                          setDecorPreviewKey(k => k + 1)
+                        }}
+                        className={`relative text-left p-3 rounded-xl transition-all border ${
+                          active
+                            ? 'bg-indigo-50 border-indigo-300 ring-1 ring-indigo-300/30 shadow-sm'
+                            : 'bg-white border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-[10px] font-bold ${active ? 'text-indigo-700' : 'text-gray-600'}`}>{pair.name}</p>
+                            <p className="text-[8px] text-gray-400 mt-0.5">{pair.desc}</p>
+                          </div>
+                          {active && (
+                            <div className="w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center shrink-0 mt-0.5">
+                              <Check className="w-2.5 h-2.5 text-white" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="mt-2 px-2 py-1.5 rounded-lg" style={{ backgroundColor: _p }}>
+                          <p style={{ fontFamily: `'${pair.heading}', serif`, color: _t, fontSize: 16, fontWeight: 700, lineHeight: 1.2 }}>
+                            {previewData.groom_name} &amp; {previewData.bride_name}
+                          </p>
+                          <p style={{ fontFamily: `'${pair.body}', sans-serif`, color: `${_t}99`, fontSize: 9, marginTop: 3, lineHeight: 1.5 }}>
+                            Dengan memohon rahmat dan ridho Allah SWT
+                          </p>
+                        </div>
+                        <div className="flex gap-1 mt-1.5">
+                          <span className="text-[7px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-mono">{pair.heading}</span>
+                          <span className="text-[7px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-mono">{pair.body}</span>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* ── Custom Font Override ── */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                  Pilih &amp; Atur Font
+                </p>
+                <p className="text-[9px] text-gray-400 mb-3">
+                  Pilih dari daftar, atau tambahkan font sendiri via Google Fonts / upload file
+                </p>
+                <div className="space-y-4">
+
+                  {/* ── Font Judul ── */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-semibold text-gray-600">Font Judul</p>
+                      <span className="text-[10px] italic" style={{ fontFamily: `'${cfg.meta.font.heading}', serif`, color: _a }}>{cfg.meta.font.heading}</span>
+                    </div>
+                    <select value={cfg.meta.font.heading} onChange={e => { updateFont('heading', e.target.value); setPreviewKey(k => k + 1); setDecorPreviewKey(k => k + 1) }} className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white">
+                      {(cfg.meta.font.custom_fonts ?? []).map(f => <option key={`c-${f.name}`} value={f.name}>★ {f.name}</option>)}
+                      {HEADING_FONTS.map(f => <option key={f} value={f}>{f}</option>)}
+                    </select>
+
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Skala</p>
+                      <input type="range" min={0.6} max={2.0} step={0.05}
+                        value={cfg.meta.font.heading_scale ?? 1.0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, heading_scale: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={60} max={200} step={5}
+                          value={Math.round((cfg.meta.font.heading_scale ?? 1.0) * 100)}
+                          onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0.6 && v <= 2.0) updateMeta({ font: { ...cfg.meta.font, heading_scale: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">%</span>
+                      </div>
+                      {(cfg.meta.font.heading_scale ?? 1.0) !== 1.0 && (
+                        <button onClick={() => updateMeta({ font: { ...cfg.meta.font, heading_scale: 1.0 } })}
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Tinggi</p>
+                      <input type="range" min={0.8} max={2.0} step={0.05}
+                        value={cfg.meta.font.heading_line_height ?? 1.15}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, heading_line_height: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={0.8} max={2.0} step={0.05}
+                          value={cfg.meta.font.heading_line_height ?? 1.15}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 0.8 && v <= 2.0) updateMeta({ font: { ...cfg.meta.font, heading_line_height: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Spasi</p>
+                      <input type="range" min={-0.05} max={0.3} step={0.01}
+                        value={cfg.meta.font.heading_letter_spacing ?? 0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, heading_letter_spacing: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={-0.05} max={0.3} step={0.01}
+                          value={cfg.meta.font.heading_letter_spacing ?? 0}
+                          onChange={e => { const v = Number(e.target.value); if (v >= -0.05 && v <= 0.3) updateMeta({ font: { ...cfg.meta.font, heading_letter_spacing: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">em</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Kata</p>
+                      <input type="range" min={-0.05} max={0.5} step={0.01}
+                        value={cfg.meta.font.heading_word_spacing ?? 0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, heading_word_spacing: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={-0.05} max={0.5} step={0.01}
+                          value={cfg.meta.font.heading_word_spacing ?? 0}
+                          onChange={e => { const v = Number(e.target.value); if (v >= -0.05 && v <= 0.5) updateMeta({ font: { ...cfg.meta.font, heading_word_spacing: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">em</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Font Teks ── */}
+                  <div className="space-y-2 pt-3 border-t border-gray-50">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-semibold text-gray-600">Font Teks</p>
+                      <span className="text-[10px]" style={{ fontFamily: `'${cfg.meta.font.body}', sans-serif`, color: '#666' }}>{cfg.meta.font.body}</span>
+                    </div>
+                    <select value={cfg.meta.font.body} onChange={e => { updateFont('body', e.target.value); setPreviewKey(k => k + 1); setDecorPreviewKey(k => k + 1) }} className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white">
+                      {(cfg.meta.font.custom_fonts ?? []).map(f => <option key={`c-${f.name}`} value={f.name}>★ {f.name}</option>)}
+                      {BODY_FONTS.map(f => <option key={f} value={f}>{f}</option>)}
+                    </select>
+
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Skala</p>
+                      <input type="range" min={0.6} max={1.6} step={0.05}
+                        value={cfg.meta.font.body_scale ?? 1.0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, body_scale: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={60} max={160} step={5}
+                          value={Math.round((cfg.meta.font.body_scale ?? 1.0) * 100)}
+                          onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0.6 && v <= 1.6) updateMeta({ font: { ...cfg.meta.font, body_scale: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">%</span>
+                      </div>
+                      {(cfg.meta.font.body_scale ?? 1.0) !== 1.0 && (
+                        <button onClick={() => updateMeta({ font: { ...cfg.meta.font, body_scale: 1.0 } })}
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Tinggi</p>
+                      <input type="range" min={1.0} max={2.5} step={0.05}
+                        value={cfg.meta.font.body_line_height ?? 1.65}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, body_line_height: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={1.0} max={2.5} step={0.05}
+                          value={cfg.meta.font.body_line_height ?? 1.65}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 1.0 && v <= 2.5) updateMeta({ font: { ...cfg.meta.font, body_line_height: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Spasi</p>
+                      <input type="range" min={-0.02} max={0.15} step={0.005}
+                        value={cfg.meta.font.body_letter_spacing ?? 0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, body_letter_spacing: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={-0.02} max={0.15} step={0.005}
+                          value={cfg.meta.font.body_letter_spacing ?? 0}
+                          onChange={e => { const v = Number(e.target.value); if (v >= -0.02 && v <= 0.15) updateMeta({ font: { ...cfg.meta.font, body_letter_spacing: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">em</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-gray-500 shrink-0 w-12">Kata</p>
+                      <input type="range" min={-0.02} max={0.3} step={0.01}
+                        value={cfg.meta.font.body_word_spacing ?? 0}
+                        onChange={e => updateMeta({ font: { ...cfg.meta.font, body_word_spacing: Number(e.target.value) } })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={-0.02} max={0.3} step={0.01}
+                          value={cfg.meta.font.body_word_spacing ?? 0}
+                          onChange={e => { const v = Number(e.target.value); if (v >= -0.02 && v <= 0.3) updateMeta({ font: { ...cfg.meta.font, body_word_spacing: v } }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">em</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Live preview with all typography settings */}
+                  <div className="px-3 py-3 rounded-xl border border-gray-100" style={{ backgroundColor: _p }}>
+                    <p style={{
+                      fontFamily: `'${cfg.meta.font.heading}', serif`,
+                      color: _t,
+                      fontSize: `calc(18px * ${cfg.meta.font.heading_scale ?? 1.0})`,
+                      fontWeight: 700,
+                      lineHeight: cfg.meta.font.heading_line_height ?? 1.15,
+                      letterSpacing: `${cfg.meta.font.heading_letter_spacing ?? 0}em`,
+                      wordSpacing: `${cfg.meta.font.heading_word_spacing ?? 0}em`,
+                      marginBottom: 6,
+                    }}>
+                      {previewData.groom_name} &amp; {previewData.bride_name}
+                    </p>
+                    <p style={{
+                      fontFamily: `'${cfg.meta.font.body}', sans-serif`,
+                      color: `${_t}88`,
+                      fontSize: `calc(10px * ${cfg.meta.font.body_scale ?? 1.0})`,
+                      lineHeight: cfg.meta.font.body_line_height ?? 1.65,
+                      letterSpacing: `${cfg.meta.font.body_letter_spacing ?? 0}em`,
+                      wordSpacing: `${cfg.meta.font.body_word_spacing ?? 0}em`,
+                    }}>
+                      Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir.
+                    </p>
+                  </div>
+
+                  {/* ── Tambah Font Custom ── */}
+                  <div className="pt-3 border-t border-gray-50">
+                    <p className="text-[10px] font-semibold text-gray-600 mb-2">Tambah Font Sendiri</p>
+
+                    {/* Method 1: Google Fonts name */}
+                    <div className="space-y-2 mb-3">
+                      <p className="text-[9px] text-gray-400">Ketik nama font dari Google Fonts lalu klik tambah</p>
+                      <div className="flex gap-1.5">
+                        <input
+                          type="text"
+                          id="gf-font-input"
+                          placeholder="Nama font, cth: Abril Fatface"
+                          className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const input = document.getElementById('gf-font-input') as HTMLInputElement
+                            const name = input?.value?.trim()
+                            if (!name) { toast.error('Ketik nama font'); return }
+                            const existing = cfg.meta.font.custom_fonts ?? []
+                            if (existing.some(f => f.name === name) || HEADING_FONTS.includes(name) || BODY_FONTS.includes(name)) {
+                              toast.error('Font sudah ada di daftar'); return
+                            }
+                            const encoded = name.replace(/ /g, '+')
+                            const url = `https://fonts.googleapis.com/css2?family=${encoded}:wght@300;400;600;700&display=swap`
+                            const link = document.createElement('link')
+                            link.rel = 'stylesheet'
+                            link.href = url
+                            link.setAttribute('data-gf-custom', name)
+                            document.head.appendChild(link)
+                            const updated = [...existing, { name, url, weight: '300;400;600;700' }]
+                            updateMeta({ font: { ...cfg.meta.font, custom_fonts: updated } })
+                            input.value = ''
+                            toast.success(`Font "${name}" ditambahkan!`)
+                          }}
+                          className="px-3 py-2 bg-indigo-600 text-white text-[10px] font-semibold rounded-lg hover:bg-indigo-700 transition-colors shrink-0"
+                        >
+                          + Tambah
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Method 2: Upload font file */}
+                    <div className="space-y-2 mb-3">
+                      <p className="text-[9px] text-gray-400">Atau upload file font (.woff2, .ttf, .otf) maks 5MB</p>
+                      <label className="flex items-center justify-center gap-2 px-3 py-2.5 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors">
+                        <Upload className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-[10px] text-gray-500 font-medium">Upload File Font</span>
+                        <input
+                          type="file"
+                          accept=".woff2,.woff,.ttf,.otf"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            e.target.value = ''
+                            const ext = file.name.split('.').pop()?.toLowerCase()
+                            if (!['woff2', 'woff', 'ttf', 'otf'].includes(ext ?? '')) {
+                              toast.error('Format tidak didukung. Gunakan .woff2, .ttf, atau .otf'); return
+                            }
+                            if (file.size > 5 * 1024 * 1024) { toast.error('File terlalu besar (maks 5MB)'); return }
+                            const fontName = file.name.replace(/\.(woff2?|ttf|otf)$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                            const toastId = toast.loading(`Uploading ${fontName}...`)
+                            try {
+                              const formData = new FormData()
+                              formData.append('file', file)
+                              formData.append('folder', 'fonts')
+                              const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+                              const data = await res.json()
+                              if (!res.ok) throw new Error(data.error ?? 'Upload gagal')
+                              const fontUrl = data.url as string
+                              const format = ext === 'woff2' ? 'woff2' : ext === 'woff' ? 'woff' : ext === 'ttf' ? 'truetype' : 'opentype'
+                              const style = document.createElement('style')
+                              style.textContent = `@font-face { font-family: '${fontName}'; src: url('${fontUrl}') format('${format}'); font-display: swap; }`
+                              document.head.appendChild(style)
+                              const existing = cfg.meta.font.custom_fonts ?? []
+                              const updated = [...existing, { name: fontName, url: fontUrl }]
+                              updateMeta({ font: { ...cfg.meta.font, custom_fonts: updated } })
+                              toast.success(`Font "${fontName}" berhasil diupload!`, { id: toastId })
+                            } catch (err) {
+                              toast.error((err as Error).message, { id: toastId })
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    {/* List custom fonts */}
+                    {(cfg.meta.font.custom_fonts ?? []).length > 0 && (
+                      <div className="space-y-1">
+                        <p className="text-[9px] text-gray-400 mb-1">Font yang ditambahkan:</p>
+                        {(cfg.meta.font.custom_fonts ?? []).map((cf, i) => (
+                          <div key={i} className="flex items-center justify-between px-2.5 py-1.5 bg-gray-50 rounded-lg border border-gray-100">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="text-[9px] text-amber-500 shrink-0">★</span>
+                              <span className="text-[10px] font-medium text-gray-700 truncate" style={{ fontFamily: `'${cf.name}', serif` }}>{cf.name}</span>
+                              <span className="text-[8px] text-gray-400 shrink-0">{cf.url.includes('googleapis') ? 'Google' : 'Upload'}</span>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const updated = (cfg.meta.font.custom_fonts ?? []).filter((_, j) => j !== i)
+                                updateMeta({ font: { ...cfg.meta.font, custom_fonts: updated } })
+                                toast.success(`Font "${cf.name}" dihapus`)
+                              }}
+                              className="text-gray-300 hover:text-red-400 shrink-0 ml-2"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Button Variant */}
+              <div className="pt-4 border-t border-gray-100">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
                   Gaya Tombol
                 </p>
@@ -2660,6 +3085,303 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 </div>
               </div>
 
+              {/* ── Data Preview Nama ── */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  Data Preview
+                </p>
+                <div className="space-y-2">
+                  <Field label="Nama Mempelai Pria">
+                    <input type="text" value={previewData.groom_name}
+                      onChange={e => setPreviewData(d => ({ ...d, groom_name: e.target.value }))}
+                      placeholder="Nama pria..."
+                      className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400" />
+                  </Field>
+                  <Field label="Nama Mempelai Wanita">
+                    <input type="text" value={previewData.bride_name}
+                      onChange={e => setPreviewData(d => ({ ...d, bride_name: e.target.value }))}
+                      placeholder="Nama wanita..."
+                      className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400" />
+                  </Field>
+                  <Field label="Nama Tamu Preview">
+                    <input type="text" value={previewGuestName}
+                      onChange={e => setPreviewGuestName(e.target.value)}
+                      placeholder="Nama tamu contoh..."
+                      className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400" />
+                  </Field>
+                </div>
+              </div>
+
+              {/* ── Typography & Layout ── */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  Tipografi &amp; Layout
+                </p>
+                <div className="space-y-4">
+
+                  <Field label="Ukuran Font Salam">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={8} max={20} step={0.5}
+                        value={cfg.opening.greeting_font_size ?? 11}
+                        onChange={e => updateOpening({ greeting_font_size: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600"
+                      />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={8} max={20} step={0.5}
+                          value={cfg.opening.greeting_font_size ?? 11}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 8 && v <= 20) updateOpening({ greeting_font_size: v }) }}
+                          className="w-14 px-1.5 py-1 text-xs text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none"
+                        />
+                        <span className="text-[9px] text-gray-400">px</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                  <Field label="Ukuran Font Nama">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={18} max={50} step={1}
+                        value={cfg.opening.couple_name_font_size ?? 32}
+                        onChange={e => updateOpening({ couple_name_font_size: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600"
+                      />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={18} max={50}
+                          value={cfg.opening.couple_name_font_size ?? 32}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 18 && v <= 50) updateOpening({ couple_name_font_size: v }) }}
+                          className="w-14 px-1.5 py-1 text-xs text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none"
+                        />
+                        <span className="text-[9px] text-gray-400">px</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                  <Field label="Letter Spacing">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={0} max={0.25} step={0.01}
+                        value={cfg.opening.couple_name_letter_spacing ?? 0.08}
+                        onChange={e => updateOpening({ couple_name_letter_spacing: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600"
+                      />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={0} max={0.25} step={0.01}
+                          value={cfg.opening.couple_name_letter_spacing ?? 0.08}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 0 && v <= 0.25) updateOpening({ couple_name_letter_spacing: v }) }}
+                          className="w-16 px-1.5 py-1 text-xs text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none"
+                        />
+                        <span className="text-[9px] text-gray-400">em</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                  <Field label="Gaya Huruf Nama">
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {([
+                        { key: 'uppercase', label: 'UPPERCASE', desc: 'SEMUA KAPITAL' },
+                        { key: 'capitalize', label: 'Capitalize', desc: 'Huruf Awal Besar' },
+                        { key: 'lowercase', label: 'lowercase', desc: 'semua kecil' },
+                        { key: 'none', label: 'Asli', desc: 'Sesuai input' },
+                      ] as const).map(opt => {
+                        const current = cfg.opening.couple_name_text_transform ?? (cfg.opening.couple_name_uppercase !== false ? 'uppercase' : 'none')
+                        const active = current === opt.key
+                        return (
+                          <button key={opt.key} type="button"
+                            onClick={() => updateOpening({ couple_name_text_transform: opt.key, couple_name_uppercase: opt.key === 'uppercase' })}
+                            className={`px-2 py-2 rounded-xl text-center transition-all border ${
+                              active
+                                ? 'bg-indigo-50 border-indigo-300 text-indigo-700 shadow-sm'
+                                : 'bg-white border-gray-100 text-gray-500 hover:border-gray-200'
+                            }`}
+                          >
+                            <p className="text-[11px] font-bold">{opt.label}</p>
+                            <p className="text-[8px] text-gray-400 mt-0.5">{opt.desc}</p>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </Field>
+
+                  <Field label="Ukuran Tombol">
+                    <select
+                      value={cfg.opening.button_size ?? 'lg'}
+                      onChange={e => updateOpening({ button_size: e.target.value as 'sm' | 'md' | 'lg' })}
+                      className={inputCls}
+                    >
+                      <option value="sm">Kecil</option>
+                      <option value="md">Sedang</option>
+                      <option value="lg">Besar</option>
+                    </select>
+                  </Field>
+
+                  <Field label="Padding Horizontal">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={12} max={56} step={2}
+                        value={cfg.opening.content_padding_x ?? 28}
+                        onChange={e => updateOpening({ content_padding_x: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600"
+                      />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={12} max={56} step={2}
+                          value={cfg.opening.content_padding_x ?? 28}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 12 && v <= 56) updateOpening({ content_padding_x: v }) }}
+                          className="w-14 px-1.5 py-1 text-xs text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none"
+                        />
+                        <span className="text-[9px] text-gray-400">px</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                  <Field label="Padding Bawah">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={16} max={80} step={2}
+                        value={cfg.opening.content_padding_bottom ?? 48}
+                        onChange={e => updateOpening({ content_padding_bottom: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600"
+                      />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={16} max={80} step={2}
+                          value={cfg.opening.content_padding_bottom ?? 48}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 16 && v <= 80) updateOpening({ content_padding_bottom: v }) }}
+                          className="w-14 px-1.5 py-1 text-xs text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none"
+                        />
+                        <span className="text-[9px] text-gray-400">px</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                  <Field label="Label Tamu">
+                    <input
+                      value={cfg.opening.guest_label ?? 'KEPADA YTH.'}
+                      onChange={e => updateOpening({ guest_label: e.target.value || undefined })}
+                      className={inputCls}
+                      placeholder="KEPADA YTH."
+                    />
+                  </Field>
+
+                  <Field label="Ukuran Font Label Tamu">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={6} max={14} step={0.5}
+                        value={cfg.opening.guest_label_font_size ?? 8.5}
+                        onChange={e => updateOpening({ guest_label_font_size: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600"
+                      />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={6} max={14} step={0.5}
+                          value={cfg.opening.guest_label_font_size ?? 8.5}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 6 && v <= 14) updateOpening({ guest_label_font_size: v }) }}
+                          className="w-14 px-1.5 py-1 text-xs text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none"
+                        />
+                        <span className="text-[9px] text-gray-400">px</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                  <Field label="Gaya Pembatas">
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {([
+                        { key: 'diamond', label: '◆ Diamond' },
+                        { key: 'dot', label: '● Dot' },
+                        { key: 'line', label: '― Line' },
+                        { key: 'floral', label: '❦ Floral' },
+                        { key: 'star', label: '✦ Star' },
+                        { key: 'wave', label: '〰 Wave' },
+                      ] as const).map(s => {
+                        const active = (cfg.opening.separator_style ?? 'diamond') === s.key
+                        return (
+                          <button key={s.key} type="button"
+                            onClick={() => updateOpening({ separator_style: s.key })}
+                            className={`px-2 py-2 rounded-xl text-[10px] font-semibold transition-all border text-center ${
+                              active
+                                ? 'bg-indigo-600 text-white border-indigo-600'
+                                : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                            }`}>
+                            {s.label}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </Field>
+
+                  <div className="flex items-center justify-between py-1">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500">Pembatas Atas</p>
+                      <p className="text-[10px] text-gray-400">Garis ornamen setelah salam pembuka</p>
+                    </div>
+                    <button
+                      onClick={() => updateOpening({ show_top_separator: cfg.opening.show_top_separator === false ? true : false })}
+                      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
+                        cfg.opening.show_top_separator !== false ? 'bg-indigo-600' : 'bg-gray-200'
+                      }`}
+                    >
+                      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
+                        cfg.opening.show_top_separator !== false ? 'translate-x-[18px]' : 'translate-x-0.5'
+                      }`} />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500">Pembatas Bawah</p>
+                      <p className="text-[10px] text-gray-400">Ornamen diamond sebelum nama pasangan</p>
+                    </div>
+                    <button
+                      onClick={() => updateOpening({ show_bottom_separator: cfg.opening.show_bottom_separator === false ? true : false })}
+                      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
+                        cfg.opening.show_bottom_separator !== false ? 'bg-indigo-600' : 'bg-gray-200'
+                      }`}
+                    >
+                      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
+                        cfg.opening.show_bottom_separator !== false ? 'translate-x-[18px]' : 'translate-x-0.5'
+                      }`} />
+                    </button>
+                  </div>
+
+                  <Field label="Gaya Penghubung Nama">
+                    <p className="text-[10px] text-gray-400 mb-2">Simbol antara nama mempelai pria & wanita</p>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {([
+                        { key: 'ampersand', label: '& Ampersand' },
+                        { key: 'heart', label: '♥ Heart' },
+                        { key: 'dot', label: '● Dot' },
+                        { key: 'dash', label: '— Dash' },
+                        { key: 'ring', label: '◎ Ring' },
+                        { key: 'flower', label: '✿ Flower' },
+                      ] as const).map(s => {
+                        const active = (cfg.opening.couple_name_connector ?? 'ampersand') === s.key
+                        return (
+                          <button key={s.key} type="button"
+                            onClick={() => updateOpening({ couple_name_connector: s.key })}
+                            className={`px-2 py-2 rounded-xl text-[10px] font-semibold transition-all border text-center ${
+                              active
+                                ? 'bg-indigo-50 border-indigo-300 text-indigo-700 shadow-sm'
+                                : 'bg-white border-gray-100 text-gray-500 hover:border-gray-200'
+                            }`}
+                          >
+                            {s.label}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </Field>
+
+                  <Field label="Ukuran Penghubung">
+                    <div className="flex items-center gap-2">
+                      <input type="range" min={14} max={40} step={1}
+                        value={cfg.opening.couple_name_connector_size ?? 26}
+                        onChange={e => updateOpening({ couple_name_connector_size: Number(e.target.value) })}
+                        className="flex-1 accent-indigo-600 h-1.5" />
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input type="number" min={14} max={40} step={1}
+                          value={cfg.opening.couple_name_connector_size ?? 26}
+                          onChange={e => { const v = Number(e.target.value); if (v >= 14 && v <= 40) updateOpening({ couple_name_connector_size: v }) }}
+                          className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                        <span className="text-[8px] text-gray-400">px</span>
+                      </div>
+                    </div>
+                  </Field>
+
+                </div>
+              </div>
+
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
                   Foto Pasangan
@@ -2685,12 +3407,21 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
                   {(cfg.opening.cover_photo_display ?? 'background') === 'background' && (
                     <>
-                      <Field label={`Opacity Foto: ${cfg.opening.cover_photo_opacity ?? 40}%`}>
-                        <input type="range" min={5} max={80} step={5}
-                          value={cfg.opening.cover_photo_opacity ?? 40}
-                          onChange={e => updateOpening({ cover_photo_opacity: Number(e.target.value) })}
-                          className="w-full accent-indigo-600"
-                        />
+                      <Field label="Opacity Foto">
+                        <div className="flex items-center gap-2">
+                          <input type="range" min={5} max={80} step={5}
+                            value={cfg.opening.cover_photo_opacity ?? 40}
+                            onChange={e => updateOpening({ cover_photo_opacity: Number(e.target.value) })}
+                            className="flex-1 accent-indigo-600 h-1.5"
+                          />
+                          <div className="flex items-center gap-0.5 shrink-0">
+                            <input type="number" min={5} max={80} step={5}
+                              value={cfg.opening.cover_photo_opacity ?? 40}
+                              onChange={e => { const v = Number(e.target.value); if (v >= 5 && v <= 80) updateOpening({ cover_photo_opacity: v }) }}
+                              className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                            <span className="text-[8px] text-gray-400">%</span>
+                          </div>
+                        </div>
                         <div className="flex justify-between text-[9px] text-gray-400 mt-0.5">
                           <span>Transparan</span><span>Terang</span>
                         </div>
@@ -2704,12 +3435,21 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           <option value="bottom">Bawah</option>
                         </select>
                       </Field>
-                      <Field label={`Tebal Gradasi Bawah: ${cfg.opening.cover_gradient_height ?? 55}%`}>
-                        <input type="range" min={20} max={90} step={5}
-                          value={cfg.opening.cover_gradient_height ?? 55}
-                          onChange={e => updateOpening({ cover_gradient_height: Number(e.target.value) })}
-                          className="w-full accent-indigo-600"
-                        />
+                      <Field label="Tebal Gradasi Bawah">
+                        <div className="flex items-center gap-2">
+                          <input type="range" min={20} max={90} step={5}
+                            value={cfg.opening.cover_gradient_height ?? 55}
+                            onChange={e => updateOpening({ cover_gradient_height: Number(e.target.value) })}
+                            className="flex-1 accent-indigo-600 h-1.5"
+                          />
+                          <div className="flex items-center gap-0.5 shrink-0">
+                            <input type="number" min={20} max={90} step={5}
+                              value={cfg.opening.cover_gradient_height ?? 55}
+                              onChange={e => { const v = Number(e.target.value); if (v >= 20 && v <= 90) updateOpening({ cover_gradient_height: v }) }}
+                              className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                            <span className="text-[8px] text-gray-400">%</span>
+                          </div>
+                        </div>
                         <div className="flex justify-between text-[9px] text-gray-400 mt-0.5">
                           <span>Tipis</span><span>Tebal</span>
                         </div>
@@ -3040,17 +3780,24 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                             </div>
                           </div>
                           <div>
-                            <label className="block text-[10px] text-gray-400 mb-1">
-                              Sudut Gradient: {cfg.loading.bg_gradient_angle ?? 135}°
-                            </label>
-                            <input type="range" min={0} max={360} step={15}
-                              value={cfg.loading.bg_gradient_angle ?? 135}
-                              onChange={e => setConfig(prev => ({
-                                ...prev,
-                                config: { ...prev.config, loading: { ...prev.config.loading, bg_gradient_angle: Number(e.target.value) } },
-                              }))}
-                              className="w-full accent-indigo-500"
-                            />
+                            <label className="block text-[10px] text-gray-400 mb-1">Sudut Gradient</label>
+                            <div className="flex items-center gap-2">
+                              <input type="range" min={0} max={360} step={15}
+                                value={cfg.loading.bg_gradient_angle ?? 135}
+                                onChange={e => setConfig(prev => ({
+                                  ...prev,
+                                  config: { ...prev.config, loading: { ...prev.config.loading, bg_gradient_angle: Number(e.target.value) } },
+                                }))}
+                                className="flex-1 accent-indigo-500 h-1.5"
+                              />
+                              <div className="flex items-center gap-0.5 shrink-0">
+                                <input type="number" min={0} max={360} step={15}
+                                  value={cfg.loading.bg_gradient_angle ?? 135}
+                                  onChange={e => { const v = Number(e.target.value); if (v >= 0 && v <= 360) setConfig(prev => ({ ...prev, config: { ...prev.config, loading: { ...prev.config.loading, bg_gradient_angle: v } } })) }}
+                                  className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                                <span className="text-[8px] text-gray-400">°</span>
+                              </div>
+                            </div>
                           </div>
                         </>
                       )}
@@ -3111,17 +3858,24 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[10px] text-gray-400 mb-1">
-                          Opacity Overlay: {Math.round((cfg.loading.overlay_opacity ?? 0.85) * 100)}%
-                        </label>
-                        <input type="range" min={0} max={1} step={0.05}
-                          value={cfg.loading.overlay_opacity ?? 0.85}
-                          onChange={e => setConfig(prev => ({
-                            ...prev,
-                            config: { ...prev.config, loading: { ...prev.config.loading, overlay_opacity: Number(e.target.value) } },
-                          }))}
-                          className="w-full accent-indigo-500"
-                        />
+                        <label className="block text-[10px] text-gray-400 mb-1">Opacity Overlay</label>
+                        <div className="flex items-center gap-2">
+                          <input type="range" min={0} max={1} step={0.05}
+                            value={cfg.loading.overlay_opacity ?? 0.85}
+                            onChange={e => setConfig(prev => ({
+                              ...prev,
+                              config: { ...prev.config, loading: { ...prev.config.loading, overlay_opacity: Number(e.target.value) } },
+                            }))}
+                            className="flex-1 accent-indigo-500 h-1.5"
+                          />
+                          <div className="flex items-center gap-0.5 shrink-0">
+                            <input type="number" min={0} max={100} step={5}
+                              value={Math.round((cfg.loading.overlay_opacity ?? 0.85) * 100)}
+                              onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0 && v <= 1) setConfig(prev => ({ ...prev, config: { ...prev.config, loading: { ...prev.config.loading, overlay_opacity: v } } })) }}
+                              className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                            <span className="text-[8px] text-gray-400">%</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -3330,9 +4084,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                   value={s.background.overlay_opacity ?? 0.4}
                                   onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
                                   className="flex-1 accent-indigo-600 h-1" />
-                                <span className="text-[9px] font-mono text-indigo-500 w-8 text-right">
-                                  {Math.round((s.background.overlay_opacity ?? 0.4) * 100)}%
-                                </span>
+                                <div className="flex items-center gap-0.5 shrink-0">
+                                  <input type="number" min={0} max={90} step={5}
+                                    value={Math.round((s.background.overlay_opacity ?? 0.4) * 100)}
+                                    onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0 && v <= 0.9) updateSection(s.id, { background: { ...s.background, overlay_opacity: v } }) }}
+                                    className="w-12 px-1 py-0.5 text-[9px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                                  <span className="text-[8px] text-gray-400">%</span>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -3351,9 +4109,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                   value={s.background.overlay_opacity ?? 0.45}
                                   onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
                                   className="flex-1 accent-indigo-600 h-1" />
-                                <span className="text-[9px] font-mono text-indigo-500 w-8 text-right">
-                                  {Math.round((s.background.overlay_opacity ?? 0.45) * 100)}%
-                                </span>
+                                <div className="flex items-center gap-0.5 shrink-0">
+                                  <input type="number" min={0} max={90} step={5}
+                                    value={Math.round((s.background.overlay_opacity ?? 0.45) * 100)}
+                                    onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0 && v <= 0.9) updateSection(s.id, { background: { ...s.background, overlay_opacity: v } }) }}
+                                    className="w-12 px-1 py-0.5 text-[9px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+                                  <span className="text-[8px] text-gray-400">%</span>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -3474,24 +4236,30 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                               <p className="text-[8px] font-bold text-violet-500 uppercase tracking-widest">Animasi</p>
                               <div className="grid grid-cols-2 gap-1.5">
                                 <div>
-                                  <div className="flex justify-between">
-                                    <p className="text-[8px] text-gray-400">Durasi (dtk)</p>
-                                    <span className="text-[8px] font-mono text-gray-500">{(s.hero_anim_duration ?? 0.8).toFixed(1)}</span>
+                                  <p className="text-[8px] text-gray-400 mb-0.5">Durasi (dtk)</p>
+                                  <div className="flex items-center gap-1">
+                                    <input type="range" min={0.2} max={2.0} step={0.1}
+                                      value={s.hero_anim_duration ?? 0.8}
+                                      onChange={e => updateSection(s.id, { hero_anim_duration: Number(e.target.value) })}
+                                      className="flex-1 h-1 accent-violet-500" />
+                                    <input type="number" min={0.2} max={2.0} step={0.1}
+                                      value={s.hero_anim_duration ?? 0.8}
+                                      onChange={e => { const v = Number(e.target.value); if (v >= 0.2 && v <= 2.0) updateSection(s.id, { hero_anim_duration: v }) }}
+                                      className="w-12 px-1 py-0.5 text-[8px] text-center border border-gray-200 rounded focus:border-violet-400 focus:outline-none font-mono" />
                                   </div>
-                                  <input type="range" min={0.2} max={2.0} step={0.1}
-                                    value={s.hero_anim_duration ?? 0.8}
-                                    onChange={e => updateSection(s.id, { hero_anim_duration: Number(e.target.value) })}
-                                    className="w-full h-1 accent-violet-500" />
                                 </div>
                                 <div>
-                                  <div className="flex justify-between">
-                                    <p className="text-[8px] text-gray-400">Jeda (stagger)</p>
-                                    <span className="text-[8px] font-mono text-gray-500">{(s.hero_anim_stagger ?? 0.15).toFixed(2)}</span>
+                                  <p className="text-[8px] text-gray-400 mb-0.5">Jeda (stagger)</p>
+                                  <div className="flex items-center gap-1">
+                                    <input type="range" min={0} max={0.5} step={0.05}
+                                      value={s.hero_anim_stagger ?? 0.15}
+                                      onChange={e => updateSection(s.id, { hero_anim_stagger: Number(e.target.value) })}
+                                      className="flex-1 h-1 accent-violet-500" />
+                                    <input type="number" min={0} max={0.5} step={0.05}
+                                      value={s.hero_anim_stagger ?? 0.15}
+                                      onChange={e => { const v = Number(e.target.value); if (v >= 0 && v <= 0.5) updateSection(s.id, { hero_anim_stagger: v }) }}
+                                      className="w-12 px-1 py-0.5 text-[8px] text-center border border-gray-200 rounded focus:border-violet-400 focus:outline-none font-mono" />
                                   </div>
-                                  <input type="range" min={0} max={0.5} step={0.05}
-                                    value={s.hero_anim_stagger ?? 0.15}
-                                    onChange={e => updateSection(s.id, { hero_anim_stagger: Number(e.target.value) })}
-                                    className="w-full h-1 accent-violet-500" />
                                 </div>
                               </div>
                             </div>
@@ -3513,14 +4281,20 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                     onChange={e => updateSection(s.id, { hero_padding_bottom: Number(e.target.value) })} />
                                 </div>
                                 <div>
-                                  <div className="flex justify-between">
-                                    <p className="text-[8px] text-gray-400">Overlay background</p>
-                                    <span className="text-[8px] font-mono text-gray-500">{Math.round((s.hero_overlay ?? 0.52) * 100)}%</span>
+                                  <p className="text-[8px] text-gray-400 mb-0.5">Overlay background</p>
+                                  <div className="flex items-center gap-1">
+                                    <input type="range" min={0} max={0.95} step={0.05}
+                                      value={s.hero_overlay ?? 0.52}
+                                      onChange={e => updateSection(s.id, { hero_overlay: Number(e.target.value) })}
+                                      className="flex-1 h-1 accent-violet-500" />
+                                    <div className="flex items-center gap-0.5 shrink-0">
+                                      <input type="number" min={0} max={95} step={5}
+                                        value={Math.round((s.hero_overlay ?? 0.52) * 100)}
+                                        onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0 && v <= 0.95) updateSection(s.id, { hero_overlay: v }) }}
+                                        className="w-10 px-0.5 py-0.5 text-[8px] text-center border border-gray-200 rounded focus:border-violet-400 focus:outline-none font-mono" />
+                                      <span className="text-[7px] text-gray-400">%</span>
+                                    </div>
                                   </div>
-                                  <input type="range" min={0} max={0.95} step={0.05}
-                                    value={s.hero_overlay ?? 0.52}
-                                    onChange={e => updateSection(s.id, { hero_overlay: Number(e.target.value) })}
-                                    className="w-full h-1 accent-violet-500" />
                                 </div>
                                 <div className="flex items-center gap-2 pt-3">
                                   <input type="checkbox" id={`scroll-${s.id}`}
@@ -4002,12 +4776,18 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     </div>
 
                     <Field label="Volume Default">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <Volume2 className="w-4 h-4 text-gray-400 shrink-0" />
                         <input type="range" min="0" max="100" value={Math.round(musicCfg.volume * 100)}
                           onChange={e => updateMusic({ volume: Number(e.target.value) / 100 })}
                           className="flex-1 h-1.5 bg-gray-200 rounded-full accent-purple-600 cursor-pointer" />
-                        <span className="text-xs text-gray-500 w-8 text-right">{Math.round(musicCfg.volume * 100)}%</span>
+                        <div className="flex items-center gap-0.5 shrink-0">
+                          <input type="number" min={0} max={100} step={5}
+                            value={Math.round(musicCfg.volume * 100)}
+                            onChange={e => { const v = Number(e.target.value); if (v >= 0 && v <= 100) updateMusic({ volume: v / 100 }) }}
+                            className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-purple-400 focus:outline-none font-mono" />
+                          <span className="text-[8px] text-gray-400">%</span>
+                        </div>
                       </div>
                     </Field>
                   </div>
@@ -4314,20 +5094,21 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   )}
                 </div>
 
-                {/* ── Opening preview (single layer — CoverPagePreview) ── */}
+                {/* ── Opening preview (live OpeningScene) ── */}
                 <div style={{
                   position: 'absolute', inset: 0, overflow: 'hidden',
                   visibility: previewMode === 'opening' && !previewPlaying && !previewLoading ? 'visible' : 'hidden',
                   pointerEvents: previewMode === 'opening' && !previewPlaying && !previewLoading ? 'auto' : 'none',
                 }}>
-                  <div style={{ width: 390, zoom: 340 / 390, height: 845 }}>
-                    <CoverPagePreview
-                      template={config}
+                  <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'relative' }}>
+                    <OpeningScene
+                      key={`static-opening-${decorPreviewKey}-${cfg.opening.type}`}
+                      config={cfg.opening}
                       data={previewData}
+                      meta={cfg.meta}
+                      positionMode="absolute"
+                      onOpen={() => setDecorPreviewKey(k => k + 1)}
                       previewGuestName={previewGuestName}
-                      containerHeight={845}
-                      decorPreviewKey={decorPreviewKey}
-                      previewMode={coverPreviewMode}
                     />
                   </div>
                 </div>
@@ -4419,8 +5200,8 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           data={previewData}
                           meta={cfg.meta}
                           positionMode="absolute"
+                          previewGuestName={previewGuestName}
                           onOpen={() => {
-                            // When clicking MASUK SEKARANG: hide cover, show loading
                             setPreviewPlaying(false)
                             setPreviewLoading(true)
                           }}
@@ -4934,13 +5715,18 @@ function SliderRow({ label, value, min, max, step, unit, onChange }: {
 }) {
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
-        <p className="text-[9px] font-semibold text-gray-500">{label}</p>
-        <span className="text-[9px] font-mono text-indigo-600">{value}{unit}</span>
+      <p className="text-[9px] font-semibold text-gray-500 mb-1">{label}</p>
+      <div className="flex items-center gap-2">
+        <input type="range" min={min} max={max} step={step} value={value}
+          onChange={e => onChange(Number(e.target.value))}
+          className="flex-1 accent-indigo-600 h-1.5" />
+        <div className="flex items-center gap-0.5">
+          <input type="number" min={min} max={max} step={step} value={value}
+            onChange={e => { const v = Number(e.target.value); if (v >= min && v <= max) onChange(v) }}
+            className="w-14 px-1 py-0.5 text-[10px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
+          <span className="text-[8px] text-gray-400">{unit}</span>
+        </div>
       </div>
-      <input type="range" min={min} max={max} step={step} value={value}
-        onChange={e => onChange(Number(e.target.value))}
-        className="w-full accent-indigo-600 h-1.5" />
     </div>
   )
 }

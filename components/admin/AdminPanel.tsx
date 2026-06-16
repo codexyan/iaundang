@@ -381,6 +381,7 @@ export default function AdminPanel({
               })
               setLabEditRecord(null)
               setLabDirty(false)
+              toast.success('Template berhasil disimpan!', { duration: 4000, icon: '✅' })
             }}
             onDirtyChange={setLabDirty}
             categories={appSettings.categories}

@@ -52,6 +52,28 @@ export default function InvitationRenderer({
     }
   }, [meta.font.heading, meta.font.body])
 
+  useEffect(() => {
+    const customs = meta.font.custom_fonts ?? []
+    customs.forEach(cf => {
+      const id = `cf-${cf.name.replace(/\s+/g, '-')}`
+      if (document.querySelector(`[data-cf="${id}"]`)) return
+      if (cf.url.includes('googleapis')) {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = cf.url
+        link.setAttribute('data-cf', id)
+        document.head.appendChild(link)
+      } else {
+        const ext = cf.url.split('.').pop()?.toLowerCase()
+        const format = ext === 'woff2' ? 'woff2' : ext === 'woff' ? 'woff' : ext === 'ttf' ? 'truetype' : 'opentype'
+        const style = document.createElement('style')
+        style.textContent = `@font-face { font-family: '${cf.name}'; src: url('${cf.url}') format('${format}'); font-display: swap; }`
+        style.setAttribute('data-cf', id)
+        document.head.appendChild(style)
+      }
+    })
+  }, [meta.font.custom_fonts])
+
   const resolvedMusicUrl = musicUrl || config.music?.url || ''
   const defaultMusicConfig = {
     enabled: !!resolvedMusicUrl,

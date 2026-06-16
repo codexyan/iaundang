@@ -275,6 +275,22 @@ export interface OpeningConfig {
   cover_photo_position?: 'top' | 'center' | 'bottom'
   cover_gradient_height?: number
   cover_gradient_color?: string   // Warna gradasi bawah, default: primary template
+  // Typography & layout
+  greeting_font_size?: number      // px, default 11
+  couple_name_font_size?: number   // px, default 32
+  couple_name_letter_spacing?: number // em, default 0.08
+  couple_name_uppercase?: boolean  // DEPRECATED: use couple_name_text_transform
+  couple_name_text_transform?: 'uppercase' | 'capitalize' | 'lowercase' | 'none'  // default 'uppercase'
+  guest_label?: string             // default "KEPADA YTH."
+  guest_label_font_size?: number   // px, default 8.5
+  show_top_separator?: boolean     // separator setelah greeting, default true
+  show_bottom_separator?: boolean  // separator sebelum nama, default true
+  separator_style?: 'diamond' | 'dot' | 'line' | 'floral' | 'star' | 'wave'  // default 'diamond'
+  button_size?: 'sm' | 'md' | 'lg' // default 'lg'
+  couple_name_connector?: 'ampersand' | 'heart' | 'dot' | 'dash' | 'ring' | 'flower' // default 'ampersand'
+  couple_name_connector_size?: number // px, default 26
+  content_padding_x?: number       // px, default 28
+  content_padding_bottom?: number  // px, default 48
   // Aset dekorasi custom (upload-based)
   decoration_assets?: DecorationAsset[]
   // Aktifkan/nonaktifkan halaman cover sebelum undangan
@@ -332,11 +348,25 @@ export interface ColorScheme {
   background?: string
 }
 
+export interface CustomFont {
+  name: string
+  url: string            // URL ke file font (.woff2/.ttf/.otf) di Supabase Storage
+  weight?: string        // e.g. '400', '400;700', default '400'
+  style?: 'normal' | 'italic'
+}
+
 export interface FontConfig {
   heading: string
   body: string
   heading_scale?: number  // 0.6 – 2.0, default 1.0 — ukuran default semua judul
   body_scale?: number     // 0.6 – 1.6, default 1.0 — ukuran default semua teks
+  heading_line_height?: number   // default 1.15
+  body_line_height?: number      // default 1.65
+  heading_letter_spacing?: number // em, default 0
+  body_letter_spacing?: number    // em, default 0
+  heading_word_spacing?: number   // em, default 0
+  body_word_spacing?: number      // em, default 0
+  custom_fonts?: CustomFont[]     // font custom yang diupload/ditambahkan admin
 }
 
 export type ButtonVariant = 'outlined' | 'filled' | 'pill' | 'ghost' | 'underline'

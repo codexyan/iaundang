@@ -13,20 +13,26 @@ const MAX_AUDIO_SIZE = 15 * 1024 * 1024  // 15 MB
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime', 'video/ogg']
 const AUDIO_TYPES = ['audio/mpeg', 'audio/mp3', 'audio/mp4', 'audio/m4a', 'audio/x-m4a', 'audio/wav', 'audio/wave', 'audio/x-wav', 'audio/ogg', 'audio/aac']
+const FONT_TYPES  = ['font/woff2', 'font/woff', 'font/ttf', 'font/otf', 'application/x-font-woff2', 'application/x-font-woff', 'application/x-font-ttf', 'application/x-font-otf', 'application/font-woff2', 'application/font-woff']
 const IMAGE_EXTS = ['.jpg', '.jpeg', '.png', '.webp']
 const VIDEO_EXTS = ['.mp4', '.webm', '.mov', '.ogg']
 const AUDIO_EXTS = ['.mp3', '.m4a', '.wav', '.ogg', '.aac']
+const FONT_EXTS  = ['.woff2', '.woff', '.ttf', '.otf']
 
-const ALLOWED_FOLDERS = ['covers', 'thumbnails', 'assets', 'templates', 'decorations', 'music']
+const MAX_FONT_SIZE = 5 * 1024 * 1024  // 5 MB
 
-function fileKind(file: File): 'image' | 'video' | 'audio' | null {
+const ALLOWED_FOLDERS = ['covers', 'thumbnails', 'assets', 'templates', 'decorations', 'music', 'fonts']
+
+function fileKind(file: File): 'image' | 'video' | 'audio' | 'font' | null {
   if (IMAGE_TYPES.includes(file.type)) return 'image'
   if (VIDEO_TYPES.includes(file.type)) return 'video'
   if (AUDIO_TYPES.includes(file.type)) return 'audio'
+  if (FONT_TYPES.includes(file.type))  return 'font'
   const ext = path.extname(file.name).toLowerCase()
   if (IMAGE_EXTS.includes(ext)) return 'image'
   if (VIDEO_EXTS.includes(ext)) return 'video'
   if (AUDIO_EXTS.includes(ext)) return 'audio'
+  if (FONT_EXTS.includes(ext))  return 'font'
   return null
 }
 
@@ -48,17 +54,17 @@ export async function POST(req: NextRequest) {
 
     const kind = fileKind(file)
     if (!kind) {
-      return NextResponse.json({ error: 'Format tidak didukung. Gunakan JPG, PNG, WebP, MP4, WebM, MP3, M4A, atau WAV' }, { status: 400 })
+      return NextResponse.json({ error: 'Format tidak didukung. Gunakan JPG, PNG, WebP, MP4, WebM, MP3, M4A, WAV, WOFF2, TTF, atau OTF' }, { status: 400 })
     }
 
-    const maxSize = kind === 'video' ? MAX_VIDEO_SIZE : kind === 'audio' ? MAX_AUDIO_SIZE : MAX_IMAGE_SIZE
+    const maxSize = kind === 'video' ? MAX_VIDEO_SIZE : kind === 'audio' ? MAX_AUDIO_SIZE : kind === 'font' ? MAX_FONT_SIZE : MAX_IMAGE_SIZE
     if (file.size > maxSize) {
-      const label = kind === 'video' ? '50MB untuk video' : kind === 'audio' ? '15MB untuk audio' : '5MB untuk foto'
+      const label = kind === 'video' ? '50MB untuk video' : kind === 'audio' ? '15MB untuk audio' : kind === 'font' ? '5MB untuk font' : '5MB untuk foto'
       return NextResponse.json({ error: `File terlalu besar (maks ${label})` }, { status: 400 })
     }
 
     const ext = path.extname(file.name).toLowerCase()
-    const allowedExts = kind === 'video' ? VIDEO_EXTS : kind === 'audio' ? AUDIO_EXTS : IMAGE_EXTS
+    const allowedExts = kind === 'video' ? VIDEO_EXTS : kind === 'audio' ? AUDIO_EXTS : kind === 'font' ? FONT_EXTS : IMAGE_EXTS
     if (!allowedExts.includes(ext)) {
       return NextResponse.json({ error: 'Ekstensi file tidak valid' }, { status: 400 })
     }

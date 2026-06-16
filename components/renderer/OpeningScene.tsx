@@ -24,10 +24,11 @@ interface Props {
   onOpen: () => void
   /** 'fixed' = fullscreen viewport (live), 'absolute' = dalam container (preview mockup) */
   positionMode?: PositionMode
+  previewGuestName?: string
 }
 
-export default function OpeningScene({ config, data, meta, onOpen, positionMode = 'fixed' }: Props) {
-  const shared = { config, data, meta, onOpen, positionMode }
+export default function OpeningScene({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
+  const shared = { config, data, meta, onOpen, positionMode, previewGuestName }
 
   return (
     <AnimatePresence>
