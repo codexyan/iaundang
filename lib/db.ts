@@ -411,36 +411,36 @@ const STARTER_FEATURES: TierFeatures = {
   max_photos: 6, music: true, custom_music: false,
   opening_animation: true, opening_styles: 'basic',
   rsvp: true, wishes: true, countdown: true, gallery: true,
-  gift: true, gift_registry: false, story: false, video: false,
+  gift: false, gift_registry: false, story: false, video: false,
   livestream: false, ig_story: false, qrcode: false,
   custom_domain: false, remove_watermark: false,
-  analytics: false, priority_support: false, validity_days: 90,
+  analytics: false, priority_support: false, validity_days: 30,
 }
 
-const PREMIUM_FEATURES: TierFeatures = {
+const POPULAR_FEATURES: TierFeatures = {
   max_photos: 20, music: true, custom_music: true,
   opening_animation: true, opening_styles: 'all',
   rsvp: true, wishes: true, countdown: true, gallery: true,
   gift: true, gift_registry: true, story: true, video: true,
   livestream: false, ig_story: true, qrcode: true,
   custom_domain: false, remove_watermark: true,
-  analytics: true, priority_support: false, validity_days: 180,
+  analytics: true, priority_support: false, validity_days: 90,
 }
 
-const EXCLUSIVE_FEATURES: TierFeatures = {
+const EKSKLUSIF_FEATURES: TierFeatures = {
   max_photos: 50, music: true, custom_music: true,
   opening_animation: true, opening_styles: 'all',
   rsvp: true, wishes: true, countdown: true, gallery: true,
   gift: true, gift_registry: true, story: true, video: true,
   livestream: true, ig_story: true, qrcode: true,
   custom_domain: true, remove_watermark: true,
-  analytics: true, priority_support: true, validity_days: 365,
+  analytics: true, priority_support: true, validity_days: 180,
 }
 
 export const BUILT_IN_PRICE_TIERS: PriceTier[] = [
-  { id: 'starter',   label: 'Starter',   price: 79000,  is_built_in: true, description: 'Undangan digital esensial untuk pasangan hemat', color: '#3b82f6', icon: 'rocket', features: STARTER_FEATURES },
-  { id: 'premium',   label: 'Premium',   price: 149000, is_built_in: true, description: 'Fitur lengkap untuk pernikahan yang berkesan', color: '#8b5cf6', icon: 'crown', highlight: true, features: PREMIUM_FEATURES },
-  { id: 'exclusive', label: 'Exclusive', price: 249000, is_built_in: true, description: 'Pengalaman premium tanpa batas untuk hari spesial', color: '#d97706', icon: 'gem', features: EXCLUSIVE_FEATURES },
+  { id: 'starter',    label: 'Starter',    price: 79000,  is_built_in: true, description: 'Undangan digital esensial untuk pasangan hemat', color: '#3b82f6', icon: 'rocket', features: STARTER_FEATURES },
+  { id: 'popular',    label: 'Popular',    price: 149000, is_built_in: true, description: 'Fitur lengkap untuk pernikahan yang berkesan', color: '#8b5cf6', icon: 'crown', highlight: true, features: POPULAR_FEATURES },
+  { id: 'eksklusif',  label: 'Eksklusif',  price: 249000, is_built_in: true, description: 'Pengalaman premium tanpa batas untuk hari spesial', color: '#d97706', icon: 'gem', features: EKSKLUSIF_FEATURES },
 ]
 
 export const BUILT_IN_PALETTES: ColorPalette[] = [
@@ -493,16 +493,16 @@ const BUILT_IN_TEMPLATES: AdminTemplateConfig[] = [
 ]
 
 const DEFAULT_SETTINGS: AppSettings = {
-  price: 129000, packageName: 'Premium', packageDuration: 6, promoEndDate: '2026-08-31',
+  price: 149000, packageName: 'Popular', packageDuration: 3, promoEndDate: '2026-08-31',
   templates: BUILT_IN_TEMPLATES, categories: BUILT_IN_CATEGORIES, colorPalettes: BUILT_IN_PALETTES,
   priceTiers: BUILT_IN_PRICE_TIERS, flashSales: [], coupons: [],
   bankAccounts: [], qrisImageUrl: '',
   paymentInstructions: 'Transfer ke salah satu rekening di bawah ini, kemudian kirimkan bukti transfer.',
-  confirmationWhatsapp: '628123456789', siteName: 'Akundang', siteTagline: 'Digital Wedding Invitation',
+  confirmationWhatsapp: '628123456789', siteName: 'iaundang', siteTagline: 'Digital Wedding Invitation',
   logoHorizontalUrl: '/logos/logo-horizontal.png', logoVerticalUrl: '/logos/logo-vertical.png',
-  contactWhatsapp: '628123456789', contactEmail: 'halo@akundang.id',
-  socialInstagram: 'akundang.id', socialTwitter: 'akundang', socialGithub: 'akundang',
-  appDomain: 'akundang.id', demoSubdomain: 'demo',
+  contactWhatsapp: '628123456789', contactEmail: 'halo@iaundang.id',
+  socialInstagram: 'iaundang.id', socialTwitter: 'iaundang', socialGithub: 'iaundang',
+  appDomain: 'iaundang.id', demoSubdomain: 'demo',
   maintenanceMode: false,
 }
 
@@ -632,8 +632,8 @@ const DEFAULT_LANDING: LandingPageSettings = {
   },
   testimonials: {
     items: [
-      { names: 'Rizky & Aulia', date: 'Maret 2026', template: 'Modern', quote: 'Tamunya banyak yang nanya "link undangannya keren banget, pakai apa?". Langsung kami rekomendasiin Akundang. Setup-nya cepat banget, kurang dari 30 menit sudah jadi.', initial: 'RA', color: '#2c4a34' },
-      { names: 'Dimas & Nadia', date: 'Februari 2026', template: 'Casual', quote: 'Kami berdua kerja penuh waktu dan tidak ada waktu ngurusin undangan fisik. Akundang solusinya: simple, cantik, dan tamu bisa RSVP langsung dari HP mereka.', initial: 'DN', color: '#9a7d3f' },
+      { names: 'Rizky & Aulia', date: 'Maret 2026', template: 'Modern', quote: 'Tamunya banyak yang nanya "link undangannya keren banget, pakai apa?". Langsung kami rekomendasiin iaundang. Setup-nya cepat banget, kurang dari 30 menit sudah jadi.', initial: 'RA', color: '#2c4a34' },
+      { names: 'Dimas & Nadia', date: 'Februari 2026', template: 'Casual', quote: 'Kami berdua kerja penuh waktu dan tidak ada waktu ngurusin undangan fisik. iaundang solusinya: simple, cantik, dan tamu bisa RSVP langsung dari HP mereka.', initial: 'DN', color: '#9a7d3f' },
       { names: 'Fajar & Syifa', date: 'April 2026', template: 'Traditional', quote: 'Yang paling suka fitur nama tamu personalnya. Tamu merasa diperhatikan karena nama mereka muncul langsung di undangan. Banyak yang WA bilang terkesan.', initial: 'FS', color: '#4a6355' },
       { names: 'Hendra & Mita', date: 'Januari 2026', template: 'Modern', quote: 'Harga segini sudah dapat semua fitur lengkap, tidak ada tambahan biaya. Undangan kami masih bisa dibuka 6 bulan setelah nikah untuk kenangan.', initial: 'HM', color: '#5d7a6a' },
     ],
@@ -644,7 +644,7 @@ const DEFAULT_LANDING: LandingPageSettings = {
       { q: 'Tamu perlu download atau install sesuatu?', a: 'Tidak perlu sama sekali. Tamu cukup tap link yang kalian kirim lewat WhatsApp, dan undangan langsung terbuka di browser HP mereka.' },
       { q: 'Berapa lama undangan bisa diakses setelah bayar?', a: '6 bulan penuh sejak tanggal pembelian. Lebih dari cukup untuk sebelum hari H, saat hari H, dan beberapa bulan setelahnya.' },
       { q: 'Bisa ganti foto atau detail acara setelah dipublish?', a: 'Bisa, kapan saja dan sebanyak yang kalian mau. Edit info acara, ganti foto, ganti musik, bahkan ganti gaya tampilan tanpa biaya tambahan.' },
-      { q: 'Bagaimana cara tamu menerima undangan?', a: 'Setelah undangan kalian publish, kalian dapat link unik seperti ikhwal-fani.akundang.id. Salin dan kirim ke tamu lewat WhatsApp, Line, atau media apapun.' },
+      { q: 'Bagaimana cara tamu menerima undangan?', a: 'Setelah undangan kalian publish, kalian dapat link unik seperti ikhwal-fani.iaundang.id. Salin dan kirim ke tamu lewat WhatsApp, Line, atau media apapun.' },
       { q: 'Kalau ada yang membingungkan, ada yang bisa dihubungi?', a: 'Tentu. Hubungi kami lewat WhatsApp dan kami akan bantu dengan senang hati. Kami balas dalam 1 hari kerja.' },
     ],
   },
@@ -848,7 +848,7 @@ export const articles = {
         content: data.content,
         coverUrl: data.coverUrl ?? '',
         authorId: data.authorId ?? null,
-        authorName: data.authorName ?? 'Tim Akundang',
+        authorName: data.authorName ?? 'Tim iaundang',
         authorAvatar: data.authorAvatar ?? '',
         allowLikes: data.allowLikes,
         allowComments: data.allowComments,

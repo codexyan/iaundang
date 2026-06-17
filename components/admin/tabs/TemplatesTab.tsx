@@ -31,10 +31,10 @@ interface Props {
 type Filter = 'all' | 'draft' | 'active' | 'archived'
 
 const PACKAGE_OPTIONS: { value: TemplatePackageRequirement; label: string; color: string }[] = [
-  { value: 'all',      label: 'Semua User',    color: 'bg-gray-100 text-gray-600' },
-  { value: 'starter',  label: 'Starter+',      color: 'bg-blue-100 text-blue-700' },
-  { value: 'premium',  label: 'Premium+',      color: 'bg-amber-100 text-amber-700' },
-  { value: 'ultimate', label: 'Exclusive only',  color: 'bg-purple-100 text-purple-700' },
+  { value: 'all',       label: 'Semua User',      color: 'bg-gray-100 text-gray-600' },
+  { value: 'starter',   label: 'Starter+',        color: 'bg-blue-100 text-blue-700' },
+  { value: 'popular',   label: 'Popular+',         color: 'bg-amber-100 text-amber-700' },
+  { value: 'eksklusif', label: 'Eksklusif saja',   color: 'bg-purple-100 text-purple-700' },
 ]
 
 function formatRp(n: number) {
@@ -1061,7 +1061,7 @@ export default function TemplatesTab({
           ]
 
           const PREMIUM_FEATURES: { key: keyof TierFeatures; label: string; desc: string; icon: React.ElementType }[] = [
-            { key: 'remove_watermark', label: 'Hapus Watermark', desc: 'Tidak ada branding Akundang', icon: Eye },
+            { key: 'remove_watermark', label: 'Hapus Watermark', desc: 'Tidak ada branding iaundang', icon: Eye },
             { key: 'custom_domain', label: 'Custom Domain', desc: 'Pakai domain sendiri (misal: nikahan.com)', icon: Globe },
             { key: 'analytics', label: 'Analytics', desc: 'Statistik views, RSVP, dll', icon: BarChart3 },
             { key: 'priority_support', label: 'Priority Support', desc: 'Bantuan prioritas via WhatsApp', icon: Headphones },

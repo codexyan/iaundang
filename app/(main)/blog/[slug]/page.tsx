@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const article = await articles.findBySlug(params.slug)
   if (!article) return {}
   return {
-    title: article.metaTitle || `${article.title} — Blog Akundang`,
+    title: article.metaTitle || `${article.title} — Blog iaundang`,
     description: article.metaDesc || article.excerpt,
     openGraph: {
       title: article.metaTitle || article.title,
@@ -142,7 +142,7 @@ export default async function BlogArticlePage({ params }: { params: { slug: stri
               <div>
                 <p className="font-semibold text-stone-800">Ditulis oleh {article.authorName}</p>
                 <p className="text-sm text-stone-400 mt-1">
-                  Kontributor di blog Akundang. Berbagi tips dan inspirasi seputar pernikahan dan undangan digital.
+                  Kontributor di blog iaundang. Berbagi tips dan inspirasi seputar pernikahan dan undangan digital.
                 </p>
               </div>
             </div>

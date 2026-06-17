@@ -1,7 +1,7 @@
 import type { SessionPayload } from './session'
 
 export function getAdminEmail(): string {
-  return process.env.ADMIN_EMAIL || 'admin@akundang.id'
+  return process.env.ADMIN_EMAIL || 'admin@iaundang.id'
 }
 
 export function isAdmin(session: SessionPayload | null | undefined): boolean {

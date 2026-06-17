@@ -150,7 +150,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
                   <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
                   <p className="text-emerald-100 text-xs font-semibold uppercase tracking-wider">Undangan Aktif</p>
                 </div>
-                <p className="font-mono text-base font-semibold truncate text-white/95">{invitation.slug}.akundang.id</p>
+                <p className="font-mono text-base font-semibold truncate text-white/95">{invitation.slug}.iaundang.id</p>
                 {invitation.expires_at && (
                   <p className="text-emerald-200/70 text-xs mt-1.5">
                     Aktif hingga {new Date(invitation.expires_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}

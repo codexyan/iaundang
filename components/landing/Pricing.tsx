@@ -140,11 +140,11 @@ export default function Pricing() {
           />
           <PricingCard
             name="Paket Popular"
-            badge={PRICING_CONFIG.premium.badge}
-            price={PRICING_CONFIG.premium.priceFormatted}
-            duration={PRICING_CONFIG.premium.durationLabel}
-            features={PRICING_CONFIG.premium.features}
-            highlightedFeature={PRICING_CONFIG.premium.highlightedFeature}
+            badge={PRICING_CONFIG.popular.badge}
+            price={PRICING_CONFIG.popular.priceFormatted}
+            duration={PRICING_CONFIG.popular.durationLabel}
+            features={PRICING_CONFIG.popular.features}
+            highlightedFeature={PRICING_CONFIG.popular.highlightedFeature}
             ctaLabel="Pilih Popular"
             ctaHint="Pilihan terpopuler pasangan"
             variant="dark"
@@ -153,11 +153,11 @@ export default function Pricing() {
           />
           <PricingCard
             name="Paket Eksklusif"
-            badge={PRICING_CONFIG.exclusive.badge}
-            price={PRICING_CONFIG.exclusive.priceFormatted}
-            duration={PRICING_CONFIG.exclusive.durationLabel}
-            features={PRICING_CONFIG.exclusive.features}
-            highlightedFeature={PRICING_CONFIG.exclusive.highlightedFeature}
+            badge={PRICING_CONFIG.eksklusif.badge}
+            price={PRICING_CONFIG.eksklusif.priceFormatted}
+            duration={PRICING_CONFIG.eksklusif.durationLabel}
+            features={PRICING_CONFIG.eksklusif.features}
+            highlightedFeature={PRICING_CONFIG.eksklusif.highlightedFeature}
             ctaLabel="Pilih Eksklusif"
             ctaHint="Untuk acara besar & eksklusif"
             variant="gold"

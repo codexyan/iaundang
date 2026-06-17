@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { TEMPLATES } from '@/lib/types'
 
 export const metadata: Metadata = {
-  title: 'Pilih Template Undangan | Akundang',
+  title: 'Pilih Template Undangan | iaundang',
   description: 'Lihat semua template undangan digital pernikahan. Coba gratis dengan nama kalian sebelum beli.',
 }
 

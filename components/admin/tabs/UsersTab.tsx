@@ -109,8 +109,8 @@ function daysUntilExpiry(dateString: string | null): number | null {
 
 const TIER_LABELS: Record<string, { label: string; color: string; bg: string }> = {
   starter: { label: 'Starter', color: 'text-stone-700', bg: 'bg-stone-100' },
-  premium: { label: 'Premium', color: 'text-blue-700', bg: 'bg-blue-100' },
-  exclusive: { label: 'Exclusive', color: 'text-amber-700', bg: 'bg-amber-100' },
+  popular: { label: 'Popular', color: 'text-blue-700', bg: 'bg-blue-100' },
+  eksklusif: { label: 'Eksklusif', color: 'text-amber-700', bg: 'bg-amber-100' },
 }
 
 type FilterKey = 'all' | 'active' | 'expired' | 'unpaid' | 'no-template' | 'has-ticket'

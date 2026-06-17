@@ -110,7 +110,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               href="/"
               className="text-lg font-bold text-forest-700 tracking-tight"
             >
-              Akundang
+              iaundang
             </Link>
 
             {/* Desktop nav */}

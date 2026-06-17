@@ -330,7 +330,7 @@ export default function AdminPanel({
         onLogout={handleLogout}
         stats={stats}
         pendingProofs={pendingProofs}
-        siteName={appSettings.siteName ?? 'Akundang'}
+        siteName={appSettings.siteName ?? 'iaundang'}
         logoVerticalUrl={appSettings.logoVerticalUrl ?? '/logos/logo-vertical.png'}
       />
 
@@ -411,16 +411,16 @@ export default function AdminPanel({
         {activeTab === 'settings' && (
           <NewSettingsTab
             settings={{
-              siteName: appSettings.siteName ?? 'Akundang',
+              siteName: appSettings.siteName ?? 'iaundang',
               siteTagline: appSettings.siteTagline ?? 'Digital Wedding Invitation',
               logoHorizontalUrl: appSettings.logoHorizontalUrl ?? '/logos/logo-horizontal.png',
               logoVerticalUrl: appSettings.logoVerticalUrl ?? '/logos/logo-vertical.png',
-              contactEmail: appSettings.contactEmail ?? 'halo@akundang.id',
+              contactEmail: appSettings.contactEmail ?? 'halo@iaundang.id',
               contactWhatsapp: appSettings.confirmationWhatsapp ?? '628123456789',
-              socialInstagram: appSettings.socialInstagram ?? 'akundang.id',
-              socialTwitter: appSettings.socialTwitter ?? 'akundang',
-              socialGithub: appSettings.socialGithub ?? 'akundang',
-              appDomain: appSettings.appDomain ?? 'akundang.id',
+              socialInstagram: appSettings.socialInstagram ?? 'iaundang.id',
+              socialTwitter: appSettings.socialTwitter ?? 'iaundang',
+              socialGithub: appSettings.socialGithub ?? 'iaundang',
+              appDomain: appSettings.appDomain ?? 'iaundang.id',
               demoSubdomain: appSettings.demoSubdomain ?? 'demo',
             }}
             adminEmail={adminEmail}

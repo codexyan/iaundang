@@ -742,7 +742,7 @@ function StepKisah({ data, set }: { data: WizardData; set: (k: keyof WizardData,
 // ── Step 4: Selesai ─────────────────────────────────────────────
 
 function StepSelesai({ data, invitation }: { data: WizardData; invitation: Invitation }) {
-  const invUrl = `${invitation.slug}.akundang.id`
+  const invUrl = `${invitation.slug}.iaundang.id`
 
   const completedFields = [
     { label: 'Nama Mempelai', done: !!(data.groom_name && data.bride_name) },

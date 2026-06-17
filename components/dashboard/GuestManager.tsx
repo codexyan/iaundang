@@ -63,7 +63,7 @@ export default function GuestManager({ invitation }: Props) {
   const [showBlast, setShowBlast] = useState(false)
   const [newGuest, setNewGuest] = useState({ name: '', phone: '', group: '', note: '' })
 
-  const tier = (invitation.package_tier ?? 'premium') as PackageTier
+  const tier = (invitation.package_tier ?? 'popular') as PackageTier
   const pkg = getPackage(tier)
   const maxGuests = pkg.maxGuests
   const isAtLimit = maxGuests !== -1 && contacts.length >= maxGuests

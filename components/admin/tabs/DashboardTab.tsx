@@ -173,7 +173,7 @@ export default function DashboardTab({
         <p className="text-sm text-stone-400 mt-0.5">
           {stats.totalUsers > 0
             ? `${stats.totalUsers} pengguna terdaftar, ${liveCount} undangan aktif hari ini.`
-            : 'Belum ada aktivitas. Mulai promosikan platform Akundang!'}
+            : 'Belum ada aktivitas. Mulai promosikan platform iaundang!'}
         </p>
       </div>
 

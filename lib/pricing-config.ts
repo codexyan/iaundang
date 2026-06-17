@@ -18,24 +18,26 @@ export const PRICING_CONFIG = {
       'Aktif 1 bulan',
     ],
   },
-  premium: {
+  popular: {
     price: 149000,
     priceFormatted: 'Rp 149.000',
     duration: 3,
     durationLabel: '3 bulan',
     rsvpLimit: 500,
-    badge: 'PALING POPULER',
+    badge: 'PALING DIPILIH',
     description: 'Fitur lengkap untuk pernikahan yang berkesan',
     features: [
       'Semua fitur Starter',
       'RSVP online hingga 500 tamu',
-      'Amplop digital & gift registry',
-      'Kisah cinta & video prewedding',
+      'Amplop digital & rekening',
+      'Wishlist hadiah',
+      'Kisah cinta pasangan',
+      'Video prewedding',
       'Aktif 3 bulan',
     ],
-    highlightedFeature: 'Amplop digital & gift registry',
+    highlightedFeature: 'Amplop digital & rekening',
   },
-  exclusive: {
+  eksklusif: {
     price: 249000,
     priceFormatted: 'Rp 249.000',
     duration: 6,
@@ -62,7 +64,7 @@ export const PRICING_CONFIG = {
   },
 } as const;
 
-export type PricingPackage = 'starter' | 'premium' | 'exclusive';
+export type PricingPackage = 'starter' | 'popular' | 'eksklusif';
 export type PricingConfig = typeof PRICING_CONFIG;
 
 export function getPackagePrice(pkg: PricingPackage): number {

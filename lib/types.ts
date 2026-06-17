@@ -418,7 +418,7 @@ export interface JsonTemplateConfig {
 
 /** Tier minimum yang dibutuhkan user untuk akses template.
  *  'all' = semua user (termasuk free). Selain itu = tier minimum (lihat lib/packages.ts). */
-export type TemplatePackageRequirement = 'all' | 'starter' | 'premium' | 'ultimate'
+export type TemplatePackageRequirement = 'all' | 'starter' | 'popular' | 'eksklusif'
 
 /** Kategori template — admin bisa CRUD dari Manajemen tab. */
 export interface TemplateCategory {

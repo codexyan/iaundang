@@ -91,7 +91,7 @@ const PREVIEW_DATA_DEFAULT: NewInvitationData = {
     { label: 'Furnitur rumah tangga', url: 'https://shopee.co.id/wishlist/2', marketplace: 'shopee', image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=300&fit=crop' },
   ],
   ig_story_image_url: 'https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?w=400&h=710&fit=crop',
-  qr_target_url: 'https://akundang.id/ikhwal-fani',
+  qr_target_url: 'https://iaundang.id/ikhwal-fani',
   qr_label: 'Pindai untuk membagikan undangan ini',
 }
 
@@ -969,7 +969,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   const [showFullscreen, setShowFullscreen] = useState(false)
   const [fullscreenPhase, setFullscreenPhase] = useState<'opening' | 'loading' | 'main'>('opening')
   const [savedLabs, setSavedLabs] = useState<{ id: string; name: string; config: TemplateRecord; status?: 'draft' | 'released'; savedAt?: string; description?: string }[]>(() => {
-    try { return JSON.parse(localStorage.getItem('akundang-labs') || '[]') }
+    try { return JSON.parse(localStorage.getItem('iaundang-labs') || '[]') }
     catch { return [] }
   })
 
@@ -1250,12 +1250,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
       if (existing) {
         const updated = savedLabs.map(l => l.id === existing.id ? { ...l, config, savedAt: now.toISOString(), description: templateDesc } : l)
         setSavedLabs(updated)
-        localStorage.setItem('akundang-labs', JSON.stringify(updated))
+        localStorage.setItem('iaundang-labs', JSON.stringify(updated))
       } else {
         const entry = { id: makeId(), name: labName, config, status: 'draft' as const, savedAt: now.toISOString(), description: templateDesc }
         const updated = [...savedLabs, entry]
         setSavedLabs(updated)
-        localStorage.setItem('akundang-labs', JSON.stringify(updated))
+        localStorage.setItem('iaundang-labs', JSON.stringify(updated))
       }
     }
     setLastSavedAt(now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }))
@@ -1277,7 +1277,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   function deleteLab(id: string) {
     const updated = savedLabs.filter(l => l.id !== id)
     setSavedLabs(updated)
-    localStorage.setItem('akundang-labs', JSON.stringify(updated))
+    localStorage.setItem('iaundang-labs', JSON.stringify(updated))
   }
 
   function openReleaseModal() {
@@ -1382,7 +1382,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
       if (matchIdx >= 0) {
         const updLabs = savedLabs.map((l, i) => i === matchIdx ? { ...l, status: 'released' as const } : l)
         setSavedLabs(updLabs)
-        localStorage.setItem('akundang-labs', JSON.stringify(updLabs))
+        localStorage.setItem('iaundang-labs', JSON.stringify(updLabs))
       }
     } catch (e) {
       toast.error((e as Error).message)
@@ -1734,12 +1734,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 if (existing) {
                   const updated = savedLabs.map(l => l.id === existing.id ? { ...l, config, savedAt: now.toISOString() } : l)
                   setSavedLabs(updated)
-                  localStorage.setItem('akundang-labs', JSON.stringify(updated))
+                  localStorage.setItem('iaundang-labs', JSON.stringify(updated))
                 } else {
                   const entry = { id: makeId(), name: config.name, config, status: 'draft' as const, savedAt: now.toISOString(), description: templateDesc }
                   const updated = [...savedLabs, entry]
                   setSavedLabs(updated)
-                  localStorage.setItem('akundang-labs', JSON.stringify(updated))
+                  localStorage.setItem('iaundang-labs', JSON.stringify(updated))
                 }
                 toast.success('Perubahan tersimpan otomatis')
               }
@@ -5428,8 +5428,8 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       >
                         <option value="all">Semua user</option>
                         <option value="starter">Starter ke atas</option>
-                        <option value="premium">Premium ke atas</option>
-                        <option value="ultimate">Ultimate saja</option>
+                        <option value="popular">Popular ke atas</option>
+                        <option value="eksklusif">Eksklusif saja</option>
                       </select>
                     </div>
                   </div>

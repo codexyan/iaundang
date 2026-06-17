@@ -11,7 +11,7 @@ const defaultFaqs = [
   { q: 'Tamu perlu download atau install sesuatu?', a: 'Tidak perlu sama sekali. Tamu cukup tap link yang kalian kirim lewat WhatsApp, dan undangan langsung terbuka di browser HP mereka.' },
   { q: 'Berapa lama undangan bisa diakses setelah bayar?', a: '6 bulan penuh sejak tanggal pembelian. Lebih dari cukup untuk sebelum hari H, saat hari H, dan beberapa bulan setelahnya.' },
   { q: 'Bisa ganti foto atau detail acara setelah dipublish?', a: 'Bisa, kapan saja dan sebanyak yang kalian mau. Edit info acara, ganti foto, ganti musik, bahkan ganti gaya tampilan tanpa biaya tambahan.' },
-  { q: 'Bagaimana cara tamu menerima undangan?', a: 'Setelah undangan kalian publish, kalian dapat link unik seperti ikhwal-fani.akundang.id. Salin dan kirim ke tamu lewat WhatsApp, Line, atau media apapun.' },
+  { q: 'Bagaimana cara tamu menerima undangan?', a: 'Setelah undangan kalian publish, kalian dapat link unik seperti ikhwal-fani.iaundang.id. Salin dan kirim ke tamu lewat WhatsApp, Line, atau media apapun.' },
   { q: 'Kalau ada yang membingungkan, ada yang bisa dihubungi?', a: 'Tentu. Hubungi kami lewat WhatsApp dan kami akan bantu dengan senang hati. Kami balas dalam 1 hari kerja.' },
 ]
 

@@ -72,7 +72,7 @@ function Wizard({ onInvitationCreated, allTemplates }: { onInvitationCreated: (i
   const defaultTemplateId = allTemplates[0]?.id ?? ''
   const [form, setForm] = useState<FormData>({
     templateId: defaultTemplateId,
-    packageTier: 'premium',
+    packageTier: 'popular',
     groomName: '',
     brideName: '',
     slug: '',
@@ -352,14 +352,14 @@ function StepTemplate({ form, onSelect, allTemplates }: { form: FormData; onSele
 // ─── Step 2: Pilih Paket ──────────────────────────────────────
 const TIER_ICONS: Record<PackageTier, React.ElementType> = {
   starter: Leaf,
-  premium: Sparkles,
-  ultimate: Crown,
+  popular: Sparkles,
+  eksklusif: Crown,
 }
 
 const TIER_COLORS: Record<PackageTier, { bg: string; border: string; badge: string; ring: string }> = {
   starter: { bg: 'from-blue-50 to-blue-100', border: 'border-blue-300', badge: 'bg-blue-100 text-blue-700', ring: 'ring-blue-200' },
-  premium: { bg: 'from-rose-50 to-rose-100', border: 'border-rose-300', badge: 'bg-rose-100 text-rose-700', ring: 'ring-rose-200' },
-  ultimate: { bg: 'from-amber-50 to-amber-100', border: 'border-amber-300', badge: 'bg-amber-100 text-amber-700', ring: 'ring-amber-200' },
+  popular: { bg: 'from-rose-50 to-rose-100', border: 'border-rose-300', badge: 'bg-rose-100 text-rose-700', ring: 'ring-rose-200' },
+  eksklusif: { bg: 'from-amber-50 to-amber-100', border: 'border-amber-300', badge: 'bg-amber-100 text-amber-700', ring: 'ring-amber-200' },
 }
 
 function StepPackage({ form, onSelect }: { form: FormData; onSelect: (tier: string) => void }) {
@@ -385,7 +385,7 @@ function StepPackage({ form, onSelect }: { form: FormData; onSelect: (tier: stri
                   : 'border-stone-200 hover:border-stone-300'
               }`}
             >
-              {tier === 'premium' && (
+              {tier === 'popular' && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="text-[10px] bg-rose-500 text-white px-3 py-1 rounded-full font-bold uppercase tracking-wide">
                     Populer
@@ -502,7 +502,7 @@ function StepNames({
             placeholder="ahmad-siti"
             className="flex-1 pl-3.5 pr-1 py-2.5 text-sm font-mono text-stone-800 bg-transparent focus:outline-none text-right"
           />
-          <span className="pr-3.5 pl-1 text-sm text-stone-400 shrink-0 select-none">.akundang.id</span>
+          <span className="pr-3.5 pl-1 text-sm text-stone-400 shrink-0 select-none">.iaundang.id</span>
           <span className={`pr-3 text-xs font-medium shrink-0 ${slugIndicator.color}`}>
             {slugStatus === 'checking'
               ? <Loader2 size={12} className="animate-spin inline" />
@@ -512,7 +512,7 @@ function StepNames({
         {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
         {!slugError && form.slug && (
           <p className="text-xs text-stone-400 mt-1.5">
-            Undangan Anda akan tersedia di <span className="font-mono font-medium text-stone-600">{form.slug}.akundang.id</span>
+            Undangan Anda akan tersedia di <span className="font-mono font-medium text-stone-600">{form.slug}.iaundang.id</span>
           </p>
         )}
         {!slugError && !form.slug && (
@@ -626,7 +626,7 @@ function StepKonfirmasi({ form, allTemplates }: { form: FormData; allTemplates: 
         <Row icon={<Users size={14} className="text-stone-400" />}
           label="Pasangan" value={`${form.groomName} & ${form.brideName}`} />
         <Row icon={<Link2 size={14} className="text-stone-400" />}
-          label="Link" value={`${form.slug}.akundang.id`} mono />
+          label="Link" value={`${form.slug}.iaundang.id`} mono />
         <Row icon={<Calendar size={14} className="text-stone-400" />}
           label="Masa aktif" value={`${pkg.activeMonths} bulan`} />
         {form.akadVenue && (

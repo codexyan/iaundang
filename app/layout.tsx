@@ -17,17 +17,17 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Akundang: Buat Undangan Digital Premium, Tanpa Coding, Tanpa Ribet',
-    template: '%s | Akundang',
+    default: 'iaundang: Buat Undangan Digital Premium, Tanpa Coding, Tanpa Ribet',
+    template: '%s | iaundang',
   },
   description:
     'Platform self-service untuk pasangan: pilih template undangan sinematik, kustomisasi langsung dari dashboard, kirim link personal ke setiap tamu. Tanpa skill desain, tanpa coding.',
-  keywords: ['undangan digital', 'undangan pernikahan premium', 'template undangan', 'wedding invitation', 'Akundang'],
+  keywords: ['undangan digital', 'undangan pernikahan premium', 'template undangan', 'wedding invitation', 'iaundang'],
   openGraph: {
-    title: 'Akundang: Undangan Digital Premium Tanpa Coding',
+    title: 'iaundang: Undangan Digital Premium Tanpa Coding',
     description: 'Pilih template sinematik, kustomisasi dari dashboard, bagikan link personal ke tamu. Tanpa ribet.',
-    url: 'https://akundang.id',
-    siteName: 'Akundang',
+    url: 'https://iaundang.id',
+    siteName: 'iaundang',
     locale: 'id_ID',
     type: 'website',
   },

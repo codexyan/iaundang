@@ -75,7 +75,7 @@ function BrandFooter({ text, bodyFont }: { text: string; bodyFont: string }) {
     <motion.p
       style={{ fontSize: fsb(7.5), color: `${text}50`, fontFamily: bodyFont, letterSpacing: '0.15em', marginTop: 32 }}
       variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-      Akundang
+      iaundang
     </motion.p>
   )
 }
@@ -279,7 +279,7 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
         <motion.p
           style={{ fontSize: fsb(7.5), color: 'rgba(255,255,255,0.1)', fontFamily: bodyFont, letterSpacing: '0.15em', marginTop: 32 }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-          Akundang
+          iaundang
         </motion.p>
       </motion.div>
     </div>

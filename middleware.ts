@@ -3,7 +3,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { isAdmin, isWriter, isAffiliate } from '@/lib/auth'
 
 const PROTECTED_PATHS = ['/dashboard', '/admin', '/writer', '/affiliate']
-const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || 'akundang.id'
+const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || 'iaundang.id'
 
 export async function middleware(req: NextRequest) {
   const hostname = req.headers.get('host') || ''

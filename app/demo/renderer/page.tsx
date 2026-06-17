@@ -12,9 +12,9 @@ interface Props {
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ searchParams }: Props) {
-  if (!searchParams.id) return { title: 'Demo Tema - Akundang' }
+  if (!searchParams.id) return { title: 'Demo Tema - iaundang' }
   const rec = await templateRecords.findById(searchParams.id)
-  return { title: `Preview: ${rec?.name ?? 'Tema'} - Akundang` }
+  return { title: `Preview: ${rec?.name ?? 'Tema'} - iaundang` }
 }
 
 const DEMO_DATA: NewInvitationData = {
@@ -80,7 +80,7 @@ const DEMO_DATA: NewInvitationData = {
     { label: 'Furnitur rumah tangga', url: 'https://shopee.co.id/wishlist/2', marketplace: 'shopee', image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=300&fit=crop' },
   ],
   ig_story_image_url: 'https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?w=400&h=710&fit=crop',
-  qr_target_url: 'https://akundang.id/ikhwal-fani',
+  qr_target_url: 'https://iaundang.id/ikhwal-fani',
   qr_label: 'Pindai untuk membagikan undangan ini',
 }
 

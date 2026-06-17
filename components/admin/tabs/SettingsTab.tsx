@@ -162,7 +162,7 @@ function BrandingPanel({
             label="Nama Brand"
             value={form.siteName}
             onChange={(v) => update('siteName', v)}
-            placeholder="Akundang"
+            placeholder="iaundang"
           />
           <Field
             label="Tagline"
@@ -185,7 +185,7 @@ function BrandingPanel({
             icon={Globe2}
             value={form.appDomain ?? ''}
             onChange={(v) => update('appDomain', v)}
-            placeholder="akundang.id"
+            placeholder="iaundang.id"
             hint="Domain utama website (tanpa http://). Digunakan untuk routing subdomain."
           />
           <Field
@@ -194,17 +194,17 @@ function BrandingPanel({
             value={form.demoSubdomain ?? ''}
             onChange={(v) => update('demoSubdomain', v)}
             placeholder="demo"
-            hint={`Template gratis bisa diakses di ${form.demoSubdomain || 'demo'}.${form.appDomain || 'akundang.id'}`}
+            hint={`Template gratis bisa diakses di ${form.demoSubdomain || 'demo'}.${form.appDomain || 'iaundang.id'}`}
           />
         </div>
         <div className="mt-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
           <p className="text-[11px] text-indigo-700 font-medium mb-1">Pola URL Undangan</p>
           <div className="space-y-1">
             <p className="text-[10px] text-indigo-600 font-mono">
-              User: <span className="font-semibold">nama-pasangan.{form.appDomain || 'akundang.id'}</span>
+              User: <span className="font-semibold">nama-pasangan.{form.appDomain || 'iaundang.id'}</span>
             </p>
             <p className="text-[10px] text-indigo-600 font-mono">
-              Demo: <span className="font-semibold">{form.demoSubdomain || 'demo'}.{form.appDomain || 'akundang.id'}</span>
+              Demo: <span className="font-semibold">{form.demoSubdomain || 'demo'}.{form.appDomain || 'iaundang.id'}</span>
             </p>
             <p className="text-[10px] text-indigo-600 font-mono">
               Localhost: <span className="font-semibold">localhost:3000?slug=nama-pasangan</span>
@@ -527,7 +527,7 @@ function ContactPanel({
             icon={Mail}
             value={form.contactEmail}
             onChange={(v) => update('contactEmail', v)}
-            placeholder="halo@akundang.id"
+            placeholder="halo@iaundang.id"
             type="email"
             hint="Ditampilkan di footer website"
           />
@@ -554,7 +554,7 @@ function ContactPanel({
             icon={Instagram}
             value={form.socialInstagram}
             onChange={(v) => update('socialInstagram', v)}
-            placeholder="akundang.id"
+            placeholder="iaundang.id"
             hint="Username tanpa @"
           />
           <Field
@@ -562,7 +562,7 @@ function ContactPanel({
             icon={Twitter}
             value={form.socialTwitter}
             onChange={(v) => update('socialTwitter', v)}
-            placeholder="akundang"
+            placeholder="iaundang"
             hint="Username tanpa @"
           />
         </div>
@@ -571,7 +571,7 @@ function ContactPanel({
           icon={Github}
           value={form.socialGithub}
           onChange={(v) => update('socialGithub', v)}
-          placeholder="akundang"
+          placeholder="iaundang"
           hint="Repository atau organisasi"
         />
       </div>

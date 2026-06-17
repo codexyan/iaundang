@@ -986,7 +986,7 @@ function PreviewPanel({ form }: { form: ArticleData }) {
         <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-3">Preview Hasil Pencarian Google</p>
         <div className="space-y-0.5">
           <p className="text-lg text-blue-700 font-medium truncate">{form.metaTitle || form.title || 'Judul Artikel'}</p>
-          <p className="text-sm text-emerald-700">akundang.vercel.app/blog/{form.slug || 'slug'}</p>
+          <p className="text-sm text-emerald-700">iaundang.vercel.app/blog/{form.slug || 'slug'}</p>
           <p className="text-sm text-gray-500 line-clamp-2">{form.metaDesc || form.excerpt || 'Deskripsi artikel akan muncul di sini...'}</p>
         </div>
       </div>
@@ -1196,7 +1196,7 @@ function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection,
                   <div>
                     <FieldLabel>Canonical URL (opsional)</FieldLabel>
                     <input type="text" value={form.settings.seo.canonicalUrl} onChange={e => updateSettings('seo.canonicalUrl', e.target.value)}
-                      placeholder="https://akundang.vercel.app/blog/..."
+                      placeholder="https://iaundang.vercel.app/blog/..."
                       className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 transition-colors" />
                     <p className="text-[10px] text-gray-400 mt-1">Isi jika konten ini duplikat dari URL lain. Biarkan kosong jika ini konten original.</p>
                   </div>
@@ -1234,7 +1234,7 @@ function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection,
                 <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-3">Preview Hasil Google</p>
                 <div className="space-y-0.5 p-3 bg-white rounded-lg border border-gray-100">
                   <p className="text-lg text-blue-700 font-medium truncate">{form.metaTitle || form.title || 'Judul Artikel'}</p>
-                  <p className="text-sm text-emerald-700">akundang.vercel.app/blog/{form.slug || 'slug'}</p>
+                  <p className="text-sm text-emerald-700">iaundang.vercel.app/blog/{form.slug || 'slug'}</p>
                   <p className="text-sm text-gray-500 line-clamp-2">{form.metaDesc || form.excerpt || 'Deskripsi artikel akan muncul di sini...'}</p>
                 </div>
               </Card>

@@ -9,7 +9,7 @@ export const SESSION_COOKIE_NAME = '__ku_session'
 const EXPIRES_DAYS = 30
 
 function getSecret() {
-  const secret = process.env.SESSION_SECRET || 'akundang-dev-secret-must-be-32chars!!'
+  const secret = process.env.SESSION_SECRET || 'iaundang-dev-secret-must-be-32chars!!'
   return new TextEncoder().encode(secret)
 }
 

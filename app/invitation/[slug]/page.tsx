@@ -111,7 +111,7 @@ function WatermarkShell({ children }: { children: React.ReactNode }) {
       <div className="sticky top-0 z-[100] bg-white/95 backdrop-blur-xl border-b border-stone-200/60 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-11 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logos/logo-horizontal.png" alt="Akundang" width={90} height={24} className="object-contain" />
+            <Image src="/logos/logo-horizontal.png" alt="iaundang" width={90} height={24} className="object-contain" />
           </Link>
           <Link
             href="/register"
@@ -129,7 +129,7 @@ function WatermarkShell({ children }: { children: React.ReactNode }) {
       <div className="sticky bottom-0 z-[100] bg-white/95 backdrop-blur-xl border-t border-stone-200/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-10 flex items-center justify-between">
           <p className="text-[11px] text-stone-400">
-            Dibuat dengan <span className="font-semibold text-stone-600">Akundang</span> · Undangan digital premium
+            Dibuat dengan <span className="font-semibold text-stone-600">iaundang</span> · Undangan digital premium
           </p>
           <Link href="/register" className="text-[11px] text-forest-600 hover:text-forest-700 transition-colors font-semibold">
             Buat Undangan Gratis

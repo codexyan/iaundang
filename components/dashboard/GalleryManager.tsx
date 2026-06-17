@@ -19,7 +19,7 @@ export default function GalleryManager({ invitation }: Props) {
   const [lightbox, setLightbox] = useState<number | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
-  const tier = (invitation.package_tier ?? 'premium') as PackageTier
+  const tier = (invitation.package_tier ?? 'popular') as PackageTier
   const pkg = getPackage(tier)
   const maxPhotos = pkg.maxPhotos // -1 = unlimited
   const isAtLimit = maxPhotos !== -1 && galleries.length >= maxPhotos
@@ -195,11 +195,11 @@ export default function GalleryManager({ invitation }: Props) {
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2 text-sm text-amber-800">
                 <Crown size={14} className="text-amber-500" />
-                <span>Upgrade ke Premium: 20 foto</span>
+                <span>Upgrade ke Popular: 20 foto</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-amber-800">
                 <Crown size={14} className="text-amber-500" />
-                <span>Upgrade ke Ultimate: ∞ foto</span>
+                <span>Upgrade ke Eksklusif: ∞ foto</span>
               </div>
             </div>
             <button className="mt-4 px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-colors w-full">

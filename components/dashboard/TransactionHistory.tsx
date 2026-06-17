@@ -48,7 +48,7 @@ export default function TransactionHistory({ invitation }: Props) {
             <p className="mt-2 text-sm text-gray-500">Semua transaksi terkait undangan Anda ditampilkan di sini.</p>
           </div>
           <div className="rounded-3xl bg-gray-50 px-4 py-3 text-sm text-gray-600">
-            Slug: <span className="font-medium text-gray-900">{invitation.slug}.akundang.id</span>
+            Slug: <span className="font-medium text-gray-900">{invitation.slug}.iaundang.id</span>
           </div>
         </div>
 

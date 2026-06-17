@@ -33,7 +33,7 @@ export function generateOrderId(userId: string): string {
 }
 
 export function getInvitationUrl(slug: string): string {
-  const domain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'akundang.id'
+  const domain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'iaundang.id'
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return `${window.location.origin}?slug=${slug}`
   }

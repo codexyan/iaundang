@@ -43,7 +43,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
             await affiliates.recordConversion(affiliate.id, {
               invitationId: proof.invitation_id,
               buyerEmail: buyer?.email || proof.user_email || '',
-              packageTier: invitation.package_tier || 'premium',
+              packageTier: invitation.package_tier || 'popular',
               saleAmount,
               commission,
             })

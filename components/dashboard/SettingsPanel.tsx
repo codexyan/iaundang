@@ -43,7 +43,7 @@ export default function SettingsPanel({ invitation, userEmail, onDeleted }: Prop
             <p className="mt-2 text-sm text-gray-500 max-w-2xl">Pengaturan dasar untuk undangan Anda dan preferensi dashboard.</p>
           </div>
           <div className="rounded-3xl bg-gray-50 px-4 py-3 text-sm text-gray-600">
-            Slug: <span className="font-medium text-gray-900">{slug}.akundang.id</span>
+            Slug: <span className="font-medium text-gray-900">{slug}.iaundang.id</span>
           </div>
         </div>
 
@@ -75,7 +75,7 @@ export default function SettingsPanel({ invitation, userEmail, onDeleted }: Prop
           <p className="text-sm text-gray-500 mt-2">Slug undangan ini akan digunakan di semua modul terkait.</p>
           <div className="mt-4 rounded-2xl bg-gray-50 border border-gray-200 p-4">
             <p className="text-xs text-gray-500">Link undangan</p>
-            <p className="text-sm font-medium text-gold-600 mt-1">https://{slug}.akundang.id</p>
+            <p className="text-sm font-medium text-gold-600 mt-1">https://{slug}.iaundang.id</p>
           </div>
         </div>
 

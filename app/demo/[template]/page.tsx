@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   const tpl = TEMPLATES.find((t) => t.id === params.template)
   if (!tpl) return {}
   return {
-    title: `Coba Template ${tpl.name} · Akundang`,
+    title: `Coba Template ${tpl.name} · iaundang`,
     description: `Preview undangan digital dengan template ${tpl.name}. Masukkan nama kamu dan lihat hasilnya langsung.`,
   }
 }

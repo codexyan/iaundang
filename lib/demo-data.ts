@@ -58,7 +58,7 @@ export const DEMO_WISHES: Wish[] = [
   {
     id: '3',
     invitation_id: 'demo',
-    name: 'Tim Akundang',
+    name: 'Tim iaundang',
     message: 'Selamat berbahagia! Ini adalah contoh tampilan buku ucapan. Tamu kalian bisa menulis ucapan langsung dari halaman undangan.',
     created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
   },

@@ -176,7 +176,7 @@ function VisualDomain() {
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd"/>
             </svg>
             <span className="text-[9px] text-stone-400 font-mono">
-              <span className="text-stone-500 font-semibold">rizky-aulia</span>.akundang.id
+              <span className="text-stone-500 font-semibold">rizky-aulia</span>.iaundang.id
             </span>
           </div>
         </div>
@@ -209,7 +209,7 @@ function VisualDomain() {
           </div>
           <p className="text-[9px] font-bold text-stone-700">Bagikan via WA</p>
         </div>
-        <p className="text-[8px] text-stone-400 font-mono">rizky-aulia.akundang.id</p>
+        <p className="text-[8px] text-stone-400 font-mono">rizky-aulia.iaundang.id</p>
       </motion.div>
     </div>
   )
@@ -316,7 +316,7 @@ function getFeatures(personalisasi?: PersonalisasiData) {
     title: 'Link pribadi atas\nnama kalian berdua',
     desc: 'Bukan link random yang susah diingat. Undangan kalian punya alamat sendiri yang mudah dibagikan lewat WhatsApp.',
     bullets: [
-      'Format: nama-pasangan.akundang.id',
+      'Format: nama-pasangan.iaundang.id',
       'Langsung bisa dibagikan via WA',
       'Bisa diakses 6 bulan penuh',
     ],

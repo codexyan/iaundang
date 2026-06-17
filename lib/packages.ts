@@ -1,4 +1,4 @@
-export type PackageTier = 'starter' | 'premium' | 'ultimate'
+export type PackageTier = 'starter' | 'popular' | 'eksklusif'
 
 export interface PackageFeatures {
   name: string
@@ -14,58 +14,62 @@ export interface PackageFeatures {
   hasCustomDomain: boolean
   hasWatermarkFree: boolean
   activeMonths: number
+  rsvpLimit: number
 }
 
 export const PACKAGES: Record<PackageTier, PackageFeatures> = {
   starter: {
     name: 'Starter',
     emoji: '🌱',
-    price: 99000,
+    price: 79000,
     color: 'blue',
     maxPhotos: 10,
-    maxGuests: 30,
+    maxGuests: 200,
     canChangeTemplate: false,
-    canCustomizeSections: true,   // can toggle sections
-    canReorderSections: true,     // drag-drop is FREE for everyone
+    canCustomizeSections: true,
+    canReorderSections: true,
     canHideWishes: false,
     hasCustomDomain: false,
     hasWatermarkFree: false,
-    activeMonths: 6,
+    activeMonths: 1,
+    rsvpLimit: 200,
   },
-  premium: {
-    name: 'Premium',
+  popular: {
+    name: 'Popular',
     emoji: '✨',
     price: 149000,
     color: 'rose',
     maxPhotos: 20,
-    maxGuests: 50,
-    canChangeTemplate: false,     // beli template lain = beli lagi
+    maxGuests: 500,
+    canChangeTemplate: false,
     canCustomizeSections: true,
     canReorderSections: true,
     canHideWishes: true,
     hasCustomDomain: false,
     hasWatermarkFree: true,
-    activeMonths: 12,
+    activeMonths: 3,
+    rsvpLimit: 500,
   },
-  ultimate: {
-    name: 'Ultimate',
+  eksklusif: {
+    name: 'Eksklusif',
     emoji: '👑',
-    price: 299000,
+    price: 249000,
     color: 'amber',
     maxPhotos: -1,
     maxGuests: -1,
-    canChangeTemplate: false,     // tetap harus beli lagi
+    canChangeTemplate: false,
     canCustomizeSections: true,
     canReorderSections: true,
     canHideWishes: true,
     hasCustomDomain: true,
     hasWatermarkFree: true,
-    activeMonths: 24,
+    activeMonths: 6,
+    rsvpLimit: 1000,
   },
 }
 
 export function getPackage(tier?: PackageTier | null): PackageFeatures {
-  return PACKAGES[tier ?? 'premium']
+  return PACKAGES[tier ?? 'popular']
 }
 
 export function canDoFeature(
@@ -86,4 +90,4 @@ export function formatPrice(price: number): string {
   return `Rp ${price.toLocaleString('id-ID')}`
 }
 
-export const PACKAGE_LIST: PackageTier[] = ['starter', 'premium', 'ultimate']
+export const PACKAGE_LIST: PackageTier[] = ['starter', 'popular', 'eksklusif']

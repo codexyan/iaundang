@@ -171,7 +171,7 @@ Ada beberapa situasi di mana undangan cetak masih jadi pilihan tepat:
 | Kesan | Modern & interaktif | Klasik & tangible |
 | Lingkungan | Ramah | Boros kertas |
 
-Untuk pasangan modern yang ingin **hemat, praktis, dan berkesan**, undangan digital adalah pilihan yang jelas. Platform seperti Akundang bahkan memungkinkan kalian mencoba dulu gratis sebelum memutuskan.
+Untuk pasangan modern yang ingin **hemat, praktis, dan berkesan**, undangan digital adalah pilihan yang jelas. Platform seperti iaundang bahkan memungkinkan kalian mencoba dulu gratis sebelum memutuskan.
 
 ---
 
@@ -226,7 +226,7 @@ Generasi muda semakin peduli dengan dampak lingkungan, termasuk di hari pernikah
 - **RSVP terintegrasi** — tamu konfirmasi dalam 1 tap
 - **Galeri & countdown** — semua info dalam satu link
 
-Platform seperti Akundang memungkinkan pasangan membuat undangan digital premium dengan harga mulai dari Rp 79.000 — jauh lebih hemat dari undangan cetak tradisional.
+Platform seperti iaundang memungkinkan pasangan membuat undangan digital premium dengan harga mulai dari Rp 79.000 — jauh lebih hemat dari undangan cetak tradisional.
 
 ## 4. Micro Reception + Live Streaming
 

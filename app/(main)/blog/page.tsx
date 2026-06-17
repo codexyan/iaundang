@@ -5,7 +5,7 @@ import { FileText, ArrowRight, Clock, Eye, Search, Tag } from 'lucide-react'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Blog — Tips & Inspirasi Pernikahan | Akundang',
+  title: 'Blog — Tips & Inspirasi Pernikahan | iaundang',
   description: 'Artikel seputar persiapan pernikahan, undangan digital, dan inspirasi untuk hari spesial kalian.',
 }
 
@@ -31,7 +31,7 @@ export default async function BlogPage() {
             </h1>
             <p className="mt-4 text-stone-500 text-base sm:text-lg leading-relaxed">
               Panduan lengkap persiapan pernikahan, inspirasi undangan digital,
-              dan cerita dari pasangan yang sudah menggunakan Akundang.
+              dan cerita dari pasangan yang sudah menggunakan iaundang.
             </p>
           </div>
 

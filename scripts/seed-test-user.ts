@@ -18,7 +18,7 @@ async function main() {
     where: { slug: 'mdcodeid' },
     update: {
       templateId: 'javanese-gold',
-      packageTier: 'premium',
+      packageTier: 'popular',
       isPaid: true,
       isPublished: true,
     },
@@ -26,7 +26,7 @@ async function main() {
       userId: user.id,
       slug: 'mdcodeid',
       templateId: 'javanese-gold',
-      packageTier: 'premium',
+      packageTier: 'popular',
       isPaid: true,
       isPublished: true,
       expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),

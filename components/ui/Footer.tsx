@@ -20,7 +20,7 @@ const companyLinks = [
 ]
 
 const socials = [
-  { href: 'https://instagram.com/akundang.id', icon: Instagram, label: 'Instagram' },
+  { href: 'https://instagram.com/iaundang.id', icon: Instagram, label: 'Instagram' },
   { href: 'https://wa.me/628123456789', icon: MessageCircle, label: 'WhatsApp' },
 ]
 
@@ -82,7 +82,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-4">
               <Image
                 src="/logos/logo-horizontal.png"
-                alt="Akundang"
+                alt="iaundang"
                 width={140}
                 height={40}
                 className="object-contain"
@@ -121,11 +121,11 @@ export default function Footer() {
             <ul className="space-y-2.5 mb-5">
               <li>
                 <a
-                  href="mailto:halo@akundang.id"
+                  href="mailto:halo@iaundang.id"
                   className="text-[13px] text-stone-400 hover:text-stone-700 transition-colors duration-200 flex items-center gap-2"
                 >
                   <Mail className="w-3.5 h-3.5 shrink-0" />
-                  halo@akundang.id
+                  halo@iaundang.id
                 </a>
               </li>
               <li>
@@ -152,7 +152,7 @@ export default function Footer() {
         <div className="mt-12 pt-6 border-t border-stone-200/50">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
             <p className="text-stone-400 text-[12px]">
-              &copy; {currentYear} <span className="text-stone-500 font-medium">Akundang</span>. Semua hak dilindungi.
+              &copy; {currentYear} <span className="text-stone-500 font-medium">iaundang</span>. Semua hak dilindungi.
             </p>
             <div className="flex items-center gap-5 text-[12px]">
               <Link href="/privacy" className="text-stone-400 hover:text-stone-600 transition-colors">

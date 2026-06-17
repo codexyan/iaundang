@@ -190,7 +190,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
         {/* Closing */}
         <section className="py-10 bg-rose-50 text-center">
           <p className="font-serif text-lg text-gray-800">{d.closingText || 'Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Bapak/Ibu/Saudara/i.'}</p>
-          <p className="text-gray-400 text-xs mt-4">Dibuat dengan akundang.id</p>
+          <p className="text-gray-400 text-xs mt-4">Dibuat dengan iaundang.id</p>
         </section>
       </div>
     </>

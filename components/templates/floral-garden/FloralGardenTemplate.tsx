@@ -146,7 +146,7 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
           >
             💬 Share via WhatsApp
           </a>
-          <p className="text-pink-200 text-xs mt-8">Dibuat dengan ❤️ di akundang.id</p>
+          <p className="text-pink-200 text-xs mt-8">Dibuat dengan ❤️ di iaundang.id</p>
         </section>
       </div>
     </>
