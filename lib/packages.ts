@@ -1,3 +1,6 @@
+import { BUILT_IN_PRICE_TIERS } from './db'
+import type { TierFeatures } from './types'
+
 export type PackageTier = 'starter' | 'popular' | 'eksklusif'
 
 export interface PackageFeatures {
@@ -91,3 +94,9 @@ export function formatPrice(price: number): string {
 }
 
 export const PACKAGE_LIST: PackageTier[] = ['starter', 'popular', 'eksklusif']
+
+export function getTierFeatures(tier?: PackageTier | null): TierFeatures {
+  const id = tier ?? 'popular'
+  const found = BUILT_IN_PRICE_TIERS.find(t => t.id === id)
+  return found?.features as TierFeatures
+}

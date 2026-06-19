@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import type { TemplateRecord, NewInvitationData, Wish } from '@/lib/types'
+import type { TemplateRecord, NewInvitationData, Wish, SectionConfig } from '@/lib/types'
+import { mergeDecorationAssets } from '@/lib/decoration-utils'
 import LoadingScreen from './LoadingScreen'
 import OpeningScene from './OpeningScene'
 import SectionRenderer from './SectionRenderer'
@@ -169,16 +170,22 @@ export default function InvitationRenderer({
               : { height: '100dvh' }),
           }}
         >
-          {activeSections.map((section) => (
-            <SectionRenderer
-              key={section.id}
-              sectionConfig={section}
-              invitationData={invitationData}
-              templateMeta={meta}
-              invitationId={invitationId}
-              initialWishes={section.type === 'wishes' ? initialWishes : undefined}
-            />
-          ))}
+          {activeSections.map((section) => {
+            const userAssets = invitationData.section_decoration_overrides?.[section.id]
+            const merged: SectionConfig = userAssets?.length
+              ? { ...section, decoration_assets: mergeDecorationAssets(section.decoration_assets, userAssets) }
+              : section
+            return (
+              <SectionRenderer
+                key={section.id}
+                sectionConfig={merged}
+                invitationData={invitationData}
+                templateMeta={meta}
+                invitationId={invitationId}
+                initialWishes={section.type === 'wishes' ? initialWishes : undefined}
+              />
+            )
+          })}
         </motion.main>
       )}
     </div>

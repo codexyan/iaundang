@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import type { TemplateRecord, NewInvitationData, Wish } from '@/lib/types'
+import type { TemplateRecord, NewInvitationData, Wish, SectionConfig } from '@/lib/types'
+import { mergeDecorationAssets } from '@/lib/decoration-utils'
 import SectionRenderer from './SectionRenderer'
 import { PreviewContext } from './PreviewContext'
 
@@ -51,16 +52,22 @@ export default function InvitationPreview({
         backgroundColor: meta.color_scheme.primary,
         minHeight: '100%', width: '100%',
       }}>
-        {activeSections.map(section => (
-          <SectionRenderer
-            key={`${section.id}-${section.style_variant ?? 'default'}`}
-            sectionConfig={section}
-            invitationData={data}
-            templateMeta={meta}
-            invitationId={invitationId}
-            initialWishes={section.type === 'wishes' ? initialWishes : undefined}
-          />
-        ))}
+        {activeSections.map(section => {
+          const userAssets = data.section_decoration_overrides?.[section.id]
+          const merged: SectionConfig = userAssets?.length
+            ? { ...section, decoration_assets: mergeDecorationAssets(section.decoration_assets, userAssets) }
+            : section
+          return (
+            <SectionRenderer
+              key={`${section.id}-${section.style_variant ?? 'default'}`}
+              sectionConfig={merged}
+              invitationData={data}
+              templateMeta={meta}
+              invitationId={invitationId}
+              initialWishes={section.type === 'wishes' ? initialWishes : undefined}
+            />
+          )
+        })}
       </div>
     </PreviewContext.Provider>
   )

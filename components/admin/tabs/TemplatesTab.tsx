@@ -220,6 +220,7 @@ export default function TemplatesTab({
     livestream: false, ig_story: false, qrcode: false,
     custom_domain: false, remove_watermark: false,
     analytics: false, priority_support: false, validity_days: 90,
+    decoration_editing: false, max_decoration_assets: 0, custom_animations: false,
   }
 
   function openTierEditor(tier?: PriceTier) {

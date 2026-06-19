@@ -6,11 +6,14 @@ import dynamic from 'next/dynamic'
 import {
   CheckSquare, MessageSquare, BookOpen, Eye, X, Loader2, Check, RefreshCw,
   Palette, User, Calendar, Sparkles, Music, Quote, Heart, Image, Gift, FileText,
-  ChevronDown,
+  ChevronDown, Layers,
 } from 'lucide-react'
 import type { Invitation, NewInvitationData, TemplateRecord, OpeningType } from '@/lib/types'
+import type { PackageTier } from '@/lib/packages'
+import { usePackageGating } from '@/hooks/usePackageGating'
 import InvitationPreview from '@/components/renderer/InvitationPreview'
 import GalleryManager from '@/components/dashboard/GalleryManager'
+import LockedOverlay from './ui/LockedOverlay'
 
 const CoverPagePreview = dynamic(() => import('@/components/renderer/CoverPagePreview'), { ssr: false })
 const LoadingScreen = dynamic(() => import('@/components/renderer/LoadingScreen'), { ssr: false })
@@ -25,6 +28,7 @@ import EventDetailsForm from './forms/EventDetailsForm'
 import ProfilesForm from './forms/ProfilesForm'
 import GiftForm from './forms/GiftForm'
 import StoryForm from './forms/StoryForm'
+import DecorationForm from './forms/DecorationForm'
 import InfoCard from './ui/InfoCard'
 import FormField, { textareaClass } from './ui/FormField'
 import SectionCard from './ui/SectionCard'
@@ -75,6 +79,7 @@ function initData(inv: Invitation): NewInvitationData {
     livestream_url: d.livestream_url ?? '',
     video_embed_url: d.video_embed_url ?? '',
     video_caption: d.video_caption ?? '',
+    section_decoration_overrides: d.section_decoration_overrides ?? {},
   }
 }
 
@@ -99,6 +104,7 @@ function calculateProgress(data: NewInvitationData) {
 
 const SECTIONS = [
   { id: 'warna', label: 'Warna', icon: Palette },
+  { id: 'dekorasi', label: 'Dekorasi', icon: Layers },
   { id: 'info', label: 'Info Dasar', icon: User },
   { id: 'acara', label: 'Acara', icon: Calendar },
   { id: 'opening', label: 'Pembuka', icon: Sparkles },
@@ -122,6 +128,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
   const timer = useRef<ReturnType<typeof setTimeout>>()
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const progress = calculateProgress(data)
+  const gating = usePackageGating((invitation as unknown as Record<string, unknown>).package_tier as PackageTier | undefined)
 
   const scheduleSave = useCallback(
     (updatedData: NewInvitationData) => {
@@ -171,6 +178,17 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
           onAccentColorChange={(val) => updateData({ accent_color: val })}
           onTextColorChange={(val) => updateData({ text_color: val })}
           onBackgroundColorChange={(val) => updateData({ background_color: val })}
+        />
+      </div>
+
+      <div ref={el => { sectionRefs.current['dekorasi'] = el }} className="relative">
+        <DecorationForm
+          template={template}
+          data={data}
+          onUpdate={updateData}
+          canEdit={gating.canEditDecorations}
+          maxAssets={gating.maxDecorationAssets}
+          requiredTier={gating.canEditDecorations ? undefined : (gating.getRequiredTier('dekorasi') ?? 'Popular')}
         />
       </div>
 
@@ -244,7 +262,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
         />
       </div>
 
-      <div ref={el => { sectionRefs.current['cerita'] = el }}>
+      <div ref={el => { sectionRefs.current['cerita'] = el }} className="relative">
         <StoryForm
           storyTitle={data.story_title ?? ''}
           storyText={data.story_text ?? ''}
@@ -253,17 +271,23 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
           onStoryTextChange={(val) => updateData({ story_text: val })}
           onChaptersChange={(chapters) => updateData({ story_chapters: chapters })}
         />
+        {!gating.isSectionAllowed('cerita') && (
+          <LockedOverlay requiredTier={gating.getRequiredTier('cerita') ?? 'Popular'} />
+        )}
       </div>
 
       <div ref={el => { sectionRefs.current['galeri'] = el }}>
         <GalleryManager invitation={invitation} />
       </div>
 
-      <div ref={el => { sectionRefs.current['hadiah'] = el }}>
+      <div ref={el => { sectionRefs.current['hadiah'] = el }} className="relative">
         <GiftForm
           accounts={data.gift_accounts ?? []}
           onAccountsChange={(accounts) => updateData({ gift_accounts: accounts })}
         />
+        {!gating.isSectionAllowed('hadiah') && (
+          <LockedOverlay requiredTier={gating.getRequiredTier('hadiah') ?? 'Popular'} />
+        )}
       </div>
 
       <InfoCard
@@ -485,7 +509,8 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
                   key={`inv-${previewKey}`}
                   style={{
                     position: 'absolute', inset: 0,
-                    overflowY: 'auto', overflowX: 'hidden',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
                     scrollbarWidth: 'none',
                     WebkitOverflowScrolling: 'touch',
                     visibility: previewMode === 'invitation' ? 'visible' : 'hidden',
@@ -504,7 +529,9 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
               </div>
             </div>
 
-            <p className="text-center text-[10px] text-stone-300 mt-3 tracking-wide font-medium">Live Preview</p>
+            <p className="text-center text-[10px] text-stone-300 mt-3 tracking-wide font-medium">
+              Live Preview
+            </p>
           </div>
         </div>
 
@@ -532,7 +559,8 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
                 <div className="rounded-[30px] overflow-hidden bg-stone-950" style={{ width: 286, height: 620, position: 'relative' }}>
                   <div style={{
                     position: 'absolute', inset: 0,
-                    overflowY: 'auto', overflowX: 'hidden',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
                     scrollbarWidth: 'none',
                     WebkitOverflowScrolling: 'touch',
                   }}>

@@ -9,9 +9,10 @@ interface Props {
   onChange: (url: string | undefined) => void
   label?: string
   hint?: string
+  uploadUrl?: string
 }
 
-export default function ImageUploadField({ value, onChange, label, hint }: Props) {
+export default function ImageUploadField({ value, onChange, label, hint, uploadUrl }: Props) {
   const [uploading, setUploading] = useState(false)
   const [dragging, setDragging] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -29,7 +30,7 @@ export default function ImageUploadField({ value, onChange, label, hint }: Props
       formData.append('file', file)
       formData.append('folder', 'covers')
       // Session cookie (__ku_session) otomatis dikirim browser
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+      const res = await fetch(uploadUrl ?? '/api/admin/upload', { method: 'POST', body: formData })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Upload gagal')
       onChange(data.url)

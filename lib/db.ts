@@ -415,6 +415,7 @@ const STARTER_FEATURES: TierFeatures = {
   livestream: false, ig_story: false, qrcode: false,
   custom_domain: false, remove_watermark: false,
   analytics: false, priority_support: false, validity_days: 30,
+  decoration_editing: false, max_decoration_assets: 0, custom_animations: false,
 }
 
 const POPULAR_FEATURES: TierFeatures = {
@@ -425,6 +426,7 @@ const POPULAR_FEATURES: TierFeatures = {
   livestream: false, ig_story: true, qrcode: true,
   custom_domain: false, remove_watermark: true,
   analytics: true, priority_support: false, validity_days: 90,
+  decoration_editing: true, max_decoration_assets: 3, custom_animations: false,
 }
 
 const EKSKLUSIF_FEATURES: TierFeatures = {
@@ -435,6 +437,7 @@ const EKSKLUSIF_FEATURES: TierFeatures = {
   livestream: true, ig_story: true, qrcode: true,
   custom_domain: true, remove_watermark: true,
   analytics: true, priority_support: true, validity_days: 180,
+  decoration_editing: true, max_decoration_assets: -1, custom_animations: true,
 }
 
 export const BUILT_IN_PRICE_TIERS: PriceTier[] = [

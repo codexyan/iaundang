@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { TemplateRecord, NewInvitationData, LoadingConfig } from '@/lib/types'
+import type { TemplateRecord, NewInvitationData, LoadingConfig, DecorationAsset } from '@/lib/types'
+import { mergeDecorationAssets } from '@/lib/decoration-utils'
 import DecorationAssetLayer from './DecorationAssetLayer'
 import LoadingScreen from './LoadingScreen'
 import { getComponentStyle, btnStyle } from '@/lib/component-styles'
@@ -165,10 +166,10 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
               }} />
             )}
 
-            {/* Decoration assets */}
+            {/* Decoration assets — merge template + user overrides */}
             <DecorationAssetLayer
               key={decorPreviewKey ?? 0}
-              assets={opening.decoration_assets ?? []}
+              assets={mergeDecorationAssets(opening.decoration_assets, data.opening_decoration_overrides)}
               animate={decorPreviewKey != null && decorPreviewKey > 0}
               exiting={isExiting}
             />

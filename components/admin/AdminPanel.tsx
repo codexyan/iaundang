@@ -24,6 +24,7 @@ import LandingPageTab from './tabs/LandingPageTab'
 import ArticlesTab from './tabs/ArticlesTab'
 import WriterTab from './tabs/WriterTab'
 import AffiliatesTab from './tabs/AffiliatesTab'
+import PackagesTab from './tabs/PackagesTab'
 import NewSettingsTab from './tabs/SettingsTab'
 import type { SiteSettings } from './tabs/SettingsTab'
 
@@ -115,9 +116,9 @@ interface Props {
   adminEmail: string
 }
 
-type NavTab = 'dashboard' | 'users' | 'template' | 'lab' | 'music' | 'orders' | 'payment' | 'landing' | 'articles' | 'writers' | 'affiliates' | 'settings'
+type NavTab = 'dashboard' | 'users' | 'template' | 'lab' | 'music' | 'orders' | 'payment' | 'landing' | 'articles' | 'writers' | 'affiliates' | 'packages' | 'settings'
 
-const VALID_TABS: NavTab[] = ['dashboard', 'users', 'template', 'lab', 'music', 'orders', 'payment', 'landing', 'articles', 'writers', 'affiliates', 'settings']
+const VALID_TABS: NavTab[] = ['dashboard', 'users', 'template', 'lab', 'music', 'orders', 'payment', 'landing', 'articles', 'writers', 'affiliates', 'packages', 'settings']
 
 // ─── Main Component ───────────────────────────────────────────
 
@@ -404,6 +405,12 @@ export default function AdminPanel({
             onProofReview={handleProofReview}
           />
         )}
+        {activeTab === 'packages' && (
+          <PackagesTab
+            priceTiers={appSettings.priceTiers}
+            onSave={async (tiers) => { await handleSaveSettings({ ...appSettings, priceTiers: tiers }) }}
+          />
+        )}
         {activeTab === 'landing' && <LandingPageTab />}
         {activeTab === 'articles' && <ArticlesTab />}
         {activeTab === 'writers' && <WriterTab />}
@@ -508,6 +515,7 @@ const NAV_GROUPS = [
   {
     label: 'Transaksi',
     items: [
+      { id: 'packages'    as NavTab, label: 'Paket & Harga',      icon: Package,         desc: 'Tier, fitur & konfigurasi harga' },
       { id: 'payment'     as NavTab, label: 'Pembayaran',         icon: CreditCard,      desc: 'Bank, QRIS & verifikasi' },
       { id: 'orders'      as NavTab, label: 'Pesanan',            icon: ShoppingCart,    desc: 'Riwayat transaksi' },
     ],

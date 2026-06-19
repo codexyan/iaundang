@@ -488,6 +488,9 @@ export interface TierFeatures {
   analytics: boolean
   priority_support: boolean
   validity_days: number
+  decoration_editing: boolean
+  max_decoration_assets: number
+  custom_animations: boolean
 }
 
 /** Tier harga yang bisa dipilih per-template. Admin CRUD dari Manajemen. */
@@ -681,6 +684,9 @@ export interface NewInvitationData {
   // QR Code Generator
   qr_target_url?: string
   qr_label?: string
+  // User decoration overrides
+  opening_decoration_overrides?: DecorationAsset[]
+  section_decoration_overrides?: Record<string, DecorationAsset[]>
 }
 
 export interface NewInvitation {
