@@ -10,14 +10,14 @@ import {
 import type { MusicTrack, MusicCategory } from '@/lib/types'
 
 function formatDuration(sec: number) {
-  if (!sec) return '-'
+  if (!sec) return '0:00'
   const m = Math.floor(sec / 60)
   const s = sec % 60
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
 function formatFileSize(bytes: number) {
-  if (!bytes) return '-'
+  if (!bytes) return '0 B'
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
@@ -65,7 +65,7 @@ export default function MusicLibraryTab() {
 
   const catNames = categories.map(c => c.name)
 
-  // ── Track operations ──
+  //  Track operations 
 
   async function handleUpload(file: File) {
     if (!file.type.startsWith('audio/')) {
@@ -192,7 +192,7 @@ export default function MusicLibraryTab() {
     setEditForm({ title: track.title, artist: track.artist, category: track.category })
   }
 
-  // ── Category operations ──
+  //  Category operations 
 
   async function handleAddCategory() {
     const name = newCatName.trim()
@@ -249,7 +249,7 @@ export default function MusicLibraryTab() {
     }
   }
 
-  // ── Filtered tracks ──
+  //  Filtered tracks 
 
   const filtered = tracks.filter(t => {
     if (filterCat !== 'all' && t.category !== filterCat) return false
@@ -328,7 +328,7 @@ export default function MusicLibraryTab() {
         ))}
       </div>
 
-      {/* ═══ TRACKS TAB ═══ */}
+      {/*  TRACKS TAB  */}
       {tab === 'tracks' && (
         <>
           {/* Add URL Form */}
@@ -577,7 +577,7 @@ export default function MusicLibraryTab() {
         </>
       )}
 
-      {/* ═══ CATEGORIES TAB ═══ */}
+      {/*  CATEGORIES TAB  */}
       {tab === 'categories' && (
         <div className="space-y-4">
           {/* Add category */}
@@ -674,7 +674,7 @@ export default function MusicLibraryTab() {
         </div>
       )}
 
-      {/* ═══ STATS TAB ═══ */}
+      {/*  STATS TAB  */}
       {tab === 'stats' && (
         <div className="space-y-6">
           {/* Summary Cards */}

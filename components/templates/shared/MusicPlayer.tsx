@@ -17,7 +17,7 @@ export default function MusicPlayer({ src, title = 'Musik Pengiring' }: Props) {
 
     // Try autoplay
     audio.play().then(() => setPlaying(true)).catch(() => {
-      // Autoplay blocked — user must tap
+      // Autoplay blocked   user must tap
     })
   }, [])
 

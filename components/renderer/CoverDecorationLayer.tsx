@@ -11,7 +11,7 @@ interface Props {
   animate?: boolean  // true = entrance animation (live view), false = static (preview)
 }
 
-// ─── Javanese (Batik Jawa) ──────────────────────────────────────
+//  Javanese (Batik Jawa) 
 function JavaneseDecor({ accent, opacity }: { accent: string; opacity: number }) {
   return (
     <>
@@ -78,7 +78,7 @@ function JavaneseDecor({ accent, opacity }: { accent: string; opacity: number })
   )
 }
 
-// ─── Floral ────────────────────────────────────────────────────
+//  Floral 
 function FloralDecor({ accent, opacity }: { accent: string; opacity: number }) {
   return (
     <>
@@ -141,7 +141,7 @@ function FloralDecor({ accent, opacity }: { accent: string; opacity: number }) {
   )
 }
 
-// ─── Modern ────────────────────────────────────────────────────
+//  Modern 
 function ModernDecor({ accent, opacity }: { accent: string; opacity: number }) {
   return (
     <>
@@ -178,7 +178,7 @@ function ModernDecor({ accent, opacity }: { accent: string; opacity: number }) {
   )
 }
 
-// ─── Rustic ────────────────────────────────────────────────────
+//  Rustic 
 function RusticDecor({ accent, opacity }: { accent: string; opacity: number }) {
   return (
     <>
@@ -205,7 +205,7 @@ function RusticDecor({ accent, opacity }: { accent: string; opacity: number }) {
   )
 }
 
-// ─── Main component ────────────────────────────────────────────
+//  Main component 
 export default function CoverDecorationLayer({ preset, accent, opacity = 70, animate = false }: Props) {
   if (!preset || preset === 'none') return null
 

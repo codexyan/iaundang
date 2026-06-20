@@ -5,7 +5,7 @@ import { FileText, ArrowRight, Clock, Eye, Search, Tag } from 'lucide-react'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Blog — Tips & Inspirasi Pernikahan | iaundang',
+  title: 'Blog | Tips & Inspirasi Pernikahan | iaundang',
   description: 'Artikel seputar persiapan pernikahan, undangan digital, dan inspirasi untuk hari spesial kalian.',
 }
 

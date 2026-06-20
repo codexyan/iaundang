@@ -1,5 +1,5 @@
 /**
- * Server-only session helper — hanya untuk Server Components dan API Routes.
+ * Server-only session helper   hanya untuk Server Components dan API Routes.
  * JANGAN diimpor dari middleware.ts.
  */
 import { cookies } from 'next/headers'

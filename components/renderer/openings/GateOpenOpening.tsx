@@ -122,7 +122,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
 
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
-      {/* Logo icon — top center */}
+      {/* Logo icon   top center */}
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}
@@ -133,7 +133,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
         <img src="/logos/icons.png" alt="" style={{ width: 40, height: 'auto', opacity: 0.85, filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))' }} />
       </motion.div>
 
-      {/* Left gate panel — 3D perspective swing */}
+      {/* Left gate panel   3D perspective swing */}
       <motion.div
         className="absolute inset-y-0 left-0 w-1/2 z-[15]"
         style={{
@@ -159,7 +159,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
         }} />
       </motion.div>
 
-      {/* Right gate panel — 3D perspective swing */}
+      {/* Right gate panel   3D perspective swing */}
       <motion.div
         className="absolute inset-y-0 right-0 w-1/2 z-[15]"
         style={{
@@ -185,7 +185,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
         }} />
       </motion.div>
 
-      {/* Content — bottom-anchored, above gates */}
+      {/* Content   bottom-anchored, above gates */}
       <div
         className="relative z-20 flex flex-col items-center w-full mt-auto"
         style={{ paddingBottom: padBottom, paddingLeft: padX, paddingRight: padX }}

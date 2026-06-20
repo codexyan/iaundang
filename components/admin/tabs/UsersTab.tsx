@@ -10,7 +10,7 @@ import {
   MessageSquare, Send, LayoutDashboard, Zap,
 } from 'lucide-react'
 
-// ─── Types ───────────────────────────────────────────────────
+//  Types 
 
 interface AdminUserInvitation {
   id: string
@@ -63,7 +63,7 @@ interface UsersTabProps {
   onTogglePublished: (invId: string, published: boolean) => Promise<void>
 }
 
-// ─── Helpers ─────────────────────────────────────────────────
+//  Helpers 
 
 function timeAgo(dateString: string): string {
   const now = Date.now()
@@ -85,7 +85,7 @@ function timeAgo(dateString: string): string {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) return ''
   return new Date(dateString).toLocaleDateString('id-ID', {
     day: 'numeric', month: 'short', year: 'numeric',
   })
@@ -134,7 +134,7 @@ const TICKET_STATUS_LABELS: Record<string, { label: string; color: string; bg: s
   closed: { label: 'Ditutup', color: 'text-stone-600', bg: 'bg-stone-100' },
 }
 
-// ─── Modal Backdrop ──────────────────────────────────────────
+//  Modal Backdrop 
 
 function ModalBackdrop({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   const backdropRef = useRef<HTMLDivElement>(null)
@@ -156,7 +156,7 @@ function ModalBackdrop({ children, onClose }: { children: React.ReactNode; onClo
   )
 }
 
-// ─── Detail item sub-component ──────────────────────────────
+//  Detail item sub-component 
 
 function DetailItem({ icon: Icon, label, value, mono, valueColor, extra }: {
   icon: React.ComponentType<{ className?: string }>
@@ -178,7 +178,7 @@ function DetailItem({ icon: Icon, label, value, mono, valueColor, extra }: {
   )
 }
 
-// ─── Component ───────────────────────────────────────────────
+//  Component 
 
 export default function UsersTab({ users, templates, onDelete, onOverridePaid, onTogglePublished }: UsersTabProps) {
   const [search, setSearch] = useState('')
@@ -228,7 +228,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
     return localTickets[user.id] ?? user.tickets ?? []
   }, [localTickets])
 
-  // ── Stats ───────────────────────────────────────────────────
+  //  Stats 
   const stats = useMemo(() => {
     const total = users.length
     const withInvitation = users.filter((u) => u.invitations.length > 0).length
@@ -240,7 +240,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
     return { total, withInvitation, paid, active, noTemplate, expired, hasTicket }
   }, [users, getUserTickets])
 
-  // ── Filtered + sorted list ───────────────────────────────
+  //  Filtered + sorted list 
   const filtered = useMemo(() => {
     let list = [...users]
     if (search.trim()) {
@@ -266,13 +266,13 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
     return list
   }, [users, search, filter, sort, getUserTickets])
 
-  // ── Pagination ───────────────────────────────────────────
+  //  Pagination 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))
   const safePage = Math.min(page, totalPages)
   const paginated = filtered.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE)
   const resetPage = () => setPage(1)
 
-  // ── Reset password (auto-generate) ───────────────────────
+  //  Reset password (auto-generate) 
   function openResetModal(user: AdminUser) {
     setResetModal(user)
     setResetError(null)
@@ -302,7 +302,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
     }
   }
 
-  // ── Delete (modal with confirmation) ─────────────────────
+  //  Delete (modal with confirmation) 
   function openDeleteModal(user: AdminUser) {
     setDeleteModal(user)
     setDeleteConfirmText('')
@@ -319,14 +319,14 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
     }
   }
 
-  // ── Copy ID ──────────────────────────────────────────────
+  //  Copy ID 
   function copyToClipboard(text: string, key: string) {
     navigator.clipboard.writeText(text)
     setCopiedId(key)
     setTimeout(() => setCopiedId(null), 2000)
   }
 
-  // ── Ticket reply ─────────────────────────────────────────
+  //  Ticket reply 
   async function sendTicketReply(ticketId: string, userId: string) {
     if (!replyMessage.trim()) return
     setSendingReply(true)
@@ -355,7 +355,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
     await fetchUserTickets(userId)
   }
 
-  // ── Avatar & status helpers ──────────────────────────────
+  //  Avatar & status helpers 
   function avatarColor(user: AdminUser): string {
     const primaryInv = user.invitations[0]
     if (primaryInv) {
@@ -384,7 +384,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
 
   return (
     <div>
-      {/* ── Header ──────────────────────────────────────────── */}
+      {/*  Header  */}
       <div className="px-8 py-5 border-b border-stone-200 bg-white">
         <h1 className="text-lg font-bold text-stone-900 tracking-tight">Pengguna</h1>
         <p className="text-xs text-stone-400 mt-0.5">
@@ -395,7 +395,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
       </div>
 
       <div className="p-8 space-y-6">
-        {/* ── Summary Cards ───────────────────────────────────── */}
+        {/*  Summary Cards  */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {summaryCards.map((card) => (
             <div key={card.label} className="flex items-center gap-3 px-4 py-3 bg-white border border-stone-200 rounded-xl">
@@ -410,7 +410,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
           ))}
         </div>
 
-        {/* ── Filter + Search + Sort Row ──────────────────────── */}
+        {/*  Filter + Search + Sort Row  */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Filter className="w-3.5 h-3.5 text-stone-400 mr-1 hidden sm:block" />
@@ -465,7 +465,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
           </div>
         </div>
 
-        {/* ── User Cards List ─────────────────────────────────── */}
+        {/*  User Cards List  */}
         {paginated.length > 0 ? (
           <div className="space-y-2">
             {paginated.map((user) => {
@@ -484,7 +484,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
                     isExpanded ? 'border-stone-300 shadow-sm' : 'border-stone-200 hover:border-stone-300'
                   }`}
                 >
-                  {/* ── Main row (clickable) ─────────────────── */}
+                  {/*  Main row (clickable)  */}
                   <button
                     type="button"
                     onClick={() => {
@@ -560,7 +560,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
                     </div>
                   )}
 
-                  {/* ── Expanded detail panel ────────────────── */}
+                  {/*  Expanded detail panel  */}
                   {isExpanded && (
                     <div className="border-t border-stone-100">
                       {/* Account info */}
@@ -590,7 +590,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
                         </div>
                       </div>
 
-                      {/* ── Detail Tabs ───────────────────────── */}
+                      {/*  Detail Tabs  */}
                       <div className="px-5 pt-3">
                         <div className="flex items-center gap-1 border-b border-stone-100">
                           <button
@@ -623,7 +623,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
                         </div>
                       </div>
 
-                      {/* ── Template Tab Content ──────────────── */}
+                      {/*  Template Tab Content  */}
                       {detailTab === 'templates' && (
                         <div className="px-5 py-4 space-y-3">
                           {user.invitations.length > 0 ? (
@@ -760,7 +760,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
                         </div>
                       )}
 
-                      {/* ── Tickets Tab Content ───────────────── */}
+                      {/*  Tickets Tab Content  */}
                       {detailTab === 'tickets' && (
                         <div className="px-5 py-4 space-y-3">
                           {tickets.length > 0 ? (
@@ -880,7 +880,7 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
                         </div>
                       )}
 
-                      {/* ── User Action Buttons ───────────────── */}
+                      {/*  User Action Buttons  */}
                       <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-t border-stone-100 bg-stone-50/50">
                         <button
                           onClick={(e) => { e.stopPropagation(); openResetModal(user) }}
@@ -925,11 +925,11 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
           </div>
         )}
 
-        {/* ── Pagination ──────────────────────────────────────── */}
+        {/*  Pagination  */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between pt-2">
             <p className="text-xs text-stone-400">
-              Menampilkan {(safePage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(safePage * ITEMS_PER_PAGE, filtered.length)} dari {filtered.length} pengguna
+              Menampilkan {(safePage - 1) * ITEMS_PER_PAGE + 1} s/d {Math.min(safePage * ITEMS_PER_PAGE, filtered.length)} dari {filtered.length} pengguna
             </p>
             <div className="flex items-center gap-1.5">
               <button
@@ -969,9 +969,9 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
         )}
       </div>
 
-      {/* ══════════════════════════════════════════════════════════
+      {/* 
           MODAL: Reset Password (Auto-generate)
-         ══════════════════════════════════════════════════════════ */}
+          */}
       {resetModal && (
         <ModalBackdrop onClose={() => { setResetModal(null); setResetResult(null) }}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
@@ -1066,9 +1066,9 @@ export default function UsersTab({ users, templates, onDelete, onOverridePaid, o
         </ModalBackdrop>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
+      {/* 
           MODAL: Delete User Confirmation
-         ══════════════════════════════════════════════════════════ */}
+          */}
       {deleteModal && (
         <ModalBackdrop onClose={() => setDeleteModal(null)}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>

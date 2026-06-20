@@ -28,7 +28,7 @@ export default function DemoPreviewClient({
 
   const tpl = TEMPLATES.find((t) => t.id === templateId)
 
-  // Preview langsung pakai nama default — user bisa ganti opsional
+  // Preview langsung pakai nama default   user bisa ganti opsional
   const invitation: Invitation = {
     ...defaultInvitation,
     template_id: templateId,
@@ -86,7 +86,7 @@ export default function DemoPreviewClient({
         {templateId === 'modern-white' && <ModernWhiteTemplate {...templateProps} />}
       </div>
 
-      {/* Floating panel ganti nama — opsional */}
+      {/* Floating panel ganti nama   opsional */}
       <div className="fixed bottom-5 right-4 z-[199] flex flex-col items-end gap-2">
         <AnimatePresence>
           {panelOpen && (

@@ -87,7 +87,7 @@ export default function Navbar() {
         transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
         className="fixed top-0 inset-x-0 z-50"
       >
-        {/* Outer container — adds horizontal margin on scroll for floating pill effect */}
+        {/* Outer container   adds horizontal margin on scroll for floating pill effect */}
         <div
           className={`transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             scrollState === 'scrolled'
@@ -107,7 +107,7 @@ export default function Navbar() {
               <Logo variant="horizontal" size="sm" />
             </motion.div>
 
-            {/* Desktop nav — center-aligned pill navigation */}
+            {/* Desktop nav   center-aligned pill navigation */}
             <div className="hidden md:flex items-center">
               <div className={`flex items-center gap-0.5 px-1 py-1 rounded-xl transition-all duration-300 ${
                 scrollState === 'scrolled' ? 'bg-stone-100/60' : 'bg-white/40 backdrop-blur-sm'
@@ -222,7 +222,7 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile menu — full-screen overlay */}
+      {/* Mobile menu   full-screen overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <>

@@ -64,7 +64,7 @@ function PhotoPlaceholder({ accent, side }: { accent: string; side: 'groom' | 'b
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 18, color: `${accent}30`,
       }}>
-        {side === 'groom' ? '♂' : '♀'}
+        {side === 'groom' ? '��' : '�'}
       </div>
     </div>
   )
@@ -95,7 +95,7 @@ function AndDivider({ accent, headingFont, style: s }: {
   )
 }
 
-// ─── DEFAULT: Side-by-side editorial portraits ──────────────────────────────
+//  DEFAULT: Side-by-side editorial portraits 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, groom, bride } = ctx
@@ -167,7 +167,7 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── CARD: Full-width cinematic panels stacked ──────────────────────────────
+//  CARD: Full-width cinematic panels stacked 
 
 function CardView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, primary, headingFont, bodyFont, groom, bride } = ctx
@@ -247,7 +247,7 @@ function CardView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   )
 }
 
-// ─── VERTICAL: Centered stacked with circle frames ──────────────────────────
+//  VERTICAL: Centered stacked with circle frames 
 
 function VerticalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, groom, bride } = ctx
@@ -313,7 +313,7 @@ function VerticalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── MAGAZINE: Alternating left-right editorial layout ──────────────────────
+//  MAGAZINE: Alternating left-right editorial layout 
 
 function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, groom, bride } = ctx
@@ -386,7 +386,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── OVERLAP: Overlapping photos with centered names ────────────────────────
+//  OVERLAP: Overlapping photos with centered names 
 
 function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, groom, bride } = ctx
@@ -405,7 +405,7 @@ function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
           variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
           style={{ position: 'relative', height: 320, marginBottom: 28 }}>
 
-          {/* Groom — left, slightly back */}
+          {/* Groom  left, slightly back */}
           <div style={{
             position: 'absolute', top: 0, left: 0,
             width: '58%', aspectRatio: '3 / 4', overflow: 'hidden',
@@ -418,7 +418,7 @@ function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
             )}
           </div>
 
-          {/* Bride — right, overlapping */}
+          {/* Bride  right, overlapping */}
           <div style={{
             position: 'absolute', top: 40, right: 0,
             width: '58%', aspectRatio: '3 / 4', overflow: 'hidden',
@@ -474,7 +474,7 @@ function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── MAIN ───────────────────────────────────────────────────────────────────
+//  MAIN 
 
 export default function ProfilesSection({ section, data, meta }: Props) {
   const { accent, text, primary } = meta.color_scheme

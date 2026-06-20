@@ -59,7 +59,7 @@ export default async function InvitationPage({ params }: Props) {
   const pkg = getPackage(tier)
   const showWatermark = !invitation.is_paid || !pkg.hasWatermarkFree
 
-  // ── JSON-driven renderer path ─────────────────────────────────
+  //  JSON-driven renderer path 
   const isLegacy = (LEGACY_TEMPLATE_IDS as string[]).includes(invitation.template_id)
 
   if (!isLegacy) {
@@ -83,7 +83,7 @@ export default async function InvitationPage({ params }: Props) {
     return showWatermark ? <WatermarkShell>{content}</WatermarkShell> : content
   }
 
-  // ── Legacy hardcoded templates path ───────────────────────────
+  //  Legacy hardcoded templates path 
   const props = {
     invitation: invitation as Invitation,
     galleries: await galleries.findByInvitationId(invitation.id) as Gallery[],
@@ -158,7 +158,7 @@ function ExpiredPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center px-4">
-        <div className="text-5xl mb-4">⏰</div>
+        <div className="text-5xl mb-4">��</div>
         <h1 className="text-2xl font-serif font-bold text-gray-800">Undangan Sudah Berakhir</h1>
         <p className="text-gray-500 mt-3 max-w-sm">
           Masa aktif undangan ini telah habis. Terima kasih telah hadir.

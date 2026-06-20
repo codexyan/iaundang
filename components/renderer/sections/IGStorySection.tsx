@@ -78,7 +78,7 @@ function DownloadButton({ ctx, disabled }: { ctx: StyleCtx; disabled?: boolean }
   )
 }
 
-// ─── DEFAULT: Centered editorial ────────────────────────────────────────────
+//  DEFAULT: Centered editorial 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, url, hasImage } = ctx
@@ -136,7 +136,7 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── PHONE: Mockup inside phone frame ───────────────────────────────────────
+//  PHONE: Mockup inside phone frame 
 
 function PhoneView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, url, hasImage } = ctx
@@ -220,7 +220,7 @@ function PhoneView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) 
   )
 }
 
-// ─── MINIMAL: Large image, overlay button at bottom ─────────────────────────
+//  MINIMAL: Large image, overlay button at bottom 
 
 function MinimalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, url, filename, hasImage } = ctx
@@ -307,7 +307,7 @@ function MinimalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── MAIN ───────────────────────────────────────────────────────────────────
+//  MAIN 
 
 export default function IGStorySection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

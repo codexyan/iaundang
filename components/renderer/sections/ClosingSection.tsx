@@ -80,7 +80,7 @@ function BrandFooter({ text, bodyFont }: { text: string; bodyFont: string }) {
   )
 }
 
-// ─── DEFAULT: Clean editorial ───────────────────────────────────────────────
+//  DEFAULT: Clean editorial 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, closingText, thankYouText, data } = ctx
@@ -132,7 +132,7 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── ELEGANT: Double border frame with corner dots ──────────────────────────
+//  ELEGANT: Double border frame with corner dots 
 
 function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, closingText, thankYouText, data } = ctx
@@ -189,7 +189,7 @@ function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── CINEMATIC: Full-screen dark overlay with photo background ──────────────
+//  CINEMATIC: Full-screen dark overlay with photo background 
 
 function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, headingFont, bodyFont, closingText, thankYouText, data } = ctx
@@ -286,7 +286,7 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
   )
 }
 
-// ─── MAGAZINE: Left-aligned editorial layout ────────────────────────────────
+//  MAGAZINE: Left-aligned editorial layout 
 
 function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, closingText, thankYouText, data } = ctx
@@ -316,7 +316,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
           {closingText}
         </motion.p>
 
-        {/* Names — large, left-aligned */}
+        {/* Names  large, left-aligned */}
         <motion.div style={{ marginTop: 36 }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
           <p style={{ fontSize: fsb(8), letterSpacing: '0.3em', textTransform: 'uppercase', color: `${text}65`, fontFamily: bodyFont, marginBottom: 14 }}>
@@ -370,7 +370,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── CARD: Centered card with accent border top ─────────────────────────────
+//  CARD: Centered card with accent border top 
 
 function CardView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, closingText, thankYouText, data } = ctx
@@ -452,7 +452,7 @@ function CardView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   )
 }
 
-// ─── POETIC: Large quote-style typography ───────────────────────────────────
+//  POETIC: Large quote-style typography 
 
 function PoeticView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, closingText, thankYouText, data } = ctx
@@ -517,7 +517,7 @@ function PoeticView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx })
   )
 }
 
-// ─── MAIN ───────────────────────────────────────────────────────────────────
+//  MAIN 
 
 export default function ClosingSection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

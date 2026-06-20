@@ -9,7 +9,7 @@ interface Props {
   musicUrlOverride?: string
   musicTitleOverride?: string
   colors: ColorScheme
-  /** Visual-only mode — no audio, absolute positioning */
+  /** Visual-only mode   no audio, absolute positioning */
   static?: boolean
   /** Absolute positioning with real audio playback (for fullscreen preview) */
   contained?: boolean

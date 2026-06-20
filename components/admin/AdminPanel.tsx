@@ -24,11 +24,11 @@ import LandingPageTab from './tabs/LandingPageTab'
 import ArticlesTab from './tabs/ArticlesTab'
 import WriterTab from './tabs/WriterTab'
 import AffiliatesTab from './tabs/AffiliatesTab'
-import PackagesTab from './tabs/PackagesTab'
+// PackagesTab removed  tier management consolidated into TemplatesTab config drawer
 import NewSettingsTab from './tabs/SettingsTab'
 import type { SiteSettings } from './tabs/SettingsTab'
 
-// ─── Types ────────────────────────────────────────────────────
+//  Types 
 
 interface AdminUserInvitation {
   id: string
@@ -118,11 +118,11 @@ interface Props {
   adminEmail: string
 }
 
-type NavTab = 'dashboard' | 'users' | 'template' | 'lab' | 'music' | 'orders' | 'payment' | 'landing' | 'articles' | 'writers' | 'affiliates' | 'packages' | 'settings'
+type NavTab = 'dashboard' | 'users' | 'template' | 'lab' | 'music' | 'orders' | 'payment' | 'landing' | 'articles' | 'writers' | 'affiliates' | 'settings'
 
-const VALID_TABS: NavTab[] = ['dashboard', 'users', 'template', 'lab', 'music', 'orders', 'payment', 'landing', 'articles', 'writers', 'affiliates', 'packages', 'settings']
+const VALID_TABS: NavTab[] = ['dashboard', 'users', 'template', 'lab', 'music', 'orders', 'payment', 'landing', 'articles', 'writers', 'affiliates', 'settings']
 
-// ─── Main Component ───────────────────────────────────────────
+//  Main Component 
 
 export default function AdminPanel({
   users: initialUsers,
@@ -234,7 +234,7 @@ export default function AdminPanel({
     setInvitations(newInvs)
     setUsers(newUsers)
     recalc(newInvs, newUsers)
-    toast.success(paid ? '✓ Ditandai lunas & dipublish' : 'Status direset ke belum bayar')
+    toast.success(paid ? '�� Ditandai lunas & dipublish' : 'Status direset ke belum bayar')
   }
 
   async function handleTogglePublished(invId: string, published: boolean) {
@@ -386,7 +386,7 @@ export default function AdminPanel({
               })
               setLabEditRecord(null)
               setLabDirty(false)
-              toast.success('Template berhasil disimpan!', { duration: 4000, icon: '✅' })
+              toast.success('Template berhasil disimpan!', { duration: 4000, icon: '��' })
             }}
             onDirtyChange={setLabDirty}
             categories={appSettings.categories}
@@ -407,12 +407,6 @@ export default function AdminPanel({
             packageDuration={appSettings.packageDuration}
             onConfigUpdate={(cfg) => setAppSettings({ ...appSettings, ...cfg })}
             onProofReview={handleProofReview}
-          />
-        )}
-        {activeTab === 'packages' && (
-          <PackagesTab
-            priceTiers={appSettings.priceTiers}
-            onSave={async (tiers) => { await handleSaveSettings({ ...appSettings, priceTiers: tiers }) }}
           />
         )}
         {activeTab === 'landing' && <LandingPageTab />}
@@ -490,7 +484,7 @@ export default function AdminPanel({
   )
 }
 
-// ─── Sidebar ─────────────────────────────────────────────────
+//  Sidebar 
 
 const NAV_GROUPS = [
   {
@@ -519,7 +513,6 @@ const NAV_GROUPS = [
   {
     label: 'Transaksi',
     items: [
-      { id: 'packages'    as NavTab, label: 'Paket & Harga',      icon: Package,         desc: 'Tier, fitur & konfigurasi harga' },
       { id: 'payment'     as NavTab, label: 'Pembayaran',         icon: CreditCard,      desc: 'Bank, QRIS & verifikasi' },
       { id: 'orders'      as NavTab, label: 'Pesanan',            icon: ShoppingCart,    desc: 'Riwayat transaksi' },
     ],
@@ -700,7 +693,7 @@ function Sidebar({
   )
 }
 
-// ─── Page Header ─────────────────────────────────────────────
+//  Page Header 
 
 function PageHeader({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
@@ -711,7 +704,7 @@ function PageHeader({ title, subtitle }: { title: string; subtitle?: string }) {
   )
 }
 
-// ─── Badge ───────────────────────────────────────────────────
+//  Badge 
 
 function Badge({ variant, children }: { variant: 'green' | 'yellow' | 'red' | 'gray' | 'blue'; children: React.ReactNode }) {
   const styles = {
@@ -728,7 +721,7 @@ function Badge({ variant, children }: { variant: 'green' | 'yellow' | 'red' | 'g
   )
 }
 
-// ─── Orders Tab ──────────────────────────────────────────────
+//  Orders Tab 
 
 function OrdersTab({ orders }: { orders: AdminOrder[] }) {
   return (
@@ -749,8 +742,8 @@ function OrdersTab({ orders }: { orders: AdminOrder[] }) {
             <tbody className="divide-y divide-gray-50">
               {orders.map((o, i) => (
                 <tr key={o.order_id ?? i} className="hover:bg-gray-50">
-                  <td className="px-5 py-4 font-mono text-xs text-gray-600">{o.order_id ?? '-'}</td>
-                  <td className="px-5 py-4 font-medium">{o.amount ? formatPrice(o.amount) : '-'}</td>
+                  <td className="px-5 py-4 font-mono text-xs text-gray-600">{o.order_id ?? ''}</td>
+                  <td className="px-5 py-4 font-medium">{o.amount ? formatPrice(o.amount) : ''}</td>
                   <td className="px-5 py-4">
                     <Badge
                       variant={
@@ -760,14 +753,14 @@ function OrdersTab({ orders }: { orders: AdminOrder[] }) {
                         : 'gray'
                       }
                     >
-                      {o.status ?? '-'}
+                      {o.status ?? ''}
                     </Badge>
                   </td>
-                  <td className="px-5 py-4 text-gray-500">{o.payment_type ?? '-'}</td>
+                  <td className="px-5 py-4 text-gray-500">{o.payment_type ?? ''}</td>
                   <td className="px-5 py-4 text-gray-500 text-xs">
                     {o.created_at
                       ? new Date(o.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-                      : '-'}
+                      : ''}
                   </td>
                 </tr>
               ))}

@@ -112,7 +112,7 @@ export default function LoadingScreen({ config, onDone, isPreview = false }: Pro
   )
 }
 
-// ─── Background builder ────────────────────────────────────────────────────────
+//  Background builder 
 
 function buildBgStyle(config: LoadingConfig): React.CSSProperties {
   const base: React.CSSProperties = {}
@@ -135,7 +135,7 @@ function buildBgStyle(config: LoadingConfig): React.CSSProperties {
   return base
 }
 
-// ─── Pattern Overlay ───────────────────────────────────────────────────────────
+//  Pattern Overlay 
 
 function PatternOverlay({ pattern, accent }: { pattern: string; accent: string }) {
   const patternStyle = useMemo(() => {
@@ -173,7 +173,7 @@ function PatternOverlay({ pattern, accent }: { pattern: string; accent: string }
   return <div className="absolute inset-0 z-[1]" style={patternStyle} />
 }
 
-// ─── Variant Renderer ──────────────────────────────────────────────────────────
+//  Variant Renderer 
 
 function VariantRenderer({ variant, accent, speed, text }: {
   variant: LoadingVariant; accent: string; speed: number; text: string
@@ -202,7 +202,7 @@ function VariantRenderer({ variant, accent, speed, text }: {
 
 type LP = { accent: string; speed: number }
 
-// ─── 1. Dual Ring ──────────────────────────────────────────────────────────────
+//  1. Dual Ring 
 
 function DualRingLoader({ accent, speed }: LP) {
   return (
@@ -229,7 +229,7 @@ function DualRingLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 2. Heartbeat ──────────────────────────────────────────────────────────────
+//  2. Heartbeat 
 
 function HeartbeatLoader({ accent, speed }: LP) {
   return (
@@ -250,7 +250,7 @@ function HeartbeatLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 3. Elegant Spinner ────────────────────────────────────────────────────────
+//  3. Elegant Spinner 
 
 function ElegantSpinnerLoader({ accent, speed }: LP) {
   const n = 12
@@ -274,7 +274,7 @@ function ElegantSpinnerLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 4. Petal Cascade ──────────────────────────────────────────────────────────
+//  4. Petal Cascade 
 
 function PetalCascadeLoader({ accent, speed }: LP) {
   const petals = 6
@@ -305,7 +305,7 @@ function PetalCascadeLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 5. Wave Dots ──────────────────────────────────────────────────────────────
+//  5. Wave Dots 
 
 function WaveDotsLoader({ accent, speed }: LP) {
   return (
@@ -323,7 +323,7 @@ function WaveDotsLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 6. Letter Reveal ──────────────────────────────────────────────────────────
+//  6. Letter Reveal 
 
 function LetterRevealLoader({ accent, speed, text }: LP & { text: string }) {
   const t = text.length > 20 ? text.slice(0, 20) : text
@@ -344,7 +344,7 @@ function LetterRevealLoader({ accent, speed, text }: LP & { text: string }) {
   )
 }
 
-// ─── 7. Arch Gate ──────────────────────────────────────────────────────────────
+//  7. Arch Gate 
 
 function ArchGateLoader({ accent, speed }: LP) {
   return (
@@ -373,7 +373,7 @@ function ArchGateLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 8. Candle Glow ────────────────────────────────────────────────────────────
+//  8. Candle Glow 
 
 function CandleGlowLoader({ accent, speed }: LP) {
   return (
@@ -407,7 +407,7 @@ function CandleGlowLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 9. Infinity Ribbon ────────────────────────────────────────────────────────
+//  9. Infinity Ribbon 
 
 function InfinityRibbonLoader({ accent, speed }: LP) {
   return (
@@ -427,7 +427,7 @@ function InfinityRibbonLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 10. Shimmer Bar ───────────────────────────────────────────────────────────
+//  10. Shimmer Bar 
 
 function ShimmerBarLoader({ accent, speed }: LP) {
   return (
@@ -452,7 +452,7 @@ function ShimmerBarLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 11. Orbit Rings ───────────────────────────────────────────────────────────
+//  11. Orbit Rings 
 
 function OrbitRingsLoader({ accent, speed }: LP) {
   return (
@@ -490,7 +490,7 @@ function OrbitRingsLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 12. Ripple Pulse ──────────────────────────────────────────────────────────
+//  12. Ripple Pulse 
 
 function RipplePulseLoader({ accent, speed }: LP) {
   return (
@@ -514,7 +514,7 @@ function RipplePulseLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 13. Diamond Spin ──────────────────────────────────────────────────────────
+//  13. Diamond Spin 
 
 function DiamondSpinLoader({ accent, speed }: LP) {
   return (
@@ -545,7 +545,7 @@ function DiamondSpinLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 14. Hourglass ─────────────────────────────────────────────────────────────
+//  14. Hourglass 
 
 function HourglassLoader({ accent, speed }: LP) {
   return (
@@ -571,7 +571,7 @@ function HourglassLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 15. Crescent Moon ─────────────────────────────────────────────────────────
+//  15. Crescent Moon 
 
 function CrescentMoonLoader({ accent, speed }: LP) {
   return (
@@ -606,7 +606,7 @@ function CrescentMoonLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── 16. Spiral Gold ───────────────────────────────────────────────────────────
+//  16. Spiral Gold 
 
 function SpiralGoldLoader({ accent, speed }: LP) {
   return (
@@ -638,7 +638,7 @@ function SpiralGoldLoader({ accent, speed }: LP) {
   )
 }
 
-// ─── Particles Background ──────────────────────────────────────────────────────
+//  Particles Background 
 
 function Particles({ count, accent }: { count: number; accent: string }) {
   const particles = useMemo(() =>

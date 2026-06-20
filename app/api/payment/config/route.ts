@@ -4,7 +4,7 @@ import { settings } from '@/lib/db'
 // Force dynamic rendering (don't prerender at build time)
 export const dynamic = 'force-dynamic'
 
-// Public endpoint — user dashboard baca ini untuk tampilkan info pembayaran
+// Public endpoint   user dashboard baca ini untuk tampilkan info pembayaran
 export async function GET() {
   const s = await settings.get()
   return NextResponse.json({

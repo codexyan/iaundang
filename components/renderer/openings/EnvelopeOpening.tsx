@@ -120,7 +120,7 @@ export default function EnvelopeOpening({ config, data, meta, onOpen, positionMo
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
 
-      {/* ── Envelope visual — centered hero ── */}
+      {/*  Envelope visual  centered hero  */}
       <div className="absolute inset-0 z-[8] flex items-center justify-center pointer-events-none"
         style={{ paddingBottom: '18%' }}>
         <motion.div
@@ -144,7 +144,7 @@ export default function EnvelopeOpening({ config, data, meta, onOpen, positionMo
             <path d="M1 1 L130 80 L259 1" stroke={accent} strokeWidth="0.6" strokeOpacity="0.3" />
           </svg>
 
-          {/* Flap — animated open */}
+          {/* Flap  animated open */}
           <motion.div
             initial={{ rotateX: 0 }}
             animate={{ rotateX: clicked ? 180 : 0 }}
@@ -214,7 +214,7 @@ export default function EnvelopeOpening({ config, data, meta, onOpen, positionMo
         </motion.div>
       </div>
 
-      {/* ── Content — bottom section ── */}
+      {/*  Content  bottom section  */}
       <div
         className="relative z-20 flex flex-col items-center w-full mt-auto"
         style={{ paddingBottom: padBottom, paddingLeft: padX, paddingRight: padX }}

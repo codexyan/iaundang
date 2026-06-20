@@ -65,7 +65,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         setEmail(data.email ?? '')
       })
       .catch(() => {
-        // not authenticated — layout will handle redirect
+        // not authenticated   layout will handle redirect
       })
   }, [])
 

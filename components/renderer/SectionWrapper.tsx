@@ -11,9 +11,9 @@ interface Props {
   section: SectionConfig
   children: React.ReactNode
   className?: string
-  /** Renders inside <section> but outside the motion.div — use for in-section modals/overlays */
+  /** Renders inside <section> but outside the motion.div   use for in-section modals/overlays */
   overlay?: React.ReactNode
-  /** Template-level font config — provides default scale fallback before section overrides */
+  /** Template-level font config   provides default scale fallback before section overrides */
   fontConfig?: FontConfig
 }
 
@@ -48,7 +48,7 @@ export function clampB(min: string, mid: string, max: string): string {
   return `calc(clamp(${min}, ${mid}, ${max}) * var(--bs, 1))`
 }
 
-/** Legacy helpers — tetap ada untuk backward compat */
+/** Legacy helpers   tetap ada untuk backward compat */
 export function fs(base: number, scale: number): number { return Math.round(base * scale * 10) / 10 }
 export function clampFs(min: string, mid: string, max: string, scale: number): string {
   return scale === 1 ? `clamp(${min}, ${mid}, ${max})` : `calc(clamp(${min}, ${mid}, ${max}) * ${scale})`
@@ -116,7 +116,7 @@ export default function SectionWrapper({ section, children, className = '', over
   }
   // video: rendered as <video> element below, not bgStyle
 
-  // Setiap section penuh layar — snap ke setiap section
+  // Setiap section penuh layar   snap ke setiap section
   // Preview: 845px (= 736 / (340/390)) agar pas di phone mockup setelah zoom
   // Live: 100dvh
   const sectionMinH: React.CSSProperties['minHeight'] = isPreview ? 845 : '100dvh'
@@ -133,7 +133,7 @@ export default function SectionWrapper({ section, children, className = '', over
     ? { alignSelf: 'stretch', flex: 1, display: 'flex', flexDirection: 'column' }
     : {}
 
-  // CSS variables — section overrides > template defaults > hardcoded fallback
+  // CSS variables   section overrides > template defaults > hardcoded fallback
   const fontVars = {
     '--hs': section.heading_scale ?? fontConfig?.heading_scale ?? 1,
     '--bs': section.body_scale    ?? fontConfig?.body_scale    ?? 1,
@@ -157,7 +157,7 @@ export default function SectionWrapper({ section, children, className = '', over
       }}
       className={className}
     >
-      {/* Video background — sits at z-0 behind overlay and content */}
+      {/* Video background   sits at z-0 behind overlay and content */}
       {bg.type === 'video' && bg.url && (
         <video
           autoPlay muted loop playsInline
@@ -167,7 +167,7 @@ export default function SectionWrapper({ section, children, className = '', over
         />
       )}
 
-      {/* Dark overlay for photo and video backgrounds — enforce minimum 0.55 */}
+      {/* Dark overlay for photo and video backgrounds   enforce minimum 0.55 */}
       {(bg.type === 'image' || bg.type === 'video') && (
         <div
           className="absolute inset-0"
@@ -192,14 +192,14 @@ export default function SectionWrapper({ section, children, className = '', over
         {children}
       </motion.div>
 
-      {/* Decoration assets — z-5 sits between overlay (z-1) and content (z-10) */}
+      {/* Decoration assets   z-5 sits between overlay (z-1) and content (z-10) */}
       {section.decoration_assets && section.decoration_assets.length > 0 && (
         <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
           <DecorationAssetLayer assets={section.decoration_assets} />
         </div>
       )}
 
-      {/* Section-scoped overlay — absolute, clipped by section's overflow:hidden */}
+      {/* Section-scoped overlay   absolute, clipped by section's overflow:hidden */}
       {overlay}
     </section>
   )

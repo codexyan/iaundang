@@ -42,7 +42,7 @@ export default function Testimonials({ reviews: propReviews }: { reviews?: Revie
             Pasangan yang sudah merasakannya
           </h2>
           <p className="mt-3 text-stone-400 text-[15px] max-w-sm mx-auto">
-            Bukan dari kami — dari mereka yang sudah pakai.
+            Langsung dari mereka yang sudah pakai.
           </p>
         </motion.div>
 

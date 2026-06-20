@@ -13,7 +13,7 @@ import type { Invitation, NewInvitationData, TemplateRecord, GiftAccount, Sectio
 import InvitationPreview from '@/components/renderer/InvitationPreview'
 import ImageUploadField from '@/components/admin/ImageUploadField'
 
-// ── Types ──────────────────────────────────────────────────────
+//  Types 
 
 interface EditorSection {
   id: string
@@ -28,7 +28,7 @@ interface Props {
   onSaved: (inv: Invitation) => void
 }
 
-// ── Section icons (lucide — no emojis) ────────────────────────
+//  Section icons (lucide  no emojis) 
 
 const SICONS: Record<string, React.ElementType> = {
   hero: Sparkles, profiles: Users, countdown: Timer, story: Heart,
@@ -43,7 +43,7 @@ const SLABELS: Record<string, string> = {
   livestream: 'Live Streaming', closing: 'Penutup',
 }
 
-// ── Helpers ────────────────────────────────────────────────────
+//  Helpers 
 
 function initData(inv: Invitation): NewInvitationData {
   const d = inv.data as unknown as NewInvitationData
@@ -83,7 +83,7 @@ function initSections(
   return source.map((s, i) => ({ id: s.id, type: s.type, enabled: s.enabled, order: i + 1 }))
 }
 
-// ── Tiny input helpers ─────────────────────────────────────────
+//  Tiny input helpers 
 
 const ic = 'w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-rose-400 bg-white placeholder:text-gray-300 transition-all'
 
@@ -106,7 +106,7 @@ function InfoBox({ icon: Icon, text }: { icon: React.ElementType; text: string }
   )
 }
 
-// ── Section form per type ──────────────────────────────────────
+//  Section form per type 
 
 function SectionForm({ type, data, onChange }: {
   type: SectionType
@@ -244,7 +244,7 @@ function SectionForm({ type, data, onChange }: {
   }
 }
 
-// ── Hero Form ──────────────────────────────────────────────────
+//  Hero Form 
 
 function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: Partial<NewInvitationData>) => void }) {
   const [uploading, setUploading] = useState<'photo' | 'video' | null>(null)
@@ -322,7 +322,7 @@ function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
               </button>
               <button onClick={() => videoRef.current?.click()}
                 className="flex items-center gap-1 bg-gray-900/90 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
-                ▶ Pakai Video
+                �� Pakai Video
               </button>
             </div>
           </div>
@@ -336,7 +336,7 @@ function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
             <button onClick={() => videoRef.current?.click()} disabled={!!uploading}
               className="flex-1 py-5 border border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-1.5 text-gray-400 hover:border-indigo-300 hover:text-indigo-400 transition-colors disabled:opacity-50">
               {uploading === 'video' ? <><Loader2 size={16} className="animate-spin" /><span className="text-[9px]">Upload...</span></>
-                : <><span className="text-base">▶</span><span className="text-[9px] font-medium">Upload Video</span></>}
+                : <><span className="text-base">��</span><span className="text-[9px] font-medium">Upload Video</span></>}
             </button>
           </div>
         )}
@@ -345,7 +345,7 @@ function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
   )
 }
 
-// ── Story Form ─────────────────────────────────────────────────
+//  Story Form 
 
 type StoryMode = 'text' | 'timeline' | 'cinematic'
 
@@ -362,7 +362,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
   const [uploadType, setUploadType]     = useState<Record<number, 'photo' | 'video'>>({})
   const fileRefs = useRef<(HTMLInputElement | null)[]>([])
 
-  // ─── mode switch ───────────────────────────────────────────
+  //  mode switch 
   function setMode(m: StoryMode) {
     if (m === 'cinematic') {
       onChange({ story_timeline: [], story_chapters: chapters.length ? chapters : [{ title: '', text: '', date: '' }] })
@@ -374,7 +374,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
     setExpandedIdx(0)
   }
 
-  // ─── timeline helpers ──────────────────────────────────────
+  //  timeline helpers 
   function updateItem(i: number, patch: Partial<typeof timeline[number]>) {
     onChange({ story_timeline: timeline.map((t, j) => j === i ? { ...t, ...patch } : t) })
   }
@@ -398,7 +398,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
     setExpandedIdx(j)
   }
 
-  // ─── chapter helpers ───────────────────────────────────────
+  //  chapter helpers 
   function updateChapter(i: number, patch: Partial<StoryChapter>) {
     onChange({ story_chapters: chapters.map((c, j) => j === i ? { ...c, ...patch } : c) })
   }
@@ -442,7 +442,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
   }
 
   const MODES: { id: StoryMode; label: string }[] = [
-    { id: 'text',      label: '✍ Teks' },
+    { id: 'text',      label: '�� Teks' },
     { id: 'timeline',  label: '📅 Timeline' },
     { id: 'cinematic', label: '🎬 Sinematik' },
   ]
@@ -459,7 +459,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
         ))}
       </div>
 
-      {/* ── TEKS ── */}
+      {/*  TEKS  */}
       {mode === 'text' && (
         <div className="space-y-2">
           <F label="Judul">
@@ -472,7 +472,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
         </div>
       )}
 
-      {/* ── TIMELINE ── */}
+      {/*  TIMELINE  */}
       {mode === 'timeline' && (
         <div className="space-y-1.5">
           <p className="text-[9px] text-gray-400">Tambah poin perjalanan sebanyak yang kamu mau.</p>
@@ -522,7 +522,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
         </div>
       )}
 
-      {/* ── SINEMATIK ── */}
+      {/*  SINEMATIK  */}
       {mode === 'cinematic' && (
         <div className="space-y-1.5">
           <p className="text-[9px] text-gray-400">Tiap bab = layar penuh. Foto atau video sebagai background.</p>
@@ -536,7 +536,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
                 </div>
                 <button className="flex-1 text-left flex items-center gap-1.5" onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}>
                   {ch.video_url
-                    ? <span className="w-5 h-5 rounded bg-gray-900 flex items-center justify-center shrink-0 text-[8px] text-white font-bold">▶</span>
+                    ? <span className="w-5 h-5 rounded bg-gray-900 flex items-center justify-center shrink-0 text-[8px] text-white font-bold">��</span>
                     : ch.photo_url
                       ? <img src={ch.photo_url} alt="Foto bab kisah" className="w-5 h-5 rounded object-cover border border-gray-200 shrink-0" />
                       : <div className="w-5 h-5 rounded bg-gray-100 shrink-0 flex items-center justify-center"><ImageIcon size={9} className="text-gray-400" /></div>
@@ -644,9 +644,9 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
   )
 }
 
-// ── Gift Form ──────────────────────────────────────────────────
+//  Gift Form 
 
-// ── Provider data ──────────────────────────────────────────────
+//  Provider data 
 const BANKS = ['BRI', 'BCA', 'BNI', 'Mandiri', 'BSI', 'Blu', 'Bank lainnya']
 const EWALLETS = ['GoPay', 'DANA', 'ShopeePay', 'OVO', 'E-wallet lainnya']
 
@@ -819,7 +819,7 @@ function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
             </F>
           )}
 
-          {/* Preview card — live debit card mockup */}
+          {/* Preview card  live debit card mockup */}
           {providerName && !providerName.includes('lainnya') && (() => {
             const pb = PROVIDER_BRANDS[providerName]
             const [g1, g2] = pb ? pb.gradient : [brandColor, `${brandColor}cc`]
@@ -866,7 +866,7 @@ function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
 
                 {/* Card number */}
                 <p style={{ position: 'absolute', bottom: 30, left: 16, fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.95)', fontFamily: 'monospace', textShadow: '0 1px 6px rgba(0,0,0,0.45)' }}>
-                  {formatted || '•••• •••• ••••'}
+                  {formatted || '���� ���� ����'}
                 </p>
 
                 {/* Name + type */}
@@ -913,7 +913,7 @@ function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
   )
 }
 
-// ── Phone mockup ───────────────────────────────────────────────
+//  Phone mockup 
 
 function PhoneMockup({ children, slug }: { children: React.ReactNode; slug: string }) {
   const SCREEN_W = 248
@@ -948,7 +948,7 @@ function PhoneMockup({ children, slug }: { children: React.ReactNode; slug: stri
   )
 }
 
-// ── Draggable section row ──────────────────────────────────────
+//  Draggable section row 
 
 function SectionRow({
   section, isExpanded, onToggleExpand, onToggle, data, onChange,
@@ -1004,7 +1004,7 @@ function SectionRow({
             )}
           </button>
 
-          {/* Toggle ON/OFF — prominent */}
+          {/* Toggle ON/OFF  prominent */}
           <button
             title={on ? 'Nonaktifkan section' : 'Aktifkan section'}
             className={`shrink-0 flex items-center rounded-full transition-all px-1 ${on ? 'hover:bg-gold-50' : 'hover:bg-gray-100'}`}
@@ -1056,7 +1056,7 @@ function SectionRow({
   )
 }
 
-// ── Main editor ────────────────────────────────────────────────
+//  Main editor 
 
 export default function InvitationEditor({ invitation, template, onSaved }: Props) {
   const savedOverrides = (() => {
@@ -1123,11 +1123,11 @@ export default function InvitationEditor({ invitation, template, onSaved }: Prop
 
   return (
     <div className="flex gap-5">
-      {/* ── Left: sections editor ─────────────── */}
+      {/*  Left: sections editor  */}
       <div className="flex-1 min-w-0 space-y-1">
         {/* Status row */}
         <div className="flex items-center justify-between h-5 mb-1">
-          <p className="text-[10px] text-gray-400">Seret ≡ untuk ubah urutan · Toggle untuk tampilkan/sembunyikan</p>
+          <p className="text-[10px] text-gray-400">Seret �� untuk ubah urutan · Toggle untuk tampilkan/sembunyikan</p>
           <div className={`flex items-center gap-1 text-[10px] transition-opacity ${saveStatus === 'idle' ? 'opacity-0' : 'opacity-100'}`}>
             {saveStatus === 'saving' && <><Loader2 size={10} className="animate-spin text-gray-400" /><span className="text-gray-400">Menyimpan...</span></>}
             {saveStatus === 'saved' && <><Check size={10} className="text-green-500" /><span className="text-green-600">Tersimpan</span></>}
@@ -1154,7 +1154,7 @@ export default function InvitationEditor({ invitation, template, onSaved }: Prop
         </Reorder.Group>
       </div>
 
-      {/* ── Right: phone preview ──────────────── */}
+      {/*  Right: phone preview  */}
       <div className="hidden lg:block shrink-0">
         <div className="sticky top-4">
           <PhoneMockup slug={invitation.slug}>

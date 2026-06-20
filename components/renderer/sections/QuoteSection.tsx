@@ -22,7 +22,7 @@ type StyleCtx = {
 
 const ARABIC_FONT_STACK = `'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Noto Naskh Arabic', serif`
 
-// ─── Shared ornaments ─────────────────────────────────────────────────────────
+//  Shared ornaments 
 
 function Ornament({ accent }: { accent: string }) {
   return (
@@ -40,7 +40,7 @@ function FooterOrnament({ accent }: { accent: string }) {
   )
 }
 
-// ─── DEFAULT: Centered, ornament top/bottom ───────────────────────────────────
+//  DEFAULT: Centered, ornament top/bottom 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, arabic, translation, source } = ctx
@@ -112,12 +112,12 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── CINEMATIC: Full-height dark overlay, dramatic ────────────────────────────
+//  CINEMATIC: Full-height dark overlay, dramatic 
 
 function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, arabic, translation, source } = ctx
 
-  // Use section.background for the image — SectionWrapper handles overlay rendering
+  // Use section.background for the image  SectionWrapper handles overlay rendering
   const sectionCfg: SectionConfig = {
     ...section,
     background: section.background?.type === 'image'
@@ -183,7 +183,7 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
   )
 }
 
-// ─── ELEGANT: Large decorative quotes, diamond divider ────────────────────────
+//  ELEGANT: Large decorative quotes, diamond divider 
 
 function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, arabic, translation, source } = ctx
@@ -285,7 +285,7 @@ function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── MAGAZINE: Left-aligned, accent bar ───────────────────────────────────────
+//  MAGAZINE: Left-aligned, accent bar 
 
 function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, arabic, translation, source } = ctx
@@ -364,7 +364,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── MINIMAL: Ultra-clean, just content ───────────────────────────────────────
+//  MINIMAL: Ultra-clean, just content 
 
 function MinimalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, arabic, translation, source } = ctx
@@ -428,7 +428,7 @@ function MinimalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── Main QuoteSection ────────────────────────────────────────────────────────
+//  Main QuoteSection 
 
 export default function QuoteSection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

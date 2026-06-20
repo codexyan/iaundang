@@ -283,7 +283,7 @@ function Wizard({ onInvitationCreated, allTemplates }: { onInvitationCreated: (i
   )
 }
 
-// ─── Step 1: Pilih Template ────────────────────────────────────
+//  Step 1: Pilih Template 
 function StepTemplate({ form, onSelect, allTemplates }: { form: FormData; onSelect: (id: string) => void; allTemplates: TemplateInfo[] }) {
   return (
     <div>
@@ -349,7 +349,7 @@ function StepTemplate({ form, onSelect, allTemplates }: { form: FormData; onSele
   )
 }
 
-// ─── Step 2: Pilih Paket ──────────────────────────────────────
+//  Step 2: Pilih Paket 
 const TIER_ICONS: Record<PackageTier, React.ElementType> = {
   starter: Leaf,
   popular: Sparkles,
@@ -443,7 +443,7 @@ function StepPackage({ form, onSelect }: { form: FormData; onSelect: (tier: stri
   )
 }
 
-// ─── Step 3: Nama & Link ───────────────────────────────────────
+//  Step 3: Nama & Link 
 function StepNames({
   form, slugStatus, slugError, slugSuggestions, onPatch, onSlugInput,
 }: {
@@ -457,8 +457,8 @@ function StepNames({
   const slugIndicator = {
     idle:     { color: 'text-stone-300',  text: '' },
     checking: { color: 'text-stone-400',  text: 'Mengecek...' },
-    ok:       { color: 'text-green-600',  text: '✓ Tersedia' },
-    taken:    { color: 'text-red-500',    text: '✗ Sudah dipakai' },
+    ok:       { color: 'text-green-600',  text: '�� Tersedia' },
+    taken:    { color: 'text-red-500',    text: '�� Sudah dipakai' },
   }[slugStatus]
 
   return (
@@ -544,7 +544,7 @@ function StepNames({
   )
 }
 
-// ─── Step 4: Detail Acara ──────────────────────────────────────
+//  Step 4: Detail Acara 
 function StepAcara({ form, onPatch }: { form: FormData; onPatch: (key: keyof FormData, value: string) => void }) {
   return (
     <div className="max-w-lg">
@@ -608,7 +608,7 @@ function StepAcara({ form, onPatch }: { form: FormData; onPatch: (key: keyof For
   )
 }
 
-// ─── Step 5: Konfirmasi ────────────────────────────────────────
+//  Step 5: Konfirmasi 
 function StepKonfirmasi({ form, allTemplates }: { form: FormData; allTemplates: TemplateInfo[] }) {
   const tpl = allTemplates.find(t => t.id === form.templateId)
   const pkg = PACKAGES[form.packageTier]
@@ -622,7 +622,7 @@ function StepKonfirmasi({ form, allTemplates }: { form: FormData; allTemplates: 
         <Row icon={<Sparkles size={14} className="text-stone-400" />}
           label="Template" value={tpl?.name ?? form.templateId} />
         <Row icon={<Crown size={14} className="text-stone-400" />}
-          label="Paket" value={`${pkg.emoji} ${pkg.name} — ${formatPrice(pkg.price)}`} />
+          label="Paket" value={`${pkg.emoji} ${pkg.name} · ${formatPrice(pkg.price)}`} />
         <Row icon={<Users size={14} className="text-stone-400" />}
           label="Pasangan" value={`${form.groomName} & ${form.brideName}`} />
         <Row icon={<Link2 size={14} className="text-stone-400" />}
@@ -653,7 +653,7 @@ function Row({ icon, label, value, mono }: { icon: React.ReactNode; label: strin
       <span className="shrink-0 mt-0.5">{icon}</span>
       <div className="flex-1 min-w-0">
         <p className="text-[11px] text-stone-400 font-medium">{label}</p>
-        <p className={`text-sm text-stone-800 font-semibold truncate ${mono ? 'font-mono' : ''}`}>{value || '-'}</p>
+        <p className={`text-sm text-stone-800 font-semibold truncate ${mono ? 'font-mono' : ''}`}>{value || ''}</p>
       </div>
     </div>
   )

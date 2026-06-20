@@ -1,5 +1,5 @@
 /**
- * Database layer — Prisma + Supabase PostgreSQL
+ * Database layer  Prisma + Supabase PostgreSQL
  * Interface identik dengan versi JSON sebelumnya, semua fungsi sekarang async.
  */
 
@@ -7,7 +7,7 @@ import { prisma } from './prisma'
 import type { Invitation, Gallery, Guest, Wish, TemplateRecord, TemplatePackageRequirement, TemplateCategory, ColorPalette, PriceTier, TierFeatures, FlashSale, Coupon, MusicTrack, MusicCategory } from './types'
 import JAVANESE_GOLD from './template-configs/javanese-gold'
 
-// ─── TYPE EXPORTS ────────────────────────────────────────────────────────────
+//  TYPE EXPORTS 
 
 export type UserRole = 'admin' | 'content_writer' | 'affiliate' | 'user'
 
@@ -98,7 +98,7 @@ export interface PaymentProof {
   reviewed_at: string | null
 }
 
-// ─── MAPPERS ─────────────────────────────────────────────────────────────────
+//  MAPPERS 
 
 function mapUser(u: { id: string; email: string; passwordHash: string; role: string; createdAt: Date }): DbUser {
   return { id: u.id, email: u.email, password_hash: u.passwordHash, role: u.role as UserRole, created_at: u.createdAt.toISOString() }
@@ -161,7 +161,7 @@ function mapPaymentProof(p: {
   }
 }
 
-// ─── USERS ───────────────────────────────────────────────────────────────────
+//  USERS 
 
 export const users = {
   async findByEmail(email: string): Promise<DbUser | null> {
@@ -193,7 +193,7 @@ export const users = {
   },
 }
 
-// ─── INVITATIONS ─────────────────────────────────────────────────────────────
+//  INVITATIONS 
 
 export const invitations = {
   async findBySlug(slug: string): Promise<Invitation | null> {
@@ -253,7 +253,7 @@ export const invitations = {
   },
 }
 
-// ─── GALLERIES ───────────────────────────────────────────────────────────────
+//  GALLERIES 
 
 export const galleries = {
   async findByInvitationId(invitationId: string): Promise<Gallery[]> {
@@ -275,7 +275,7 @@ export const galleries = {
   },
 }
 
-// ─── GUESTS ──────────────────────────────────────────────────────────────────
+//  GUESTS 
 
 export const guests = {
   async findByInvitationId(invitationId: string): Promise<Guest[]> {
@@ -293,7 +293,7 @@ export const guests = {
   },
 }
 
-// ─── WISHES ──────────────────────────────────────────────────────────────────
+//  WISHES 
 
 export const wishes = {
   async findByInvitationId(invitationId: string): Promise<Wish[]> {
@@ -311,7 +311,7 @@ export const wishes = {
   },
 }
 
-// ─── GIFT PROOFS ─────────────────────────────────────────────────────────────
+//  GIFT PROOFS 
 
 export interface GiftProofRecord {
   id: string
@@ -336,7 +336,7 @@ export const giftProofs = {
   },
 }
 
-// ─── TEMPLATE RECORDS ────────────────────────────────────────────────────────
+//  TEMPLATE RECORDS 
 
 const BUILT_IN_TEMPLATE_RECORDS: TemplateRecord[] = [JAVANESE_GOLD]
 
@@ -391,7 +391,7 @@ export const templateRecords = {
   },
 }
 
-// ─── ORDERS ──────────────────────────────────────────────────────────────────
+//  ORDERS 
 
 export const orders = {
   async findAll(): Promise<unknown[]> {
@@ -399,7 +399,7 @@ export const orders = {
   },
 }
 
-// ─── SETTINGS ────────────────────────────────────────────────────────────────
+//  SETTINGS 
 
 export const BUILT_IN_CATEGORIES: TemplateCategory[] = [
   { slug: 'modern',      label: 'Modern',      is_built_in: true },
@@ -557,7 +557,7 @@ export const settings = {
   },
 }
 
-// ─── LANDING PAGE SETTINGS ──────────────────────────────────────────────────
+//  LANDING PAGE SETTINGS 
 
 export interface LandingPageSettings {
   hero: {
@@ -600,7 +600,7 @@ export interface LandingPageSettings {
 const DEFAULT_LANDING: LandingPageSettings = {
   hero: {
     headline: 'Undangan digital yang bikin tamu kagum sejak klik pertama',
-    subheadline: 'Tamu klik link → musik langsung mengalir → nama mereka muncul personal → animasi memukau terbuka. Terpukau sejak detik pertama, tanpa ribet scroll atau cari tombol.',
+    subheadline: 'Tamu klik link �� musik langsung mengalir �� nama mereka muncul personal �� animasi memukau terbuka. Terpukau sejak detik pertama, tanpa ribet scroll atau cari tombol.',
     ctaPrimary: 'Mulai Buat Undangan',
     ctaSecondary: 'Lihat Demo Live',
     socialProofCount: '500+',
@@ -691,7 +691,7 @@ export const landingSettings = {
   },
 }
 
-// ─── ARTICLES ────────────────────────────────────────────────────────────────
+//  ARTICLES 
 
 export interface ArticleSettings {
   comments: {
@@ -890,7 +890,7 @@ export const articles = {
   },
 }
 
-// ─── PAYMENT PROOFS ──────────────────────────────────────────────────────────
+//  PAYMENT PROOFS 
 
 export const paymentProofs = {
   async findAll(): Promise<PaymentProof[]> {
@@ -942,7 +942,7 @@ export const paymentProofs = {
   },
 }
 
-// ─── MUSIC LIBRARY ───────────────────────────────────────────────────────────
+//  MUSIC LIBRARY 
 
 function mapMusicTrack(m: { id: string; title: string; artist: string; category: string; url: string; duration: number; fileSize: number; isActive: boolean; sortOrder: number; usageCount: number; createdAt: Date }): MusicTrack {
   return { id: m.id, title: m.title, artist: m.artist, category: m.category, url: m.url, duration: m.duration, file_size: m.fileSize, is_active: m.isActive, sort_order: m.sortOrder, usage_count: m.usageCount, created_at: m.createdAt.toISOString() }
@@ -1003,7 +1003,7 @@ export const musicTracks = {
   },
 }
 
-// ─── MUSIC CATEGORIES ───────────────────────────────────────────────────────
+//  MUSIC CATEGORIES 
 
 function mapMusicCategory(m: { id: string; name: string; sortOrder: number; createdAt: Date }): MusicCategory {
   return { id: m.id, name: m.name, sort_order: m.sortOrder, created_at: m.createdAt.toISOString() }
@@ -1038,7 +1038,7 @@ export const musicCategories = {
   },
 }
 
-// ─── AFFILIATES ─────────────────────────────────────────────────────────────
+//  AFFILIATES 
 
 export interface AffiliateData {
   id: string
@@ -1243,7 +1243,7 @@ function mapWithdrawal(w: {
   }
 }
 
-// ─── LANDING SECTIONS CONFIG ────────────────────────────────────────────────
+//  LANDING SECTIONS CONFIG 
 
 export interface LandingSectionConfig {
   id: string

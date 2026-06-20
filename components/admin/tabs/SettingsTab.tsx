@@ -12,7 +12,7 @@ import {
 import toast from 'react-hot-toast'
 import ImageUploadField from '../ImageUploadField'
 
-// ─── Types ───────────────────────────────────────────────────
+//  Types 
 
 interface LogoUsage {
   navbar: boolean
@@ -51,7 +51,7 @@ const SUB_TABS: { id: SubTab; label: string; icon: React.ElementType; mobileLabe
   { id: 'contact',    label: 'Kontak & Sosial',    icon: Globe2,           mobileLabel: 'Kontak' },
 ]
 
-// ─── Shared components ───────────────────────────────────────
+//  Shared components 
 
 function Field({
   label, hint, icon: Icon, value, onChange, placeholder, type = 'text', disabled = false,
@@ -91,7 +91,7 @@ function Toggle({ enabled, onToggle, label }: { enabled: boolean; onToggle: () =
   )
 }
 
-// ─── Logo Usage Preview Card ─────────────────────────────────
+//  Logo Usage Preview Card 
 
 function LogoUsageCard({
   icon: Icon,
@@ -143,7 +143,7 @@ function LogoUsageCard({
   )
 }
 
-// ─── Sub-tab: Branding ───────────────────────────────────────
+//  Sub-tab: Branding 
 
 function BrandingPanel({
   form, update,
@@ -275,7 +275,7 @@ function BrandingPanel({
   )
 }
 
-// ─── Sub-tab: Logo Usage ─────────────────────────────────────
+//  Sub-tab: Logo Usage 
 
 function LogoUsagePanel({
   form, update,
@@ -418,7 +418,7 @@ function LogoUsagePanel({
   )
 }
 
-// ─── Sub-tab: Account ────────────────────────────────────────
+//  Sub-tab: Account 
 
 function AccountPanel({ adminEmail }: { adminEmail: string }) {
   return (
@@ -469,7 +469,7 @@ function AccountPanel({ adminEmail }: { adminEmail: string }) {
           </div>
           <button
             className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-            onClick={() => toast('Fitur ganti password akan tersedia segera', { icon: '🔒' })}
+            onClick={() => toast('Fitur ganti password akan tersedia segera', { icon: '�' })}
           >
             Ganti Password
           </button>
@@ -505,7 +505,7 @@ function AccountPanel({ adminEmail }: { adminEmail: string }) {
   )
 }
 
-// ─── Sub-tab: Contact ────────────────────────────────────────
+//  Sub-tab: Contact 
 
 function ContactPanel({
   form, update,
@@ -606,7 +606,7 @@ function ContactPanel({
   )
 }
 
-// ─── Main component ──────────────────────────────────────────
+//  Main component 
 
 export default function SettingsTab({ settings: initial, adminEmail, onSave }: Props) {
   const [form, setForm] = useState<SiteSettings>(initial)

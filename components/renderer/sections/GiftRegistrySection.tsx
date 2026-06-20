@@ -27,7 +27,7 @@ const MARKETPLACE_LABEL: Record<string, string> = {
   other: 'Wishlist',
 }
 
-// ─── Ornament ─────────────────────────────────────────────────────────────────
+//  Ornament 
 
 function Ornament({ accent }: { accent: string }) {
   return (
@@ -37,7 +37,7 @@ function Ornament({ accent }: { accent: string }) {
   )
 }
 
-// ─── Section Header ───────────────────────────────────────────────────────────
+//  Section Header 
 
 function SectionHeader({ ctx }: { ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont } = ctx
@@ -77,7 +77,7 @@ function SectionHeader({ ctx }: { ctx: StyleCtx }) {
   )
 }
 
-// ─── Marketplace Tag ──────────────────────────────────────────────────────────
+//  Marketplace Tag 
 
 function MarketplaceTag({ marketplace, accent, bodyFont }: {
   marketplace?: string; accent: string; bodyFont: string
@@ -93,7 +93,7 @@ function MarketplaceTag({ marketplace, accent, bodyFont }: {
   )
 }
 
-// ─── Link Button ──────────────────────────────────────────────────────────────
+//  Link Button 
 
 function LinkButton({ url, accent, bodyFont }: {
   url: string; accent: string; bodyFont: string
@@ -117,9 +117,9 @@ function LinkButton({ url, accent, bodyFont }: {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// VARIANT: default — horizontal scroll carousel
-// ═══════════════════════════════════════════════════════════════════════════════
+// 
+// VARIANT: default  horizontal scroll carousel
+// 
 
 function CarouselCard({ item, ctx, index, bg }: {
   item: GiftRegistryLink; ctx: StyleCtx; index: number; bg?: SectionConfig['background']
@@ -267,9 +267,9 @@ function DefaultVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; c
   )
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// VARIANT: grid — 2-column compact grid
-// ═══════════════════════════════════════════════════════════════════════════════
+// 
+// VARIANT: grid  2-column compact grid
+// 
 
 function GridVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; ctx: StyleCtx; bg: SectionConfig['background'] }) {
   const { accent, text, headingFont, bodyFont } = ctx
@@ -341,9 +341,9 @@ function GridVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; ctx:
   )
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// VARIANT: list — full-width stacked rows, image left
-// ═══════════════════════════════════════════════════════════════════════════════
+// 
+// VARIANT: list  full-width stacked rows, image left
+// 
 
 function ListVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; ctx: StyleCtx; bg: SectionConfig['background'] }) {
   const { accent, text, headingFont, bodyFont } = ctx
@@ -366,7 +366,7 @@ function ListVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; ctx:
             ...contentPanelBg(bg),
           }}>
 
-          {/* Image — small square */}
+          {/* Image  small square */}
           {item.image_url ? (
             <div style={{
               width: 56, height: 56, flexShrink: 0,
@@ -438,9 +438,9 @@ function ListVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; ctx:
   )
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// VARIANT: minimal — text only, no images
-// ═══════════════════════════════════════════════════════════════════════════════
+// 
+// VARIANT: minimal  text only, no images
+// 
 
 function MinimalVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; ctx: StyleCtx; bg: SectionConfig['background'] }) {
   const { accent, text, headingFont, bodyFont } = ctx
@@ -516,9 +516,9 @@ function MinimalVariant({ registry, ctx, bg }: { registry: GiftRegistryLink[]; c
   )
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// 
 // Main export
-// ═══════════════════════════════════════════════════════════════════════════════
+// 
 
 export default function GiftRegistrySection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

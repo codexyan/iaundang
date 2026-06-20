@@ -145,7 +145,7 @@ export default function DiamondSplitOpening({ config, data, meta, onOpen, positi
 
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
-      {/* Logo icon — top center */}
+      {/* Logo icon   top center */}
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}

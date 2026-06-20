@@ -48,7 +48,7 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
             </div>
             <div>
               <p className="text-sm font-semibold text-stone-800">Edit Undangan</p>
-              <p className="text-[11px] text-stone-400">Template klasik — semua pengaturan di satu tempat</p>
+              <p className="text-[11px] text-stone-400">Template klasik, semua pengaturan di satu tempat</p>
             </div>
             <span className="ml-auto text-[10px] bg-stone-100 text-stone-500 px-2.5 py-1 rounded-full font-medium">
               Template Lama

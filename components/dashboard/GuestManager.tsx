@@ -12,7 +12,7 @@ import type { Invitation } from '@/lib/types'
 import { getPackage, type PackageTier } from '@/lib/packages'
 import { getInvitationUrl } from '@/lib/utils'
 
-// ── Types ──────────────────────────────────────────────────────
+//  Types 
 
 interface GuestContact {
   id: string
@@ -28,7 +28,7 @@ interface Props {
   invitation: Invitation
 }
 
-// ── Helpers ────────────────────────────────────────────────────
+//  Helpers 
 
 function normalizePhone(phone: string): string {
   const digits = phone.replace(/\D/g, '')
@@ -53,7 +53,7 @@ function saveGuests(invId: string, guests: GuestContact[]) {
   try { localStorage.setItem(STORAGE_KEY(invId), JSON.stringify(guests)) } catch { }
 }
 
-// ── Main ───────────────────────────────────────────────────────
+//  Main 
 
 export default function GuestManager({ invitation }: Props) {
   const [contacts, setContacts] = useState<GuestContact[]>(() => loadGuests(invitation.id))
@@ -71,7 +71,7 @@ export default function GuestManager({ invitation }: Props) {
   const invUrl = getInvitationUrl(invitation.slug)
 
   const defaultMessage = (name: string) =>
-    `Assalamu'alaikum Yth. ${name},\n\nKami mengundang kehadiran Bapak/Ibu/Saudara/i dalam acara pernikahan kami.\n\n🔗 Undangan digital: ${invUrl}\n\nMohon hadir ya, terima kasih 💝`
+    `Assalamu'alaikum Yth. ${name},\n\nKami mengundang kehadiran Bapak/Ibu/Saudara/i dalam acara pernikahan kami.\n\n� Undangan digital: ${invUrl}\n\nMohon hadir ya, terima kasih 💝`
 
   const filtered = useMemo(() => {
     return contacts.filter(c => {
@@ -162,7 +162,7 @@ export default function GuestManager({ invitation }: Props) {
           { label: 'Total Tamu', value: contacts.length, icon: Users, color: 'bg-blue-50 text-blue-600 border-blue-100' },
           { label: 'Sudah Dikirimi', value: sentCount, icon: CheckCircle2, color: 'bg-green-50 text-green-600 border-green-100' },
           { label: 'Belum Dikirimi', value: unsentCount, icon: Clock, color: 'bg-amber-50 text-amber-600 border-amber-100' },
-          { label: 'Batas Paket', value: maxGuests === -1 ? '∞' : maxGuests, icon: Crown, color: 'bg-gold-50 text-gold-600 border-rose-100' },
+          { label: 'Batas Paket', value: maxGuests === -1 ? '��' : maxGuests, icon: Crown, color: 'bg-gold-50 text-gold-600 border-rose-100' },
         ].map(s => (
           <div key={s.label} className={`rounded-2xl border p-4 ${s.color}`}>
             <s.icon size={16} className="mb-2 opacity-70" />
@@ -179,7 +179,7 @@ export default function GuestManager({ invitation }: Props) {
           <div>
             <p className="font-bold text-amber-900 text-sm">Batas {maxGuests} tamu tercapai</p>
             <p className="text-xs text-amber-700 mt-0.5">Upgrade paket untuk menambah lebih banyak tamu.</p>
-            <button className="mt-2 text-xs text-amber-700 font-bold underline">Upgrade →</button>
+            <button className="mt-2 text-xs text-amber-700 font-bold underline">Upgrade ��</button>
           </div>
         </div>
       )}
@@ -371,7 +371,7 @@ export default function GuestManager({ invitation }: Props) {
               {filtered.length} tamu {search || filterSent !== 'all' ? '(difilter)' : ''}
             </p>
             <p className="text-xs text-gray-400">
-              {contacts.length}/{maxGuests === -1 ? '∞' : maxGuests} slot digunakan
+              {contacts.length}/{maxGuests === -1 ? '��' : maxGuests} slot digunakan
             </p>
           </div>
 
@@ -457,7 +457,7 @@ export default function GuestManager({ invitation }: Props) {
         <div className="bg-white rounded-xl p-3 text-xs text-gray-600 font-mono leading-relaxed border border-blue-100">
           Assalamu&apos;alaikum Yth. <strong>[Nama Tamu]</strong>,<br />
           Kami mengundang kehadiran...<br />
-          🔗 {invUrl}
+          � {invUrl}
         </div>
       </div>
     </div>

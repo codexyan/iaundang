@@ -9,6 +9,7 @@ import {
   ToggleLeft, ToggleRight, Copy, ChevronRight, ChevronLeft,
   Rocket, Gem, Music, Image as ImageLucide, Video, Heart, MessageSquare,
   QrCode, Globe, BarChart3, Headphones, Timer, Gift, BookOpen, Radio, Camera,
+  Layers, Search,
 } from 'lucide-react'
 import type { TemplateRecord, TemplatePackageRequirement, TemplateCategory, PriceTier, TierFeatures, FlashSale, Coupon, PromoScope } from '@/lib/types'
 import { BUILT_IN_CATEGORIES, BUILT_IN_PRICE_TIERS } from '@/lib/db'
@@ -30,13 +31,14 @@ interface Props {
   onCouponsUpdate?: (coupons: Coupon[]) => void
 }
 
+type MainTab = 'tema' | 'kategori' | 'harga' | 'promo'
 type Filter = 'all' | 'draft' | 'active' | 'archived'
 
-const PACKAGE_OPTIONS: { value: TemplatePackageRequirement; label: string; color: string }[] = [
-  { value: 'all',       label: 'Semua User',      color: 'bg-gray-100 text-gray-600' },
-  { value: 'starter',   label: 'Starter+',        color: 'bg-blue-100 text-blue-700' },
-  { value: 'popular',   label: 'Popular+',         color: 'bg-amber-100 text-amber-700' },
-  { value: 'eksklusif', label: 'Eksklusif saja',   color: 'bg-purple-100 text-purple-700' },
+const PACKAGE_OPTIONS: { value: TemplatePackageRequirement; label: string }[] = [
+  { value: 'all',       label: 'Semua User' },
+  { value: 'starter',   label: 'Starter+' },
+  { value: 'popular',   label: 'Popular+' },
+  { value: 'eksklusif', label: 'Eksklusif saja' },
 ]
 
 function formatRp(n: number) {
@@ -44,7 +46,6 @@ function formatRp(n: number) {
 }
 function genId() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36) }
 
-/* ── Reusable Drawer Shell ── */
 function Drawer({ open, onClose, title, width = 'max-w-md', children }: {
   open: boolean; onClose: () => void; title: string; width?: string; children: React.ReactNode
 }) {
@@ -61,7 +62,7 @@ function Drawer({ open, onClose, title, width = 'max-w-md', children }: {
       <div className={`absolute inset-y-0 right-0 w-full ${width} bg-white shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${open ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
           <h2 className="text-base font-bold text-gray-900">{title}</h2>
-          <button onClick={onClose} className="p-2 -mr-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
+          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -72,9 +73,21 @@ function Drawer({ open, onClose, title, width = 'max-w-md', children }: {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  if (status === 'active')   return <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-700"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />Aktif</span>
-  if (status === 'draft')    return <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-semibold bg-amber-50 text-amber-600"><span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />Draft</span>
-  return                            <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-semibold bg-red-50 text-red-400"><span className="w-1.5 h-1.5 rounded-full bg-red-300 inline-block" />Arsip</span>
+  if (status === 'active') return (
+    <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />Aktif
+    </span>
+  )
+  if (status === 'draft') return (
+    <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full font-semibold bg-amber-50 text-amber-600 border border-amber-100">
+      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />Draft
+    </span>
+  )
+  return (
+    <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full font-semibold bg-gray-50 text-gray-400 border border-gray-100">
+      <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />Arsip
+    </span>
+  )
 }
 
 function TemplateThumbnail({ rec }: { rec: TemplateRecord }) {
@@ -178,25 +191,24 @@ function ScopeBadge({ scope, scopeIds, tiers, categories }: {
   if (scope === 'all') return <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Semua</span>
   if (scope === 'tier') {
     const names = scopeIds.map(id => tiers.find(t => t.id === id)?.label).filter(Boolean)
-    return <span className="text-[10px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">{names.join(', ') || '-'}</span>
+    return <span className="text-[10px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">{names.join(', ') || 'Belum dipilih'}</span>
   }
   const names = scopeIds.map(slug => categories.find(c => c.slug === slug)?.label).filter(Boolean)
-  return <span className="text-[10px] bg-violet-50 text-violet-600 px-1.5 py-0.5 rounded">{names.join(', ') || '-'}</span>
+  return <span className="text-[10px] bg-violet-50 text-violet-600 px-1.5 py-0.5 rounded">{names.join(', ') || 'Belum dipilih'}</span>
 }
 
-// ═══════════════════════════════════════════════════════════════
 export default function TemplatesTab({
   records, categories, priceTiers, flashSales, coupons,
   deletedCategoryIds: propDeletedCatIds, deletedTierIds: propDeletedTierIds,
   onRecordsUpdate, onGoToLab, onEditInLab,
   onCategoriesUpdate, onPriceTiersUpdate, onFlashSalesUpdate, onCouponsUpdate,
 }: Props) {
-  const [filter, setFilter]           = useState<Filter>('all')
-  const [editingId, setEditingId]     = useState<string | null>(null)
-  const [editData, setEditData]       = useState<Partial<TemplateRecord>>({})
-  const [saving, setSaving]           = useState(false)
+  const [mainTab, setMainTab] = useState<MainTab>('tema')
+  const [filter, setFilter] = useState<Filter>('all')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editData, setEditData] = useState<Partial<TemplateRecord>>({})
+  const [saving, setSaving] = useState(false)
   const [uploadingThumb, setUploadingThumb] = useState(false)
-  const [showConfig, setShowConfig]   = useState(false)
   const [showAddFlashSale, setShowAddFlashSale] = useState(false)
   const [showAddCoupon, setShowAddCoupon] = useState(false)
   const thumbInputRef = useRef<HTMLInputElement>(null)
@@ -245,7 +257,7 @@ export default function TemplatesTab({
       onPriceTiersUpdate?.(allTiers.map(t => t.id === tierEditorId ? { ...t, ...d } as PriceTier : t))
       toast.success('Tier diperbarui')
     } else {
-      const id = d.label!.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || genId()
+      const id = d.label!.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || genId()
       if (allTiers.some(t => t.id === id)) { toast.error('ID sudah ada'); return }
       onPriceTiersUpdate?.([...allTiers, { id, label: d.label!.trim(), price: d.price!, is_built_in: false, description: d.description, color: d.color, icon: d.icon, features: d.features, highlight: d.highlight } as PriceTier])
       toast.success('Tier ditambahkan')
@@ -255,8 +267,6 @@ export default function TemplatesTab({
 
   const [fsForm, setFsForm] = useState({ label: '', discount_type: 'percentage' as 'percentage' | 'fixed', discount_value: '', start_date: '', end_date: '', scope: 'all' as PromoScope, scope_ids: [] as string[] })
   const [cpForm, setCpForm] = useState({ code: '', label: '', discount_type: 'percentage' as 'percentage' | 'fixed', discount_value: '', max_uses: '', valid_from: '', valid_until: '', scope: 'all' as PromoScope, scope_ids: [] as string[] })
-
-  const [configTab, setConfigTab] = useState<'kategori' | 'harga' | 'promo'>('kategori')
 
   const [confirmModal, setConfirmModal] = useState<{
     open: boolean; action: 'archive' | 'delete'; targetId: string; targetName: string
@@ -275,7 +285,6 @@ export default function TemplatesTab({
 
   function findTierLabel(price: number) { return allTiers.find(t => t.price === price)?.label ?? null }
 
-  // ── Template ──
   function openEdit(rec: TemplateRecord) {
     setEditingId(rec.id)
     setEditData({ name: rec.name, category: rec.category, thumbnail_url: rec.thumbnail_url, price: rec.price, required_package: rec.required_package, sort_order: rec.sort_order })
@@ -319,17 +328,16 @@ export default function TemplatesTab({
     onRecordsUpdate(records.map(r => r.id === editingId ? { ...r, ...editData } : r)); setEditingId(null); toast.success('Tersimpan')
   }
 
-  // ── Category CRUD ──
   function addCategory() {
     const label = newCatLabel.trim(); if (!label) return
-    const slug = label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const slug = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
     if (allCategories.some(c => c.slug === slug)) { toast.error('Sudah ada'); return }
     onCategoriesUpdate?.([...allCategories, { slug, label, is_built_in: false }]); setNewCatLabel(''); toast.success(`"${label}" ditambahkan`)
   }
   function startEditCategory(c: TemplateCategory) { setEditingCatSlug(c.slug); setEditingCatLabel(c.label) }
   function saveEditCategory() {
     if (!editingCatSlug || !editingCatLabel.trim()) return
-    onCategoriesUpdate?.(allCategories.map(c => c.slug === editingCatSlug ? { ...c, label: editingCatLabel.trim() } : c)); setEditingCatSlug(null); toast.success('Diupdate')
+    onCategoriesUpdate?.(allCategories.map(c => c.slug === editingCatSlug ? { ...c, label: editingCatLabel.trim() } : c)); setEditingCatSlug(null); toast.success('Diperbarui')
   }
   function removeCategory(slug: string) {
     if (records.some(r => r.category === slug)) { toast.error('Masih dipakai template'); return }
@@ -337,18 +345,12 @@ export default function TemplatesTab({
     onCategoriesUpdate?.(allCategories.filter(c => c.slug !== slug), newDeleted); toast.success('Dihapus')
   }
 
-  // ── Price Tier CRUD ──
   function addTier() {
     const label = newTierLabel.trim(); const price = Number(newTierPrice)
     if (!label || isNaN(price) || price < 0) { toast.error('Isi nama dan harga'); return }
     if (allTiers.some(t => t.price === price)) { toast.error('Harga sudah ada'); return }
-    const id = label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || genId()
+    const id = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || genId()
     onPriceTiersUpdate?.([...allTiers, { id, label, price, is_built_in: false }]); setNewTierLabel(''); setNewTierPrice(''); toast.success(`"${label}" ditambahkan`)
-  }
-  function startEditTier(t: PriceTier) { setEditingTierId(t.id); setEditingTierLabel(t.label); setEditingTierPrice(String(t.price)) }
-  function saveEditTier() {
-    if (!editingTierId || !editingTierLabel.trim()) return
-    onPriceTiersUpdate?.(allTiers.map(t => t.id === editingTierId ? { ...t, label: editingTierLabel.trim(), price: Number(editingTierPrice) || t.price } : t)); setEditingTierId(null); toast.success('Diupdate')
   }
   function removeTier(id: string) {
     const tier = allTiers.find(t => t.id === id)
@@ -357,7 +359,6 @@ export default function TemplatesTab({
     onPriceTiersUpdate?.(allTiers.filter(t => t.id !== id), newDeleted); toast.success('Dihapus')
   }
 
-  // ── Flash Sale ──
   function addFlashSale() {
     if (!fsForm.label.trim() || !fsForm.discount_value || !fsForm.start_date || !fsForm.end_date) { toast.error('Lengkapi field'); return }
     if (fsForm.scope !== 'all' && fsForm.scope_ids.length === 0) { toast.error('Pilih target'); return }
@@ -368,7 +369,6 @@ export default function TemplatesTab({
   function removeFlashSale(id: string) { onFlashSalesUpdate?.(allFlashSales.filter(s => s.id !== id)); toast.success('Dihapus') }
   function isLive(s: FlashSale) { const n = new Date(); return s.is_active && new Date(s.start_date) <= n && new Date(s.end_date) >= n }
 
-  // ── Coupon ──
   function addCoupon() {
     if (!cpForm.code.trim() || !cpForm.label.trim() || !cpForm.discount_value || !cpForm.valid_from || !cpForm.valid_until) { toast.error('Lengkapi field'); return }
     if (cpForm.scope !== 'all' && cpForm.scope_ids.length === 0) { toast.error('Pilih target'); return }
@@ -380,173 +380,528 @@ export default function TemplatesTab({
   function toggleCoupon(id: string) { onCouponsUpdate?.(allCoupons.map(c => c.id === id ? { ...c, is_active: !c.is_active } : c)) }
   function removeCoupon(id: string) { onCouponsUpdate?.(allCoupons.filter(c => c.id !== id)); toast.success('Dihapus') }
 
-  // ═══════════════════════════════════════════════════════════════
-  return (
-    <div className="min-h-screen bg-gray-50/80">
+  const MAIN_TABS: { id: MainTab; label: string; icon: typeof Layers; count?: number }[] = [
+    { id: 'tema', label: 'Tema', icon: Layers, count: counts.all },
+    { id: 'kategori', label: 'Kategori', icon: Tag, count: allCategories.length },
+    { id: 'harga', label: 'Paket Harga', icon: Crown, count: allTiers.length },
+    { id: 'promo', label: 'Promosi', icon: Zap, count: allFlashSales.length + allCoupons.length },
+  ]
 
-      {/* ── Header ── */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="px-6 lg:px-8 py-5">
-          <div className="flex items-center justify-between">
+  return (
+    <div className="min-h-screen bg-gray-50/60">
+
+      {/* Header */}
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
+        <div className="px-6 lg:px-8">
+          <div className="flex items-center justify-between py-5">
             <div>
-              <h1 className="text-lg font-bold text-gray-900">Manajemen Tema</h1>
-              <p className="text-sm text-gray-400 mt-0.5">Atur harga, kategori, dan publikasi tema</p>
+              <h1 className="text-xl font-bold text-gray-900 tracking-tight">Manajemen Tema</h1>
+              <p className="text-sm text-gray-400 mt-0.5">Kelola tema, kategori, harga, dan promosi</p>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => setShowConfig(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:border-indigo-200 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors">
-                <Settings2 className="w-4 h-4" />
-                Konfigurasi
+            {onGoToLab && (
+              <button onClick={onGoToLab}
+                className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
+                <FlaskConical className="w-4 h-4" /> Studio Desain
               </button>
-              {onGoToLab && (
-                <button onClick={onGoToLab}
-                  className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
-                  <FlaskConical className="w-4 h-4" /> Studio Desain
-                </button>
-              )}
-            </div>
+            )}
           </div>
 
-          {/* Stats + Filter */}
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex items-center gap-5">
-              {[
-                { icon: Package, label: 'Total', value: counts.all, color: 'text-gray-500' },
-                { icon: CheckCircle2, label: 'Aktif', value: counts.active, color: 'text-emerald-500' },
-                { icon: Clock, label: 'Draft', value: counts.draft, color: 'text-amber-500' },
-                { icon: Archive, label: 'Arsip', value: counts.archived, color: 'text-red-400' },
-              ].map(({ icon: Icon, label, value, color }) => (
-                <div key={label} className="flex items-center gap-1.5">
-                  <Icon className={`w-3.5 h-3.5 ${color}`} />
-                  <span className="text-sm font-bold text-gray-900">{value}</span>
-                  <span className="text-xs text-gray-400">{label}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex bg-gray-100 rounded-xl p-0.5">
-              {(['all','active','draft','archived'] as Filter[]).map(f => (
-                <button key={f} onClick={() => setFilter(f)}
-                  className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                    filter === f ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                  }`}>
-                  {f === 'all' ? 'Semua' : f === 'draft' ? 'Draft' : f === 'active' ? 'Aktif' : 'Arsip'}
-                </button>
-              ))}
-            </div>
+          {/* Main navigation tabs */}
+          <div className="flex items-center gap-1 pb-0">
+            {MAIN_TABS.map(tab => (
+              <button key={tab.id} onClick={() => setMainTab(tab.id)}
+                className={`relative flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                  mainTab === tab.id
+                    ? 'text-indigo-600'
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}>
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+                {tab.count != null && tab.count > 0 && (
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                    mainTab === tab.id ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-400'
+                  }`}>{tab.count}</span>
+                )}
+                {mainTab === tab.id && (
+                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-indigo-600 rounded-full" />
+                )}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* ═══ Template Cards ═══ */}
-      <div className="p-6 lg:p-8">
-        {filtered.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-16 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-4">
-              <FlaskConical className="w-7 h-7 text-gray-200" />
+      {/* Content area */}
+      <div className="px-6 lg:px-8 py-6">
+
+        {/* TEMA TAB */}
+        {mainTab === 'tema' && (
+          <div>
+            {/* Filter + Stats */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-1 bg-white border border-gray-100 rounded-xl p-1 shadow-sm">
+                {([
+                  { f: 'all' as Filter, label: 'Semua', count: counts.all },
+                  { f: 'active' as Filter, label: 'Aktif', count: counts.active },
+                  { f: 'draft' as Filter, label: 'Draft', count: counts.draft },
+                  { f: 'archived' as Filter, label: 'Arsip', count: counts.archived },
+                ]).map(({ f, label, count }) => (
+                  <button key={f} onClick={() => setFilter(f)}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg transition-all ${
+                      filter === f ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                    }`}>
+                    {label}
+                    {count > 0 && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                        filter === f ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'
+                      }`}>{count}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
-            <p className="text-base font-semibold text-gray-400 mb-1">
-              {filter === 'all' ? 'Belum ada tema' : `Tidak ada tema "${filter}"`}
-            </p>
-            <p className="text-sm text-gray-300 mb-5">
-              {filter === 'all' ? 'Buat desain pertama di Studio Desain.' : 'Ubah filter atau buat tema baru.'}
-            </p>
-            {filter === 'all' && onGoToLab && (
-              <button onClick={onGoToLab}
-                className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
-                <FlaskConical className="w-4 h-4" /> Mulai Desain
-              </button>
+
+            {/* Template grid */}
+            {filtered.length === 0 ? (
+              <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-16 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-4">
+                  <FlaskConical className="w-7 h-7 text-gray-200" />
+                </div>
+                <p className="text-base font-semibold text-gray-400 mb-1">
+                  {filter === 'all' ? 'Belum ada tema' : `Tidak ada tema ${filter === 'draft' ? 'draft' : filter === 'active' ? 'aktif' : 'arsip'}`}
+                </p>
+                <p className="text-sm text-gray-300 mb-5">
+                  {filter === 'all' ? 'Buat desain pertama di Studio Desain.' : 'Ubah filter atau buat tema baru.'}
+                </p>
+                {filter === 'all' && onGoToLab && (
+                  <button onClick={onGoToLab}
+                    className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
+                    <FlaskConical className="w-4 h-4" /> Mulai Desain
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {(() => {
+                  const catGroups = allCategories
+                    .map(cat => ({ cat, items: filtered.filter(r => r.category === cat.slug) }))
+                    .filter(g => g.items.length > 0)
+                  const uncategorized = filtered.filter(r => !allCategories.some(c => c.slug === r.category))
+                  if (uncategorized.length > 0) catGroups.push({ cat: { slug: '_other', label: 'Lainnya', is_built_in: false }, items: uncategorized })
+
+                  return catGroups.map(({ cat, items }) => (
+                    <div key={cat.slug}>
+                      <div className="flex items-center gap-2.5 mb-4">
+                        <h3 className="text-sm font-bold text-gray-700">{cat.label}</h3>
+                        <span className="text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full font-semibold">{items.length}</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        {items.map(rec => {
+                          const cs = rec.config.meta.color_scheme
+                          const tierLabel = findTierLabel(rec.price)
+                          return (
+                            <div key={rec.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-200 group">
+                              <div className="relative aspect-[3/4] overflow-hidden cursor-pointer" onClick={() => openEdit(rec)}
+                                style={{ background: `linear-gradient(135deg, ${cs.primary} 0%, ${cs.background} 100%)` }}>
+                                <div className="absolute inset-0">
+                                  <TemplateThumbnail rec={rec} />
+                                </div>
+                                <div className="absolute top-3 left-3">
+                                  <StatusBadge status={rec.status} />
+                                </div>
+                                {rec.price > 0 && (
+                                  <div className="absolute bottom-3 right-3">
+                                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/90 text-gray-800 backdrop-blur-sm shadow-sm">
+                                      {tierLabel ?? formatRp(rec.price)}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                  <span className="text-white text-xs font-semibold bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Pengaturan
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="p-4">
+                                <div className="flex items-start justify-between gap-2 mb-3">
+                                  <div className="min-w-0 flex-1">
+                                    <h4 className="font-bold text-gray-900 text-sm truncate">{rec.name}</h4>
+                                    <p className="text-[11px] text-gray-400 mt-0.5">
+                                      {rec.config.sections.filter(s => s.enabled).length} section aktif
+                                    </p>
+                                  </div>
+                                  <a href={`/demo/renderer?id=${rec.id}`} target="_blank" rel="noopener noreferrer" title="Preview"
+                                    className="p-1.5 text-gray-300 hover:text-indigo-500 hover:bg-indigo-50 rounded-lg transition-colors shrink-0">
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                  </a>
+                                </div>
+
+                                <div className="flex gap-2">
+                                  {onEditInLab && (
+                                    <button onClick={() => onEditInLab(rec)}
+                                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
+                                      <FlaskConical className="w-3.5 h-3.5" /> Desain
+                                    </button>
+                                  )}
+                                  <button onClick={() => openEdit(rec)}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
+                                    <Settings2 className="w-3.5 h-3.5" /> Atur
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))
+                })()}
+              </div>
             )}
           </div>
-        ) : (
-          <div className="space-y-8">
-            {(() => {
-              const catGroups = allCategories
-                .map(cat => ({ cat, items: filtered.filter(r => r.category === cat.slug) }))
-                .filter(g => g.items.length > 0)
-              const uncategorized = filtered.filter(r => !allCategories.some(c => c.slug === r.category))
-              if (uncategorized.length > 0) catGroups.push({ cat: { slug: '_other', label: 'Lainnya', is_built_in: false }, items: uncategorized })
+        )}
 
-              return catGroups.map(({ cat, items }) => (
-                <div key={cat.slug}>
-                  <div className="flex items-center gap-2 mb-4">
-                    <h3 className="text-sm font-bold text-gray-700">{cat.label}</h3>
-                    <span className="text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full font-semibold">{items.length}</span>
+        {/* KATEGORI TAB */}
+        {mainTab === 'kategori' && (
+          <div className="max-w-xl">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-50">
+                <h2 className="text-base font-bold text-gray-900">Kategori Tema</h2>
+                <p className="text-sm text-gray-400 mt-0.5">Kelompokkan tema berdasarkan gaya. Kategori yang dipakai tidak bisa dihapus.</p>
+              </div>
+              <div className="p-6 space-y-3">
+                {allCategories.map(c => {
+                  const count = records.filter(r => r.category === c.slug).length
+                  const isEd = editingCatSlug === c.slug
+                  return isEd ? (
+                    <div key={c.slug} className="flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
+                      <input value={editingCatLabel} onChange={e => setEditingCatLabel(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') saveEditCategory(); if (e.key === 'Escape') setEditingCatSlug(null) }}
+                        autoFocus className="flex-1 px-3 py-1.5 text-sm bg-white border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30" />
+                      <button onClick={saveEditCategory} className="p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg"><Check className="w-4 h-4" /></button>
+                      <button onClick={() => setEditingCatSlug(null)} className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-lg"><X className="w-4 h-4" /></button>
+                    </div>
+                  ) : (
+                    <div key={c.slug} className="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-100 bg-white hover:border-gray-200 transition-colors group">
+                      <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${count > 0 ? 'bg-indigo-400' : 'bg-gray-200'}`} />
+                      <span className="text-sm font-medium text-gray-800 flex-1">{c.label}</span>
+                      <span className="text-[11px] text-gray-400 tabular-nums">{count} tema</span>
+                      {c.is_built_in && <span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full font-semibold shrink-0">bawaan</span>}
+                      <button onClick={() => startEditCategory(c)} className="p-1 text-gray-300 hover:text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-indigo-50"><Pencil className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => removeCategory(c.slug)} disabled={count > 0}
+                        className="p-1 text-gray-300 hover:text-red-500 disabled:opacity-20 disabled:cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" /></button>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="px-6 pb-6">
+                <div className="flex gap-2">
+                  <input value={newCatLabel} onChange={e => setNewCatLabel(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') addCategory() }}
+                    placeholder="Nama kategori baru..."
+                    className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-white" />
+                  <button onClick={addCategory} disabled={!newCatLabel.trim()}
+                    className="flex items-center gap-1.5 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-40 transition-colors">
+                    <Plus className="w-3.5 h-3.5" /> Tambah
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* PAKET HARGA TAB */}
+        {mainTab === 'harga' && (
+          <div className="max-w-2xl">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-base font-bold text-gray-900">Paket Harga</h2>
+                <p className="text-sm text-gray-400 mt-0.5">Kelola tier harga dan fitur per paket</p>
+              </div>
+              <button onClick={() => openTierEditor()}
+                className="flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
+                <Plus className="w-4 h-4" /> Buat Paket
+              </button>
+            </div>
+            <div className="space-y-3">
+              {allTiers.sort((a, b) => a.price - b.price).map(t => {
+                const used = records.filter(r => r.price === t.price).length
+                const f = t.features
+                const enabledCount = f ? Object.values(f).filter(v => v === true).length : 0
+                const TierIcon = t.icon === 'crown' ? Crown : t.icon === 'gem' ? Gem : Rocket
+                return (
+                  <div key={t.id}
+                    className={`bg-white rounded-2xl border overflow-hidden cursor-pointer hover:shadow-md transition-all duration-200 group ${
+                      t.highlight ? 'border-purple-200 ring-1 ring-purple-100' : 'border-gray-100'
+                    }`}
+                    onClick={() => openTierEditor(t)}>
+                    <div className="px-5 py-4 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${t.color || '#6366f1'}12` }}>
+                        <TierIcon className="w-5 h-5" style={{ color: t.color || '#6366f1' }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-gray-900">{t.label}</span>
+                          {t.highlight && <span className="text-[9px] bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-full font-bold">POPULER</span>}
+                          {t.is_built_in && <span className="text-[9px] bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded-full font-semibold">bawaan</span>}
+                        </div>
+                        {t.description && <p className="text-[11px] text-gray-400 truncate mt-0.5">{t.description}</p>}
+                        <div className="flex items-center gap-3 mt-1.5">
+                          <span className="text-[11px] text-gray-400">{used} tema</span>
+                          <span className="text-[11px] text-gray-400">{enabledCount} fitur</span>
+                          {f && <span className="text-[11px] text-gray-400">{f.validity_days} hari</span>}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-lg font-bold" style={{ color: t.color || '#6366f1' }}>
+                          {t.price === 0 ? 'Gratis' : formatRp(t.price)}
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); if (used > 0) { toast.error('Masih dipakai template'); return } if (confirm(`Hapus paket "${t.label}"?`)) removeTier(t.id) }}
+                        className="p-2 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-300 opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                        title="Hapus paket"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors shrink-0" />
+                    </div>
+                    {f && (
+                      <div className="px-5 pb-4 flex flex-wrap gap-1.5">
+                        {f.music && <span className="text-[10px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded-md border border-gray-100">Musik</span>}
+                        {f.gallery && <span className="text-[10px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded-md border border-gray-100">Galeri {f.max_photos}</span>}
+                        {f.rsvp && <span className="text-[10px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded-md border border-gray-100">RSVP</span>}
+                        {f.wishes && <span className="text-[10px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded-md border border-gray-100">Ucapan</span>}
+                        {f.story && <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-100">Story</span>}
+                        {f.video && <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-100">Video</span>}
+                        {f.gift_registry && <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-100">Gift Registry</span>}
+                        {f.custom_music && <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md border border-blue-100">Upload Musik</span>}
+                        {f.remove_watermark && <span className="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-md border border-purple-100">No Watermark</span>}
+                        {f.custom_domain && <span className="text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md border border-amber-100">Custom Domain</span>}
+                        {f.analytics && <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md border border-blue-100">Analytics</span>}
+                        {f.priority_support && <span className="text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md border border-amber-100">Priority</span>}
+                      </div>
+                    )}
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {items.map(rec => {
-                      const cs = rec.config.meta.color_scheme
-                      const tierLabel = findTierLabel(rec.price)
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* PROMOSI TAB */}
+        {mainTab === 'promo' && (
+          <div className="max-w-2xl space-y-8">
+            {/* Flash Sale */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+                    <Zap className="w-4 h-4 text-amber-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-gray-900">Flash Sale</h2>
+                    <p className="text-[12px] text-gray-400">Diskon otomatis berdasarkan periode waktu</p>
+                  </div>
+                  {allFlashSales.length > 0 && <span className="text-[10px] bg-amber-100 text-amber-600 px-2 py-0.5 rounded-full font-bold">{allFlashSales.length}</span>}
+                </div>
+                <button onClick={() => setShowAddFlashSale(!showAddFlashSale)}
+                  className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg transition-colors ${
+                    showAddFlashSale ? 'text-gray-400 bg-gray-100' : 'text-amber-600 bg-amber-50 hover:bg-amber-100'
+                  }`}>
+                  {showAddFlashSale ? <><X className="w-3.5 h-3.5" /> Batal</> : <><Plus className="w-3.5 h-3.5" /> Buat</>}
+                </button>
+              </div>
+
+              <div className="p-6">
+                {showAddFlashSale && (
+                  <div className="bg-amber-50/50 rounded-xl border border-amber-100 p-5 space-y-3 mb-5">
+                    <input value={fsForm.label} onChange={e => setFsForm({ ...fsForm, label: e.target.value })} placeholder="Nama promo"
+                      className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
+                    <div className="flex gap-2">
+                      <select value={fsForm.discount_type} onChange={e => setFsForm({ ...fsForm, discount_type: e.target.value as 'percentage' | 'fixed' })}
+                        className="w-16 px-2 py-2.5 text-sm border border-gray-200 rounded-xl bg-white">
+                        <option value="percentage">%</option><option value="fixed">Rp</option>
+                      </select>
+                      <input type="number" min={0} value={fsForm.discount_value} onChange={e => setFsForm({ ...fsForm, discount_value: e.target.value })}
+                        placeholder={fsForm.discount_type === 'percentage' ? '20' : '50000'}
+                        className="flex-1 px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[11px] font-medium text-gray-500 mb-1">Mulai</label>
+                        <input type="date" value={fsForm.start_date} onChange={e => setFsForm({ ...fsForm, start_date: e.target.value })}
+                          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-medium text-gray-500 mb-1">Berakhir</label>
+                        <input type="date" value={fsForm.end_date} onChange={e => setFsForm({ ...fsForm, end_date: e.target.value })}
+                          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1.5">Berlaku untuk:</p>
+                      <ScopeSelector scope={fsForm.scope} scopeIds={fsForm.scope_ids} tiers={allTiers} categories={allCategories}
+                        onChange={(scope, ids) => setFsForm({ ...fsForm, scope, scope_ids: ids })} />
+                    </div>
+                    <button onClick={addFlashSale}
+                      className="w-full flex items-center justify-center gap-1.5 bg-amber-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors">
+                      <Zap className="w-3.5 h-3.5" /> Buat Flash Sale
+                    </button>
+                  </div>
+                )}
+
+                {allFlashSales.length > 0 ? (
+                  <div className="space-y-2.5">
+                    {allFlashSales.map(s => (
+                      <div key={s.id} className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm transition-colors ${
+                        isLive(s) ? 'bg-amber-50/50 border-amber-200' : s.is_active ? 'bg-white border-gray-100' : 'bg-gray-50 border-gray-100 opacity-50'
+                      }`}>
+                        <button onClick={() => toggleFlashSale(s.id)} className="shrink-0">
+                          {s.is_active ? <ToggleRight className="w-5 h-5 text-emerald-500" /> : <ToggleLeft className="w-5 h-5 text-gray-300" />}
+                        </button>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-gray-800">{s.label}</span>
+                            {isLive(s) && <span className="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold animate-pulse">LIVE</span>}
+                          </div>
+                          <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
+                            <span className="font-mono font-bold text-amber-600">{s.discount_type === 'percentage' ? `${s.discount_value}%` : formatRp(s.discount_value)}</span>
+                            <ScopeBadge scope={s.scope} scopeIds={s.scope_ids} tiers={allTiers} categories={allCategories} />
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(s.start_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })} sampai {new Date(s.end_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                            </span>
+                          </div>
+                        </div>
+                        <button onClick={() => removeFlashSale(s.id)} className="p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-300 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                      </div>
+                    ))}
+                  </div>
+                ) : !showAddFlashSale && (
+                  <div className="text-center py-8 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
+                    <Zap className="w-5 h-5 text-gray-300 mx-auto mb-2" />
+                    <p className="text-xs text-gray-400">Belum ada flash sale</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Kupon */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-violet-50 flex items-center justify-center">
+                    <Ticket className="w-4 h-4 text-violet-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-gray-900">Kupon Diskon</h2>
+                    <p className="text-[12px] text-gray-400">Kode promo yang bisa dipakai user saat checkout</p>
+                  </div>
+                  {allCoupons.length > 0 && <span className="text-[10px] bg-violet-100 text-violet-600 px-2 py-0.5 rounded-full font-bold">{allCoupons.length}</span>}
+                </div>
+                <button onClick={() => setShowAddCoupon(!showAddCoupon)}
+                  className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg transition-colors ${
+                    showAddCoupon ? 'text-gray-400 bg-gray-100' : 'text-violet-600 bg-violet-50 hover:bg-violet-100'
+                  }`}>
+                  {showAddCoupon ? <><X className="w-3.5 h-3.5" /> Batal</> : <><Plus className="w-3.5 h-3.5" /> Buat</>}
+                </button>
+              </div>
+
+              <div className="p-6">
+                {showAddCoupon && (
+                  <div className="bg-violet-50/50 rounded-xl border border-violet-100 p-5 space-y-3 mb-5">
+                    <div className="grid grid-cols-2 gap-2">
+                      <input value={cpForm.code} onChange={e => setCpForm({ ...cpForm, code: e.target.value.toUpperCase() })} placeholder="KODE"
+                        className="px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-white font-mono uppercase focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
+                      <input value={cpForm.label} onChange={e => setCpForm({ ...cpForm, label: e.target.value })} placeholder="Deskripsi"
+                        className="px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
+                    </div>
+                    <div className="flex gap-2">
+                      <select value={cpForm.discount_type} onChange={e => setCpForm({ ...cpForm, discount_type: e.target.value as 'percentage' | 'fixed' })}
+                        className="w-16 px-2 py-2.5 text-sm border border-gray-200 rounded-xl bg-white">
+                        <option value="percentage">%</option><option value="fixed">Rp</option>
+                      </select>
+                      <input type="number" min={0} value={cpForm.discount_value} onChange={e => setCpForm({ ...cpForm, discount_value: e.target.value })} placeholder="Diskon"
+                        className="flex-1 px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
+                      <input type="number" min={0} value={cpForm.max_uses} onChange={e => setCpForm({ ...cpForm, max_uses: e.target.value })} placeholder="Maks (0=∞)"
+                        className="flex-1 px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[11px] font-medium text-gray-500 mb-1">Berlaku dari</label>
+                        <input type="date" value={cpForm.valid_from} onChange={e => setCpForm({ ...cpForm, valid_from: e.target.value })}
+                          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-medium text-gray-500 mb-1">Sampai</label>
+                        <input type="date" value={cpForm.valid_until} onChange={e => setCpForm({ ...cpForm, valid_until: e.target.value })}
+                          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1.5">Berlaku untuk:</p>
+                      <ScopeSelector scope={cpForm.scope} scopeIds={cpForm.scope_ids} tiers={allTiers} categories={allCategories}
+                        onChange={(scope, ids) => setCpForm({ ...cpForm, scope, scope_ids: ids })} />
+                    </div>
+                    <button onClick={addCoupon}
+                      className="w-full flex items-center justify-center gap-1.5 bg-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors">
+                      <Ticket className="w-3.5 h-3.5" /> Buat Kupon
+                    </button>
+                  </div>
+                )}
+
+                {allCoupons.length > 0 ? (
+                  <div className="space-y-2.5">
+                    {allCoupons.map(c => {
+                      const expired = new Date(c.valid_until) < new Date()
+                      const exhausted = c.max_uses > 0 && c.used_count >= c.max_uses
                       return (
-                        <div key={rec.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all group">
-                          {/* Thumbnail */}
-                          <div className="relative aspect-[3/4] overflow-hidden cursor-pointer" onClick={() => openEdit(rec)}
-                            style={{ background: `linear-gradient(135deg, ${cs.primary} 0%, ${cs.background} 100%)` }}>
-                            <div className="absolute inset-0">
-                              <TemplateThumbnail rec={rec} />
-                            </div>
-                            <div className="absolute top-2.5 left-2.5">
-                              <StatusBadge status={rec.status} />
-                            </div>
-                            {rec.price > 0 && (
-                              <div className="absolute bottom-2.5 right-2.5">
-                                <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-500/90 text-white backdrop-blur-sm">
-                                  {tierLabel ?? formatRp(rec.price)}
-                                </span>
-                              </div>
-                            )}
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                              <span className="text-white text-xs font-semibold bg-black/50 px-3 py-1.5 rounded-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                Atur Tema
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Info */}
-                          <div className="p-3.5">
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="min-w-0 flex-1">
-                                <h4 className="font-semibold text-gray-900 text-sm truncate">{rec.name}</h4>
-                                <p className="text-[10px] text-gray-400 font-mono mt-0.5 truncate">/{rec.slug}</p>
-                              </div>
-                              <div className="flex items-center gap-0.5 shrink-0">
-                                <a href={`/demo/renderer?id=${rec.id}`} target="_blank" rel="noopener noreferrer" title="Preview"
-                                  className="p-1.5 text-gray-300 hover:text-indigo-500 hover:bg-indigo-50 rounded-lg transition-colors">
-                                  <ExternalLink className="w-3.5 h-3.5" />
-                                </a>
-                              </div>
-                            </div>
-
-                            {/* Action row */}
-                            <div className="flex gap-1.5 mt-3">
-                              {onEditInLab && (
-                                <button onClick={() => onEditInLab(rec)}
-                                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
-                                  <FlaskConical className="w-3.5 h-3.5" /> Edit Desain
-                                </button>
-                              )}
-                              <button onClick={() => openEdit(rec)}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
-                                <Settings2 className="w-3.5 h-3.5" /> Atur
+                        <div key={c.id} className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm transition-colors ${
+                          !c.is_active || expired || exhausted ? 'bg-gray-50 border-gray-100 opacity-50' : 'bg-white border-violet-100'
+                        }`}>
+                          <button onClick={() => toggleCoupon(c.id)} className="shrink-0">
+                            {c.is_active ? <ToggleRight className="w-5 h-5 text-emerald-500" /> : <ToggleLeft className="w-5 h-5 text-gray-300" />}
+                          </button>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <button onClick={() => { navigator.clipboard.writeText(c.code); toast.success(`"${c.code}" disalin`) }}
+                                className="inline-flex items-center gap-1 bg-violet-100 text-violet-700 font-mono font-bold text-xs px-2 py-0.5 rounded-lg hover:bg-violet-200 transition-colors">
+                                {c.code} <Copy className="w-2.5 h-2.5 opacity-50" />
                               </button>
+                              <span className="font-medium text-gray-700">{c.label}</span>
+                              {expired && <span className="text-[9px] bg-red-100 text-red-500 px-1.5 py-0.5 rounded-full font-semibold">Expired</span>}
+                              {exhausted && !expired && <span className="text-[9px] bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded-full font-semibold">Habis</span>}
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
+                              <span className="font-mono font-bold text-violet-600">{c.discount_type === 'percentage' ? `${c.discount_value}%` : formatRp(c.discount_value)}</span>
+                              <ScopeBadge scope={c.scope} scopeIds={c.scope_ids} tiers={allTiers} categories={allCategories} />
+                              <span>{c.used_count}/{c.max_uses || '∞'} terpakai</span>
                             </div>
                           </div>
+                          <button onClick={() => removeCoupon(c.id)} className="p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-300 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
                       )
                     })}
                   </div>
-                </div>
-              ))
-            })()}
+                ) : !showAddCoupon && (
+                  <div className="text-center py-8 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
+                    <Ticket className="w-5 h-5 text-gray-300 mx-auto mb-2" />
+                    <p className="text-xs text-gray-400">Belum ada kupon</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* ═══ EDIT DRAWER ═══ */}
+      {/* EDIT DRAWER */}
       <Drawer open={!!editingId} onClose={() => setEditingId(null)} title="Pengaturan Tema" width="max-w-lg">
         {editingRec && (
           <div className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto">
-              {/* Hero card */}
               <div className="p-5">
                 <div className="rounded-2xl overflow-hidden border border-gray-100" style={{ background: `linear-gradient(135deg, ${editingRec.config.meta.color_scheme.primary}12 0%, ${editingRec.config.meta.color_scheme.accent}08 100%)` }}>
                   <div className="flex gap-4 p-4">
@@ -563,7 +918,6 @@ export default function TemplatesTab({
                         )}
                       </div>
                       <h3 className="font-bold text-gray-900 text-base truncate">{editingRec.name}</h3>
-                      <p className="text-[11px] text-gray-400 font-mono mt-0.5">/{editingRec.slug}</p>
                       <div className="flex items-center gap-1.5 mt-2">
                         {[editingRec.config.meta.color_scheme.primary, editingRec.config.meta.color_scheme.accent, editingRec.config.meta.color_scheme.text, editingRec.config.meta.color_scheme.background].map((c, i) => (
                           <div key={i} className="w-3.5 h-3.5 rounded-full border border-white shadow-sm" style={{ backgroundColor: c }} />
@@ -597,9 +951,7 @@ export default function TemplatesTab({
                 </div>
               </div>
 
-              {/* Form fields */}
               <div className="px-5 pb-2 space-y-5">
-                {/* Nama & Kategori */}
                 <div className="grid grid-cols-[1fr_auto] gap-3">
                   <div>
                     <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Nama Tampilan</label>
@@ -627,7 +979,6 @@ export default function TemplatesTab({
                   </div>
                 </div>
 
-                {/* Thumbnail */}
                 <div>
                   <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Thumbnail</label>
                   <input ref={thumbInputRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleThumbUpload(f) }} />
@@ -642,12 +993,11 @@ export default function TemplatesTab({
                     </div>
                     <button type="button" onClick={() => thumbInputRef.current?.click()} disabled={uploadingThumb}
                       className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium border border-gray-200 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition-colors bg-white disabled:opacity-50">
-                      <Upload className="w-3.5 h-3.5" /> {uploadingThumb ? 'Uploading...' : 'Ganti Thumbnail'}
+                      <Upload className="w-3.5 h-3.5" /> {uploadingThumb ? 'Mengupload...' : 'Ganti Thumbnail'}
                     </button>
                   </div>
                 </div>
 
-                {/* Tier & Akses - visual card selector */}
                 <div>
                   <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Paket Harga</label>
                   <div className="space-y-1.5">
@@ -669,7 +1019,7 @@ export default function TemplatesTab({
                           <span className="text-sm font-bold shrink-0" style={{ color: t.color || '#6366f1' }}>
                             {t.price === 0 ? 'Gratis' : formatRp(t.price)}
                           </span>
-                          <div className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                             sel ? 'bg-indigo-600 border-indigo-600' : 'border-gray-300'
                           }`}>
                             {sel && <Check className="w-2.5 h-2.5 text-white" />}
@@ -692,12 +1042,11 @@ export default function TemplatesTab({
                         }`}>{o.label}</button>
                     ))}
                   </div>
-                  <p className="text-[10px] text-gray-400 mt-1">Paket minimum yang diperlukan user untuk menggunakan tema ini</p>
+                  <p className="text-[10px] text-gray-400 mt-1.5">Paket minimum yang diperlukan user untuk menggunakan tema ini</p>
                 </div>
               </div>
             </div>
 
-            {/* Sticky save footer */}
             <div className="p-4 border-t border-gray-100 bg-white shrink-0">
               <div className="flex items-center gap-2">
                 <button onClick={saveEdit} disabled={saving}
@@ -713,338 +1062,7 @@ export default function TemplatesTab({
         )}
       </Drawer>
 
-      {/* ═══ CONFIG DRAWER ═══ */}
-      <Drawer open={showConfig} onClose={() => setShowConfig(false)} title="Konfigurasi" width="max-w-xl">
-        <div className="flex flex-col h-full">
-          {/* Inner tabs */}
-          <div className="px-5 pt-3 pb-0 shrink-0">
-            <div className="flex bg-gray-100 rounded-xl p-0.5">
-              {([
-                { id: 'kategori' as const, label: 'Kategori', icon: Tag, count: allCategories.length },
-                { id: 'harga' as const, label: 'Paket Harga', icon: Crown, count: allTiers.length },
-                { id: 'promo' as const, label: 'Promo', icon: Zap, count: allFlashSales.length + allCoupons.length },
-              ]).map(tab => (
-                <button key={tab.id} onClick={() => setConfigTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                    configTab === tab.id ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                  }`}>
-                  <tab.icon className="w-3.5 h-3.5" />
-                  {tab.label}
-                  {tab.count > 0 && <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
-                    configTab === tab.id ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-200 text-gray-400'
-                  }`}>{tab.count}</span>}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Tab content */}
-          <div className="flex-1 overflow-y-auto">
-            {/* ── Kategori tab ── */}
-            {configTab === 'kategori' && (
-              <div className="p-5 space-y-4">
-                <p className="text-xs text-gray-400">Kelompokkan tema berdasarkan gaya. Kategori yang dipakai tidak bisa dihapus.</p>
-                <div className="space-y-2">
-                  {allCategories.map(c => {
-                    const count = records.filter(r => r.category === c.slug).length
-                    const isEd = editingCatSlug === c.slug
-                    return isEd ? (
-                      <div key={c.slug} className="flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-xl px-3.5 py-2.5">
-                        <input value={editingCatLabel} onChange={e => setEditingCatLabel(e.target.value)}
-                          onKeyDown={e => { if (e.key === 'Enter') saveEditCategory(); if (e.key === 'Escape') setEditingCatSlug(null) }}
-                          autoFocus className="flex-1 px-2 py-1 text-sm bg-white border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30" />
-                        <button onClick={saveEditCategory} className="p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg"><Check className="w-4 h-4" /></button>
-                        <button onClick={() => setEditingCatSlug(null)} className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-lg"><X className="w-4 h-4" /></button>
-                      </div>
-                    ) : (
-                      <div key={c.slug} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-gray-100 bg-white hover:border-gray-200 transition-colors group">
-                        <div className={`w-2 h-2 rounded-full shrink-0 ${count > 0 ? 'bg-indigo-400' : 'bg-gray-200'}`} />
-                        <span className="text-sm font-medium text-gray-800 flex-1">{c.label}</span>
-                        <span className="text-[11px] text-gray-400">{count} tema</span>
-                        {c.is_built_in && <span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full font-semibold shrink-0">bawaan</span>}
-                        <button onClick={() => startEditCategory(c)} className="p-1 text-gray-300 hover:text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-indigo-50"><Pencil className="w-3.5 h-3.5" /></button>
-                        <button onClick={() => removeCategory(c.slug)} disabled={count > 0}
-                          className="p-1 text-gray-300 hover:text-red-500 disabled:opacity-20 disabled:cursor-not-allowed opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" /></button>
-                      </div>
-                    )
-                  })}
-                </div>
-                <div className="flex gap-2 pt-2">
-                  <input value={newCatLabel} onChange={e => setNewCatLabel(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter') addCategory() }}
-                    placeholder="Nama kategori baru..."
-                    className="flex-1 px-3.5 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-white" />
-                  <button onClick={addCategory} disabled={!newCatLabel.trim()}
-                    className="flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-40 transition-colors">
-                    <Plus className="w-3.5 h-3.5" /> Tambah
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* ── Paket Harga tab ── */}
-            {configTab === 'harga' && (
-              <div className="p-5 space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-400">Kelola paket harga dan fitur yang disertakan.</p>
-                  <button onClick={() => openTierEditor()} className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors">
-                    <Plus className="w-3.5 h-3.5" /> Buat Paket
-                  </button>
-                </div>
-                <div className="space-y-2.5">
-                  {allTiers.sort((a, b) => a.price - b.price).map(t => {
-                    const used = records.filter(r => r.price === t.price).length
-                    const f = t.features
-                    const enabledCount = f ? Object.values(f).filter(v => v === true).length : 0
-                    const TierIcon = t.icon === 'crown' ? Crown : t.icon === 'gem' ? Gem : Rocket
-                    return (
-                      <div key={t.id}
-                        className={`rounded-xl border overflow-hidden cursor-pointer hover:shadow-md transition-all group ${t.highlight ? 'border-purple-200 bg-gradient-to-r from-purple-50/40 to-white' : 'border-gray-100 bg-white'}`}
-                        onClick={() => openTierEditor(t)}>
-                        <div className="px-4 py-3.5 flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${t.color || '#6366f1'}15` }}>
-                            <TierIcon className="w-5 h-5" style={{ color: t.color || '#6366f1' }} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-bold text-gray-900">{t.label}</span>
-                              {t.highlight && <span className="text-[9px] bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-full font-bold">POPULER</span>}
-                            </div>
-                            {t.description && <p className="text-[11px] text-gray-400 truncate mt-0.5">{t.description}</p>}
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-[10px] text-gray-400">{used} tema</span>
-                              <span className="text-[10px] text-gray-300">·</span>
-                              <span className="text-[10px] text-gray-400">{enabledCount} fitur</span>
-                              {f && <>
-                                <span className="text-[10px] text-gray-300">·</span>
-                                <span className="text-[10px] text-gray-400">{f.validity_days} hari</span>
-                              </>}
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <p className="text-base font-bold" style={{ color: t.color || '#6366f1' }}>{formatRp(t.price)}</p>
-                          </div>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); if (used > 0) { toast.error('Masih dipakai template'); return } if (confirm(`Hapus paket "${t.label}"?`)) removeTier(t.id) }}
-                            className="p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-300 opacity-0 group-hover:opacity-100 transition-all shrink-0"
-                            title="Hapus paket"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                          <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors shrink-0" />
-                        </div>
-                        {f && (
-                          <div className="px-4 pb-3 flex flex-wrap gap-1">
-                            {f.music && <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Musik</span>}
-                            {f.gallery && <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Galeri {f.max_photos}</span>}
-                            {f.rsvp && <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">RSVP</span>}
-                            {f.wishes && <span className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Ucapan</span>}
-                            {f.story && <span className="text-[9px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">Story</span>}
-                            {f.video && <span className="text-[9px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">Video</span>}
-                            {f.gift_registry && <span className="text-[9px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">Gift Registry</span>}
-                            {f.custom_music && <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">Upload Musik</span>}
-                            {f.remove_watermark && <span className="text-[9px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded">No Watermark</span>}
-                            {f.custom_domain && <span className="text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded">Custom Domain</span>}
-                            {f.analytics && <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">Analytics</span>}
-                            {f.priority_support && <span className="text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded">Priority</span>}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* ── Promo tab (Flash Sale + Kupon) ── */}
-            {configTab === 'promo' && (
-              <div className="p-5 space-y-6">
-                {/* Flash Sale */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-amber-500" />
-                      <h4 className="text-sm font-bold text-gray-800">Flash Sale</h4>
-                      {allFlashSales.length > 0 && <span className="text-[10px] bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full font-bold">{allFlashSales.length}</span>}
-                    </div>
-                    <button onClick={() => setShowAddFlashSale(!showAddFlashSale)}
-                      className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${showAddFlashSale ? 'text-gray-400 bg-gray-100' : 'text-amber-600 bg-amber-50 hover:bg-amber-100'}`}>
-                      {showAddFlashSale ? <><X className="w-3 h-3" /> Batal</> : <><Plus className="w-3 h-3" /> Buat</>}
-                    </button>
-                  </div>
-
-                  {showAddFlashSale && (
-                    <div className="bg-amber-50/50 rounded-xl border border-amber-100 p-4 space-y-3 mb-3">
-                      <input value={fsForm.label} onChange={e => setFsForm({ ...fsForm, label: e.target.value })} placeholder="Nama promo"
-                        className="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
-                      <div className="flex gap-2">
-                        <select value={fsForm.discount_type} onChange={e => setFsForm({ ...fsForm, discount_type: e.target.value as 'percentage' | 'fixed' })}
-                          className="w-16 px-2 py-2 text-sm border border-gray-200 rounded-xl bg-white">
-                          <option value="percentage">%</option><option value="fixed">Rp</option>
-                        </select>
-                        <input type="number" min={0} value={fsForm.discount_value} onChange={e => setFsForm({ ...fsForm, discount_value: e.target.value })}
-                          placeholder={fsForm.discount_type === 'percentage' ? '20' : '50000'}
-                          className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="block text-[10px] text-gray-400 mb-1">Mulai</label>
-                          <input type="date" value={fsForm.start_date} onChange={e => setFsForm({ ...fsForm, start_date: e.target.value })}
-                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-gray-400 mb-1">Berakhir</label>
-                          <input type="date" value={fsForm.end_date} onChange={e => setFsForm({ ...fsForm, end_date: e.target.value })}
-                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400" />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 mb-1.5">Berlaku untuk:</p>
-                        <ScopeSelector scope={fsForm.scope} scopeIds={fsForm.scope_ids} tiers={allTiers} categories={allCategories}
-                          onChange={(scope, ids) => setFsForm({ ...fsForm, scope, scope_ids: ids })} />
-                      </div>
-                      <button onClick={addFlashSale}
-                        className="w-full flex items-center justify-center gap-1.5 bg-amber-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors">
-                        <Zap className="w-3.5 h-3.5" /> Buat Flash Sale
-                      </button>
-                    </div>
-                  )}
-
-                  {allFlashSales.length > 0 ? (
-                    <div className="space-y-2">
-                      {allFlashSales.map(s => (
-                        <div key={s.id} className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl border text-sm transition-colors ${
-                          isLive(s) ? 'bg-amber-50 border-amber-200' : s.is_active ? 'bg-white border-gray-100' : 'bg-gray-50 border-gray-100 opacity-50'
-                        }`}>
-                          <button onClick={() => toggleFlashSale(s.id)} className="shrink-0">
-                            {s.is_active ? <ToggleRight className="w-5 h-5 text-emerald-500" /> : <ToggleLeft className="w-5 h-5 text-gray-300" />}
-                          </button>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-semibold text-gray-800">{s.label}</span>
-                              {isLive(s) && <span className="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold animate-pulse">LIVE</span>}
-                            </div>
-                            <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
-                              <span className="font-mono font-bold text-amber-600">{s.discount_type === 'percentage' ? `${s.discount_value}%` : formatRp(s.discount_value)}</span>
-                              <ScopeBadge scope={s.scope} scopeIds={s.scope_ids} tiers={allTiers} categories={allCategories} />
-                              <span className="flex items-center gap-0.5"><Calendar className="w-3 h-3" />{new Date(s.start_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })} s.d. {new Date(s.end_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
-                            </div>
-                          </div>
-                          <button onClick={() => removeFlashSale(s.id)} className="p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-300 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : !showAddFlashSale && (
-                    <div className="text-center py-6 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
-                      <Zap className="w-5 h-5 text-gray-300 mx-auto mb-1.5" />
-                      <p className="text-xs text-gray-400">Belum ada flash sale aktif</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Kupon */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Ticket className="w-4 h-4 text-violet-500" />
-                      <h4 className="text-sm font-bold text-gray-800">Kupon Diskon</h4>
-                      {allCoupons.length > 0 && <span className="text-[10px] bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded-full font-bold">{allCoupons.length}</span>}
-                    </div>
-                    <button onClick={() => setShowAddCoupon(!showAddCoupon)}
-                      className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${showAddCoupon ? 'text-gray-400 bg-gray-100' : 'text-violet-600 bg-violet-50 hover:bg-violet-100'}`}>
-                      {showAddCoupon ? <><X className="w-3 h-3" /> Batal</> : <><Plus className="w-3 h-3" /> Buat</>}
-                    </button>
-                  </div>
-
-                  {showAddCoupon && (
-                    <div className="bg-violet-50/50 rounded-xl border border-violet-100 p-4 space-y-3 mb-3">
-                      <div className="grid grid-cols-2 gap-2">
-                        <input value={cpForm.code} onChange={e => setCpForm({ ...cpForm, code: e.target.value.toUpperCase() })} placeholder="KODE"
-                          className="px-3.5 py-2 text-sm border border-gray-200 rounded-xl bg-white font-mono uppercase focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
-                        <input value={cpForm.label} onChange={e => setCpForm({ ...cpForm, label: e.target.value })} placeholder="Deskripsi"
-                          className="px-3.5 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
-                      </div>
-                      <div className="flex gap-2">
-                        <select value={cpForm.discount_type} onChange={e => setCpForm({ ...cpForm, discount_type: e.target.value as 'percentage' | 'fixed' })}
-                          className="w-16 px-2 py-2 text-sm border border-gray-200 rounded-xl bg-white">
-                          <option value="percentage">%</option><option value="fixed">Rp</option>
-                        </select>
-                        <input type="number" min={0} value={cpForm.discount_value} onChange={e => setCpForm({ ...cpForm, discount_value: e.target.value })} placeholder="Diskon"
-                          className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
-                        <input type="number" min={0} value={cpForm.max_uses} onChange={e => setCpForm({ ...cpForm, max_uses: e.target.value })} placeholder="Maks (0=∞)"
-                          className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="block text-[10px] text-gray-400 mb-1">Berlaku dari</label>
-                          <input type="date" value={cpForm.valid_from} onChange={e => setCpForm({ ...cpForm, valid_from: e.target.value })}
-                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-gray-400 mb-1">Sampai</label>
-                          <input type="date" value={cpForm.valid_until} onChange={e => setCpForm({ ...cpForm, valid_until: e.target.value })}
-                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400" />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 mb-1.5">Berlaku untuk:</p>
-                        <ScopeSelector scope={cpForm.scope} scopeIds={cpForm.scope_ids} tiers={allTiers} categories={allCategories}
-                          onChange={(scope, ids) => setCpForm({ ...cpForm, scope, scope_ids: ids })} />
-                      </div>
-                      <button onClick={addCoupon}
-                        className="w-full flex items-center justify-center gap-1.5 bg-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors">
-                        <Ticket className="w-3.5 h-3.5" /> Buat Kupon
-                      </button>
-                    </div>
-                  )}
-
-                  {allCoupons.length > 0 ? (
-                    <div className="space-y-2">
-                      {allCoupons.map(c => {
-                        const expired = new Date(c.valid_until) < new Date()
-                        const exhausted = c.max_uses > 0 && c.used_count >= c.max_uses
-                        return (
-                          <div key={c.id} className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl border text-sm transition-colors ${
-                            !c.is_active || expired || exhausted ? 'bg-gray-50 border-gray-100 opacity-50' : 'bg-white border-violet-100'
-                          }`}>
-                            <button onClick={() => toggleCoupon(c.id)} className="shrink-0">
-                              {c.is_active ? <ToggleRight className="w-5 h-5 text-emerald-500" /> : <ToggleLeft className="w-5 h-5 text-gray-300" />}
-                            </button>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <button onClick={() => { navigator.clipboard.writeText(c.code); toast.success(`"${c.code}" disalin`) }}
-                                  className="inline-flex items-center gap-1 bg-violet-100 text-violet-700 font-mono font-bold text-xs px-2 py-0.5 rounded-lg hover:bg-violet-200 transition-colors">
-                                  {c.code} <Copy className="w-2.5 h-2.5 opacity-50" />
-                                </button>
-                                <span className="font-medium text-gray-700">{c.label}</span>
-                                {expired && <span className="text-[9px] bg-red-100 text-red-500 px-1.5 py-0.5 rounded-full font-semibold">Expired</span>}
-                                {exhausted && !expired && <span className="text-[9px] bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded-full font-semibold">Habis</span>}
-                              </div>
-                              <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
-                                <span className="font-mono font-bold text-violet-600">{c.discount_type === 'percentage' ? `${c.discount_value}%` : formatRp(c.discount_value)}</span>
-                                <ScopeBadge scope={c.scope} scopeIds={c.scope_ids} tiers={allTiers} categories={allCategories} />
-                                <span>{c.used_count}/{c.max_uses || '∞'} terpakai</span>
-                              </div>
-                            </div>
-                            <button onClick={() => removeCoupon(c.id)} className="p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-300 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  ) : !showAddCoupon && (
-                    <div className="text-center py-6 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
-                      <Ticket className="w-5 h-5 text-gray-300 mx-auto mb-1.5" />
-                      <p className="text-xs text-gray-400">Belum ada kupon aktif</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </Drawer>
-
-      {/* ═══ TIER EDITOR DRAWER ═══ */}
+      {/* TIER EDITOR DRAWER */}
       <Drawer open={tierEditorOpen} onClose={() => setTierEditorOpen(false)} title={tierEditorId ? 'Edit Paket' : 'Buat Paket Baru'} width="max-w-lg">
         {(() => {
           const d = tierDraft
@@ -1083,7 +1101,6 @@ export default function TemplatesTab({
 
           return (
             <div className="flex flex-col h-full">
-              {/* Step indicator */}
               <div className="px-6 py-3 border-b border-gray-100 bg-gray-50/50 shrink-0">
                 <div className="flex items-center gap-1">
                   {STEPS.map((s, i) => (
@@ -1099,7 +1116,6 @@ export default function TemplatesTab({
                 </div>
               </div>
 
-              {/* Step content */}
               <div className="flex-1 overflow-y-auto">
                 {tierStep === 0 && (
                   <div className="p-6 space-y-5">
@@ -1247,7 +1263,6 @@ export default function TemplatesTab({
                 )}
               </div>
 
-              {/* Footer navigation */}
               <div className="p-4 border-t border-gray-100 bg-gray-50/80 shrink-0">
                 <div className="flex items-center gap-3">
                   {tierStep > 0 && (

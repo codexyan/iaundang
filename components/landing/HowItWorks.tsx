@@ -13,11 +13,11 @@ const defaultSteps = [
   },
   {
     title: 'Bayar sekali, langsung aktif',
-    description: 'Sudah cocok? Pilih paket mulai Rp 79.000 — sekali bayar, tanpa langganan. Undangan langsung aktif dengan subdomain nama kalian.',
+    description: 'Sudah cocok? Pilih paket mulai Rp 79.000, sekali bayar tanpa langganan. Undangan langsung aktif dengan subdomain nama kalian.',
   },
   {
     title: 'Lengkapi & bagikan ke tamu',
-    description: 'Isi detail acara, upload foto, pilih musik. Salin link undangan dan kirim ke tamu lewat WhatsApp — setiap tamu dapat undangan personal.',
+    description: 'Isi detail acara, upload foto, pilih musik. Salin link undangan dan kirim ke tamu lewat WhatsApp. Setiap tamu dapat undangan personal.',
   },
 ]
 

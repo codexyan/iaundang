@@ -15,7 +15,7 @@ interface Props {
   template: TemplateRecord
   initialWishes?: Wish[]
   musicUrl?: string
-  /** Contained mode — absolute positioning, untuk preview dalam container (demo/fullscreen) */
+  /** Contained mode   absolute positioning, untuk preview dalam container (demo/fullscreen) */
   contained?: boolean
 }
 
@@ -108,7 +108,7 @@ export default function InvitationRenderer({
       position: 'relative',
       ...(contained ? { width: '100%', height: '100%' } : {}),
     }}>
-      {/* Music player — tampil sejak opening */}
+      {/* Music player   tampil sejak opening */}
       {resolvedMusicUrl && (
         <FloatingMusicPlayer
           config={{ ...musicConfig, autoplay: true }}

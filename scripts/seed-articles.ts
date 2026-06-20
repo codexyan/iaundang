@@ -28,7 +28,7 @@ Selalu ada pengeluaran tak terduga. Dekorasi tambahan, tip untuk vendor, atau pe
 
 ## 3. Undangan Digital: Kirim 6-8 Minggu Sebelumnya
 
-Di era digital, undangan online bukan hanya hemat tapi juga lebih praktis. Tamu bisa langsung RSVP, lihat peta lokasi, dan bahkan mendengar musik yang kalian pilih — semua dari satu link.
+Di era digital, undangan online bukan hanya hemat tapi juga lebih praktis. Tamu bisa langsung RSVP, lihat peta lokasi, dan bahkan mendengar musik yang kalian pilih   semua dari satu link.
 
 ![Contoh undangan digital modern](https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80)
 
@@ -37,9 +37,9 @@ Di era digital, undangan online bukan hanya hemat tapi juga lebih praktis. Tamu 
 ## 4. Buat Daftar Tamu yang Realistis
 
 Hitung kapasitas venue terlebih dahulu, baru buat daftar tamu. Bagi dalam kategori:
-- **Wajib hadir** — keluarga inti dan sahabat dekat
-- **Sangat diharapkan** — keluarga besar dan teman dekat
-- **Jika memungkinkan** — rekan kerja dan kenalan
+- **Wajib hadir**   keluarga inti dan sahabat dekat
+- **Sangat diharapkan**   keluarga besar dan teman dekat
+- **Jika memungkinkan**   rekan kerja dan kenalan
 
 ## 5. Koordinasi Jadwal Foto Pre-Wedding
 
@@ -73,7 +73,7 @@ Di tengah semua kesibukan, jangan lupa bahwa ini tentang **cinta kalian berdua**
 
 ---
 
-Semoga checklist ini membantu persiapan pernikahan kalian lebih lancar. Ingat, tidak ada pernikahan yang sempurna — yang ada hanyalah pernikahan yang penuh cinta dan kenangan indah.`,
+Semoga checklist ini membantu persiapan pernikahan kalian lebih lancar. Ingat, tidak ada pernikahan yang sempurna   yang ada hanyalah pernikahan yang penuh cinta dan kenangan indah.`,
     settings: {
       featured: true,
       pinned: false,
@@ -117,10 +117,10 @@ Semoga checklist ini membantu persiapan pernikahan kalian lebih lancar. Ingat, t
 
 Undangan digital unggul jauh dalam hal kepraktisan:
 
-- **Pengiriman instan** — kirim ke ratusan tamu dalam hitungan menit via WhatsApp
-- **RSVP otomatis** — tamu konfirmasi langsung dari undangan, data terkumpul rapi
-- **Mudah diupdate** — ada perubahan? Edit langsung tanpa perlu cetak ulang
-- **Peta lokasi interaktif** — tamu tidak perlu bertanya arah ke venue
+- **Pengiriman instan**   kirim ke ratusan tamu dalam hitungan menit via WhatsApp
+- **RSVP otomatis**   tamu konfirmasi langsung dari undangan, data terkumpul rapi
+- **Mudah diupdate**   ada perubahan? Edit langsung tanpa perlu cetak ulang
+- **Peta lokasi interaktif**   tamu tidak perlu bertanya arah ke venue
 
 Sementara undangan cetak membutuhkan:
 - Waktu produksi 1-2 minggu
@@ -200,33 +200,33 @@ Untuk pasangan modern yang ingin **hemat, praktis, dan berkesan**, undangan digi
 
 Konsep pernikahan intimate dengan 50-100 tamu semakin populer. Alih-alih mengundang ratusan orang, pasangan lebih memilih kualitas dibanding kuantitas:
 
-- **Budget per tamu lebih besar** — makanan lebih berkualitas, dekorasi lebih detail
-- **Interaksi lebih bermakna** — sempat ngobrol dengan setiap tamu
-- **Venue lebih fleksibel** — restoran, villa, bahkan rooftop
+- **Budget per tamu lebih besar**   makanan lebih berkualitas, dekorasi lebih detail
+- **Interaksi lebih bermakna**   sempat ngobrol dengan setiap tamu
+- **Venue lebih fleksibel**   restoran, villa, bahkan rooftop
 
 ![Intimate wedding di taman](https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80)
 
-> "Kami hanya mengundang 80 orang dan itu adalah keputusan terbaik. Setiap tamu benar-benar menikmati momen bersama kami." — Andi & Fira, menikah Januari 2026
+> "Kami hanya mengundang 80 orang dan itu adalah keputusan terbaik. Setiap tamu benar-benar menikmati momen bersama kami."   Andi & Fira, menikah Januari 2026
 
 ## 2. Sustainable Wedding
 
 Generasi muda semakin peduli dengan dampak lingkungan, termasuk di hari pernikahan:
 
-- **Zero-waste decoration** — menggunakan tanaman hidup sebagai dekorasi yang bisa dibawa pulang tamu
-- **Digital invitation only** — mengurangi limbah kertas secara signifikan
-- **Local & seasonal flowers** — bunga lokal yang tidak perlu impor
-- **Edible favors** — souvenir berupa makanan yang bisa langsung dinikmati, bukan barang yang berakhir di gudang
+- **Zero-waste decoration**   menggunakan tanaman hidup sebagai dekorasi yang bisa dibawa pulang tamu
+- **Digital invitation only**   mengurangi limbah kertas secara signifikan
+- **Local & seasonal flowers**   bunga lokal yang tidak perlu impor
+- **Edible favors**   souvenir berupa makanan yang bisa langsung dinikmati, bukan barang yang berakhir di gudang
 
 ## 3. Undangan Digital Interaktif
 
-2026 adalah tahun di mana undangan digital bukan lagi sekadar alternatif — tapi menjadi **standar baru**:
+2026 adalah tahun di mana undangan digital bukan lagi sekadar alternatif   tapi menjadi **standar baru**:
 
-- **Opening animation** — nama tamu muncul personal dengan animasi memukau
-- **Musik latar otomatis** — suasana langsung terbangun saat undangan dibuka
-- **RSVP terintegrasi** — tamu konfirmasi dalam 1 tap
-- **Galeri & countdown** — semua info dalam satu link
+- **Opening animation**   nama tamu muncul personal dengan animasi memukau
+- **Musik latar otomatis**   suasana langsung terbangun saat undangan dibuka
+- **RSVP terintegrasi**   tamu konfirmasi dalam 1 tap
+- **Galeri & countdown**   semua info dalam satu link
 
-Platform seperti iaundang memungkinkan pasangan membuat undangan digital premium dengan harga mulai dari Rp 79.000 — jauh lebih hemat dari undangan cetak tradisional.
+Platform seperti iaundang memungkinkan pasangan membuat undangan digital premium dengan harga mulai dari Rp 79.000   jauh lebih hemat dari undangan cetak tradisional.
 
 ## 4. Micro Reception + Live Streaming
 
@@ -242,10 +242,10 @@ Ini solusi sempurna untuk pasangan yang punya keluarga di kota atau negara berbe
 
 Venue konvensional seperti hotel ballroom mulai ditinggalkan. Pasangan 2026 lebih memilih:
 
-- **Kebun atau perkebunan** — nuansa natural dan foto yang stunning
-- **Museum atau galeri seni** — sophisticated dan unik
-- **Restoran favorit** — personal dan penuh kenangan
-- **Pantai atau tebing** — dramatic dan memorable
+- **Kebun atau perkebunan**   nuansa natural dan foto yang stunning
+- **Museum atau galeri seni**   sophisticated dan unik
+- **Restoran favorit**   personal dan penuh kenangan
+- **Pantai atau tebing**   dramatic dan memorable
 
 ![Pernikahan di pantai saat sunset](https://images.unsplash.com/photo-1546032996-6dfacbacbf3f?w=800&q=80)
 
@@ -253,20 +253,20 @@ Venue konvensional seperti hotel ballroom mulai ditinggalkan. Pasangan 2026 lebi
 
 Bukan lagi one-size-fits-all. Pasangan modern memberikan pengalaman unik:
 
-- **Custom welcome drink** — koktail signature dengan nama pasangan
-- **Interactive food station** — tamu pilih dan racik sendiri
-- **Photo booth dengan AI filter** — hasil langsung dikirim ke HP tamu
-- **Personalized playlist** — tamu bisa request lagu via QR code
+- **Custom welcome drink**   koktail signature dengan nama pasangan
+- **Interactive food station**   tamu pilih dan racik sendiri
+- **Photo booth dengan AI filter**   hasil langsung dikirim ke HP tamu
+- **Personalized playlist**   tamu bisa request lagu via QR code
 
 ## 7. Earth Tones & Natural Palette
 
 Warna-warna yang mendominasi pernikahan 2026:
 
-- **Sage green** — natural dan menenangkan
-- **Terracotta** — hangat dan earthy
-- **Dusty rose** — romantis tapi tidak berlebihan
-- **Cream & ivory** — timeless dan elegan
-- **Deep emerald** — mewah dan sophisticated
+- **Sage green**   natural dan menenangkan
+- **Terracotta**   hangat dan earthy
+- **Dusty rose**   romantis tapi tidak berlebihan
+- **Cream & ivory**   timeless dan elegan
+- **Deep emerald**   mewah dan sophisticated
 
 Palet warna ini sempurna dipadu dengan dekorasi natural: kayu, dedaunan hijau, dan bunga-bunga kering.
 
@@ -274,7 +274,7 @@ Palet warna ini sempurna dipadu dengan dekorasi natural: kayu, dedaunan hijau, d
 
 ## Mana Tren Favoritmu?
 
-Setiap pasangan punya cerita dan gaya unik. Tren hanyalah inspirasi — yang terpenting adalah pernikahan yang mencerminkan **siapa kalian berdua**.
+Setiap pasangan punya cerita dan gaya unik. Tren hanyalah inspirasi   yang terpenting adalah pernikahan yang mencerminkan **siapa kalian berdua**.
 
 Apakah kalian sudah mulai merencanakan pernikahan? Mulai dengan hal yang paling mudah: buat undangan digital kalian sekarang dan rasakan bedanya!`,
     settings: {

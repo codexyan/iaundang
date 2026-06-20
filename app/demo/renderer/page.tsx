@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { templateRecords } from '@/lib/db'
 import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
-import InvitationRenderer from '@/components/renderer/InvitationRenderer'
 import DemoShell from './DemoShell'
+import DemoEditorClient from './DemoEditorClient'
 import type { NewInvitationData, Wish } from '@/lib/types'
 
 interface Props {
@@ -109,22 +109,11 @@ export default async function DemoRendererPage({ searchParams }: Props) {
 
   return (
     <DemoShell templateName={template.name}>
-      <div style={{
-        width: '100%',
-        maxWidth: 430,
-        height: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <InvitationRenderer
-          invitationId={`demo-${template.id}`}
-          invitationData={DEMO_DATA}
-          template={demoTemplate}
-          initialWishes={DEMO_WISHES}
-          musicUrl={demoTemplate.config.music?.url}
-          contained
-        />
-      </div>
+      <DemoEditorClient
+        template={demoTemplate}
+        demoData={DEMO_DATA}
+        demoWishes={DEMO_WISHES}
+      />
     </DemoShell>
   )
 }

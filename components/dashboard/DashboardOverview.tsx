@@ -207,7 +207,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
           {daysUntil !== null ? (
             <>
               <p className={`text-3xl font-bold tracking-tight ${daysUntil <= 30 ? 'text-amber-600' : 'text-stone-800'}`}>
-                {daysUntil > 0 ? daysUntil : daysUntil === 0 ? '0' : '—'}
+                {daysUntil > 0 ? daysUntil : daysUntil === 0 ? '0' : '!'}
               </p>
               <p className="text-[11px] text-stone-400 mt-0.5">
                 {daysUntil > 0 ? 'hari lagi' : daysUntil === 0 ? 'Hari ini!' : 'Sudah lewat'}
@@ -229,7 +229,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
             </div>
             <p className="text-[11px] text-stone-400 font-medium uppercase tracking-wider mb-1">{s.label}</p>
             <p className="text-3xl font-bold text-stone-800 tracking-tight">
-              {stats !== null ? (s.value ?? 0) : '—'}
+              {stats !== null ? (s.value ?? 0) : '...'}
             </p>
             <p className="text-[11px] text-stone-400 mt-0.5">
               {stats !== null ? 'total' : 'memuat...'}

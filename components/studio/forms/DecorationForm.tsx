@@ -8,7 +8,7 @@ import SectionCard from '../ui/SectionCard'
 import ImageUploadField from '@/components/admin/ImageUploadField'
 import LockedOverlay from '../ui/LockedOverlay'
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+//  Types 
 
 type DecorationScope = 'opening' | string
 
@@ -21,7 +21,7 @@ interface Props {
   requiredTier?: string
 }
 
-// ─── Anchor → pixel position (same logic as DecorationAssetLayer) ────────────
+//  Anchor �� pixel position (same logic as DecorationAssetLayer) 
 
 const ANCHOR_POS: Record<string, (w: number, cw: number, ch: number) => { x: number; y: number }> = {
   'top-left':       (w, _cw, _ch) => ({ x: 0, y: 0 }),
@@ -46,7 +46,7 @@ function getAssetPixelPos(asset: DecorationAsset, cw: number, ch: number) {
   }
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+//  Helpers 
 
 function makeId() {
   return `user-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
@@ -66,7 +66,7 @@ function buildPatch(scope: DecorationScope, assets: DecorationAsset[], data: New
 const CANVAS_W = 390
 const CANVAS_H = 845
 
-// ─── Main component ─────────────────────────────────────────────────────────
+//  Main component 
 
 export default function DecorationForm({ template, data, onUpdate, canEdit, maxAssets, requiredTier }: Props) {
   const [scope, setScope] = useState<DecorationScope>('opening')
@@ -118,7 +118,7 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
     <SectionCard title="Dekorasi" icon={Layers} description="Tambah & geser ornamen langsung">
       <div className="relative space-y-3">
 
-        {/* ── Scope picker ──────────────────────────── */}
+        {/*  Scope picker  */}
         <div>
           <p className="text-[10px] font-semibold text-stone-400 uppercase tracking-wider mb-1.5">Pilih Area</p>
           <div className="flex gap-1 flex-wrap">
@@ -147,7 +147,7 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
           </div>
         </div>
 
-        {/* ── Draggable Canvas ───────────────────────── */}
+        {/*  Draggable Canvas  */}
         <DragCanvas
           assets={assets}
           selectedId={selectedId}
@@ -163,7 +163,7 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
           isOpening={scope === 'opening'}
         />
 
-        {/* ── Upload ────────────────────────────────── */}
+        {/*  Upload  */}
         <div className="flex gap-2 items-end">
           <div className="flex-1">
             <ImageUploadField
@@ -181,7 +181,7 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
           )}
         </div>
 
-        {/* ── Asset list ────────────────────────────── */}
+        {/*  Asset list  */}
         {assets.length > 0 && (
           <div className="space-y-1.5">
             {assets.map((asset, idx) => (
@@ -216,7 +216,7 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
   )
 }
 
-// ─── Drag Canvas ─────────────────────────────────────────────────────────────
+//  Drag Canvas 
 // Interactive canvas where user can drag ornaments freely.
 // Maps pointer movements to offset_x/offset_y in the logical 390×845 space.
 
@@ -277,7 +277,7 @@ function DragCanvas({ assets, selectedId, onSelect, onMove, isOpening }: {
     if (e.target === canvasRef.current) onSelect(null)
   }
 
-  // Visual canvas height — show phone aspect ratio
+  // Visual canvas height  show phone aspect ratio
   // Canvas width fills parent, height proportional
   const aspectRatio = CANVAS_H / CANVAS_W // ~2.167
 
@@ -369,7 +369,7 @@ function DragCanvas({ assets, selectedId, onSelect, onMove, isOpening }: {
   )
 }
 
-// ─── Asset Card ──────────────────────────────────────────────────────────────
+//  Asset Card 
 
 function AssetCard({ asset, index, isSelected, isExpanded, onSelect, onToggle, onUpdate, onRemove }: {
   asset: DecorationAsset
@@ -440,7 +440,7 @@ function AssetCard({ asset, index, isSelected, isExpanded, onSelect, onToggle, o
   )
 }
 
-// ─── Slider ──────────────────────────────────────────────────────────────────
+//  Slider 
 
 function Slider({ label, value, min, max, step, display, onChange }: {
   label: string; value: number; min: number; max: number; step: number; display: string

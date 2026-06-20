@@ -117,7 +117,7 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
         style={{ backgroundColor: `${primary}66` }}
       />
 
-      {/* Bottom gradient — strong multi-stop for text area */}
+      {/* Bottom gradient   strong multi-stop for text area */}
       <div className="absolute inset-x-0 bottom-0 z-[5]" style={{
         height: `${gradH}%`,
         background: `linear-gradient(to top,
@@ -141,7 +141,7 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
 
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
-      {/* Logo icon — top center */}
+      {/* Logo icon   top center */}
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}
@@ -152,7 +152,7 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
         <img src="/logos/icons.png" alt="" style={{ width: 40, height: 'auto', opacity: 0.85, filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))' }} />
       </motion.div>
 
-      {/* Content — bottom-anchored */}
+      {/* Content   bottom-anchored */}
       <div
         className="relative z-20 flex flex-col items-center w-full mt-auto"
         style={{ paddingBottom: padBottom, paddingLeft: padX, paddingRight: padX }}

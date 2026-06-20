@@ -234,7 +234,7 @@ export default function WishesSection({ section, data, meta, invitationId, initi
           </motion.p>
         </div>
 
-        {/* ── Form container ── */}
+        {/*  Form container  */}
         <motion.div
           variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { delay: 0.15 } } }}
           style={{
@@ -317,7 +317,7 @@ export default function WishesSection({ section, data, meta, invitationId, initi
           </form>
         </motion.div>
 
-        {/* ── Chat wish list (below form) ── */}
+        {/*  Chat wish list (below form)  */}
         {wishes.length > 0 && (
           <motion.div
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { delay: 0.25 } } }}>

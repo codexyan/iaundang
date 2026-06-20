@@ -65,7 +65,7 @@ export default function SettingsPanel({ invitation, userEmail, onDeleted }: Prop
             <p className="text-sm text-gray-500 mt-2">Kelola akses dan informasi dasar akun.</p>
             <div className="mt-4 rounded-2xl bg-white border border-gray-200 p-4">
               <p className="text-xs text-gray-400">Email login</p>
-              <p className="mt-1 font-medium text-gray-900">{userEmail || '-'}</p>
+              <p className="mt-1 font-medium text-gray-900">{userEmail || 'Tidak tersedia'}</p>
             </div>
           </div>
         </div>

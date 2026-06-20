@@ -178,7 +178,7 @@ export default function LanternRiseOpening({ config, data, meta, onOpen, positio
 
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
-      {/* Logo icon — top center */}
+      {/* Logo icon   top center */}
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}

@@ -19,15 +19,15 @@ export function generateSlugSuggestions(groomFull: string, brideFull: string): s
   const b0 = b[0]
 
   const candidates = [
-    `${g}-dan-${b}`,              // budi-dan-ani         — paling natural
-    `${g}${b}`,                   // budiani              — akronim gabung
-    `${b}${g}`,                   // anibudi              — reversed
-    `${g}-${b}`,                  // budi-ani             — simpel
-    `${g}-${b}-${year}`,          // budi-ani-2025        — dengan tahun
-    `${g[0]}${b[0]}-${year}`,     // ba-2025              — inisial + tahun
-    `${g}and${b}`,                // budiandani           — gaya internasional
+    `${g}-dan-${b}`,              // budi-dan-ani           paling natural
+    `${g}${b}`,                   // budiani                akronim gabung
+    `${b}${g}`,                   // anibudi                reversed
+    `${g}-${b}`,                  // budi-ani               simpel
+    `${g}-${b}-${year}`,          // budi-ani-2025          dengan tahun
+    `${g[0]}${b[0]}-${year}`,     // ba-2025                inisial + tahun
+    `${g}and${b}`,                // budiandani             gaya internasional
     `${b}and${g}`,                // aniandbudi
-    `${g0}n${b0}-wedding`,        // bnb-wedding          — inisial kreatif
+    `${g0}n${b0}-wedding`,        // bnb-wedding            inisial kreatif
     `pernikahan-${g}-${b}`,       // pernikahan-budi-ani
   ]
 

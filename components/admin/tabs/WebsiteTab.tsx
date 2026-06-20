@@ -19,9 +19,9 @@ import {
   GripVertical, ArrowUp, ArrowDown, LayoutGrid,
 } from 'lucide-react'
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // TYPES
-// ═══════════════════════════════════════════════════════════════
+// 
 
 interface HeroContent {
   headline: string; subheadline: string; ctaPrimary: string; ctaSecondary: string
@@ -123,9 +123,9 @@ function readTime(text: string): number {
   return Math.max(1, Math.ceil(wordCount(text) / 200))
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // MARKDOWN PREVIEW (reuses parser logic inline for admin preview)
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function parseMarkdownPreview(md: string): string {
   const lines = md.split('\n')
@@ -184,9 +184,9 @@ function inl(s: string) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2c4a34;text-decoration:underline">$1</a>')
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // SEO ANALYSIS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 interface SeoCheck { label: string; pass: boolean; hint: string }
 
@@ -224,9 +224,9 @@ function analyzeSeo(form: ArticleData): { score: number; checks: SeoCheck[]; gra
   return { score, checks, grade }
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // MAIN COMPONENT
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export default function WebsiteTab() {
   const [subTab, setSubTab] = useState<SubTab>('landing')
@@ -260,9 +260,9 @@ export default function WebsiteTab() {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // LANDING SECTIONS PANEL
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function LandingSectionsPanel() {
   const [landing, setLanding] = useState<LandingPageSettings | null>(null)
@@ -522,9 +522,9 @@ function LandingSectionsPanel() {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // ARTICLES PANEL
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function ArticlesPanel() {
   const [articlesList, setArticlesList] = useState<ArticleData[]>([])
@@ -675,9 +675,9 @@ function ArticlesPanel() {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ARTICLE EDITOR — full professional writing interface
-// ═══════════════════════════════════════════════════════════════
+// 
+// ARTICLE EDITOR  full professional writing interface
+// 
 
 type EditorPanel = 'write' | 'preview' | 'settings'
 type SettingsSection = 'engagement' | 'comments' | 'seo' | 'ads' | 'meta'
@@ -855,7 +855,7 @@ function ArticleEditor({ article, isNew, onBack }: { article: ArticleData; isNew
   )
 }
 
-// ── Write Panel ──────────────────────────────────────────────
+//  Write Panel 
 
 function WritePanel({ form, set, insertAt, titleRef, contentRef, isNew, onShowTable, onShowImage, onShowLink }: {
   form: ArticleData; set: (k: keyof ArticleData, v: unknown) => void; insertAt: (p: string, s?: string) => void
@@ -932,7 +932,7 @@ function WritePanel({ form, set, insertAt, titleRef, contentRef, isNew, onShowTa
   )
 }
 
-// ── Preview Panel ────────────────────────────────────────────
+//  Preview Panel 
 
 function PreviewPanel({ form }: { form: ArticleData }) {
   const html = useMemo(() => parseMarkdownPreview(form.content), [form.content])
@@ -994,7 +994,7 @@ function PreviewPanel({ form }: { form: ArticleData }) {
   )
 }
 
-// ── Settings Panel ───────────────────────────────────────────
+//  Settings Panel 
 
 function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection, setSettingsSection, onDelete }: {
   form: ArticleData; set: (k: keyof ArticleData, v: unknown) => void; updateSettings: (path: string, v: unknown) => void
@@ -1366,9 +1366,9 @@ function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection,
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // TABLE BUILDER MODAL
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function TableBuilderModal({ onInsert, onClose }: { onInsert: (md: string) => void; onClose: () => void }) {
   const [cols, setCols] = useState(3)
@@ -1437,9 +1437,9 @@ function TableBuilderModal({ onInsert, onClose }: { onInsert: (md: string) => vo
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // IMAGE INSERT MODAL
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function ImageInsertModal({ onInsert, onClose }: { onInsert: (md: string) => void; onClose: () => void }) {
   const [url, setUrl] = useState('')
@@ -1480,9 +1480,9 @@ function ImageInsertModal({ onInsert, onClose }: { onInsert: (md: string) => voi
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // LINK INSERT MODAL
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function LinkInsertModal({ onInsert, onClose }: { onInsert: (md: string) => void; onClose: () => void }) {
   const [url, setUrl] = useState('')
@@ -1528,9 +1528,9 @@ function LinkInsertModal({ onInsert, onClose }: { onInsert: (md: string) => void
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // SHARED COMPONENTS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="block text-xs font-semibold text-gray-600 mb-1.5">{children}</label>
@@ -1585,9 +1585,9 @@ function ToggleRow({ label, desc, icon, checked, onChange }: {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // SECTION EDITORS (Landing Page)
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function HeroEditor({ hero, onChange }: { hero: HeroContent; onChange: (v: HeroContent) => void }) {
   const set = (key: keyof HeroContent, value: string) => onChange({ ...hero, [key]: value })

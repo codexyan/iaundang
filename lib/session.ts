@@ -1,5 +1,5 @@
 /**
- * Edge-compatible JWT session — boleh diimpor dari middleware.ts.
+ * Edge-compatible JWT session   boleh diimpor dari middleware.ts.
  * Tidak boleh mengimpor 'next/headers' di sini.
  */
 import { SignJWT, jwtVerify } from 'jose'

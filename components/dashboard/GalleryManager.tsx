@@ -182,7 +182,7 @@ export default function GalleryManager({ invitation }: Props) {
             )}
           </div>
         ) : (
-          /* At limit — upgrade prompt */
+          /* At limit   upgrade prompt */
           <div className="border-2 border-amber-200 rounded-2xl p-6 bg-amber-50 text-center">
             <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
               <Lock size={20} className="text-amber-500" />

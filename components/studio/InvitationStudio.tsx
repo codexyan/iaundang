@@ -340,7 +340,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
     </div>
   )
 
-  // ── Embedded mode (inside dashboard) ─────────────────────────
+  //  Embedded mode (inside dashboard) 
   if (embedded) {
     return (
       <div className="flex gap-6">
@@ -588,7 +588,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
     )
   }
 
-  // ── Standalone mode (full page) ──────────────────────────────
+  //  Standalone mode (full page) 
   return (
     <div className="min-h-screen bg-stone-50">
       <StudioHeader

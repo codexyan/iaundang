@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 
-// ─── Types ──────────────────────────────────────────────────
+//  Types 
 
 interface AdminUserInvitation {
   id: string
@@ -64,7 +64,7 @@ interface DashboardTabProps {
   onGoToTab: (tab: string) => void
 }
 
-// ─── Helpers ────────────────────────────────────────────────
+//  Helpers 
 
 function timeAgo(dateString: string): string {
   const now = Date.now()
@@ -95,7 +95,7 @@ function formatDate(dateString: string): string {
   })
 }
 
-// ─── Component ──────────────────────────────────────────────
+//  Component 
 
 export default function DashboardTab({
   stats,
@@ -449,7 +449,7 @@ export default function DashboardTab({
   )
 }
 
-// ─── Funnel Row ─────────────────────────────────────────────
+//  Funnel Row 
 
 function FunnelRow({
   label,

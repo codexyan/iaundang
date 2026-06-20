@@ -248,8 +248,8 @@ export default function AffiliateDashboard() {
                   <tbody className="divide-y divide-stone-50">
                     {referralsList.map(r => (
                       <tr key={r.id}>
-                        <td className="px-4 py-3 text-stone-700">{r.buyerEmail || '-'}</td>
-                        <td className="px-4 py-3 text-stone-500">{r.packageTier || '-'}</td>
+                        <td className="px-4 py-3 text-stone-700">{r.buyerEmail || ''}</td>
+                        <td className="px-4 py-3 text-stone-500">{r.packageTier || ''}</td>
                         <td className="px-4 py-3 text-right text-stone-700">{formatRupiah(r.saleAmount)}</td>
                         <td className="px-4 py-3 text-right font-medium text-emerald-600">{formatRupiah(r.commission)}</td>
                         <td className="px-4 py-3 text-center">

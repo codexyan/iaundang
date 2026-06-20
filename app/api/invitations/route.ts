@@ -14,7 +14,7 @@ const schema = z.object({
   data: z.record(z.unknown()).optional().default({}),
 })
 
-// GET /api/invitations — ambil undangan milik user yang login
+// GET /api/invitations   ambil undangan milik user yang login
 export async function GET() {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -23,7 +23,7 @@ export async function GET() {
   return NextResponse.json({ invitation: inv })
 }
 
-// POST /api/invitations — buat undangan baru
+// POST /api/invitations   buat undangan baru
 export async function POST(req: NextRequest) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

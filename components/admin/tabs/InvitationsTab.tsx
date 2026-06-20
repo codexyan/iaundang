@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import { TEMPLATES } from '@/lib/types'
 
-// ─── Types ───────────────────────────────────────────────────
+//  Types 
 
 interface AdminInvitation {
   id: string
@@ -28,7 +28,7 @@ interface InvitationsTabProps {
   onTogglePublished: (id: string, published: boolean) => Promise<void>
 }
 
-// ─── Helpers ─────────────────────────────────────────────────
+//  Helpers 
 
 type InvFilter = 'all' | 'live' | 'draft' | 'paid' | 'unpaid' | 'expired'
 type SortMode = 'newest' | 'oldest' | 'slug-az'
@@ -78,7 +78,7 @@ function formatDate(dateString: string): string {
   })
 }
 
-// ─── Sub-components ──────────────────────────────────────────
+//  Sub-components 
 
 function SummaryCard({
   label,
@@ -179,7 +179,7 @@ function Badge({
   )
 }
 
-// ─── Pagination ──────────────────────────────────────────────
+//  Pagination 
 
 const PAGE_SIZE = 15
 
@@ -227,7 +227,7 @@ function Pagination({
   )
 }
 
-// ─── Main Component ──────────────────────────────────────────
+//  Main Component 
 
 export default function InvitationsTab({
   invitations,
@@ -240,7 +240,7 @@ export default function InvitationsTab({
   const [page, setPage] = useState(1)
   const [loadingAction, setLoadingAction] = useState<string | null>(null)
 
-  // ─── Computed counts ─────────────────────────────────────
+  //  Computed counts 
 
   const counts = useMemo(() => {
     const all = invitations.length
@@ -252,7 +252,7 @@ export default function InvitationsTab({
     return { all, live, draft, paid, unpaid, expired }
   }, [invitations])
 
-  // ─── Filtering ───────────────────────────────────────────
+  //  Filtering 
 
   const filtered = useMemo(() => {
     let result = invitations.filter((inv) => {
@@ -306,7 +306,7 @@ export default function InvitationsTab({
 
   const paginated = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
 
-  // ─── Actions ─────────────────────────────────────────────
+  //  Actions 
 
   async function handleTogglePaid(inv: AdminInvitation) {
     const key = inv.id + '-pay'
@@ -328,7 +328,7 @@ export default function InvitationsTab({
     }
   }
 
-  // ─── Filter config ──────────────────────────────────────
+  //  Filter config 
 
   const FILTERS: { id: InvFilter; label: string; count: number }[] = [
     { id: 'all', label: 'Semua', count: counts.all },
@@ -345,7 +345,7 @@ export default function InvitationsTab({
     { id: 'slug-az', label: 'Slug A-Z' },
   ]
 
-  // ─── Render ──────────────────────────────────────────────
+  //  Render 
 
   return (
     <div>

@@ -115,7 +115,7 @@ function getIdleProps(idle: AssetIdleAnimation, speed: string, opacity: number):
   }
 }
 
-// ─── Single asset item ────────────────────────────────────────
+//  Single asset item 
 interface ItemProps {
   asset: DecorationAsset
   doAnimate: boolean
@@ -226,7 +226,7 @@ function DecorationAssetItem({ asset, doAnimate, exiting }: ItemProps) {
   )
 }
 
-// ─── Layer container ──────────────────────────────────────────
+//  Layer container 
 export default function DecorationAssetLayer({ assets, animate = true, exiting = false }: LayerProps) {
   if (!assets || assets.length === 0) return null
 

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import type { SectionConfig, NewInvitationData, TemplateMeta } from '@/lib/types'
 import SectionWrapper, { resolveFont, fsh, fsb } from '../SectionWrapper'
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+//  Types 
 
 interface Props {
   section: SectionConfig
@@ -23,7 +23,7 @@ interface StyleCtx {
   caption?: string
 }
 
-// ─── Embed URL builder ───────────────────────────────────────────────────────
+//  Embed URL builder 
 
 function buildEmbedUrl(url: string): string | null {
   const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([^&?/]+)/)
@@ -33,7 +33,7 @@ function buildEmbedUrl(url: string): string | null {
   return null
 }
 
-// ─── Shared video player ─────────────────────────────────────────────────────
+//  Shared video player 
 
 function VideoPlayer({ embed, url, caption, style }: {
   embed: string | null
@@ -55,7 +55,7 @@ function VideoPlayer({ embed, url, caption, style }: {
   )
 }
 
-// ─── Variant: Default (editorial ornament header + sharp frame) ──────────────
+//  Variant: Default (editorial ornament header + sharp frame) 
 
 function VideoDefault({ section, data, font, accent, text, embed, url, caption }: StyleCtx) {
   const dur = 0.6
@@ -132,7 +132,7 @@ function VideoDefault({ section, data, font, accent, text, embed, url, caption }
   )
 }
 
-// ─── Variant: Cinematic (full-width, caption overlay with gradient) ──────────
+//  Variant: Cinematic (full-width, caption overlay with gradient) 
 
 function VideoCinematic({ section, data, font, accent, text, embed, url, caption }: StyleCtx) {
   return (
@@ -188,7 +188,7 @@ function VideoCinematic({ section, data, font, accent, text, embed, url, caption
   )
 }
 
-// ─── Variant: Magazine (left-aligned editorial) ──────────────────────────────
+//  Variant: Magazine (left-aligned editorial) 
 
 function VideoMagazine({ section, data, font, accent, text, embed, url, caption }: StyleCtx) {
   return (
@@ -252,7 +252,7 @@ function VideoMagazine({ section, data, font, accent, text, embed, url, caption 
   )
 }
 
-// ─── Variant: Minimal (no header, thin border, small caption centered) ───────
+//  Variant: Minimal (no header, thin border, small caption centered) 
 
 function VideoMinimal({ section, data, font, accent, text, embed, url, caption }: StyleCtx) {
   return (
@@ -287,7 +287,7 @@ function VideoMinimal({ section, data, font, accent, text, embed, url, caption }
   )
 }
 
-// ─── Main export ─────────────────────────────────────────────────────────────
+//  Main export 
 
 export default function VideoSection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

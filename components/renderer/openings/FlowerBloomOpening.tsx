@@ -161,7 +161,7 @@ export default function FlowerBloomOpening({ config, data, meta, onOpen, positio
 
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
-      {/* Logo icon — top center */}
+      {/* Logo icon   top center */}
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}
@@ -213,7 +213,7 @@ export default function FlowerBloomOpening({ config, data, meta, onOpen, positio
         ))}
       </div>
 
-      {/* Content — bottom-anchored */}
+      {/* Content   bottom-anchored */}
       <div
         className="relative z-20 flex flex-col items-center w-full mt-auto"
         style={{ paddingBottom: padBottom, paddingLeft: padX, paddingRight: padX }}

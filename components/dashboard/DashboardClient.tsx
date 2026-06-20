@@ -408,7 +408,7 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
   )
 }
 
-// ── Upgrade Banner ──────────────────────────────────────────────
+//  Upgrade Banner 
 
 import { CreditCard as CreditCardIcon } from 'lucide-react'
 import { PACKAGES, formatPrice, type PackageTier } from '@/lib/packages'

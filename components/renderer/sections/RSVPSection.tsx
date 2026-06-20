@@ -133,7 +133,7 @@ export default function RSVPSection({ section, data, meta, invitationId }: Props
                 </motion.p>
               </div>
 
-              {/* Name — underline style */}
+              {/* Name   underline style */}
               <motion.div style={{ marginBottom: 32 }}
                 variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
                 <label style={{
@@ -158,7 +158,7 @@ export default function RSVPSection({ section, data, meta, invitationId }: Props
                 />
               </motion.div>
 
-              {/* Attendance — editorial radio cards */}
+              {/* Attendance   editorial radio cards */}
               <motion.div style={{ marginBottom: 28 }}
                 variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
                 <label style={{
@@ -270,7 +270,7 @@ export default function RSVPSection({ section, data, meta, invitationId }: Props
                 <p style={{ fontSize: fsb(9), color: '#c45', marginBottom: 16, textAlign: 'center', fontFamily: bodyFont }}>{error}</p>
               )}
 
-              {/* Submit — elegant bordered text button */}
+              {/* Submit   elegant bordered text button */}
               <motion.div className="text-center"
                 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>
                 <motion.button

@@ -75,7 +75,7 @@ function FooterOrnament({ accent, text, bodyFont, count }: { accent: string; tex
   )
 }
 
-// ─── Lightbox (shared) ──────────────────────────────────────────────────────
+//  Lightbox (shared) 
 
 function Lightbox({ photos, index, onClose, onPrev, onNext }: {
   photos: string[]; index: number; onClose: () => void; onPrev: () => void; onNext: () => void
@@ -130,7 +130,7 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }: {
   )
 }
 
-// ─── DEFAULT: Editorial Masonry ─────────────────────────────────────────────
+//  DEFAULT: Editorial Masonry 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, photos, onOpen } = ctx
@@ -196,7 +196,7 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── DRAMATIC: Full-bleed cinematic horizontal IG-stories-style ─────────────
+//  DRAMATIC: Full-bleed cinematic horizontal IG-stories-style 
 
 function DramaticView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, photos, onOpen } = ctx
@@ -214,7 +214,7 @@ function DramaticView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
 
   return (
     <div style={{ position: 'relative', width: '100%', minHeight: '100dvh', overflow: 'hidden', background: '#0a0a0a' }}>
-      {/* Background photo — full bleed */}
+      {/* Background photo  full bleed */}
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
@@ -317,7 +317,7 @@ function DramaticView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── MOSAIC: Asymmetric magazine-style grid ─────────────────────────────────
+//  MOSAIC: Asymmetric magazine-style grid 
 
 function MosaicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, photos, onOpen } = ctx
@@ -419,7 +419,7 @@ function MosaicTile({ url, idx, onOpen, style }: {
   )
 }
 
-// ─── FILMSTRIP: Horizontal scrolling cinematic strip ────────────────────────
+//  FILMSTRIP: Horizontal scrolling cinematic strip 
 
 function FilmstripView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, photos, onOpen } = ctx
@@ -513,7 +513,7 @@ function FilmstripView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
   )
 }
 
-// ─── COLLAGE: Overlapping editorial spread ──────────────────────────────────
+//  COLLAGE: Overlapping editorial spread 
 
 function CollageView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, photos, onOpen } = ctx
@@ -605,7 +605,7 @@ function CollageView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── Empty state ────────────────────────────────────────────────────────────
+//  Empty state 
 
 function EmptyPreview({ section, accent, text, headingFont, bodyFont }: {
   section: SectionConfig; accent: string; text: string; headingFont: string; bodyFont: string
@@ -639,7 +639,7 @@ function EmptyPreview({ section, accent, text, headingFont, bodyFont }: {
   )
 }
 
-// ─── MAIN ───────────────────────────────────────────────────────────────────
+//  MAIN 
 
 export default function GallerySection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

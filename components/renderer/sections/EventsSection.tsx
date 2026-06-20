@@ -23,7 +23,7 @@ function fmt(d: string) {
   catch { return d }
 }
 
-// ─── Shared components ─────────────────────────────────────────────────────
+//  Shared components 
 
 function Ornament({ accent }: { accent: string }) {
   return (
@@ -130,7 +130,7 @@ function EventInfo({ event, accent, text, bodyFont, light }: {
   )
 }
 
-// ─── DEFAULT: Clean editorial cards ────────────────────────────────────────
+//  DEFAULT: Clean editorial cards 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, events, cs } = ctx
@@ -189,7 +189,7 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── CINEMATIC: Full-bleed venue photos with overlay ───────────────────────
+//  CINEMATIC: Full-bleed venue photos with overlay 
 
 function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, headingFont, bodyFont, events, cs } = ctx
@@ -278,7 +278,7 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
   )
 }
 
-// ─── TIMELINE: Vertical line with dots ─────────────────────────────────────
+//  TIMELINE: Vertical line with dots 
 
 function TimelineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, events, cs } = ctx
@@ -343,7 +343,7 @@ function TimelineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── MAGAZINE: Left-aligned with accent bar ────────────────────────────────
+//  MAGAZINE: Left-aligned with accent bar 
 
 function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, events, cs } = ctx
@@ -386,7 +386,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
 
                 <div style={{ flex: 1 }}>
                   <p style={{ fontSize: fsb(7.5), letterSpacing: '0.3em', textTransform: 'uppercase', color: `${accent}60`, fontFamily: bodyFont, marginBottom: 6 }}>
-                    {String(index + 1).padStart(2, '0')} — {title}
+                    {String(index + 1).padStart(2, '0')}  {title}
                   </p>
                   <h3 style={{ fontSize: fsh(18), fontWeight: 400, color: text, fontFamily: headingFont, lineHeight: 1.3, marginBottom: 16 }}>
                     {event.venue_name}
@@ -411,7 +411,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── ELEGANT: Centered with ornamental dividers ────────────────────────────
+//  ELEGANT: Centered with ornamental dividers 
 
 function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, events, cs } = ctx
@@ -452,7 +452,7 @@ function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
                 {event.venue_name}
               </h3>
               <p style={{ fontSize: fsb(10), color: `${text}70`, fontFamily: bodyFont, fontStyle: 'italic', marginBottom: 20 }} className="capitalize">
-                {fmt(event.date)} — {event.time} WIB
+                {fmt(event.date)}  {event.time} WIB
               </p>
 
               {event.venue_address && (
@@ -474,7 +474,7 @@ function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── MAIN ──────────────────────────────────────────────────────────────────
+//  MAIN 
 
 export default function EventsSection({ section, data, meta }: Props) {
   const { accent, text, primary } = meta.color_scheme

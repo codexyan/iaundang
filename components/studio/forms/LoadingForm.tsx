@@ -93,7 +93,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
       icon={Loader2}
       description="Animasi & tampilan saat undangan pertama kali dibuka"
     >
-      {/* ─── Variant Grid ──────────────────────────────── */}
+      {/*  Variant Grid  */}
       <FormField label="Gaya Animasi">
         <div className="grid grid-cols-4 gap-1.5">
           {VARIANTS.map((v) => {
@@ -134,7 +134,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
         </p>
       </FormField>
 
-      {/* ─── Teks Loading ────────────────────────────────── */}
+      {/*  Teks Loading  */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
@@ -191,7 +191,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
         )}
       </div>
 
-      {/* ─── Background Type ─────────────────────────────── */}
+      {/*  Background Type  */}
       <FormField label="Background">
         <div className="flex gap-1.5 mb-3">
           {BG_TYPES.map((bg) => (
@@ -317,14 +317,14 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
         )}
       </FormField>
 
-      {/* ─── Accent Color ────────────────────────────────── */}
+      {/*  Accent Color  */}
       <ColorRow
         label="Warna Aksen (animasi)"
         value={config.accent_color ?? '#d4af37'}
         onChange={(v) => update({ accent_color: v })}
       />
 
-      {/* ─── Speed ───────────────────────────────────────── */}
+      {/*  Speed  */}
       <FormField label="Kecepatan">
         <div className="flex gap-1.5">
           {SPEEDS.map((s) => (
@@ -346,7 +346,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
         </div>
       </FormField>
 
-      {/* ─── Advanced ────────────────────────────────────── */}
+      {/*  Advanced  */}
       <button
         type="button"
         onClick={() => setShowAdvanced(!showAdvanced)}
@@ -442,7 +442,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
   )
 }
 
-// ─── Shared small components ───────────────────────────────────────────────────
+//  Shared small components 
 
 function ColorRow({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (

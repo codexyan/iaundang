@@ -19,7 +19,7 @@ function Ornament({ accent }: { accent: string }) {
   )
 }
 
-// ─── IG Stories-style progress bars ─────────────────────────────────────────
+//  IG Stories-style progress bars 
 
 function ProgressBars({ total, current, progress, accent }: {
   total: number; current: number; progress: number; accent: string
@@ -43,7 +43,7 @@ function ProgressBars({ total, current, progress, accent }: {
   )
 }
 
-// ─── Stories viewer ─────────────────────────────────────────────────────────
+//  Stories viewer 
 
 const STORY_DURATION = 6000
 
@@ -143,7 +143,7 @@ function StoriesViewer({ chapters, accent, text, font }: {
         </span>
       </div>
 
-      {/* Content — anchored to bottom */}
+      {/* Content  anchored to bottom */}
       <div style={{
         position: 'relative', zIndex: 15, marginTop: 'auto',
         padding: '0 24px 32px',
@@ -208,7 +208,7 @@ function StoriesViewer({ chapters, accent, text, font }: {
   )
 }
 
-// ─── Default: Stories inside section wrapper ─────────────────────────────────
+//  Default: Stories inside section wrapper 
 
 function DefaultView({ section, data, meta }: Props) {
   const font = resolveFont(meta, section)
@@ -302,7 +302,7 @@ function DefaultView({ section, data, meta }: Props) {
   )
 }
 
-// ─── Timeline: Vertical timeline with photos ────────────────────────────────
+//  Timeline: Vertical timeline with photos 
 
 function TimelineView({ section, data, meta }: Props) {
   const font = resolveFont(meta, section)
@@ -413,7 +413,7 @@ function TimelineView({ section, data, meta }: Props) {
   )
 }
 
-// ─── Main ───────────────────────────────────────────────────────────────────
+//  Main 
 
 export default function StorySection({ section, data, meta }: Props) {
   const variant = section.style_variant ?? 'default'

@@ -42,7 +42,7 @@ export default async function AdminPage() {
 
   const invitationsWithUsers = allInvitations.map((inv) => ({
     ...inv,
-    user_email: allUsers.find((u) => u.id === inv.user_id)?.email ?? '-',
+    user_email: allUsers.find((u) => u.id === inv.user_id)?.email ?? '',
   }))
 
   const paidCount = allInvitations.filter((i) => i.is_paid).length

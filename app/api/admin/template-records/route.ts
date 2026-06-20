@@ -13,7 +13,7 @@ export async function GET() {
   return NextResponse.json({ records: await templateRecords.findAll() })
 }
 
-/** Rilis template dari Studio Desain — terima full JsonTemplateConfig. */
+/** Rilis template dari Studio Desain   terima full JsonTemplateConfig. */
 export async function POST(req: NextRequest) {
   const session = await getSession()
   if (!isAdmin(session)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Field `config`, `name`, `slug` wajib diisi' }, { status: 400 })
   }
 
-  // Cek duplicate slug — slug dipakai sebagai public identifier.
+  // Cek duplicate slug   slug dipakai sebagai public identifier.
   const existing = await templateRecords.findBySlug(body.slug)
   if (existing && existing.id !== body.id) {
     return NextResponse.json({ error: 'Slug template sudah dipakai' }, { status: 409 })

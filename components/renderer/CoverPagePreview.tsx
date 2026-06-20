@@ -137,7 +137,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
               backgroundColor: `${primary}66`,
             }} />
 
-            {/* Bottom gradient — strong multi-stop */}
+            {/* Bottom gradient   strong multi-stop */}
             <div style={{
               position: 'absolute', inset: 'auto 0 0 0',
               height: `${gradH}%`,
@@ -167,7 +167,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
               }} />
             )}
 
-            {/* Decoration assets — merge template + user overrides */}
+            {/* Decoration assets   merge template + user overrides */}
             <DecorationAssetLayer
               key={decorPreviewKey ?? 0}
               assets={mergeDecorationAssets(opening.decoration_assets, data.opening_decoration_overrides)}
@@ -187,7 +187,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
               {opening.type}
             </div>
 
-            {/* Content — bottom anchored */}
+            {/* Content   bottom anchored */}
             <div style={{
               position: 'relative', zIndex: 10,
               marginTop: 'auto',

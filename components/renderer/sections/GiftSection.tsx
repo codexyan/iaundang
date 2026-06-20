@@ -14,7 +14,7 @@ interface Props {
   invitationId?: string
 }
 
-// ─── Brand config ─────────────────────────────────────────────────────────────
+//  Brand config 
 
 type BrandKey = 'bri' | 'bca' | 'bni' | 'mandiri' | 'bsi' | 'blu' | 'gopay' | 'dana' | 'shopee' | 'ovo' | 'default'
 
@@ -61,7 +61,7 @@ function accountKey(acc: GiftAccount): string {
   return `${acc.type}-${acc.type === 'bank' ? acc.bank : acc.platform}-${acc.number}`
 }
 
-// ─── Shared helpers ───────────────────────────────────────────────────────────
+//  Shared helpers 
 
 function formatNum(n: string) {
   return n.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim()
@@ -119,7 +119,7 @@ function CardBg({ pattern, accent }: { pattern: Brand['pattern']; accent: string
   return null
 }
 
-// ─── Copy button with animation ──────────────────────────────────────────────
+//  Copy button with animation 
 
 function CopyBtn({ isCopied, onClick, g1, size = 'md' }: { isCopied: boolean; onClick: () => void; g1: string; size?: 'sm' | 'md' }) {
   const pad = size === 'sm' ? '4px 8px' : '6px 10px'
@@ -153,7 +153,7 @@ function CopyBtn({ isCopied, onClick, g1, size = 'md' }: { isCopied: boolean; on
   )
 }
 
-// ─── Full gradient card ───────────────────────────────────────────────────────
+//  Full gradient card 
 
 function BrandCard({ acc, index, copied, onCopy, showLogo, ratio = 1.75 }: {
   acc: GiftAccount; index: number; copied: string | null
@@ -196,7 +196,7 @@ function BrandCard({ acc, index, copied, onCopy, showLogo, ratio = 1.75 }: {
 
       {/* Account number */}
       <p className="absolute" style={{ bottom: 34, left: 18, fontSize: 14, fontWeight: 700, letterSpacing: '0.2em', color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 5px rgba(0,0,0,0.35)' }}>
-        {formatNum(acc.number) || '-'}
+        {formatNum(acc.number) || '···'}
       </p>
 
       {/* Name + copy */}
@@ -206,7 +206,7 @@ function BrandCard({ acc, index, copied, onCopy, showLogo, ratio = 1.75 }: {
             {acc.type === 'bank' ? 'a.n.' : 'akun'}
           </p>
           <p style={{ fontSize: 10, fontWeight: 600, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: '0 1px 3px rgba(0,0,0,0.3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {acc.name || '-'}
+            {acc.name || '···'}
           </p>
         </div>
         <CopyBtn isCopied={isCopied} onClick={() => onCopy(acc.number)} g1={g1} />
@@ -215,7 +215,7 @@ function BrandCard({ acc, index, copied, onCopy, showLogo, ratio = 1.75 }: {
   )
 }
 
-// ─── Card Stack (swipe variant) ───────────────────────────────────────────────
+//  Card Stack (swipe variant) 
 
 const STACK_OFFSET = 14
 const STACK_SCALE  = 0.04
@@ -301,7 +301,7 @@ function CardStack({ accounts, copied, onCopy, showLogo, accent }: {
   )
 }
 
-// ─── Section header ───────────────────────────────────────────────────────────
+//  Section header 
 
 function GiftHeader({ accent, text, font }: { accent: string; text: string; font: { heading: string; body: string } }) {
   return (
@@ -344,7 +344,7 @@ function GiftHeader({ accent, text, font }: { accent: string; text: string; font
   )
 }
 
-// ─── Proof upload bottom sheet (minimal redesign) ─────────────────────────────
+//  Proof upload bottom sheet (minimal redesign) 
 
 type ProofStep = 'form' | 'uploading-img' | 'success'
 
@@ -463,7 +463,7 @@ function ProofModal({ onClose, invitationId, accent, thankyouText }: {
               </button>
             </div>
 
-            {/* Fields — clean, breathing room */}
+            {/* Fields  clean, breathing room */}
             <div className="space-y-3.5">
               <div>
                 <label style={{ display: 'block', fontSize: 11, fontWeight: 500, color: '#6b7280', marginBottom: 5 }}>
@@ -548,7 +548,7 @@ function ProofModal({ onClose, invitationId, accent, thankyouText }: {
               </p>
             )}
 
-            {/* Submit — clean pill */}
+            {/* Submit  clean pill */}
             <motion.button
               onClick={submit}
               disabled={submitting || !name.trim() || !proofUrl}
@@ -572,7 +572,7 @@ function ProofModal({ onClose, invitationId, accent, thankyouText }: {
   )
 }
 
-// ─── Minimal proof CTA ────────────────────────────────────────────────────────
+//  Minimal proof CTA 
 
 function ProofCTA({ accent, text, onClick, cs }: { accent: string; text: string; onClick: () => void; cs: ReturnType<typeof getComponentStyle> }) {
   return (
@@ -604,11 +604,11 @@ function ProofCTA({ accent, text, onClick, cs }: { accent: string; text: string;
   )
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+//  Constants 
 
 const MAX_CARDS = 3
 
-// ─── Main section ──────────────────────────────────────────────────────────────
+//  Main section 
 
 const DEFAULT_THANKYOU =
   'Terima kasih telah memberikan hadiah yang sangat berarti bagi kami.\n\nSemoga Allah SWT membalas kebaikan Bapak/Ibu/Saudara dengan keberkahan yang berlimpah. Barakallahu fiikum.'
@@ -645,10 +645,10 @@ export default function GiftSection({ section, data, meta, invitationId = 'previ
     ? <ProofModal onClose={() => setShowModal(false)} invitationId={invitationId} accent={accent} thankyouText={thankyouText} />
     : undefined
 
-  // Stable key that changes when account list changes — forces re-render with animations
+  // Stable key that changes when account list changes  forces re-render with animations
   const accountsFingerprint = accounts.map(accountKey).join('|')
 
-  // ── Variant: Swipe (card stack) ────────────────────────────────────────────
+  //  Variant: Swipe (card stack) 
   if (variant === 'swipe') {
     return (
       <SectionWrapper section={section} overlay={modal}>
@@ -672,7 +672,7 @@ export default function GiftSection({ section, data, meta, invitationId = 'previ
     )
   }
 
-  // ── Default: Stack ────────────────────────────────────────────────────────
+  //  Default: Stack 
   return (
     <SectionWrapper section={section} className="px-6" overlay={modal}>
       <div className="max-w-sm mx-auto w-full py-10">

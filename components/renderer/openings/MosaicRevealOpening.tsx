@@ -131,7 +131,7 @@ export default function MosaicRevealOpening({ config, data, meta, onOpen, positi
         )`,
       }} />
 
-      {/* Mosaic tile grid — 4x6 overlay covering the photo */}
+      {/* Mosaic tile grid   4x6 overlay covering the photo */}
       {tiles.map(({ r, c, delay }) => (
         <motion.div
           key={`${r}-${c}`}
@@ -155,7 +155,7 @@ export default function MosaicRevealOpening({ config, data, meta, onOpen, positi
 
       {/* Decoration assets */}
       <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
-      {/* Logo icon — top center */}
+      {/* Logo icon   top center */}
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}
@@ -166,7 +166,7 @@ export default function MosaicRevealOpening({ config, data, meta, onOpen, positi
         <img src="/logos/icons.png" alt="" style={{ width: 40, height: 'auto', opacity: 0.85, filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))' }} />
       </motion.div>
 
-      {/* Content — bottom-anchored, centered over tiles */}
+      {/* Content   bottom-anchored, centered over tiles */}
       <div
         className="relative z-20 flex flex-col items-center w-full mt-auto"
         style={{ paddingBottom: padBottom, paddingLeft: padX, paddingRight: padX }}

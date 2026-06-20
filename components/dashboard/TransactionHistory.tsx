@@ -89,7 +89,7 @@ export default function TransactionHistory({ invitation }: Props) {
                       <td className="py-4 pr-6 font-medium text-gray-900">
                         Rp {p.amount.toLocaleString('id-ID')}
                       </td>
-                      <td className="py-4 pr-6">{p.bank_name || '-'}</td>
+                      <td className="py-4 pr-6">{p.bank_name || ''}</td>
                       <td className="py-4">
                         <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${st.cls}`}>
                           <StIcon size={12} />

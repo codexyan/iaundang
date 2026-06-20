@@ -12,7 +12,7 @@ export interface PackageFeatures {
   maxGuests: number     // for guest blast, -1 = unlimited
   canChangeTemplate: boolean
   canCustomizeSections: boolean  // enable/disable sections
-  canReorderSections: boolean    // drag-and-drop — true for ALL tiers
+  canReorderSections: boolean    // drag-and-drop   true for ALL tiers
   canHideWishes: boolean
   hasCustomDomain: boolean
   hasWatermarkFree: boolean

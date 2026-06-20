@@ -40,7 +40,7 @@ function getTimeLeft(target: string): TimeLeft {
   }
 }
 
-// ─── Shared components ─────────────────────────────────────────────────────
+//  Shared components 
 
 
 function EventPassed({ accent, headingFont, bodyFont, formattedDate }: {
@@ -64,7 +64,7 @@ function EventPassed({ accent, headingFont, bodyFont, formattedDate }: {
   )
 }
 
-// ─── DEFAULT: Editorial boxes ──────────────────────────────────────────────
+//  DEFAULT: Editorial boxes 
 
 function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, formattedDate, units, isPassed } = ctx
@@ -128,7 +128,7 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── CINEMATIC: Full-bleed background image + overlay countdown ────────────
+//  CINEMATIC: Full-bleed background image + overlay countdown 
 
 function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, headingFont, bodyFont, formattedDate, units, isPassed, bgImage } = ctx
@@ -205,7 +205,7 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
   )
 }
 
-// ─── ELEGANT: Large focal days + smaller H:M:S row ─────────────────────────
+//  ELEGANT: Large focal days + smaller H:M:S row 
 
 function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, formattedDate, timeLeft, isPassed } = ctx
@@ -285,7 +285,7 @@ function ElegantView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── MINIMAL: Clean large typography, no decoration ────────────────────────
+//  MINIMAL: Clean large typography, no decoration 
 
 function MinimalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, formattedDate, units, isPassed } = ctx
@@ -345,7 +345,7 @@ function MinimalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
   )
 }
 
-// ─── RINGS: SVG circular progress ──────────────────────────────────────────
+//  RINGS: SVG circular progress 
 
 function RingsView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, formattedDate, units, isPassed } = ctx
@@ -427,7 +427,7 @@ function RingsView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) 
   )
 }
 
-// ─── MAGAZINE: Split layout — image left, countdown right ──────────────────
+//  MAGAZINE: Split layout  image left, countdown right 
 
 function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, formattedDate, units, isPassed, bgImage } = ctx
@@ -500,7 +500,7 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
   )
 }
 
-// ─── MAIN ──────────────────────────────────────────────────────────────────
+//  MAIN 
 
 export default function CountdownSection({ section, data, meta }: Props) {
   const { accent, text } = meta.color_scheme

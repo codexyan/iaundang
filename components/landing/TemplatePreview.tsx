@@ -290,7 +290,7 @@ export default function TemplatePreview({ showcase, templates }: { showcase?: Sh
           )}
           <p className="text-center text-[12px] text-stone-400 mt-7">
             {activeTemplates.length > 1
-              ? `${activeTemplates.length} template tersedia — pilih yang cocok untuk acara kalian`
+              ? `${activeTemplates.length} template tersedia, pilih yang cocok untuk acara kalian`
               : '12+ gaya opening akan tersedia saat peluncuran resmi'}
           </p>
         </motion.div>

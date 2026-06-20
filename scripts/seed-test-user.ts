@@ -35,7 +35,7 @@ async function main() {
   })
 
   console.log(`User: ${user.email} (${user.id})`)
-  console.log(`Invitation: /${invitation.slug} — template: ${invitation.templateId}, package: ${invitation.packageTier}`)
+  console.log(`Invitation: /${invitation.slug}   template: ${invitation.templateId}, package: ${invitation.packageTier}`)
   await prisma.$disconnect()
 }
 

@@ -21,7 +21,7 @@ import {
   Music,
 } from "lucide-react";
 
-// ─── Orchestrated entrance timing ────────────────────────
+//  Orchestrated entrance timing 
 const T = {
   badge: 0.3,
   headline: 0.5,
@@ -35,7 +35,7 @@ const T = {
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
-// ─── Floating notification cards ─────────────────────────
+//  Floating notification cards 
 const FLOAT_CARDS = [
   {
     delay: T.indicators,
@@ -66,7 +66,7 @@ const FLOAT_CARDS = [
   },
 ];
 
-// ─── Ambient gradient orb ────────────────────────────────
+//  Ambient gradient orb 
 function AmbientOrb({
   delay = 0,
   size = 300,
@@ -135,7 +135,7 @@ export default function HeroSection({ content, mockup }: { content?: HeroContent
       "Undangan digital yang bikin tamu kagum sejak klik pertama",
     subheadline:
       content?.subheadline ??
-      "Tamu klik link → musik mengalir → nama mereka muncul → foto kalian tersaji cantik. Pengalaman premium tanpa ribet.",
+      "Tamu klik link �� musik mengalir �� nama mereka muncul �� foto kalian tersaji cantik. Pengalaman premium tanpa ribet.",
     ctaPrimary: content?.ctaPrimary ?? "Buat Undangan Sekarang",
     ctaSecondary: content?.ctaSecondary ?? "Lihat Demo",
     socialProofCount: content?.socialProofCount ?? "500+",
@@ -166,7 +166,7 @@ export default function HeroSection({ content, mockup }: { content?: HeroContent
       className="relative overflow-hidden bg-[#fafaf9]"
       style={{ minHeight: "100svh" }}
     >
-      {/* ── Ambient background ── */}
+      {/*  Ambient background  */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <AmbientOrb
           delay={0.2}
@@ -199,13 +199,13 @@ export default function HeroSection({ content, mockup }: { content?: HeroContent
         />
       </motion.div>
 
-      {/* ── Main Content ── */}
+      {/*  Main Content  */}
       <motion.div
         style={{ opacity: contentOpacity, y: contentY }}
         className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-28 pb-16 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28"
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 sm:gap-14 lg:gap-20 items-center">
-          {/* ── Left: Copy ── */}
+          {/*  Left: Copy  */}
           <div className="max-w-xl lg:max-w-none">
             {/* Eyebrow badge */}
             <motion.div
@@ -381,7 +381,7 @@ export default function HeroSection({ content, mockup }: { content?: HeroContent
             </motion.div>
           </div>
 
-          {/* ── Right: Phone Mockup ── */}
+          {/*  Right: Phone Mockup  */}
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}

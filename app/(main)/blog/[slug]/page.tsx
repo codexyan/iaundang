@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const article = await articles.findBySlug(params.slug)
   if (!article) return {}
   return {
-    title: article.metaTitle || `${article.title} — Blog iaundang`,
+    title: article.metaTitle || `${article.title} | Blog iaundang`,
     description: article.metaDesc || article.excerpt,
     openGraph: {
       title: article.metaTitle || article.title,

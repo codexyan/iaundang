@@ -38,9 +38,9 @@ function sr(seed: number) {
   return x - Math.floor(x)
 }
 
-/* ─── Speed presets (duration range in seconds) ─── */
+/*  Speed presets (duration range in seconds)  */
 const SPEED_MAP = { slow: [10, 16], normal: [6, 14], fast: [3, 8] } as const
-/* ─── Size presets (base + range in px) ─── */
+/*  Size presets (base + range in px)  */
 const SIZE_MAP = { sm: [5, 8], md: [8, 16], lg: [14, 22] } as const
 
 interface FallingPetal {
@@ -84,7 +84,7 @@ function generateFallingPetals(
   return petals
 }
 
-/* ─── SVG shape paths per petal_shape ─── */
+/*  SVG shape paths per petal_shape  */
 const SHAPE_PATHS: Record<string, string[]> = {
   petal: [
     'M10 0 C15 5, 15 15, 10 20 C5 15, 5 5, 10 0Z',
@@ -125,7 +125,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
   const cs = getComponentStyle(meta.component_style)
   const pos = positionMode === 'fixed' ? 'fixed' : 'absolute'
 
-  // ─── Read configurable attributes with defaults ───
+  //  Read configurable attributes with defaults 
   const petalCount      = config.petal_count ?? 22
   const petalSpeed      = config.petal_speed ?? 'normal'
   const petalSize       = config.petal_size ?? 'md'
@@ -193,7 +193,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
           exit={{ opacity: 0, scale: 1.08, filter: `blur(${exitBlur}px)` }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
         >
-          {/* ─── Ken Burns background ─── */}
+          {/*  Ken Burns background  */}
           {bgPhoto && display === 'background' && (
             <motion.div
               className="absolute inset-0"
@@ -247,7 +247,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
             </motion.div>
           )}
 
-          {/* ─── Atmospheric overlays (configurable scrim) ─── */}
+          {/*  Atmospheric overlays (configurable scrim)  */}
           <div className="absolute inset-0 z-[2]" style={{ backgroundColor: `${primary}${scrimHex}` }} />
           <div className="absolute inset-x-0 bottom-0 z-[5]" style={{
             height: `${gradH}%`,
@@ -268,7 +268,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
           {/* Decoration assets */}
           <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
 
-          {/* ─── Falling petal particles ─── */}
+          {/*  Falling petal particles  */}
           <div className="absolute inset-0 z-[8] pointer-events-none overflow-hidden">
             {petals.map((p) => (
               <motion.div
@@ -323,7 +323,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
             <img src="/logos/icons.png" alt="" style={{ width: 40, height: 'auto', opacity: 0.85, filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.3))' }} />
           </motion.div>
 
-          {/* ─── Content — bottom-anchored ─── */}
+          {/*  Content  bottom-anchored  */}
           <div
             className="relative z-20 flex flex-col items-center w-full mt-auto"
             style={{ paddingBottom: padBottom, paddingLeft: padX, paddingRight: padX }}
@@ -476,7 +476,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
               </motion.div>
             )}
 
-            {/* ─── Button area ─── */}
+            {/*  Button area  */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

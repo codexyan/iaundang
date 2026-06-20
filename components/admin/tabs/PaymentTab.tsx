@@ -9,7 +9,7 @@ import {
 import type { BankAccount, PaymentProof } from '@/lib/db'
 import { formatPrice } from '@/lib/utils'
 
-// ─── Types ────────────────────────────────────────────────────
+// Types
 
 interface PaymentConfig {
   bankAccounts: BankAccount[]
@@ -28,7 +28,7 @@ interface Props {
 
 type SubTab = 'config' | 'proofs'
 
-// ─── Main ─────────────────────────────────────────────────────
+// Main
 
 export default function PaymentTab({ config, proofs, packageDuration, onConfigUpdate, onProofReview }: Props) {
   const [subTab, setSubTab] = useState<SubTab>('config')
@@ -77,7 +77,7 @@ export default function PaymentTab({ config, proofs, packageDuration, onConfigUp
   )
 }
 
-// ─── Payment Config ───────────────────────────────────────────
+// Payment Config
 
 function PaymentConfigTab({ config, onUpdate }: { config: PaymentConfig; onUpdate: (c: PaymentConfig) => void }) {
   const [accounts, setAccounts] = useState<BankAccount[]>(config.bankAccounts)
@@ -283,7 +283,7 @@ function PaymentConfigTab({ config, onUpdate }: { config: PaymentConfig; onUpdat
   )
 }
 
-// ─── Proofs Verification ─────────────────────────────────────
+// Proofs Verification
 
 type ProofFilter = 'all' | 'pending' | 'approved' | 'rejected'
 
