@@ -1,5 +1,5 @@
 /**
- * Database layer  Prisma + Supabase PostgreSQL
+ * Database layer   Prisma + Supabase PostgreSQL
  * Interface identik dengan versi JSON sebelumnya, semua fungsi sekarang async.
  */
 
@@ -600,7 +600,7 @@ export interface LandingPageSettings {
 const DEFAULT_LANDING: LandingPageSettings = {
   hero: {
     headline: 'Undangan digital yang bikin tamu kagum sejak klik pertama',
-    subheadline: 'Tamu klik link †’ musik langsung mengalir †’ nama mereka muncul personal †’ animasi memukau terbuka. Terpukau sejak detik pertama, tanpa ribet scroll atau cari tombol.',
+    subheadline: 'Tamu klik link â†’ musik langsung mengalir â†’ nama mereka muncul personal â†’ animasi memukau terbuka. Terpukau sejak detik pertama, tanpa ribet scroll atau cari tombol.',
     ctaPrimary: 'Mulai Buat Undangan',
     ctaSecondary: 'Lihat Demo Live',
     socialProofCount: '500+',

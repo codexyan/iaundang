@@ -19,7 +19,7 @@ import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
 import ImageUploadField from '@/components/admin/ImageUploadField'
 import VideoUploadField from '@/components/admin/VideoUploadField'
 
-// Dynamic import  hindari SSR issue
+// Dynamic import   hindari SSR issue
 const InvitationPreview = dynamic(() => import('@/components/renderer/InvitationPreview'), { ssr: false })
 // CoverPagePreview replaced by direct OpeningScene in live preview
 const OpeningScene      = dynamic(() => import('@/components/renderer/OpeningScene'),      { ssr: false })
@@ -62,7 +62,7 @@ const PREVIEW_DATA_DEFAULT: NewInvitationData = {
   ],
   closing_text: 'Merupakan suatu kehormatan apabila Bapak/Ibu berkenan hadir.',
   thank_you_message: 'Terima kasih atas doa dan kehadiran Anda.',
-  quote_arabic: 'وَم�نْ آيَات�ه� أَنْ خَلَقَ لَكُمْ م�نْ أَنْفُس�كُمْ أَزْوَاجًا ل�تَسْكُنُوا إ�لَيْهَا',
+  quote_arabic: 'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا',
   quote_translation: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya.',
   quote_source: 'QS. Ar-Rum: 21',
   video_embed_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -98,7 +98,7 @@ const PREVIEW_DATA_DEFAULT: NewInvitationData = {
 // Semua referensi PREVIEW_DATA sekarang ke state previewData di komponen
 
 const PREVIEW_WISHES: Wish[] = [
-  { id: '1', invitation_id: 'lab', name: 'Reza', message: 'Selamat menempuh hidup baru! �', created_at: new Date().toISOString() },
+  { id: '1', invitation_id: 'lab', name: 'Reza', message: 'Selamat menempuh hidup baru! 💕', created_at: new Date().toISOString() },
   { id: '2', invitation_id: 'lab', name: 'Sari', message: 'Semoga menjadi keluarga sakinah mawaddah warahmah!', created_at: new Date().toISOString() },
 ]
 
@@ -128,7 +128,7 @@ const OPENING_TYPES = ['fade-reveal', 'ring-zoom', 'petal-fall'] as const
 const TRANSITION_TYPES = ['fade', 'slide-up', 'slide-left', 'slide-right', 'zoom-in'] as const
 
 const OPENING_META: Record<string, { icon: string; label: string }> = {
-  'fade-reveal':   { icon: '��', label: 'Fade Reveal' },
+  'fade-reveal':   { icon: '✨', label: 'Fade Reveal' },
   'ring-zoom':     { icon: '💍', label: 'Cincin' },
   'petal-fall':    { icon: '🌺', label: 'Petal Jatuh' },
 }
@@ -170,7 +170,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
   const base: React.CSSProperties = { width: 54, height: 76, backgroundColor: p, borderRadius: 6, overflow: 'hidden', flexShrink: 0, position: 'relative', display: 'flex', flexDirection: 'column' }
 
   if (type === 'hero') {
-    // Centered  crosshair + centered text block
+    // Centered   crosshair + centered text block
     if (variant === 'default') return (
       <div style={base}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -182,12 +182,12 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
             <div style={{ fontSize: 6, color: `${a}88`, fontStyle: 'italic', lineHeight: 1 }}>بسم</div>
             <div style={{ fontSize: 7, fontWeight: 700, color: t, lineHeight: 1, letterSpacing: -0.3 }}>A & B</div>
             <div style={{ width: 16, height: 0.5, backgroundColor: a }} />
-            <div style={{ fontSize: 4, color: `${t}66`, lineHeight: 1 }}>scroll ��</div>
+            <div style={{ fontSize: 4, color: `${t}66`, lineHeight: 1 }}>scroll ↓</div>
           </div>
         </div>
       </div>
     )
-    // Bottom  gradient fade, text anchored to bottom
+    // Bottom   gradient fade, text anchored to bottom
     if (variant === 'bottom') return (
       <div style={{ ...base, justifyContent: 'flex-end', background: `linear-gradient(135deg, ${a}22, ${p})` }}>
         <div style={{ position: 'absolute', inset: 0, background: `url("data:image/svg+xml,%3Csvg width='54' height='76' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='54' height='76' fill='%23999' opacity='0.08'/%3E%3C/svg%3E")` }} />
@@ -202,7 +202,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
         </div>
       </div>
     )
-    // Minimal  double border frame, geometric center
+    // Minimal   double border frame, geometric center
     if (variant === 'minimal') return (
       <div style={{ ...base, alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ width: 42, height: 58, border: `1px solid ${a}55`, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
@@ -216,7 +216,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
         </div>
       </div>
     )
-    // Split  foto kiri, nama kanan
+    // Split   foto kiri, nama kanan
     if (variant === 'split') return (
       <div style={{ ...base, flexDirection: 'row' }}>
         <div style={{ flex: 1, background: `linear-gradient(135deg, ${a}33, ${a}11)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -234,7 +234,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
         </div>
       </div>
     )
-    // Glass Card  frosted card floating on gradient
+    // Glass Card   frosted card floating on gradient
     if (variant === 'overlay-card') return (
       <div style={{ ...base, alignItems: 'center', justifyContent: 'center', background: `linear-gradient(150deg, ${a}44 0%, ${p} 50%, ${a}22 100%)` }}>
         <div style={{
@@ -250,7 +250,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
         </div>
       </div>
     )
-    // Editorial  oversized dramatic text
+    // Editorial   oversized dramatic text
     if (variant === 'editorial') return (
       <div style={{ ...base, alignItems: 'center', justifyContent: 'center', gap: 1 }}>
         <div style={{ fontSize: 3.5, letterSpacing: 1.5, textTransform: 'uppercase', color: `${a}77`, lineHeight: 1 }}>THE WEDDING</div>
@@ -263,7 +263,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
         <div style={{ fontSize: 12, fontWeight: 200, color: t, lineHeight: 0.9, letterSpacing: 1 }}>B</div>
       </div>
     )
-    // Arch  SVG arch frame
+    // Arch   SVG arch frame
     if (variant === 'arch') return (
       <div style={{ ...base, alignItems: 'center', justifyContent: 'center' }}>
         <svg viewBox="0 0 42 64" width="42" height="64" fill="none" style={{ position: 'absolute' }}>
@@ -278,7 +278,7 @@ function VariantThumb({ type, variant, p, a, t }: { type: string; variant: strin
         </div>
       </div>
     )
-    // Magazine  circle photo + horizontal name
+    // Magazine   circle photo + horizontal name
     if (variant === 'magazine') return (
       <div style={{ ...base, alignItems: 'center', justifyContent: 'center', gap: 3 }}>
         <div style={{ width: 18, height: 18, borderRadius: '50%', border: `1.5px solid ${a}`, backgroundColor: `${a}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1363,7 +1363,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
       onTemplateReleased?.(savedRecord)
       setShowRelease(false)
       if (isEditMode) {
-        toast.success('Perubahan berhasil disimpan!', { duration: 4000, icon: '��' })
+        toast.success('Perubahan berhasil disimpan!', { duration: 4000, icon: '✅' })
         setShowSetup(true)
         setIsEditMode(false)
       } else {
@@ -1557,7 +1557,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         }
                       }}
                     >
-                      {/* Full-card cover  opening style as thumbnail */}
+                      {/* Full-card cover   opening style as thumbnail */}
                       <div className="aspect-[9/16] w-full relative overflow-hidden" style={{ background: primaryColor }}>
                         {card.coverPhoto ? (
                           <>
@@ -1801,7 +1801,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
           {activeTab === 'identity' && (
             <div className="space-y-5">
 
-              {/* Info: alur kerja Template Lab  collapsible */}
+              {/* Info: alur kerja Template Lab   collapsible */}
               <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 overflow-hidden">
                 <button
                   onClick={() => setShowHowTo(s => !s)}
@@ -1815,8 +1815,8 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 {showHowTo && (
                   <div className="px-4 pb-4 space-y-2.5 border-t border-indigo-100">
                     {[
-                      { icon: '��️', title: 'Edit & Eksperimen', desc: 'Desain template bebas di sini. Klik "Simpan Eksperimen" untuk menyimpan sementara di browser.' },
-                      { icon: '�', title: 'Rilis ke Manajemen', desc: 'Klik "Rilis Template" untuk mengirim ke modul Manajemen, lalu atur harga & paket akses.' },
+                      { icon: '✏️', title: 'Edit & Eksperimen', desc: 'Desain template bebas di sini. Klik "Simpan Eksperimen" untuk menyimpan sementara di browser.' },
+                      { icon: '🚀', title: 'Rilis ke Manajemen', desc: 'Klik "Rilis Template" untuk mengirim ke modul Manajemen, lalu atur harga & paket akses.' },
                       { icon: '👤', title: 'Tersedia ke User', desc: 'Setelah diaktifkan di Manajemen, user bisa memilih template ini saat buat undangan.' },
                     ].map(s => (
                       <div key={s.icon} className="flex gap-2.5 items-start pt-2">
@@ -1895,7 +1895,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         <span className="flex-1 text-xs font-semibold text-gray-700 truncate">{c.label}</span>
                       )}
 
-                      {/* Actions  all categories can be edited & deleted */}
+                      {/* Actions   all categories can be edited & deleted */}
                       <div className="flex items-center gap-0.5 shrink-0">
                         <button onClick={() => { setCatEditSlug(c.slug); setCatEditLabel(c.label) }}
                           className="text-[9px] text-indigo-400 hover:text-indigo-700 font-semibold px-1.5 py-0.5 rounded-md hover:bg-indigo-50 transition-colors">
@@ -1943,7 +1943,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       </div>
                       {(cfg.meta.font.heading_scale ?? 1.0) !== 1.0 && (
                         <button onClick={() => updateMeta({ font: { ...cfg.meta.font, heading_scale: 1.0 } })}
-                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">��</button>
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
                       )}
                     </div>
                     {/* Preview */}
@@ -1988,7 +1988,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       </div>
                       {(cfg.meta.font.body_scale ?? 1.0) !== 1.0 && (
                         <button onClick={() => updateMeta({ font: { ...cfg.meta.font, body_scale: 1.0 } })}
-                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">��</button>
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
                       )}
                     </div>
                     {/* Preview */}
@@ -2078,7 +2078,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     </div>
                     <div className="absolute bottom-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded"
                       style={{ backgroundColor: `${cfg.meta.color_scheme.accent}33`, color: cfg.meta.color_scheme.accent }}>
-                      AKSEN ��
+                      AKSEN ↑
                     </div>
                   </div>
                   {/* Secondary section = background */}
@@ -2093,7 +2093,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     </p>
                     <div className="absolute bottom-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded"
                       style={{ backgroundColor: `${cfg.meta.color_scheme.text}22`, color: cfg.meta.color_scheme.text, opacity: 0.7 }}>
-                      TEKS ��
+                      TEKS ↑
                     </div>
                   </div>
                   {/* Footer legend */}
@@ -2126,7 +2126,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     </button>
                   )}
                 </div>
-                {/* Group by category  sumber dari props server (CRUD admin) atau fallback hardcoded */}
+                {/* Group by category   sumber dari props server (CRUD admin) atau fallback hardcoded */}
                 {paletteGroups.map(cat => (
                   <div key={cat} className="mb-3">
                     <p className="text-[9px] font-semibold text-gray-300 uppercase tracking-widest mb-1.5">{cat}</p>
@@ -2229,7 +2229,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     }`}>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">
-                          {hasFailure ? '��️' : allAAA ? '��' : '�'}
+                          {hasFailure ? '⚠️' : allAAA ? '✅' : '🔶'}
                         </span>
                         <div>
                           <p className={`text-[10px] font-bold uppercase tracking-widest ${
@@ -2345,7 +2345,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
               <div className="rounded-2xl overflow-hidden" style={{ background: _p, padding: '20px 16px' }}>
                 <p className="text-center mb-3" style={{ fontSize: 8, color: `${_t}60`, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Live Preview</p>
                 <div className="flex flex-col items-center gap-3">
-                  {/* Button with MailOpen icon  opening CTA */}
+                  {/* Button with MailOpen icon   opening CTA */}
                   <div style={{
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     padding: `8px ${_br > 10 ? 24 : 28}px`,
@@ -2360,7 +2360,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"/><path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"/></svg>
                     BUKA UNDANGAN
                   </div>
-                  {/* Button with Send icon  form submit */}
+                  {/* Button with Send icon   form submit */}
                   <div style={{
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     padding: `7px ${_br > 10 ? 18 : 22}px`,
@@ -2403,7 +2403,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 <summary className="flex items-center justify-between cursor-pointer select-none py-1 list-none [&::-webkit-details-marker]:hidden">
                   <div>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Pasangan Font</p>
-                    <p className="text-[9px] text-gray-400 mt-0.5">Kombinasi heading + body terkurasi  klik untuk buka</p>
+                    <p className="text-[9px] text-gray-400 mt-0.5">Kombinasi heading + body terkurasi   klik untuk buka</p>
                   </div>
                   <ChevronDown className="w-3.5 h-3.5 text-gray-400 transition-transform group-open:rotate-180 shrink-0" />
                 </summary>
@@ -2487,7 +2487,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       <span className="text-[10px] italic" style={{ fontFamily: `'${cfg.meta.font.heading}', serif`, color: _a }}>{cfg.meta.font.heading}</span>
                     </div>
                     <select value={cfg.meta.font.heading} onChange={e => { updateFont('heading', e.target.value); setPreviewKey(k => k + 1); setDecorPreviewKey(k => k + 1) }} className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white">
-                      {(cfg.meta.font.custom_fonts ?? []).map(f => <option key={`c-${f.name}`} value={f.name}>�� {f.name}</option>)}
+                      {(cfg.meta.font.custom_fonts ?? []).map(f => <option key={`c-${f.name}`} value={f.name}>★ {f.name}</option>)}
                       {HEADING_FONTS.map(f => <option key={f} value={f}>{f}</option>)}
                     </select>
 
@@ -2506,7 +2506,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       </div>
                       {(cfg.meta.font.heading_scale ?? 1.0) !== 1.0 && (
                         <button onClick={() => updateMeta({ font: { ...cfg.meta.font, heading_scale: 1.0 } })}
-                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">��</button>
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
@@ -2559,7 +2559,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       <span className="text-[10px]" style={{ fontFamily: `'${cfg.meta.font.body}', sans-serif`, color: '#666' }}>{cfg.meta.font.body}</span>
                     </div>
                     <select value={cfg.meta.font.body} onChange={e => { updateFont('body', e.target.value); setPreviewKey(k => k + 1); setDecorPreviewKey(k => k + 1) }} className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white">
-                      {(cfg.meta.font.custom_fonts ?? []).map(f => <option key={`c-${f.name}`} value={f.name}>�� {f.name}</option>)}
+                      {(cfg.meta.font.custom_fonts ?? []).map(f => <option key={`c-${f.name}`} value={f.name}>★ {f.name}</option>)}
                       {BODY_FONTS.map(f => <option key={f} value={f}>{f}</option>)}
                     </select>
 
@@ -2578,7 +2578,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       </div>
                       {(cfg.meta.font.body_scale ?? 1.0) !== 1.0 && (
                         <button onClick={() => updateMeta({ font: { ...cfg.meta.font, body_scale: 1.0 } })}
-                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">��</button>
+                          className="text-[9px] text-gray-400 hover:text-indigo-500 shrink-0">↺</button>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
@@ -2745,7 +2745,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         {(cfg.meta.font.custom_fonts ?? []).map((cf, i) => (
                           <div key={i} className="flex items-center justify-between px-2.5 py-1.5 bg-gray-50 rounded-lg border border-gray-100">
                             <div className="flex items-center gap-2 min-w-0">
-                              <span className="text-[9px] text-amber-500 shrink-0">��</span>
+                              <span className="text-[9px] text-amber-500 shrink-0">★</span>
                               <span className="text-[10px] font-medium text-gray-700 truncate" style={{ fontFamily: `'${cf.name}', serif` }}>{cf.name}</span>
                               <span className="text-[8px] text-gray-400 shrink-0">{cf.url.includes('googleapis') ? 'Google' : 'Upload'}</span>
                             </div>
@@ -2994,7 +2994,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       { key: 'formal',    label: '🎩 Formal',      text: 'Merupakan suatu kehormatan dan kebahagiaan bagi kami untuk mengundang kehadiran Bapak/Ibu/Saudara/i' },
                       { key: 'rendah',    label: '🙏 Rendah Hati', text: 'Dengan segala kerendahan hati, kami mengundang kehadiran Bapak/Ibu/Saudara/i' },
                       { key: 'sukacita',  label: '💫 Sukacita',    text: 'Dengan penuh sukacita, kami mengundang kehadiran Bapak/Ibu/Saudara/i untuk turut merayakan momen bahagia kami' },
-                      { key: 'custom',    label: '��️ Kustom',      text: null },
+                      { key: 'custom',    label: '✏️ Kustom',      text: null },
                     ] as const
                     const current = cfg.opening.invitation_text ?? ''
                     const matchedPreset = PRESETS.slice(0, -1).find(p => p.text === current)
@@ -3276,12 +3276,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   <Field label="Gaya Pembatas">
                     <div className="grid grid-cols-3 gap-1.5">
                       {([
-                        { key: 'diamond', label: '�� Diamond' },
-                        { key: 'dot', label: '�� Dot' },
-                        { key: 'line', label: ' Line' },
-                        { key: 'floral', label: '�� Floral' },
-                        { key: 'star', label: '�� Star' },
-                        { key: 'wave', label: '� Wave' },
+                        { key: 'diamond', label: '◆ Diamond' },
+                        { key: 'dot', label: '● Dot' },
+                        { key: 'line', label: '― Line' },
+                        { key: 'floral', label: '❦ Floral' },
+                        { key: 'star', label: '✦ Star' },
+                        { key: 'wave', label: '〰 Wave' },
                       ] as const).map(s => {
                         const active = (cfg.opening.separator_style ?? 'diamond') === s.key
                         return (
@@ -3338,11 +3338,11 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     <div className="grid grid-cols-3 gap-1.5">
                       {([
                         { key: 'ampersand', label: '& Ampersand' },
-                        { key: 'heart', label: '�� Heart' },
-                        { key: 'dot', label: '�� Dot' },
-                        { key: 'dash', label: ' Dash' },
-                        { key: 'ring', label: '�� Ring' },
-                        { key: 'flower', label: '�� Flower' },
+                        { key: 'heart', label: '♥ Heart' },
+                        { key: 'dot', label: '● Dot' },
+                        { key: 'dash', label: '  Dash' },
+                        { key: 'ring', label: '◎ Ring' },
+                        { key: 'flower', label: '✿ Flower' },
                       ] as const).map(s => {
                         const active = (cfg.opening.couple_name_connector ?? 'ampersand') === s.key
                         return (
@@ -3484,7 +3484,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           {cfg.opening.cover_gradient_color && (
                             <button onClick={() => updateOpening({ cover_gradient_color: undefined })}
                               className="text-gray-300 hover:text-gray-600 text-xs shrink-0" title="Reset ke primer">
-                              ��
+                              ↺
                             </button>
                           )}
                         </div>
@@ -3562,7 +3562,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           { id: 'petal', label: 'Kelopak', icon: '🌷' },
                           { id: 'sakura', label: 'Sakura', icon: '🌸' },
                           { id: 'leaf', label: 'Daun', icon: '🍃' },
-                          { id: 'snowflake', label: 'Salju', icon: '��️' },
+                          { id: 'snowflake', label: 'Salju', icon: '❄️' },
                         ] as const).map(sh => (
                           <button key={sh.id} type="button"
                             onClick={() => updateOpening({ petal_shape: sh.id })}
@@ -3728,7 +3728,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
             const scopeAssets: DecorationAsset[] = isOpening
               ? (cfg.opening.decoration_assets ?? [])
               : (scopeSection?.decoration_assets ?? [])
-            const scopeLabel = isOpening ? 'Opening' : (scopeSection ? (SECTION_LABELS[scopeSection.type] || scopeSection.type) : '')
+            const scopeLabel = isOpening ? 'Opening' : (scopeSection ? (SECTION_LABELS[scopeSection.type] || scopeSection.type) : ' ')
 
             const updateScopeAssets = (newAssets: DecorationAsset[]) => {
               if (isOpening) updateOpening({ decoration_assets: newAssets })
@@ -3878,13 +3878,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         onClick={() => { setDecorEditMode(false); setCoverPreviewMode('entry'); setPreviewMode('opening'); setDecorPreviewKey(k => k + 1) }}
                         className="flex-1 py-2.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors"
                       >
-                        �� Preview Masuk
+                        ▶ Preview Masuk
                       </button>
                       <button
                         onClick={() => { setDecorEditMode(false); setCoverPreviewMode('full-flow'); setPreviewMode('opening'); setDecorPreviewKey(k => k + 1) }}
                         className="flex-1 py-2.5 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition-colors"
                       >
-                        ���� Full Flow
+                        ▶▶ Full Flow
                       </button>
                     </div>
                   )}
@@ -3893,7 +3893,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       onClick={() => { setPreviewMode('invitation'); setSectionReplay({ id: scopeSection.id, key: Date.now() }) }}
                       className="w-full py-2.5 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition-colors"
                     >
-                      �� Preview {scopeLabel}
+                      ▶ Preview {scopeLabel}
                     </button>
                   )}
                 </>
@@ -3919,20 +3919,20 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   {([
                     { id: 'dual-ring',       icon: '💫', label: 'Dual Ring' },
                     { id: 'heartbeat',       icon: '💗', label: 'Heartbeat' },
-                    { id: 'elegant-spinner', icon: '�', label: 'Spinner' },
+                    { id: 'elegant-spinner', icon: '🌀', label: 'Spinner' },
                     { id: 'petal-cascade',   icon: '🌸', label: 'Kelopak' },
-                    { id: 'wave-dots',       icon: '�', label: 'Wave Dots' },
-                    { id: 'letter-reveal',   icon: '��️', label: 'Letter' },
-                    { id: 'arch-gate',       icon: '�', label: 'Arch Gate' },
-                    { id: 'candle-glow',     icon: '�️', label: 'Lilin' },
-                    { id: 'infinity-ribbon', icon: '��️', label: 'Infinity' },
-                    { id: 'shimmer-bar',     icon: '��', label: 'Shimmer' },
-                    { id: 'orbit-rings',     icon: '�', label: 'Orbit' },
-                    { id: 'ripple-pulse',    icon: '�', label: 'Ripple' },
+                    { id: 'wave-dots',       icon: '🔵', label: 'Wave Dots' },
+                    { id: 'letter-reveal',   icon: '✍️', label: 'Letter' },
+                    { id: 'arch-gate',       icon: '🕌', label: 'Arch Gate' },
+                    { id: 'candle-glow',     icon: '🕯️', label: 'Lilin' },
+                    { id: 'infinity-ribbon', icon: '♾️', label: 'Infinity' },
+                    { id: 'shimmer-bar',     icon: '▬', label: 'Shimmer' },
+                    { id: 'orbit-rings',     icon: '🪐', label: 'Orbit' },
+                    { id: 'ripple-pulse',    icon: '🔘', label: 'Ripple' },
                     { id: 'diamond-spin',    icon: '💎', label: 'Diamond' },
-                    { id: 'hourglass',       icon: '��', label: 'Hourglass' },
+                    { id: 'hourglass',       icon: '⏳', label: 'Hourglass' },
                     { id: 'crescent-moon',   icon: '🌙', label: 'Bulan Sabit' },
-                    { id: 'spiral-gold',     icon: '�', label: 'Spiral Gold' },
+                    { id: 'spiral-gold',     icon: '🌀', label: 'Spiral Gold' },
                   ] as const).map(lv => {
                     const active = (cfg.loading.variant ?? 'dual-ring') === lv.id
                     return (
@@ -4208,14 +4208,14 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   }`}
                 >
                   <div className="flex items-center gap-2 px-3 py-2.5 bg-gray-50">
-                    {/* Drag handle  disabled when locked */}
+                    {/* Drag handle   disabled when locked */}
                     <div className={`shrink-0 ${lockedSectionIds.has(s.id) ? 'text-yellow-400 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500'}`}>
                       {lockedSectionIds.has(s.id)
                         ? <Lock className="w-3.5 h-3.5" />
                         : <GripVertical className="w-3.5 h-3.5" />
                       }
                     </div>
-                    {/* Reorder arrows (fallback)  disabled when locked */}
+                    {/* Reorder arrows (fallback)   disabled when locked */}
                     <div className="flex flex-col gap-0.5">
                       <button onClick={() => moveSection(s.id, 'up')} disabled={idx === 0 || lockedSectionIds.has(s.id) || (idx > 0 && lockedSectionIds.has(sections[idx - 1].id))}
                         className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20">
@@ -4288,11 +4288,11 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     )}
                   </div>
 
-                  {/* Advanced controls  hanya tampil saat di-expand */}
+                  {/* Advanced controls   hanya tampil saat di-expand */}
                   {s.enabled && expandedSectionId === s.id && (
                     <div className="bg-white border-t border-gray-50 divide-y divide-gray-50">
 
-                      {/* Style variant selector  visual thumbnails */}
+                      {/* Style variant selector   visual thumbnails */}
                       {SECTION_VARIANTS[s.type] && (
                         <div className="px-3 py-2.5">
                           <p className="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-2">
@@ -4442,7 +4442,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       {sectionReplay?.id === s.id && (
                         <div className="px-3 pb-2">
                           <p className="text-[9px] text-emerald-600 font-medium">
-                            �� Scroll di preview untuk lihat animasi section ini
+                            ↑ Scroll di preview untuk lihat animasi section ini
                           </p>
                         </div>
                       )}
@@ -4453,7 +4453,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           Konten & Foto
                         </p>
 
-                        {/* HERO  editor lengkap */}
+                        {/* HERO   editor lengkap */}
                         {s.type === 'hero' && (
                           <div className="space-y-3">
 
@@ -4493,7 +4493,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                 </SectionField>
                               )}
                               {s.hero_bismillah === 'arabic' && (
-                                <p className="text-[8px] text-gray-400 italic">ب�سْم� اللَّه� الرَّحْمَن� الرَّح�يم� + transliterasi</p>
+                                <p className="text-[8px] text-gray-400 italic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ + transliterasi</p>
                               )}
                             </div>
 
@@ -4731,7 +4731,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           </div>
                         )}
 
-                        {/* GIFT  amplop digital settings */}
+                        {/* GIFT   amplop digital settings */}
                         {s.type === 'gift' && (() => {
                           const activeSet = new Set(
                             (previewData.gift_accounts ?? []).map(a => a.type === 'bank' ? a.bank : a.platform)
@@ -4769,7 +4769,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                   </div>
                                 </div>
 
-                                {/* Mini card grid  5 per row */}
+                                {/* Mini card grid   5 per row */}
                                 <div className="grid grid-cols-5 gap-1.5">
                                   {Object.entries(GIFT_LAB_BRANDS).map(([name, b]) => {
                                     const active = activeSet.has(name)
@@ -4897,7 +4897,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
               {musicCfg.enabled && (
                 <>
-                  {/* File Musik  Current Selection */}
+                  {/* File Musik   Current Selection */}
                   <div className="pt-4 border-t border-gray-100">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Musik Terpilih</p>
                     {musicCfg.url ? (
@@ -5085,9 +5085,9 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     <div className="grid grid-cols-2 gap-2">
                       {([
                         { id: 'pill', icon: '💊', name: 'Pill', desc: 'Tombol + judul lagu' },
-                        { id: 'circle', icon: '�', name: 'Circle', desc: 'Tombol bulat sederhana' },
+                        { id: 'circle', icon: '⭕', name: 'Circle', desc: 'Tombol bulat sederhana' },
                         { id: 'vinyl', icon: '💿', name: 'Vinyl', desc: 'Piringan berputar' },
-                        { id: 'minimal', icon: '��', name: 'Minimal', desc: 'Ikon kecil saja' },
+                        { id: 'minimal', icon: '▶', name: 'Minimal', desc: 'Ikon kecil saja' },
                       ] as const).map(s => {
                         const selected = musicCfg.player_style === s.id
                         return (
@@ -5109,10 +5109,10 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Posisi Player</p>
                     <div className="grid grid-cols-2 gap-2">
                       {([
-                        { id: 'bottom-right', name: 'Kanan Bawah', icon: '��' },
-                        { id: 'bottom-left', name: 'Kiri Bawah', icon: '��' },
-                        { id: 'bottom-center', name: 'Tengah Bawah', icon: '��' },
-                        { id: 'top-right', name: 'Kanan Atas', icon: '��' },
+                        { id: 'bottom-right', name: 'Kanan Bawah', icon: '↘' },
+                        { id: 'bottom-left', name: 'Kiri Bawah', icon: '↙' },
+                        { id: 'bottom-center', name: 'Tengah Bawah', icon: '↓' },
+                        { id: 'top-right', name: 'Kanan Atas', icon: '↗' },
                       ] as const).map(p => {
                         const selected = musicCfg.player_position === p.id
                         return (
@@ -5257,7 +5257,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
           {/* Success banner setelah rilis */}
           {releaseSuccess && (
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-start gap-2.5">
-              <span className="text-lg shrink-0">��</span>
+              <span className="text-lg shrink-0">✅</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-emerald-800">
                   &ldquo;{releaseSuccess}&rdquo; berhasil {isEditMode ? 'diperbarui' : 'dirilis'}!
@@ -5269,7 +5269,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   onClick={() => { onGoToManagement?.(); setReleaseSuccess(null) }}
                   className="mt-1.5 text-[10px] font-bold text-emerald-700 hover:underline"
                 >
-                  Buka Manajemen Template ��
+                  Buka Manajemen Template →
                 </button>
               </div>
               <button onClick={() => setReleaseSuccess(null)} className="text-emerald-400 hover:text-emerald-700 shrink-0">
@@ -5307,7 +5307,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 {sections.filter(s => s.enabled).length} sections
               </span>
             )}
-            {/* Tombol Play  preview animasi opening di dalam mockup */}
+            {/* Tombol Play   preview animasi opening di dalam mockup */}
             <button
               onClick={() => { setPreviewMode('opening'); setPreviewPlaying(true) }}
               className="flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg px-3 py-1.5 transition-colors"
@@ -5335,7 +5335,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
         </div>
 
         {/*
-          Phone preview  shell 360px, screen 340×736, zoom 340/390 �� 0.872
+          Phone preview   shell 360px, screen 340×736, zoom 340/390 ≈ 0.872
           Cover height: 736 / (340/390) = 845px
           Menggunakan visibility (bukan display:none) + position:absolute agar
           kedua preview selalu punya dimensi, tidak collapse saat tidak aktif.
@@ -5352,9 +5352,9 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
               <div className="rounded-[44px] overflow-hidden bg-gray-900"
                 style={{ width: 340, height: 736, position: 'relative' }}>
 
-                {/*  Fullscreen + Music overlay  always on top  */}
+                {/*  Fullscreen + Music overlay   always on top  */}
                 <div style={{ position: 'absolute', inset: 0, zIndex: 50, pointerEvents: 'none' }}>
-                  {/* Fullscreen icon  top right corner */}
+                  {/* Fullscreen icon   top right corner */}
                   <button
                     onClick={() => {
                       const hasOpening = cfg.opening.show_opening !== false
@@ -5400,7 +5400,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   </div>
                 </div>
 
-                {/*  Moodboard overlay  drag decoration assets  */}
+                {/*  Moodboard overlay   drag decoration assets  */}
                 {decorEditMode && previewMode === 'opening' && !previewPlaying && (
                   <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'absolute', inset: 0, zIndex: 30 }}>
                     <DecorationMoodboard
@@ -5414,7 +5414,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   </div>
                 )}
 
-                {/*  Invitation preview  scroll-snap, satu section = satu layar  */}
+                {/*  Invitation preview   scroll-snap, satu section = satu layar  */}
                 <div key={previewKey} style={{
                   position: 'absolute', inset: 0,
                   overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'none',
@@ -5476,7 +5476,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   </div>
                 )}
 
-                {/*  Cover/Opening preview  click MASUK SEKARANG triggers loading  */}
+                {/*  Cover/Opening preview   click MASUK SEKARANG triggers loading  */}
                 {previewPlaying && (
                   <div style={{ position: 'absolute', inset: 0, zIndex: 30, overflow: 'hidden', borderRadius: '2rem' }}>
                     <div style={{ width: 390, zoom: 340 / 390, height: 845, position: 'relative' }}>
@@ -5561,7 +5561,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
             <X className="w-5 h-5" />
           </button>
 
-          {/* Phone-width container  simulates real device */}
+          {/* Phone-width container   simulates real device */}
           <div style={{
             width: '100%',
             maxWidth: 430,
@@ -5601,7 +5601,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
             {isEditMode ? (
               <>
-                {/* Konfirmasi simpan  tanpa form */}
+                {/* Konfirmasi simpan   tanpa form */}
                 <div className="px-6 py-6">
                   <p className="text-sm text-gray-700">
                     Simpan semua perubahan desain ke template <strong>{config.name}</strong>?
@@ -5856,13 +5856,13 @@ function DecorationLayerList({
 
       {/*  Quick Actions  */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50/80 border-b border-gray-100">
-        <QBtn label="Depan" onClick={() => up(asset.id, { z_layer: maxZ + 1 })} icon="��" />
-        <QBtn label="Maju" onClick={() => up(asset.id, { z_layer: (asset.z_layer ?? 0) + 1 })} icon="��" />
-        <QBtn label="Mundur" onClick={() => up(asset.id, { z_layer: (asset.z_layer ?? 0) - 1 })} icon="��" />
-        <QBtn label="Belakang" onClick={() => up(asset.id, { z_layer: minZ - 1 })} icon="��" />
+        <QBtn label="Depan" onClick={() => up(asset.id, { z_layer: maxZ + 1 })} icon="⤒" />
+        <QBtn label="Maju" onClick={() => up(asset.id, { z_layer: (asset.z_layer ?? 0) + 1 })} icon="↑" />
+        <QBtn label="Mundur" onClick={() => up(asset.id, { z_layer: (asset.z_layer ?? 0) - 1 })} icon="↓" />
+        <QBtn label="Belakang" onClick={() => up(asset.id, { z_layer: minZ - 1 })} icon="⤓" />
         <div className="w-px h-4 bg-gray-200 mx-0.5" />
-        <QBtn label="Flip H" onClick={() => up(asset.id, { flip_h: !asset.flip_h })} icon="�" active={asset.flip_h} />
-        <QBtn label="Flip V" onClick={() => up(asset.id, { flip_v: !asset.flip_v })} icon="�" active={asset.flip_v} />
+        <QBtn label="Flip H" onClick={() => up(asset.id, { flip_h: !asset.flip_h })} icon="↔" active={asset.flip_h} />
+        <QBtn label="Flip V" onClick={() => up(asset.id, { flip_v: !asset.flip_v })} icon="↕" active={asset.flip_v} />
         <div className="flex-1" />
         <button onClick={() => { onUpdate(assets.filter(a => a.id !== asset.id)); onFocusChange?.(null) }}
           className="p-1 text-gray-300 hover:text-red-500 rounded transition-colors" title="Hapus">
@@ -5892,7 +5892,7 @@ function DecorationLayerList({
             <p className="text-[9px] font-bold text-emerald-700 uppercase tracking-widest flex-1">Masuk</p>
             <button onClick={triggerPreview}
               className="text-[8px] font-bold text-emerald-600 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-full transition-colors">
-              �� Preview
+              ▶ Preview
             </button>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
@@ -5954,7 +5954,7 @@ function DecorationLayerList({
             {onPreviewExit && (
               <button onClick={triggerExitPreview}
                 className="text-[8px] font-bold text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 px-2 py-0.5 rounded-full transition-colors">
-                � Preview
+                ◀ Preview
               </button>
             )}
           </div>
@@ -6025,23 +6025,23 @@ function DSlider({ label, value, min, max, step, unit, onChange }: {
 type KfConfig = import('@/lib/types').AssetKeyframeConfig
 
 const ENTRY_PRESETS: { label: string; icon: string; kf: KfConfig }[] = [
-  { label: 'Fade Naik', icon: '��', kf: { from: { opacity: 0, y: 40 }, to: { opacity: 1, y: 0 }, duration: 800, easing: 'ease-out' } },
-  { label: 'Fade Turun', icon: '��', kf: { from: { opacity: 0, y: -40 }, to: { opacity: 1, y: 0 }, duration: 800, easing: 'ease-out' } },
-  { label: 'Fade Kiri', icon: '�', kf: { from: { opacity: 0, x: -60 }, to: { opacity: 1, x: 0 }, duration: 800, easing: 'ease-out' } },
-  { label: 'Fade Kanan', icon: '��', kf: { from: { opacity: 0, x: 60 }, to: { opacity: 1, x: 0 }, duration: 800, easing: 'ease-out' } },
-  { label: 'Zoom Blur', icon: '��', kf: { from: { opacity: 0, scale: 0.3, blur: 10 }, to: { opacity: 1, scale: 1, blur: 0 }, duration: 1000, easing: 'ease' } },
-  { label: 'Putar Masuk', icon: '��', kf: { from: { opacity: 0, rotate: -90, scale: 0.5 }, to: { opacity: 1, rotate: 0, scale: 1 }, duration: 900, easing: 'spring' } },
-  { label: 'Pop Elastis', icon: '��', kf: { from: { opacity: 0, scale: 0 }, to: { opacity: 1, scale: 1 }, duration: 600, easing: 'spring' } },
-  { label: 'Muncul Halus', icon: '��', kf: { from: { opacity: 0 }, to: { opacity: 1 }, duration: 1200, easing: 'ease-in-out' } },
+  { label: 'Fade Naik', icon: '↑', kf: { from: { opacity: 0, y: 40 }, to: { opacity: 1, y: 0 }, duration: 800, easing: 'ease-out' } },
+  { label: 'Fade Turun', icon: '↓', kf: { from: { opacity: 0, y: -40 }, to: { opacity: 1, y: 0 }, duration: 800, easing: 'ease-out' } },
+  { label: 'Fade Kiri', icon: '←', kf: { from: { opacity: 0, x: -60 }, to: { opacity: 1, x: 0 }, duration: 800, easing: 'ease-out' } },
+  { label: 'Fade Kanan', icon: '→', kf: { from: { opacity: 0, x: 60 }, to: { opacity: 1, x: 0 }, duration: 800, easing: 'ease-out' } },
+  { label: 'Zoom Blur', icon: '◎', kf: { from: { opacity: 0, scale: 0.3, blur: 10 }, to: { opacity: 1, scale: 1, blur: 0 }, duration: 1000, easing: 'ease' } },
+  { label: 'Putar Masuk', icon: '↻', kf: { from: { opacity: 0, rotate: -90, scale: 0.5 }, to: { opacity: 1, rotate: 0, scale: 1 }, duration: 900, easing: 'spring' } },
+  { label: 'Pop Elastis', icon: '◉', kf: { from: { opacity: 0, scale: 0 }, to: { opacity: 1, scale: 1 }, duration: 600, easing: 'spring' } },
+  { label: 'Muncul Halus', icon: '○', kf: { from: { opacity: 0 }, to: { opacity: 1 }, duration: 1200, easing: 'ease-in-out' } },
 ]
 
 const EXIT_PRESETS: { label: string; icon: string; kf: KfConfig }[] = [
-  { label: 'Fade Naik', icon: '��', kf: { from: { opacity: 1, y: 0 }, to: { opacity: 0, y: -50 }, duration: 600, easing: 'ease-in' } },
-  { label: 'Fade Turun', icon: '��', kf: { from: { opacity: 1, y: 0 }, to: { opacity: 0, y: 50 }, duration: 600, easing: 'ease-in' } },
-  { label: 'Zoom Blur', icon: '��', kf: { from: { opacity: 1, scale: 1, blur: 0 }, to: { opacity: 0, scale: 1.5, blur: 12 }, duration: 700, easing: 'ease-in' } },
-  { label: 'Putar Keluar', icon: '��', kf: { from: { opacity: 1, rotate: 0, scale: 1 }, to: { opacity: 0, rotate: 90, scale: 0.3 }, duration: 700, easing: 'ease-in' } },
+  { label: 'Fade Naik', icon: '↑', kf: { from: { opacity: 1, y: 0 }, to: { opacity: 0, y: -50 }, duration: 600, easing: 'ease-in' } },
+  { label: 'Fade Turun', icon: '↓', kf: { from: { opacity: 1, y: 0 }, to: { opacity: 0, y: 50 }, duration: 600, easing: 'ease-in' } },
+  { label: 'Zoom Blur', icon: '◎', kf: { from: { opacity: 1, scale: 1, blur: 0 }, to: { opacity: 0, scale: 1.5, blur: 12 }, duration: 700, easing: 'ease-in' } },
+  { label: 'Putar Keluar', icon: '↺', kf: { from: { opacity: 1, rotate: 0, scale: 1 }, to: { opacity: 0, rotate: 90, scale: 0.3 }, duration: 700, easing: 'ease-in' } },
   { label: 'Mengecil', icon: '·', kf: { from: { opacity: 1, scale: 1 }, to: { opacity: 0, scale: 0 }, duration: 500, easing: 'ease-in' } },
-  { label: 'Blur Hilang', icon: '��', kf: { from: { opacity: 1, blur: 0 }, to: { opacity: 0, blur: 20 }, duration: 800, easing: 'ease' } },
+  { label: 'Blur Hilang', icon: '◌', kf: { from: { opacity: 1, blur: 0 }, to: { opacity: 0, blur: 20 }, duration: 800, easing: 'ease' } },
 ]
 
 function KfPanel({ color, keyframes, onChange, presets, expanded, onToggle }: {
@@ -6115,11 +6115,11 @@ function KfPanel({ color, keyframes, onChange, presets, expanded, onToggle }: {
         <span>
           <span className="text-gray-500 font-bold">From:</span>{' '}
           <KfBrief state={keyframes.from} />
-          <span className="text-gray-300 mx-1">��</span>
+          <span className="text-gray-300 mx-1">→</span>
           <span className="text-gray-500 font-bold">To:</span>{' '}
           <KfBrief state={keyframes.to} />
         </span>
-        <span className="text-[9px] ml-2">{expanded ? '��' : '��'}</span>
+        <span className="text-[9px] ml-2">{expanded ? '▲' : '▼'}</span>
       </button>
 
       {/* Manual detail editor */}
@@ -6129,7 +6129,7 @@ function KfPanel({ color, keyframes, onChange, presets, expanded, onToggle }: {
             onUpdate={p => updateState('from', p)} onClear={p => clearProp('from', p)} />
           <div className="flex items-center gap-1 px-2">
             <div className="flex-1 h-px bg-gray-300/50" />
-            <span className="text-[10px] text-gray-400">��</span>
+            <span className="text-[10px] text-gray-400">▼</span>
             <div className="flex-1 h-px bg-gray-300/50" />
           </div>
           <KfFields label="KE (To)" state={keyframes.to} color={color}
@@ -6148,7 +6148,7 @@ function KfBrief({ state }: { state: import('@/lib/types').AssetKeyframeState })
   if (state.scale !== undefined) p.push(`s:${state.scale}`)
   if (state.rotate !== undefined) p.push(`r:${state.rotate}°`)
   if (state.blur !== undefined) p.push(`b:${state.blur}`)
-  return <span className="truncate">{p.length ? p.join(' ') : '�'}</span>
+  return <span className="truncate">{p.length ? p.join(' ') : ' '}</span>
 }
 
 const KF_FIELDS: { key: keyof import('@/lib/types').AssetKeyframeState; label: string; min: number; max: number; step: number; unit: string }[] = [

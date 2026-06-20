@@ -158,7 +158,7 @@ function ExpiredPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center px-4">
-        <div className="text-5xl mb-4">è∞</div>
+        <div className="text-5xl mb-4">‚è∞</div>
         <h1 className="text-2xl font-serif font-bold text-gray-800">Undangan Sudah Berakhir</h1>
         <p className="text-gray-500 mt-3 max-w-sm">
           Masa aktif undangan ini telah habis. Terima kasih telah hadir.

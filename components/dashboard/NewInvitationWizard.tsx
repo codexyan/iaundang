@@ -444,9 +444,9 @@ function StepCouple({ data, set, errors }: { data: WizardData; set: (k: keyof Wi
           <Heart size={18} className="text-rose-400 shrink-0" />
           <p className="text-sm text-gray-600">
             Undangan dari{' '}
-            <span className="font-bold text-gray-900">{data.groom_name || '¦'}</span>
+            <span className="font-bold text-gray-900">{data.groom_name || 'â€¦'}</span>
             <span className="text-rose-400 mx-1">&</span>
-            <span className="font-bold text-gray-900">{data.bride_name || '¦'}</span>
+            <span className="font-bold text-gray-900">{data.bride_name || 'â€¦'}</span>
           </p>
         </motion.div>
       )}

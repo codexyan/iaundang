@@ -469,7 +469,7 @@ function AccountPanel({ adminEmail }: { adminEmail: string }) {
           </div>
           <button
             className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-            onClick={() => toast('Fitur ganti password akan tersedia segera', { icon: 'ðŸ’' })}
+            onClick={() => toast('Fitur ganti password akan tersedia segera', { icon: 'ðŸ”’' })}
           >
             Ganti Password
           </button>

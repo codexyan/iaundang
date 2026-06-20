@@ -457,8 +457,8 @@ function StepNames({
   const slugIndicator = {
     idle:     { color: 'text-stone-300',  text: '' },
     checking: { color: 'text-stone-400',  text: 'Mengecek...' },
-    ok:       { color: 'text-green-600',  text: 'œ“ Tersedia' },
-    taken:    { color: 'text-red-500',    text: 'œ— Sudah dipakai' },
+    ok:       { color: 'text-green-600',  text: 'âœ“ Tersedia' },
+    taken:    { color: 'text-red-500',    text: 'âœ— Sudah dipakai' },
   }[slugStatus]
 
   return (

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -54,7 +54,7 @@ function Bismillah({ section, font, accent, delay }: {
           direction: 'rtl',
           letterSpacing: 0,
         }}>
-          ب�سْم� اللَّه� الرَّحْمَن� الرَّح�يم�
+          بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </p>
         <p style={{
           fontSize: labelSz,
@@ -240,12 +240,12 @@ function HeroBottom({ section, data, font, accent, text, primary }: {
             color: `${accent}cc`, fontFamily: `'${font.body}', serif`,
           }}>
             {section.hero_bismillah === 'none' ? 'Undangan Pernikahan'
-              : section.hero_bismillah === 'arabic' ? 'ب�سْم� اللَّه�'
+              : section.hero_bismillah === 'arabic' ? 'بِسْمِ اللَّهِ'
               : (section.hero_bismillah_custom || 'Bismillahirrahmanirrahim')}
           </p>
         </motion.div>
 
-        {/* Couple names  elegant stacked layout */}
+        {/* Couple names   elegant stacked layout */}
         <motion.h1
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: ts(2) } }}
           style={{
@@ -328,7 +328,7 @@ function HeroMinimal({ section, data, font, accent, text }: {
           <motion.span
             variants={{ hidden: { opacity: 0, rotate: -180 }, visible: { opacity: 1, rotate: 0, transition: ts(4) } }}
             style={{ fontSize: 14, color: accent }}
-          >��</motion.span>
+          >✦</motion.span>
         </div>
 
         <motion.h1
@@ -347,7 +347,7 @@ function HeroMinimal({ section, data, font, accent, text }: {
   )
 }
 
-//  Variant: Split (foto kiri, nama kanan  visual editorial) 
+//  Variant: Split (foto kiri, nama kanan   visual editorial) 
 function HeroSplit({ section, data, font, accent, text }: {
   section: SectionConfig
   data: NewInvitationData

@@ -135,7 +135,7 @@ export default function HeroSection({ content, mockup }: { content?: HeroContent
       "Undangan digital yang bikin tamu kagum sejak klik pertama",
     subheadline:
       content?.subheadline ??
-      "Tamu klik link †’ musik mengalir †’ nama mereka muncul †’ foto kalian tersaji cantik. Pengalaman premium tanpa ribet.",
+      "Tamu klik link â†’ musik mengalir â†’ nama mereka muncul â†’ foto kalian tersaji cantik. Pengalaman premium tanpa ribet.",
     ctaPrimary: content?.ctaPrimary ?? "Buat Undangan Sekarang",
     ctaSecondary: content?.ctaSecondary ?? "Lihat Demo",
     socialProofCount: content?.socialProofCount ?? "500+",

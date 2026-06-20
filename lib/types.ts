@@ -1,7 +1,7 @@
 //  LEGACY TEMPLATE TYPES (hardcoded templates) 
 
 export type LegacyTemplateId = 'modern-white' | 'floral-garden' | 'dark-elegant'
-// Backward-compat alias  old code uses `Template`
+// Backward-compat alias   old code uses `Template`
 export type Template = LegacyTemplateId
 
 export interface InvitationData {
@@ -164,7 +164,7 @@ export interface BackgroundConfig {
   type: 'image' | 'video' | 'color' | 'gradient'
   url?: string              // untuk image dan video
   value?: string            // untuk color dan gradient
-  overlay_opacity?: number  // 0“1, gelap overlay di atas foto/video
+  overlay_opacity?: number  // 0 1, gelap overlay di atas foto/video
 }
 
 export type SectionPaddingY  = 'compact' | 'normal' | 'spacious'
@@ -191,8 +191,8 @@ export interface SectionConfig {
   font_body?: string                // Override font teks untuk section ini
   heading_weight?: number           // Ketebalan judul: 300 | 400 | 500 | 600 | 700 | 800 | 900
   body_weight?: number              // Ketebalan teks: 300 | 400 | 500 | 600 | 700
-  heading_scale?: number            // Ukuran judul/heading: 0.7 “ 1.8 (default 1.0)
-  body_scale?: number               // Ukuran teks isi/body: 0.7 “ 1.5 (default 1.0)
+  heading_scale?: number            // Ukuran judul/heading: 0.7   1.8 (default 1.0)
+  body_scale?: number               // Ukuran teks isi/body: 0.7   1.5 (default 1.0)
 
   //  Gift section controls 
   gift_card_layout?: 'stack' | 'grid'  // Tata letak kartu: satu kolom atau dua kolom
@@ -207,7 +207,7 @@ export interface SectionConfig {
   hero_and_size?: number            // px ukuran simbol "&" (default 22)
   hero_tagline_size?: number        // px ukuran tagline/ayat (default 11)
   hero_label_size?: number          // px ukuran bismillah/label kecil (default 9)
-  hero_overlay?: number             // 0“1 kegelapan foto/video background
+  hero_overlay?: number             // 0 1 kegelapan foto/video background
   hero_padding_top?: number         // px padding atas konten
   hero_padding_bottom?: number      // px padding bawah konten
   hero_show_scroll?: boolean        // tampilkan indikator scroll (default true)
@@ -242,7 +242,7 @@ export type AssetIdleAnimation =
 export type AssetKeyframeEasing = 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'spring' | 'linear'
 
 export interface AssetKeyframeState {
-  opacity?: number    // 0“1
+  opacity?: number    // 0 1
   x?: number          // px offset
   y?: number          // px offset
   scale?: number      // multiplier
@@ -324,8 +324,8 @@ export interface OpeningConfig {
   petal_count?: number             // jumlah kelopak, default 22
   petal_speed?: 'slow' | 'normal' | 'fast'  // kecepatan jatuh, default 'normal'
   petal_size?: 'sm' | 'md' | 'lg' // ukuran kelopak, default 'md'
-  petal_opacity?: number           // 0“100, opacity puncak kelopak, default 30
-  petal_sway?: number              // 0“100, intensitas ayunan horizontal, default 50
+  petal_opacity?: number           // 0 100, opacity puncak kelopak, default 30
+  petal_sway?: number              // 0 100, intensitas ayunan horizontal, default 50
   petal_color?: string             // warna kelopak, default: accent color template
   petal_shape?: 'petal' | 'sakura' | 'leaf' | 'snowflake'  // bentuk partikel, default 'petal'
   show_button_glow?: boolean       // pulse glow pada tombol, default true
@@ -333,7 +333,7 @@ export interface OpeningConfig {
   ken_burns_enabled?: boolean      // animasi Ken Burns pada background, default true
   ken_burns_speed?: number         // detik durasi siklus, default 20
   exit_blur?: number               // px blur saat exit, default 12
-  scrim_opacity?: number           // 0“100, opacity overlay gelap, default 33
+  scrim_opacity?: number           // 0 100, opacity overlay gelap, default 33
 }
 
 export type LoadingVariant =
@@ -398,8 +398,8 @@ export interface CustomFont {
 export interface FontConfig {
   heading: string
   body: string
-  heading_scale?: number  // 0.6 “ 2.0, default 1.0  ukuran default semua judul
-  body_scale?: number     // 0.6 “ 1.6, default 1.0  ukuran default semua teks
+  heading_scale?: number  // 0.6   2.0, default 1.0   ukuran default semua judul
+  body_scale?: number     // 0.6   1.6, default 1.0   ukuran default semua teks
   heading_line_height?: number   // default 1.15
   body_line_height?: number      // default 1.65
   heading_letter_spacing?: number // em, default 0
@@ -460,7 +460,7 @@ export interface JsonTemplateConfig {
  *  'all' = semua user (termasuk free). Selain itu = tier minimum (lihat lib/packages.ts). */
 export type TemplatePackageRequirement = 'all' | 'starter' | 'popular' | 'eksklusif'
 
-/** Kategori template  admin bisa CRUD dari Manajemen tab. */
+/** Kategori template   admin bisa CRUD dari Manajemen tab. */
 export interface TemplateCategory {
   slug: string
   label: string
@@ -508,10 +508,10 @@ export interface PriceTier {
   highlight?: boolean
 }
 
-/** Scope target untuk promo  berlaku ke semua, per tier, atau per kategori. */
+/** Scope target untuk promo   berlaku ke semua, per tier, atau per kategori. */
 export type PromoScope = 'all' | 'tier' | 'category'
 
-/** Flash sale  diskon sementara, bisa target per tier atau per kategori. */
+/** Flash sale   diskon sementara, bisa target per tier atau per kategori. */
 export interface FlashSale {
   id: string
   label: string
@@ -524,7 +524,7 @@ export interface FlashSale {
   is_active: boolean
 }
 
-/** Kupon diskon  user memasukkan kode saat checkout, bisa target per tier atau per kategori. */
+/** Kupon diskon   user memasukkan kode saat checkout, bisa target per tier atau per kategori. */
 export interface Coupon {
   id: string
   code: string
@@ -625,14 +625,14 @@ export interface GiftRegistryLink {
   marketplace?: 'tokopedia' | 'shopee' | 'bukalapak' | 'lazada' | 'other'
 }
 
-/** Satu bab dalam section Kisah Cinta  foto atau video background */
+/** Satu bab dalam section Kisah Cinta   foto atau video background */
 export interface StoryChapter {
   title?: string
   text?: string
   date?: string
   photo_url?: string
   video_url?: string         // video background cinematic (mp4/webm)
-  overlay_opacity?: number   // 0“1, default 0.45
+  overlay_opacity?: number   // 0 1, default 0.45
 }
 
 export interface NewInvitationData {

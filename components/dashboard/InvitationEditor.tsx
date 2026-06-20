@@ -28,7 +28,7 @@ interface Props {
   onSaved: (inv: Invitation) => void
 }
 
-//  Section icons (lucide  no emojis) 
+//  Section icons (lucide   no emojis) 
 
 const SICONS: Record<string, React.ElementType> = {
   hero: Sparkles, profiles: Users, countdown: Timer, story: Heart,
@@ -322,7 +322,7 @@ function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
               </button>
               <button onClick={() => videoRef.current?.click()}
                 className="flex items-center gap-1 bg-gray-900/90 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg">
-                ñ∂ Pakai Video
+                ‚ñ∂ Pakai Video
               </button>
             </div>
           </div>
@@ -336,7 +336,7 @@ function HeroForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
             <button onClick={() => videoRef.current?.click()} disabled={!!uploading}
               className="flex-1 py-5 border border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-1.5 text-gray-400 hover:border-indigo-300 hover:text-indigo-400 transition-colors disabled:opacity-50">
               {uploading === 'video' ? <><Loader2 size={16} className="animate-spin" /><span className="text-[9px]">Upload...</span></>
-                : <><span className="text-base">ñ∂</span><span className="text-[9px] font-medium">Upload Video</span></>}
+                : <><span className="text-base">‚ñ∂</span><span className="text-[9px] font-medium">Upload Video</span></>}
             </button>
           </div>
         )}
@@ -442,7 +442,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
   }
 
   const MODES: { id: StoryMode; label: string }[] = [
-    { id: 'text',      label: 'úç Teks' },
+    { id: 'text',      label: '‚úç Teks' },
     { id: 'timeline',  label: 'üìÖ Timeline' },
     { id: 'cinematic', label: 'üé¨ Sinematik' },
   ]
@@ -536,7 +536,7 @@ function StoryForm({ data, onChange }: { data: NewInvitationData; onChange: (p: 
                 </div>
                 <button className="flex-1 text-left flex items-center gap-1.5" onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}>
                   {ch.video_url
-                    ? <span className="w-5 h-5 rounded bg-gray-900 flex items-center justify-center shrink-0 text-[8px] text-white font-bold">ñ∂</span>
+                    ? <span className="w-5 h-5 rounded bg-gray-900 flex items-center justify-center shrink-0 text-[8px] text-white font-bold">‚ñ∂</span>
                     : ch.photo_url
                       ? <img src={ch.photo_url} alt="Foto bab kisah" className="w-5 h-5 rounded object-cover border border-gray-200 shrink-0" />
                       : <div className="w-5 h-5 rounded bg-gray-100 shrink-0 flex items-center justify-center"><ImageIcon size={9} className="text-gray-400" /></div>
@@ -819,7 +819,7 @@ function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
             </F>
           )}
 
-          {/* Preview card  live debit card mockup */}
+          {/* Preview card   live debit card mockup */}
           {providerName && !providerName.includes('lainnya') && (() => {
             const pb = PROVIDER_BRANDS[providerName]
             const [g1, g2] = pb ? pb.gradient : [brandColor, `${brandColor}cc`]
@@ -866,7 +866,7 @@ function GiftForm({ data, onChange }: { data: NewInvitationData; onChange: (p: P
 
                 {/* Card number */}
                 <p style={{ position: 'absolute', bottom: 30, left: 16, fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.95)', fontFamily: 'monospace', textShadow: '0 1px 6px rgba(0,0,0,0.45)' }}>
-                  {formatted || '¢¢¢¢ ¢¢¢¢ ¢¢¢¢'}
+                  {formatted || '‚Ä¢‚Ä¢‚Ä¢‚Ä¢ ‚Ä¢‚Ä¢‚Ä¢‚Ä¢ ‚Ä¢‚Ä¢‚Ä¢‚Ä¢'}
                 </p>
 
                 {/* Name + type */}
@@ -1004,7 +1004,7 @@ function SectionRow({
             )}
           </button>
 
-          {/* Toggle ON/OFF  prominent */}
+          {/* Toggle ON/OFF   prominent */}
           <button
             title={on ? 'Nonaktifkan section' : 'Aktifkan section'}
             className={`shrink-0 flex items-center rounded-full transition-all px-1 ${on ? 'hover:bg-gold-50' : 'hover:bg-gray-100'}`}
@@ -1127,7 +1127,7 @@ export default function InvitationEditor({ invitation, template, onSaved }: Prop
       <div className="flex-1 min-w-0 space-y-1">
         {/* Status row */}
         <div className="flex items-center justify-between h-5 mb-1">
-          <p className="text-[10px] text-gray-400">Seret â° untuk ubah urutan ¬∑ Toggle untuk tampilkan/sembunyikan</p>
+          <p className="text-[10px] text-gray-400">Seret ‚â° untuk ubah urutan ¬∑ Toggle untuk tampilkan/sembunyikan</p>
           <div className={`flex items-center gap-1 text-[10px] transition-opacity ${saveStatus === 'idle' ? 'opacity-0' : 'opacity-100'}`}>
             {saveStatus === 'saving' && <><Loader2 size={10} className="animate-spin text-gray-400" /><span className="text-gray-400">Menyimpan...</span></>}
             {saveStatus === 'saved' && <><Check size={10} className="text-green-500" /><span className="text-green-600">Tersimpan</span></>}

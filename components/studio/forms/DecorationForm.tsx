@@ -21,7 +21,7 @@ interface Props {
   requiredTier?: string
 }
 
-//  Anchor †’ pixel position (same logic as DecorationAssetLayer) 
+//  Anchor â†’ pixel position (same logic as DecorationAssetLayer) 
 
 const ANCHOR_POS: Record<string, (w: number, cw: number, ch: number) => { x: number; y: number }> = {
   'top-left':       (w, _cw, _ch) => ({ x: 0, y: 0 }),
@@ -277,7 +277,7 @@ function DragCanvas({ assets, selectedId, onSelect, onMove, isOpening }: {
     if (e.target === canvasRef.current) onSelect(null)
   }
 
-  // Visual canvas height  show phone aspect ratio
+  // Visual canvas height   show phone aspect ratio
   // Canvas width fills parent, height proportional
   const aspectRatio = CANVAS_H / CANVAS_W // ~2.167
 

@@ -1,4 +1,4 @@
-ï»¿'use client'
+'use client'
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -10,7 +10,7 @@ function VisualPersonal({ guestName = 'Bapak Andi & Keluarga', groomName = 'Rizk
   const p = '#0f2d0f', a = '#d4af37', t = '#ffffff'
   return (
     <div className="relative w-full max-w-[280px] mx-auto">
-      {/* Phone shell  slim bezel */}
+      {/* Phone shell   slim bezel */}
       <div
         className="relative rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-2xl shadow-stone-200/80"
         style={{
@@ -27,21 +27,21 @@ function VisualPersonal({ guestName = 'Bapak Andi & Keluarga', groomName = 'Rizk
           <Image src="/images/templates/wedding-bg.jpg" alt="Preview undangan personalisasi" fill className="object-cover" sizes="280px" quality={90} style={{ opacity: 0.5 }} />
           <div className="absolute inset-0 z-[2]" style={{ background: 'radial-gradient(ellipse at center 40%, rgba(10,20,10,0.25) 0%, rgba(10,20,10,0.8) 100%)' }} />
 
-          {/* Content  vertically distributed */}
+          {/* Content   vertically distributed */}
           <div className="absolute inset-0 z-20 flex flex-col text-center">
-            {/* Top section  "The Wedding of" */}
+            {/* Top section   "The Wedding of" */}
             <div className="pt-14 px-5">
               <p className="text-[10px] tracking-[0.35em] uppercase" style={{ color: a }}>The Wedding of</p>
             </div>
 
-            {/* Center  couple names */}
+            {/* Center   couple names */}
             <div className="flex-1 flex flex-col items-center justify-center px-5">
               <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "var(--font-playfair), 'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>{groomName}</h3>
               <p className="text-[20px] my-1" style={{ color: a, fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontStyle: 'italic', fontWeight: 300 }}>&amp;</p>
               <h3 className="text-[34px] font-bold leading-[0.85]" style={{ color: t, fontFamily: "var(--font-playfair), 'Playfair Display', serif", textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>{brideName}</h3>
             </div>
 
-            {/* Bottom  personalized guest card */}
+            {/* Bottom   personalized guest card */}
             <div className="pb-8 px-5">
               <div className="inline-block px-5 py-3 rounded-xl" style={{ backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', backdropFilter: 'blur(8px)' }}>
                 <p className="text-[8px] tracking-[0.3em] uppercase mb-0.5" style={{ color: `${a}aa` }}>Kepada Yth.</p>
@@ -72,7 +72,7 @@ function VisualRSVP() {
             <p className="text-[10px] text-stone-700 font-medium">2 orang</p>
           </div>
           <div className="flex gap-2">
-            {['Hadir œ“', 'Tidak Hadir'].map((opt, i) => (
+            {['Hadir âœ“', 'Tidak Hadir'].map((opt, i) => (
               <button key={opt}
                 className="flex-1 py-2 rounded-xl text-[9px] font-semibold transition-all"
                 style={i === 0
@@ -137,7 +137,7 @@ function VisualMusic() {
         </div>
         {/* Controls */}
         <div className="flex items-center justify-center gap-5">
-          {['®', '¸', '­'].map(c => (
+          {['â®', 'â¸', 'â­'].map(c => (
             <button key={c} className="text-white/60 hover:text-white text-sm">{c}</button>
           ))}
         </div>
@@ -148,7 +148,7 @@ function VisualMusic() {
         {['Perfect Â· Ed Sheeran', 'All of Me Â· John Legend', 'Upload lagumu sendiri'].map((s, i) => (
           <div key={s} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${i === 2 ? 'border border-dashed border-stone-200' : 'hover:bg-stone-50'}`}>
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] ${i === 2 ? 'bg-gold-50' : 'bg-stone-100'}`}>
-              {i === 2 ? 'ï¼‹' : '™ª'}
+              {i === 2 ? 'ï¼‹' : 'â™ª'}
             </div>
             <p className="text-[9px] text-stone-600 font-medium">{s}</p>
           </div>

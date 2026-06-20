@@ -64,7 +64,7 @@ function PhotoPlaceholder({ accent, side }: { accent: string; side: 'groom' | 'b
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 18, color: `${accent}30`,
       }}>
-        {side === 'groom' ? '™‚' : '™'}
+        {side === 'groom' ? 'â™‚' : 'â™€'}
       </div>
     </div>
   )
@@ -405,7 +405,7 @@ function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
           variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
           style={{ position: 'relative', height: 320, marginBottom: 28 }}>
 
-          {/* Groom  left, slightly back */}
+          {/* Groom   left, slightly back */}
           <div style={{
             position: 'absolute', top: 0, left: 0,
             width: '58%', aspectRatio: '3 / 4', overflow: 'hidden',
@@ -418,7 +418,7 @@ function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
             )}
           </div>
 
-          {/* Bride  right, overlapping */}
+          {/* Bride   right, overlapping */}
           <div style={{
             position: 'absolute', top: 40, right: 0,
             width: '58%', aspectRatio: '3 / 4', overflow: 'hidden',
