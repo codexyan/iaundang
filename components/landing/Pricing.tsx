@@ -153,7 +153,6 @@ function buildFeatureList(tier: PriceTier): string[] {
     if (f.countdown) list.push('Countdown hari H')
     if (f.wishes) list.push('Ucapan & doa dari tamu')
   }
-  if (f.rsvp && tier.id !== 'starter') list.push(`RSVP online`)
   if (f.gift) list.push('Amplop digital & rekening')
   if (f.gift_registry) list.push('Wishlist hadiah')
   if (f.story && tier.id !== 'starter') list.push('Kisah cinta pasangan')

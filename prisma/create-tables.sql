@@ -1,4 +1,4 @@
--- Akundang — Create Tables
+-- iaundang — Create Tables
 -- Jalankan di: Supabase Dashboard → SQL Editor → New Query → paste → Run
 
 -- USERS

@@ -1,4 +1,4 @@
-// Akundang DB Schema — PostgreSQL (Supabase)
+// iaundang DB Schema — PostgreSQL (Supabase)
 // Dev: DATABASE_URL = direct connection Supabase
 // Prod: DATABASE_URL = pooler (pgbouncer), DIRECT_URL = direct
 
@@ -188,7 +188,7 @@ model Article {
   content        String    @default("")
   coverUrl       String    @default("") @map("cover_url")
   authorId       String?   @map("author_id")
-  authorName     String    @default("Tim Akundang") @map("author_name")
+  authorName     String    @default("Tim iaundang") @map("author_name")
   authorAvatar   String    @default("") @map("author_avatar")
   isPublished    Boolean   @default(false) @map("is_published")
   publishedAt    DateTime? @map("published_at")

@@ -1,4 +1,4 @@
-# Migrasi DB Akundang — JSON Local → Prisma + SQLite
+# Migrasi DB iaundang — JSON Local → Prisma + SQLite
 
 Status: **Plan** (belum dieksekusi). File `schema.prisma` sudah siap, tinggal jalankan langkah di bawah saat ready.
 

@@ -1,4 +1,4 @@
--- Akundang Database Schema
+-- iaundang Database Schema
 -- Run this in Supabase SQL Editor
 
 -- Enable UUID extension

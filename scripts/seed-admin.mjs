@@ -11,7 +11,7 @@ process.env.DATABASE_URL = dbUrl
 const prisma = new PrismaClient()
 
 const ADMIN_EMAIL = 'mdcodeid@gmail.com'
-const ADMIN_PASSWORD = 'Admin@akundang1'
+const ADMIN_PASSWORD = 'Admin@iaundang1'
 
 async function main() {
   const existing = await prisma.user.findUnique({ where: { email: ADMIN_EMAIL } })

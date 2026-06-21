@@ -1,4 +1,4 @@
-# BUGS.md — Akundang MVP
+# BUGS.md — iaundang MVP
 
 Catat bug minor di sini. Fix setelah fitur selesai sesuai aturan vibe coding.
 
