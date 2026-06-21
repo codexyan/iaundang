@@ -913,9 +913,6 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
     category: 'modern' as 'modern' | 'tradisional' | 'minimalis' | 'floral' | 'rustic',
     status: 'draft' as 'draft' | 'active',
     description: '',
-    price: 0,
-    required_package: 'all' as import('@/lib/types').TemplatePackageRequirement,
-    thumbnail_url: '',
   })
   const [releasing, setReleasing] = useState(false)
   const [deleteLabConfirm, setDeleteLabConfirm] = useState<{ id: string; name: string } | null>(null)
@@ -1283,9 +1280,6 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
       category: (config.config.meta.category as typeof releaseForm.category) || 'modern',
       status: isEditMode ? (config.status as 'draft' | 'active') || 'draft' : 'draft',
       description: templateDesc || '',
-      price: config.price ?? 0,
-      required_package: config.required_package ?? 'all',
-      thumbnail_url: config.thumbnail_url ?? '',
     })
     setShowRelease(true)
   }
@@ -1306,6 +1300,8 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
     }
     setReleasing(true)
     try {
+      const autoThumb = config.config.opening?.cover_photo_url || config.config.opening?.background_image || ''
+
       const body: Record<string, unknown> = isEditMode
         ? {
             id: config.id,
@@ -1313,10 +1309,8 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
             slug: useSlug,
             category: config.category,
             config: config.config,
-            thumbnail_url: config.thumbnail_url,
+            thumbnail_url: config.thumbnail_url || autoThumb,
             status: config.status,
-            price: config.price,
-            required_package: config.required_package,
           }
         : {
             id: releaseForm.slug,
@@ -1330,13 +1324,11 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 name: releaseForm.name,
                 slug: releaseForm.slug,
                 category: releaseForm.category,
-                thumbnail: releaseForm.thumbnail_url,
+                thumbnail: autoThumb,
               },
             },
-            thumbnail_url: releaseForm.thumbnail_url,
+            thumbnail_url: autoThumb,
             status: releaseForm.status,
-            price: releaseForm.price,
-            required_package: releaseForm.required_package,
           }
 
       const url = isEditMode
@@ -5687,47 +5679,6 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       className={inputCls + ' resize-none text-sm'}
                       placeholder="Deskripsi singkat template..."
                     />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-500 mb-1.5">Harga (Rp)</label>
-                      <input
-                        type="number"
-                        min={0}
-                        step={1000}
-                        value={releaseForm.price}
-                        onChange={e => setReleaseForm(f => ({ ...f, price: Math.max(0, Number(e.target.value)) }))}
-                        className={inputCls}
-                        placeholder="0"
-                      />
-                      <p className="text-[10px] text-gray-400 mt-1">0 = ikuti harga global</p>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-500 mb-1.5">Akses Paket</label>
-                      <select
-                        value={releaseForm.required_package}
-                        onChange={e => setReleaseForm(f => ({ ...f, required_package: e.target.value as typeof f.required_package }))}
-                        className={inputCls}
-                      >
-                        <option value="all">Semua user</option>
-                        <option value="starter">Starter ke atas</option>
-                        <option value="popular">Popular ke atas</option>
-                        <option value="eksklusif">Eksklusif saja</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">URL Thumbnail (opsional)</label>
-                    <input
-                      value={releaseForm.thumbnail_url}
-                      onChange={e => setReleaseForm(f => ({ ...f, thumbnail_url: e.target.value }))}
-                      className={inputCls}
-                      placeholder="/templates/nama-slug/thumbnail.jpg"
-                    />
-                    <p className="text-[10px] text-gray-400 mt-1">Upload manual ke /public dulu, lalu isi path</p>
                   </div>
 
                   <div>
