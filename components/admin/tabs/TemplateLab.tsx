@@ -907,13 +907,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   const [sectionReplay, setSectionReplay]           = useState<{ id: string; key: number } | null>(null)
   const [showRelease, setShowRelease]               = useState(false)
   const [releaseSuccess, setReleaseSuccess]         = useState<string | null>(null)
-  const [releaseForm, setReleaseForm] = useState({
-    name: '',
-    slug: '',
-    category: 'modern' as 'modern' | 'tradisional' | 'minimalis' | 'floral' | 'rustic',
-    status: 'draft' as 'draft' | 'active',
-    description: '',
-  })
+  const [releaseStatus, setReleaseStatus] = useState<'draft' | 'active'>('draft')
   const [releasing, setReleasing] = useState(false)
   const [deleteLabConfirm, setDeleteLabConfirm] = useState<{ id: string; name: string } | null>(null)
   const [changeCount, setChangeCount] = useState(0)
@@ -1274,61 +1268,58 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   }
 
   function openReleaseModal() {
-    setReleaseForm({
-      name: config.name || 'Template Baru',
-      slug: config.slug || 'template-baru',
-      category: (config.config.meta.category as typeof releaseForm.category) || 'modern',
-      status: isEditMode ? (config.status as 'draft' | 'active') || 'draft' : 'draft',
-      description: templateDesc || '',
-    })
+    if (!isEditMode && !config.name.trim()) {
+      toast.error('Isi nama template terlebih dahulu')
+      return
+    }
+    setReleaseStatus(isEditMode ? (config.status as 'draft' | 'active') || 'draft' : 'draft')
     setShowRelease(true)
   }
 
   async function submitRelease() {
-    const useName = isEditMode ? config.name : releaseForm.name
-    const useSlug = isEditMode ? config.slug : releaseForm.slug
+    const useName = config.name.trim()
+    const useSlug = config.slug || useName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
 
-    if (!isEditMode) {
-      if (!releaseForm.name || !releaseForm.slug) {
-        toast.error('Nama dan slug wajib diisi')
-        return
-      }
-      if (!/^[a-z0-9-]{3,30}$/.test(releaseForm.slug)) {
-        toast.error('Slug: 3-30 karakter, huruf kecil + angka + strip saja')
-        return
-      }
+    if (!useName || !useSlug) {
+      toast.error('Nama template wajib diisi')
+      return
+    }
+    if (!/^[a-z0-9-]{3,30}$/.test(useSlug)) {
+      toast.error('Slug tidak valid (pastikan nama template minimal 3 karakter)')
+      return
     }
     setReleasing(true)
     try {
       const autoThumb = config.config.opening?.cover_photo_url || config.config.opening?.background_image || ''
+      const category = config.config.meta.category || 'modern'
 
       const body: Record<string, unknown> = isEditMode
         ? {
             id: config.id,
             name: useName,
             slug: useSlug,
-            category: config.category,
+            category,
             config: config.config,
             thumbnail_url: config.thumbnail_url || autoThumb,
             status: config.status,
           }
         : {
-            id: releaseForm.slug,
-            name: releaseForm.name,
-            slug: releaseForm.slug,
-            category: releaseForm.category,
+            id: useSlug,
+            name: useName,
+            slug: useSlug,
+            category,
             config: {
               ...config.config,
               meta: {
                 ...config.config.meta,
-                name: releaseForm.name,
-                slug: releaseForm.slug,
-                category: releaseForm.category,
+                name: useName,
+                slug: useSlug,
+                category,
                 thumbnail: autoThumb,
               },
             },
             thumbnail_url: autoThumb,
-            status: releaseForm.status,
+            status: releaseStatus,
           }
 
       const url = isEditMode
@@ -5621,64 +5612,27 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
               </>
             ) : (
               <>
-                {/* Form rilis template baru */}
+                {/* Konfirmasi rilis — data sudah dari editor */}
                 <div className="px-6 py-5 space-y-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">Nama Template</label>
-                    <input
-                      value={releaseForm.name}
-                      onChange={e => setReleaseForm(f => ({
-                        ...f,
-                        name: e.target.value,
-                        slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-                      }))}
-                      className={inputCls}
-                      placeholder="Nama template yang akan tampil ke user"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">Slug (ID unik)</label>
-                    <input
-                      value={releaseForm.slug}
-                      onChange={e => setReleaseForm(f => ({
-                        ...f,
-                        slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
-                      }))}
-                      className={inputCls + ' font-mono'}
-                      placeholder="contoh: modern-floral-gold"
-                    />
-                    <p className="text-[10px] text-gray-400 mt-1">Huruf kecil dan strip saja. Ini akan menjadi ID template.</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">Kategori</label>
-                    <select
-                      value={releaseForm.category}
-                      onChange={e => setReleaseForm(f => ({ ...f, category: e.target.value as typeof f.category }))}
-                      className={inputCls}
-                    >
-                      {[
-                        ['modern',      'Modern'],
-                        ['tradisional', 'Tradisional'],
-                        ['minimalis',   'Minimalis'],
-                        ['floral',      'Floral'],
-                        ['rustic',      'Rustic'],
-                      ].map(([v, l]) => (
-                        <option key={v} value={v}>{l}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5">Deskripsi (opsional)</label>
-                    <textarea
-                      value={releaseForm.description}
-                      onChange={e => setReleaseForm(f => ({ ...f, description: e.target.value }))}
-                      rows={2}
-                      className={inputCls + ' resize-none text-sm'}
-                      placeholder="Deskripsi singkat template..."
-                    />
+                  <div className="rounded-xl bg-gray-50 border border-gray-100 p-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Nama</span>
+                      <span className="text-sm font-bold text-gray-900">{config.name}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Slug</span>
+                      <span className="text-xs font-mono text-indigo-600">{config.slug || config.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Kategori</span>
+                      <span className="text-xs font-medium text-gray-700 capitalize">{config.config.meta.category || 'modern'}</span>
+                    </div>
+                    {templateDesc && (
+                      <div className="flex justify-between items-start gap-4">
+                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider shrink-0">Deskripsi</span>
+                        <span className="text-xs text-gray-600 text-right">{templateDesc}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -5690,17 +5644,21 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                             type="radio"
                             name="status"
                             value={s}
-                            checked={releaseForm.status === s}
-                            onChange={() => setReleaseForm(f => ({ ...f, status: s }))}
+                            checked={releaseStatus === s}
+                            onChange={() => setReleaseStatus(s)}
                             className="accent-indigo-600"
                           />
-                          <span className="text-xs font-medium text-gray-700 capitalize">
+                          <span className="text-xs font-medium text-gray-700">
                             {s === 'draft' ? 'Draft (tidak tampil ke user)' : 'Aktif (langsung tampil)'}
                           </span>
                         </label>
                       ))}
                     </div>
                   </div>
+
+                  <p className="text-[10px] text-gray-400">
+                    Harga & akses paket diatur di halaman Manajemen setelah rilis.
+                  </p>
                 </div>
 
                 <div className="px-6 pb-5 flex gap-3">
@@ -5712,7 +5670,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   </button>
                   <button
                     onClick={submitRelease}
-                    disabled={releasing || !releaseForm.name || !releaseForm.slug}
+                    disabled={releasing}
                     className="flex-1 py-2.5 text-sm font-semibold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
                   >
                     <Rocket className="w-3.5 h-3.5" />
