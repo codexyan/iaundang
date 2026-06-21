@@ -5,7 +5,7 @@ import Image from 'next/image'
 import {
   ChevronRight, ChevronLeft, Check, Crown, Rocket, Gem,
   Copy, QrCode, CreditCard, Send, Loader2, CheckCircle2,
-  User, Users, Globe, Palette, ShoppingBag, Clock,
+  User, Users, Globe, Palette, ShoppingBag, Clock, X,
 } from 'lucide-react'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -20,6 +20,30 @@ interface TemplateInfo {
   }
 }
 
+interface TierFeatures {
+  max_photos: number
+  max_guests: number
+  music: boolean
+  custom_music: boolean
+  opening_animation: boolean
+  rsvp: boolean
+  wishes: boolean
+  countdown: boolean
+  gallery: boolean
+  gift: boolean
+  gift_registry: boolean
+  story: boolean
+  video: boolean
+  livestream: boolean
+  qrcode: boolean
+  custom_domain: boolean
+  subdomain: boolean
+  remove_watermark: boolean
+  analytics: boolean
+  priority_support: boolean
+  validity_days: number
+}
+
 interface TierInfo {
   id: string
   label: string
@@ -28,6 +52,7 @@ interface TierInfo {
   color: string
   icon: string
   highlight: boolean
+  features: TierFeatures | null
 }
 
 interface PaymentConfig {
@@ -41,6 +66,7 @@ interface Props {
   templates: TemplateInfo[]
   tiers: TierInfo[]
   paymentConfig: PaymentConfig
+  initialTemplate?: string
 }
 
 type Step = 0 | 1 | 2 | 3 | 4
@@ -55,10 +81,34 @@ const STEP_LABELS = [
 
 const TIER_ICONS: Record<string, React.ElementType> = { rocket: Rocket, crown: Crown, gem: Gem }
 
+function buildTierFeatureList(tierId: string, f: TierFeatures): { label: string; included: boolean }[] {
+  const list: { label: string; included: boolean }[] = []
+  list.push({ label: `Foto hingga ${f.max_photos} buah`, included: true })
+  list.push({ label: `Maks ${f.max_guests} tamu undangan`, included: true })
+  list.push({ label: `Aktif ${f.validity_days} hari`, included: true })
+  list.push({ label: 'Musik pengiring', included: f.music })
+  list.push({ label: 'RSVP online', included: f.rsvp })
+  list.push({ label: 'Galeri foto', included: f.gallery })
+  list.push({ label: 'Ucapan & doa tamu', included: f.wishes })
+  list.push({ label: 'Countdown hari H', included: f.countdown })
+  list.push({ label: 'Amplop digital', included: f.gift })
+  list.push({ label: 'Wishlist hadiah', included: f.gift_registry })
+  list.push({ label: 'Kisah cinta', included: f.story })
+  list.push({ label: 'Video prewedding', included: f.video })
+  if (tierId === 'eksklusif' || f.qrcode) {
+    list.push({ label: 'QR code kehadiran', included: f.qrcode })
+  }
+  if (tierId === 'eksklusif' || f.custom_domain) {
+    list.push({ label: 'Custom domain', included: f.custom_domain })
+  }
+  list.push({ label: 'Priority support', included: f.priority_support })
+  return list
+}
+
 const INPUT_CLS = 'w-full px-4 py-3 text-sm border border-stone-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-forest-500/20 focus:border-forest-400 transition-colors'
 const LABEL_CLS = 'block text-xs font-semibold text-stone-600 mb-1.5'
 
-export default function OrderForm({ templates, tiers, paymentConfig }: Props) {
+export default function OrderForm({ templates, tiers, paymentConfig, initialTemplate }: Props) {
   const [step, setStep] = useState<Step>(0)
 
   // Step 0: Couple data
@@ -80,8 +130,11 @@ export default function OrderForm({ templates, tiers, paymentConfig }: Props) {
   const [subdomainAvailable, setSubdomainAvailable] = useState<boolean | null>(null)
   const [checkingSubdomain, setCheckingSubdomain] = useState(false)
 
-  // Step 2: Template
-  const [templateId, setTemplateId] = useState('')
+  // Step 2: Template — pre-select from query param
+  const [templateId, setTemplateId] = useState(() => {
+    if (initialTemplate && templates.some(t => t.id === initialTemplate)) return initialTemplate
+    return ''
+  })
 
   // Step 3: Package
   const [packageTier, setPackageTier] = useState('')
@@ -399,35 +452,66 @@ export default function OrderForm({ templates, tiers, paymentConfig }: Props) {
                 <h2 className="text-lg font-semibold text-stone-900">Pilih Paket</h2>
               </div>
 
+              {/* Tier cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {tiers.map(tier => {
                   const TierIcon = TIER_ICONS[tier.icon] ?? Rocket
                   const selected = packageTier === tier.id
+                  const f = tier.features
                   return (
                     <button
                       key={tier.id}
                       onClick={() => setPackageTier(tier.id)}
-                      className={`relative text-left p-5 rounded-2xl border-2 transition-all ${
+                      className={`relative text-left rounded-2xl border-2 transition-all flex flex-col ${
                         selected
-                          ? 'border-forest-500 bg-forest-50/50 shadow-lg shadow-forest-100'
+                          ? 'border-forest-500 bg-forest-50/30 shadow-lg shadow-forest-100'
                           : 'border-stone-150 bg-white hover:border-stone-300 hover:shadow-md'
                       }`}
                     >
                       {tier.highlight && (
-                        <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-purple-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wider">
+                        <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-forest-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wider">
                           Populer
                         </span>
                       )}
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${tier.color}20` }}>
-                          <TierIcon size={16} style={{ color: tier.color }} />
+
+                      {/* Header */}
+                      <div className="p-5 pb-3">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${tier.color}20` }}>
+                            <TierIcon size={16} style={{ color: tier.color }} />
+                          </div>
+                          <span className="font-semibold text-stone-900 text-sm">{tier.label}</span>
                         </div>
-                        <span className="font-semibold text-stone-900 text-sm">{tier.label}</span>
+                        <p className="text-xl font-bold text-stone-900">
+                          Rp {tier.price.toLocaleString('id-ID')}
+                        </p>
+                        <p className="text-[11px] text-stone-400 mt-0.5">
+                          sekali bayar {f ? `· aktif ${f.validity_days} hari` : ''}
+                        </p>
                       </div>
-                      <p className="text-xl font-bold text-stone-900 mb-1">
-                        Rp {tier.price.toLocaleString('id-ID')}
-                      </p>
-                      <p className="text-[11px] text-stone-400">{tier.description}</p>
+
+                      {/* Features */}
+                      {f && (
+                        <div className="px-5 pb-5 flex-1">
+                          <div className="border-t border-stone-100 pt-3">
+                            <ul className="space-y-1.5">
+                              {buildTierFeatureList(tier.id, f).map((feat, i) => (
+                                <li key={i} className="flex items-start gap-2">
+                                  {feat.included ? (
+                                    <Check size={12} strokeWidth={3} className="text-forest-500 mt-0.5 shrink-0" />
+                                  ) : (
+                                    <X size={12} strokeWidth={2} className="text-stone-300 mt-0.5 shrink-0" />
+                                  )}
+                                  <span className={`text-[12px] leading-snug ${feat.included ? 'text-stone-700' : 'text-stone-400 line-through'}`}>
+                                    {feat.label}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+
                       {selected && (
                         <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-forest-600 flex items-center justify-center">
                           <Check size={12} className="text-white" strokeWidth={3} />

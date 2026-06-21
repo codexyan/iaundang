@@ -8,7 +8,8 @@ export const metadata = {
   description: 'Isi data pernikahan, pilih template & paket, dan buat undangan digital Anda.',
 }
 
-export default async function OrderPage() {
+export default async function OrderPage({ searchParams }: { searchParams: Promise<{ template?: string }> }) {
+  const params = await searchParams
   const [appSettings, allTemplates] = await Promise.all([
     settings.get(),
     templateRecords.findAll(),
@@ -27,15 +28,19 @@ export default async function OrderPage() {
       },
     }))
 
-  const tiers = appSettings.priceTiers.map(t => ({
-    id: t.id,
-    label: t.label,
-    price: t.price,
-    description: t.description ?? '',
-    color: t.color ?? '#6366f1',
-    icon: t.icon ?? 'rocket',
-    highlight: t.highlight ?? false,
-  }))
+  const tiers = appSettings.priceTiers
+    .filter(t => ['starter', 'popular', 'eksklusif'].includes(t.id))
+    .sort((a, b) => a.price - b.price)
+    .map(t => ({
+      id: t.id,
+      label: t.label,
+      price: t.price,
+      description: t.description ?? '',
+      color: t.color ?? '#6366f1',
+      icon: t.icon ?? 'rocket',
+      highlight: t.highlight ?? false,
+      features: t.features ?? null,
+    }))
 
   const paymentConfig = {
     bankAccounts: appSettings.bankAccounts.filter(b => b.isActive),
@@ -44,5 +49,5 @@ export default async function OrderPage() {
     confirmationWhatsapp: appSettings.confirmationWhatsapp,
   }
 
-  return <OrderForm templates={activeTemplates} tiers={tiers} paymentConfig={paymentConfig} />
+  return <OrderForm templates={activeTemplates} tiers={tiers} paymentConfig={paymentConfig} initialTemplate={params.template} />
 }
