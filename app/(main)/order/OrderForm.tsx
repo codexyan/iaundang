@@ -68,27 +68,31 @@ const STEP_LABELS = [
 
 const TIER_ICONS: Record<string, React.ElementType> = { rocket: Rocket, crown: Crown, gem: Gem }
 
-function buildTierFeatureList(tierId: string, f: TierFeatures): { label: string; included: boolean }[] {
-  const list: { label: string; included: boolean }[] = []
-  list.push({ label: `Foto hingga ${f.max_photos} buah`, included: true })
-  list.push({ label: `Maks ${f.max_guests} tamu undangan`, included: true })
+type FeatureItem = { label: string; included: boolean; section?: boolean }
+
+function buildTierFeatureList(tierId: string, f: TierFeatures): FeatureItem[] {
+  const list: FeatureItem[] = []
+
+  // Kapasitas & durasi
+  list.push({ label: `Hingga ${f.max_photos} foto`, included: true })
+  list.push({ label: `Maks ${f.max_guests} tamu`, included: true })
   list.push({ label: `Aktif ${f.validity_days} hari`, included: true })
-  list.push({ label: 'Musik pengiring', included: f.music })
-  list.push({ label: 'RSVP online', included: f.rsvp })
-  list.push({ label: 'Galeri foto', included: f.gallery })
-  list.push({ label: 'Ucapan & doa tamu', included: f.wishes })
-  list.push({ label: 'Countdown hari H', included: f.countdown })
-  list.push({ label: 'Amplop digital', included: f.gift })
-  list.push({ label: 'Wishlist hadiah', included: f.gift_registry })
-  list.push({ label: 'Kisah cinta', included: f.story })
-  list.push({ label: 'Video prewedding', included: f.video })
-  if (tierId === 'eksklusif' || f.qrcode) {
-    list.push({ label: 'QR code kehadiran', included: f.qrcode })
-  }
-  if (tierId === 'eksklusif' || f.custom_domain) {
-    list.push({ label: 'Custom domain', included: f.custom_domain })
-  }
-  list.push({ label: 'Priority support', included: f.priority_support })
+
+  // Section yang ditampilkan
+  list.push({ label: 'Section musik latar', included: f.music, section: true })
+  list.push({ label: 'Section RSVP & konfirmasi hadir', included: f.rsvp, section: true })
+  list.push({ label: 'Section galeri foto', included: f.gallery, section: true })
+  list.push({ label: 'Section ucapan & doa', included: f.wishes, section: true })
+  list.push({ label: 'Section hitung mundur', included: f.countdown, section: true })
+  list.push({ label: 'Section amplop & rekening', included: f.gift, section: true })
+  list.push({ label: 'Section wishlist hadiah', included: f.gift_registry, section: true })
+  list.push({ label: 'Section kisah perjalanan cinta', included: f.story, section: true })
+  list.push({ label: 'Section video highlight', included: f.video, section: true })
+
+  // Fitur ekstra
+  list.push({ label: 'QR code kehadiran tamu', included: f.qrcode })
+  list.push({ label: 'Custom domain sendiri', included: f.custom_domain })
+  list.push({ label: 'Priority support WhatsApp', included: f.priority_support })
   return list
 }
 
@@ -418,26 +422,61 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                       </div>
 
                       {/* Features */}
-                      {f && (
-                        <div className="px-5 pb-5 flex-1">
-                          <div className="border-t border-stone-100 pt-3">
-                            <ul className="space-y-1.5">
-                              {buildTierFeatureList(tier.id, f).map((feat, i) => (
-                                <li key={i} className="flex items-start gap-2">
-                                  {feat.included ? (
+                      {f && (() => {
+                        const features = buildTierFeatureList(tier.id, f)
+                        const basics = features.filter(ft => !ft.section)
+                        const sections = features.filter(ft => ft.section)
+                        return (
+                          <div className="px-5 pb-5 flex-1">
+                            <div className="border-t border-stone-100 pt-3 space-y-3">
+                              <ul className="space-y-1.5">
+                                {basics.slice(0, 3).map((feat, i) => (
+                                  <li key={i} className="flex items-start gap-2">
                                     <Check size={12} strokeWidth={3} className="text-forest-500 mt-0.5 shrink-0" />
-                                  ) : (
-                                    <X size={12} strokeWidth={2} className="text-stone-300 mt-0.5 shrink-0" />
-                                  )}
-                                  <span className={`text-[12px] leading-snug ${feat.included ? 'text-stone-700' : 'text-stone-400 line-through'}`}>
-                                    {feat.label}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
+                                    <span className="text-[12px] leading-snug text-stone-700">{feat.label}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                              <div>
+                                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">Section undangan</p>
+                                <ul className="space-y-1">
+                                  {sections.map((feat, i) => (
+                                    <li key={i} className="flex items-start gap-2">
+                                      {feat.included ? (
+                                        <Check size={11} strokeWidth={3} className="text-forest-500 mt-0.5 shrink-0" />
+                                      ) : (
+                                        <X size={11} strokeWidth={2} className="text-stone-300 mt-0.5 shrink-0" />
+                                      )}
+                                      <span className={`text-[11px] leading-snug ${feat.included ? 'text-stone-600' : 'text-stone-400 line-through'}`}>
+                                        {feat.label}
+                                      </span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                              {basics.slice(3).some(ft => ft.included) && (
+                                <div>
+                                  <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5">Fitur ekstra</p>
+                                  <ul className="space-y-1">
+                                    {basics.slice(3).map((feat, i) => (
+                                      <li key={i} className="flex items-start gap-2">
+                                        {feat.included ? (
+                                          <Check size={11} strokeWidth={3} className="text-forest-500 mt-0.5 shrink-0" />
+                                        ) : (
+                                          <X size={11} strokeWidth={2} className="text-stone-300 mt-0.5 shrink-0" />
+                                        )}
+                                        <span className={`text-[11px] leading-snug ${feat.included ? 'text-stone-600' : 'text-stone-400 line-through'}`}>
+                                          {feat.label}
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )
+                      })()}
 
                       {selected && (
                         <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-forest-600 flex items-center justify-center">
@@ -475,36 +514,43 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                   <CheckCircle2 size={28} className="text-green-600" />
                 </div>
                 <h2 className="text-xl font-bold text-stone-900 mb-1">Pesanan Berhasil Dibuat!</h2>
-                <p className="text-sm text-stone-500">Transfer sesuai nominal di bawah untuk mengaktifkan undangan</p>
+                <p className="text-sm text-stone-500">Silakan transfer ke salah satu rekening di bawah ini</p>
               </div>
 
-              {/* Order number */}
-              <div className="rounded-2xl bg-forest-50 border border-forest-200 p-4 mb-6 text-center">
-                <p className="text-[11px] text-forest-600 font-semibold uppercase tracking-wider mb-1">Nomor Pesanan</p>
-                <p className="text-lg font-bold font-mono text-forest-800">{order.order_number}</p>
+              {/* Order number & amount side by side */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div className="rounded-2xl bg-forest-50 border border-forest-200 p-4 text-center">
+                  <p className="text-[11px] text-forest-600 font-semibold uppercase tracking-wider mb-1">Nomor Pesanan</p>
+                  <p className="text-lg font-bold font-mono text-forest-800">{order.order_number}</p>
+                </div>
+                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4 text-center">
+                  <p className="text-[11px] text-amber-700 font-semibold uppercase tracking-wider mb-1">Total Transfer</p>
+                  <p className="text-2xl font-bold text-amber-900">
+                    Rp {order.total_amount.toLocaleString('id-ID')}
+                  </p>
+                  <p className="text-[11px] text-amber-600 mt-0.5">
+                    Rp {order.amount.toLocaleString('id-ID')} + Rp {order.unique_code} (kode unik)
+                  </p>
+                  <button onClick={() => copyText(String(order.total_amount), 'amount')} className="mt-1.5 inline-flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900 font-medium">
+                    {copied === 'amount' ? <Check size={12} /> : <Copy size={12} />} Salin nominal
+                  </button>
+                </div>
               </div>
 
-              {/* Amount to transfer */}
-              <div className="rounded-2xl bg-amber-50 border border-amber-200 p-5 mb-6 text-center">
-                <p className="text-xs text-amber-700 mb-2">Transfer tepat sebesar:</p>
-                <p className="text-3xl font-bold text-amber-900">
-                  Rp {order.total_amount.toLocaleString('id-ID')}
+              {/* Important notice */}
+              <div className="rounded-xl bg-red-50 border border-red-100 p-3 mb-6">
+                <p className="text-xs text-red-700 font-medium text-center">
+                  Pastikan transfer sesuai nominal di atas (termasuk kode unik) agar pembayaran mudah diverifikasi
                 </p>
-                <p className="text-[11px] text-amber-600 mt-1">
-                  Rp {order.amount.toLocaleString('id-ID')} + kode unik Rp {order.unique_code}
-                </p>
-                <button onClick={() => copyText(String(order.total_amount), 'amount')} className="mt-2 inline-flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900 font-medium">
-                  {copied === 'amount' ? <Check size={12} /> : <Copy size={12} />} Salin nominal
-                </button>
               </div>
 
               {/* Bank accounts */}
-              {paymentConfig.bankAccounts.length > 0 && (
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <CreditCard size={14} className="text-stone-500" />
-                    <p className="text-xs font-semibold text-stone-600 uppercase tracking-wider">Rekening Bank</p>
-                  </div>
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <CreditCard size={14} className="text-stone-500" />
+                  <p className="text-xs font-semibold text-stone-600 uppercase tracking-wider">Transfer ke salah satu rekening</p>
+                </div>
+                {paymentConfig.bankAccounts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {paymentConfig.bankAccounts.map(bank => (
                       <div key={bank.id} className="rounded-xl border border-stone-200 bg-stone-50/50 p-4">
@@ -519,15 +565,19 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="rounded-xl border border-stone-200 bg-stone-50/50 p-4 text-center">
+                    <p className="text-xs text-stone-500">Hubungi admin via WhatsApp untuk info rekening transfer</p>
+                  </div>
+                )}
+              </div>
 
               {/* QRIS */}
               {paymentConfig.qrisImageUrl && (
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-3">
                     <QrCode size={14} className="text-stone-500" />
-                    <p className="text-xs font-semibold text-stone-600 uppercase tracking-wider">QRIS</p>
+                    <p className="text-xs font-semibold text-stone-600 uppercase tracking-wider">Atau scan QRIS</p>
                   </div>
                   <div className="inline-block rounded-xl border border-stone-200 bg-white p-3">
                     <img src={paymentConfig.qrisImageUrl} alt="QRIS" className="w-48 h-48 object-contain" />
@@ -535,36 +585,33 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                 </div>
               )}
 
-              {/* Instructions */}
-              {paymentConfig.paymentInstructions && (
-                <div className="mb-6 rounded-xl bg-blue-50 border border-blue-100 p-4">
-                  <p className="text-xs text-blue-800 leading-relaxed whitespace-pre-line">{paymentConfig.paymentInstructions}</p>
-                </div>
-              )}
-
-              {/* CTA buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 mt-8">
+              {/* CTA: Konfirmasi WA */}
+              <div className="rounded-2xl bg-green-50 border border-green-200 p-5 mb-6">
+                <p className="text-sm font-semibold text-green-900 mb-1">Sudah transfer?</p>
+                <p className="text-xs text-green-700 mb-4">Kirimkan bukti transfer ke WhatsApp admin untuk verifikasi pembayaran.</p>
                 {paymentConfig.confirmationWhatsapp && (
                   <button
                     onClick={openWhatsApp}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
                   >
                     <Send size={16} />
-                    Konfirmasi via WhatsApp
+                    Kirim Bukti Transfer via WhatsApp
                   </button>
                 )}
               </div>
 
-              <div className="mt-6 rounded-xl bg-stone-50 border border-stone-100 p-4">
+              {/* Next steps */}
+              <div className="rounded-xl bg-stone-50 border border-stone-100 p-4">
                 <div className="flex items-start gap-2">
                   <Clock size={14} className="text-stone-400 mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs font-semibold text-stone-700">Apa selanjutnya?</p>
+                    <p className="text-xs font-semibold text-stone-700">Langkah selanjutnya</p>
                     <ol className="text-[11px] text-stone-500 mt-1 space-y-1 list-decimal list-inside">
                       <li>Transfer sesuai nominal unik di atas</li>
-                      <li>Kirim bukti transfer via WhatsApp ke admin</li>
-                      <li>Admin memverifikasi pembayaran (maks 1x24 jam)</li>
-                      <li>Anda akan menerima akun login via WhatsApp/email</li>
+                      <li>Screenshot bukti transfer</li>
+                      <li>Kirim bukti ke WhatsApp admin (klik tombol di atas)</li>
+                      <li>Admin verifikasi pembayaran (maks 1x24 jam kerja)</li>
+                      <li>Terima akun login via WhatsApp / email</li>
                       <li>Login ke dashboard dan lengkapi undangan</li>
                     </ol>
                   </div>
