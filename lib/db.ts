@@ -940,7 +940,6 @@ export const paymentProofs = {
 
 //  ORDERS
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 function mapOrder(o: any): Order {
   return {
     id: o.id, order_number: o.orderNumber, email: o.email, phone: o.phone,
@@ -958,7 +957,6 @@ function mapOrder(o: any): Order {
     reviewed_at: o.reviewedAt instanceof Date ? o.reviewedAt.toISOString() : o.reviewedAt ?? null,
   }
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export const orders = {
   async findAll(): Promise<Order[]> {
