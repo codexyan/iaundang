@@ -675,7 +675,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
           </div>
         )}
 
-        {/* Fullscreen preview — phone-width container like admin studio */}
+        {/* Fullscreen preview: phone-width container like admin studio */}
         {showFullscreen && (
           <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
             <button

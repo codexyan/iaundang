@@ -413,7 +413,7 @@ export default function TemplatesTab({
             )}
           </div>
 
-          {/* Main navigation tabs — pill style */}
+          {/* Main navigation tabs: pill style */}
           <div className="flex items-center gap-1 bg-gray-100/80 rounded-xl p-1 w-fit mb-3">
             {MAIN_TABS.map(tab => (
               <button key={tab.id} onClick={() => setMainTab(tab.id)}

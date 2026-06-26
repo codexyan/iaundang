@@ -62,7 +62,7 @@ export default function RSVPForm({ invitationId, className = '', accentColor = '
     return (
       <div className={`text-center py-8 ${className}`}>
         <div className="text-4xl mb-3">💌</div>
-        <p className="font-serif text-lg font-semibold">Terima kasih!</p>
+        <p className="font-sans text-lg font-semibold">Terima kasih!</p>
         <p className="text-sm opacity-70 mt-1">Konfirmasi RSVP kamu telah kami terima.</p>
       </div>
     )

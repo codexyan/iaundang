@@ -176,7 +176,7 @@ export default function QuoteForm({
 
             {quoteArabic && (
               <p
-                className="text-lg font-serif text-stone-800 leading-relaxed"
+                className="text-lg font-sans text-stone-800 leading-relaxed"
                 dir="rtl"
                 style={{ fontFamily: 'Arial, sans-serif' }}
               >

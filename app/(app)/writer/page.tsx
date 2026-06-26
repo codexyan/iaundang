@@ -223,7 +223,7 @@ export default function WriterDashboard() {
               if (!editingArticle) setSlug(generateSlug(e.target.value))
             }}
             placeholder="Judul artikel..."
-            className="w-full text-2xl sm:text-3xl font-serif font-bold text-stone-900 bg-transparent border-none outline-none placeholder:text-stone-300 mb-4"
+            className="w-full text-2xl sm:text-3xl font-sans font-bold text-stone-900 bg-transparent border-none outline-none placeholder:text-stone-300 mb-4"
           />
 
           {/* Slug */}

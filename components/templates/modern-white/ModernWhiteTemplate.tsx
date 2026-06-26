@@ -61,11 +61,11 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
             <p className="text-rose-400 tracking-widest text-xs uppercase mb-6">
               {d.openingText || 'Kami mengundang kehadiran Bapak/Ibu/Saudara/i'}
             </p>
-            <h1 className="font-serif text-5xl sm:text-6xl font-bold text-gray-900 leading-tight">
+            <h1 className="font-sans text-5xl sm:text-6xl font-bold text-gray-900 leading-tight">
               {d.groomName}
             </h1>
-            <p className="text-3xl font-serif text-rose-300 my-3">&</p>
-            <h1 className="font-serif text-5xl sm:text-6xl font-bold text-gray-900 leading-tight">
+            <p className="text-3xl font-sans text-rose-300 my-3">&</p>
+            <h1 className="font-sans text-5xl sm:text-6xl font-bold text-gray-900 leading-tight">
               {d.brideName}
             </h1>
             <div className="mt-8 h-px w-24 bg-rose-200 mx-auto" />
@@ -84,14 +84,14 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
         {/* Detail Acara */}
         <section className="py-16 bg-rose-50">
           <div className="max-w-2xl mx-auto px-6 space-y-10">
-            <h2 className="font-serif text-2xl font-bold text-center text-gray-900 mb-8">
+            <h2 className="font-sans text-2xl font-bold text-center text-gray-900 mb-8">
               Detail Acara
             </h2>
 
             {/* Akad */}
             <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
               <p className="text-xs uppercase tracking-widest text-rose-400 mb-3">Akad Nikah</p>
-              <p className="font-serif text-xl font-bold">{d.akadVenue}</p>
+              <p className="font-sans text-xl font-bold">{d.akadVenue}</p>
               <p className="text-gray-500 text-sm mt-2">{formatDate(d.akadDate)} • {d.akadTime}</p>
               <p className="text-gray-400 text-sm mt-1">{d.akadAddress}</p>
               {d.akadMapsUrl && (
@@ -109,7 +109,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
             {/* Resepsi */}
             <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
               <p className="text-xs uppercase tracking-widest text-rose-400 mb-3">Resepsi</p>
-              <p className="font-serif text-xl font-bold">{d.resepsiVenue}</p>
+              <p className="font-sans text-xl font-bold">{d.resepsiVenue}</p>
               <p className="text-gray-500 text-sm mt-2">{formatDate(d.resepsiDate)} • {d.resepsiTime}</p>
               <p className="text-gray-400 text-sm mt-1">{d.resepsiAddress}</p>
               {d.resepsiMapsUrl && (
@@ -130,7 +130,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
         {galleries.length > 0 && (
           <section className="py-16 bg-white">
             <div className="max-w-3xl mx-auto px-6">
-              <h2 className="font-serif text-2xl font-bold text-center text-gray-900 mb-8">
+              <h2 className="font-sans text-2xl font-bold text-center text-gray-900 mb-8">
                 Galeri Foto
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -153,7 +153,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
         {/* RSVP */}
         <section className="py-16 bg-rose-50">
           <div className="max-w-md mx-auto px-6">
-            <h2 className="font-serif text-2xl font-bold text-center text-gray-900 mb-2">
+            <h2 className="font-sans text-2xl font-bold text-center text-gray-900 mb-2">
               RSVP
             </h2>
             <p className="text-center text-sm text-gray-500 mb-8">
@@ -166,7 +166,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
         {/* Wishes */}
         <section className="py-16 bg-white">
           <div className="max-w-md mx-auto px-6">
-            <h2 className="font-serif text-2xl font-bold text-center text-gray-900 mb-8">
+            <h2 className="font-sans text-2xl font-bold text-center text-gray-900 mb-8">
               Buku Ucapan
             </h2>
             <WishesSection invitationId={invitation.id} initialWishes={wishes} />
@@ -175,7 +175,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
 
         {/* Share */}
         <section className="py-16 bg-rose-600 text-white text-center">
-          <p className="font-serif text-xl font-bold mb-2">Bagikan Undangan</p>
+          <p className="font-sans text-xl font-bold mb-2">Bagikan Undangan</p>
           <p className="text-rose-200 text-sm mb-6">Kirim link ini ke semua tamu undangan</p>
           <a
             href={`https://wa.me/?text=Yth. Bapak/Ibu/Saudara/i, kami mengundang kehadiran Anda di pernikahan kami. Selengkapnya: ${url}`}
@@ -189,7 +189,7 @@ export default function ModernWhiteTemplate({ invitation, galleries, wishes, gue
 
         {/* Closing */}
         <section className="py-10 bg-rose-50 text-center">
-          <p className="font-serif text-lg text-gray-800">{d.closingText || 'Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Bapak/Ibu/Saudara/i.'}</p>
+          <p className="font-sans text-lg text-gray-800">{d.closingText || 'Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Bapak/Ibu/Saudara/i.'}</p>
           <p className="text-gray-400 text-xs mt-4">Dibuat dengan iaundang.id</p>
         </section>
       </div>

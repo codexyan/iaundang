@@ -765,7 +765,7 @@ const ANIM_LABEL: Record<string, string> = {
   'zoom-in': 'Zoom In', 'rotate-in': 'Putar Masuk', 'float': 'Melayang',
 }
 const HEADING_FONTS = [
-  'Playfair Display', 'Cinzel', 'Cormorant Garamond', 'Great Vibes', 'Dancing Script',
+  'Geist', 'Cinzel', 'Cormorant Garamond', 'Great Vibes', 'Dancing Script',
   'Libre Baskerville', 'EB Garamond', 'Cinzel Decorative', 'Bodoni Moda', 'Italiana',
   'Tenor Sans', 'Marcellus', 'Yeseva One', 'Poiret One', 'Antic Didone',
   'Gilda Display', 'Cormorant SC', 'Spectral', 'Lora', 'Merriweather',
@@ -2122,7 +2122,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 </summary>
                 <div className="grid grid-cols-1 gap-2 mt-3 mb-4">
                   {([
-                    { heading: 'Playfair Display', body: 'Lato',                name: 'Classic Elegance',   desc: 'Serif mewah + sans-serif bersih' },
+                    { heading: 'Geist', body: 'Geist',                name: 'Clean Swiss',   desc: 'Sans-serif monokromatik bersih' },
                     { heading: 'Cinzel',           body: 'Raleway',             name: 'Royal Formal',       desc: 'Romawi agung + modern ringan' },
                     { heading: 'Cormorant Garamond', body: 'Montserrat',        name: 'Refined Modern',     desc: 'Garamond halus + geometris tegas' },
                     { heading: 'Great Vibes',      body: 'Lato',                name: 'Romantic Script',    desc: 'Kaligrafi romantis + body netral' },
@@ -5384,7 +5384,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
               </>
             ) : (
               <>
-                {/* Konfirmasi rilis — data sudah dari editor */}
+                {/* Konfirmasi rilis: data sudah dari editor */}
                 <div className="px-6 py-5 space-y-4">
                   <div className="rounded-xl bg-gray-50 border border-gray-100 p-4 space-y-2">
                     <div className="flex justify-between items-center">

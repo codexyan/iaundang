@@ -231,7 +231,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
 
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">Buat Undangan Digital</h1>
+          <h1 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900">Buat Undangan Digital</h1>
           <p className="mt-2 text-sm text-stone-400">
             Template: <span className="font-semibold text-stone-600">{templateName}</span>
           </p>

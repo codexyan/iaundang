@@ -21,7 +21,7 @@ export default function NotFound() {
 
         {/* 404 Number - Large & Elegant */}
         <div className="mb-8">
-          <h1 className="font-serif font-bold tracking-tight mb-4"
+          <h1 className="font-sans font-bold tracking-tight mb-4"
             style={{
               fontSize: 'clamp(120px, 20vw, 200px)',
               background: 'linear-gradient(135deg, #b8860b 0%, #d4af37 45%, #c9952d 100%)',
@@ -35,7 +35,7 @@ export default function NotFound() {
         </div>
 
         {/* Heading */}
-        <h2 className="text-white font-serif font-bold mb-4"
+        <h2 className="text-white font-sans font-bold mb-4"
           style={{ fontSize: 'clamp(28px, 4vw, 40px)' }}>
           Halaman Tidak Ditemukan
         </h2>

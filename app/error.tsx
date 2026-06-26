@@ -39,7 +39,7 @@ export default function Error({
         </div>
 
         {/* Heading */}
-        <h1 className="text-white font-serif font-bold mb-4"
+        <h1 className="text-white font-sans font-bold mb-4"
           style={{ fontSize: 'clamp(28px, 4vw, 40px)' }}>
           Oops! Terjadi Kesalahan
         </h1>

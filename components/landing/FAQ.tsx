@@ -8,12 +8,12 @@ const EASE = [0.16, 1, 0.3, 1] as const
 
 const defaultFaqs = [
   { q: 'Bisa lihat hasilnya sebelum bayar?', a: 'Bisa. Pilih template, masukkan nama kalian, dan langsung lihat preview-nya. Bayar hanya saat kalian sudah cocok dan siap publish.' },
-  { q: 'Apa tamu perlu install aplikasi?', a: 'Tidak. Tamu cukup tap link yang kalian kirim via WhatsApp — undangan langsung terbuka di browser HP mereka.' },
+  { q: 'Apa tamu perlu install aplikasi?', a: 'Tidak. Tamu cukup tap link yang kalian kirim via WhatsApp, undangan langsung terbuka di browser HP mereka.' },
   { q: 'Berapa lama undangan tetap aktif?', a: 'Tergantung paket yang dipilih. Mulai dari 30 hari hingga 180 hari. Cukup untuk persiapan, hari H, dan beberapa bulan setelahnya sebagai kenangan.' },
-  { q: 'Bisa edit setelah dipublish?', a: 'Bisa, kapan saja. Ganti foto, ubah detail acara, ganti musik — semua tanpa biaya tambahan.' },
+  { q: 'Bisa edit setelah dipublish?', a: 'Bisa, kapan saja. Ganti foto, ubah detail acara, ganti musik. Semua tanpa biaya tambahan.' },
   { q: 'Bagaimana cara kirim undangan ke tamu?', a: 'Setelah publish, kalian dapat link unik (contoh: rizky-aulia.iaundang.id). Salin dan kirim ke tamu lewat WhatsApp atau media lainnya.' },
-  { q: 'iaundang baru diluncurkan, apakah bisa dipercaya?', a: 'Kami membangun iaundang dengan standar kualitas tinggi — teknologi modern, desain premium, dan tim yang responsif via WhatsApp. Kalian bisa coba gratis dulu dan lihat sendiri kualitasnya sebelum memutuskan.' },
-  { q: 'Bagaimana kalau butuh bantuan?', a: 'Hubungi kami via WhatsApp — tim kami siap membantu dan membalas dalam 1 hari kerja.' },
+  { q: 'iaundang baru diluncurkan, apakah bisa dipercaya?', a: 'Kami membangun iaundang dengan standar kualitas tinggi. Teknologi modern, desain premium, dan tim yang responsif via WhatsApp. Kalian bisa coba gratis dulu dan lihat sendiri kualitasnya sebelum memutuskan.' },
+  { q: 'Bagaimana kalau butuh bantuan?', a: 'Hubungi kami via WhatsApp. Tim kami siap membantu dan membalas dalam 1 hari kerja.' },
 ]
 
 export default function FAQ({ items, whatsapp }: { items?: { q: string; a: string }[]; whatsapp?: string }) {
@@ -22,7 +22,7 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
   const [open, setOpen] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="py-20 sm:py-28 lg:py-32 bg-[#fafaf9]">
+    <section id="faq" className="py-20 sm:py-28 lg:py-32 bg-mist">
       <div className="max-w-2xl mx-auto px-5 sm:px-8">
 
         <motion.div
@@ -32,13 +32,13 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
           transition={{ duration: 0.6, ease: EASE }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-forest-600 bg-forest-50/80 border border-forest-100 px-3.5 py-1.5 rounded-full mb-5">
+          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-graphite bg-graphite/[0.04] border border-hairline px-3.5 py-1.5 rounded-full mb-5">
             FAQ
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
-            Pertanyaan yang sering ditanyakan
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-graphite">
+            Pertanyaan umum
           </h2>
-          <p className="mt-3 text-stone-400 text-[15px]">
+          <p className="mt-3 text-ash text-[15px]">
             Belum menemukan jawabannya? Chat kami via WhatsApp.
           </p>
         </motion.div>
@@ -55,8 +55,8 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
                 transition={{ duration: 0.4, delay: i * 0.04, ease: EASE }}
                 className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
                   isOpen
-                    ? 'bg-white border-stone-200 shadow-lg shadow-stone-100/80'
-                    : 'bg-white border-stone-100 hover:border-stone-200'
+                    ? 'bg-chalk border-hairline'
+                    : 'bg-chalk border-hairline/60 hover:border-hairline'
                 }`}
               >
                 <button
@@ -64,7 +64,7 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
                   className="w-full flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 text-left gap-4 group"
                 >
                   <span className={`font-medium text-[14px] leading-snug transition-colors duration-200 ${
-                    isOpen ? 'text-stone-900' : 'text-stone-700 group-hover:text-stone-900'
+                    isOpen ? 'text-graphite' : 'text-carbon group-hover:text-graphite'
                   }`}>
                     {faq.q}
                   </span>
@@ -74,7 +74,7 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
                     className="shrink-0"
                   >
                     <ChevronDown size={16} className={`transition-colors duration-200 ${
-                      isOpen ? 'text-forest-500' : 'text-stone-300'
+                      isOpen ? 'text-graphite' : 'text-smoke'
                     }`} />
                   </motion.div>
                 </button>
@@ -87,7 +87,7 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
                       transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="px-5 sm:px-6 pb-5 sm:pb-6 text-[14px] text-stone-500 leading-[1.7]">{faq.a}</p>
+                      <p className="px-5 sm:px-6 pb-5 sm:pb-6 text-[14px] text-concrete leading-[1.7]">{faq.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -101,13 +101,13 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-10 text-center bg-white rounded-2xl border border-stone-100 p-6 sm:p-8 shadow-sm"
+          className="mt-10 text-center bg-chalk rounded-2xl border border-hairline p-6 sm:p-8"
         >
-          <div className="w-10 h-10 rounded-xl bg-forest-50 flex items-center justify-center mx-auto mb-3">
-            <MessageCircle size={18} className="text-forest-500" />
+          <div className="w-10 h-10 rounded-xl bg-mist flex items-center justify-center mx-auto mb-3">
+            <MessageCircle size={18} className="text-graphite" />
           </div>
-          <p className="text-[14px] text-stone-800 font-semibold mb-1">Masih ada pertanyaan?</p>
-          <p className="text-[13px] text-stone-400 mb-5">Kami senang membantu, balas cepat di hari kerja.</p>
+          <p className="text-[14px] text-graphite font-semibold mb-1">Masih ada pertanyaan?</p>
+          <p className="text-[13px] text-ash mb-5">Kami senang membantu, balas cepat di hari kerja.</p>
           <a
             href={`https://wa.me/${waNumber}`}
             target="_blank"
@@ -116,7 +116,7 @@ export default function FAQ({ items, whatsapp }: { items?: { q: string; a: strin
             <motion.span
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 bg-forest-500 hover:bg-forest-600 text-white text-[13px] font-semibold px-6 py-2.5 rounded-xl transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 bg-graphite hover:bg-carbon text-chalk text-[13px] font-semibold px-6 py-2.5 rounded-button transition-colors"
             >
               Chat via WhatsApp
             </motion.span>

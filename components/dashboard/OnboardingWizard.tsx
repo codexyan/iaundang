@@ -287,7 +287,7 @@ function Wizard({ onInvitationCreated, allTemplates }: { onInvitationCreated: (i
 function StepTemplate({ form, onSelect, allTemplates }: { form: FormData; onSelect: (id: string) => void; allTemplates: TemplateInfo[] }) {
   return (
     <div>
-      <h2 className="font-serif text-2xl font-bold text-stone-900 mb-1">Pilih template undangan</h2>
+      <h2 className="font-sans text-2xl font-bold text-stone-900 mb-1">Pilih template undangan</h2>
       <p className="text-stone-400 text-sm mb-6">Pilih desain yang paling mencerminkan kalian.</p>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -365,7 +365,7 @@ const TIER_COLORS: Record<PackageTier, { bg: string; border: string; badge: stri
 function StepPackage({ form, onSelect }: { form: FormData; onSelect: (tier: string) => void }) {
   return (
     <div>
-      <h2 className="font-serif text-2xl font-bold text-stone-900 mb-1">Pilih paket</h2>
+      <h2 className="font-sans text-2xl font-bold text-stone-900 mb-1">Pilih paket</h2>
       <p className="text-stone-400 text-sm mb-6">Sesuaikan dengan kebutuhan undangan kalian.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -463,7 +463,7 @@ function StepNames({
 
   return (
     <div className="max-w-lg">
-      <h2 className="font-serif text-2xl font-bold text-stone-900 mb-1">Nama & link undangan</h2>
+      <h2 className="font-sans text-2xl font-bold text-stone-900 mb-1">Nama & link undangan</h2>
       <p className="text-stone-400 text-sm mb-6">Nama kalian untuk personalisasi undangan, dan link unik untuk dibagikan ke tamu.</p>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
@@ -548,7 +548,7 @@ function StepNames({
 function StepAcara({ form, onPatch }: { form: FormData; onPatch: (key: keyof FormData, value: string) => void }) {
   return (
     <div className="max-w-lg">
-      <h2 className="font-serif text-2xl font-bold text-stone-900 mb-1">Detail acara</h2>
+      <h2 className="font-sans text-2xl font-bold text-stone-900 mb-1">Detail acara</h2>
       <p className="text-stone-400 text-sm mb-6">Opsional, bisa diisi atau dilengkapi nanti di dashboard.</p>
 
       <div className="bg-stone-50 rounded-2xl border border-stone-100 p-5 mb-4">
@@ -615,7 +615,7 @@ function StepKonfirmasi({ form, allTemplates }: { form: FormData; allTemplates: 
 
   return (
     <div className="max-w-md">
-      <h2 className="font-serif text-2xl font-bold text-stone-900 mb-1">Hampir selesai!</h2>
+      <h2 className="font-sans text-2xl font-bold text-stone-900 mb-1">Hampir selesai!</h2>
       <p className="text-stone-400 text-sm mb-6">Periksa sekali lagi sebelum membuat undangan.</p>
 
       <div className="bg-stone-50 rounded-2xl border border-stone-100 divide-y divide-stone-100 overflow-hidden mb-5">

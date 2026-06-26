@@ -54,11 +54,11 @@ export default function OpeningAnimation({
             transition={{ delay: 0.3 }}
             className="text-center"
           >
-            <h1 className="font-serif text-4xl sm:text-5xl font-bold leading-tight">
+            <h1 className="font-sans text-4xl sm:text-5xl font-bold leading-tight">
               {groomName}
             </h1>
-            <p className="text-3xl font-serif opacity-40 my-3">&amp;</p>
-            <h1 className="font-serif text-4xl sm:text-5xl font-bold leading-tight">
+            <p className="text-3xl font-sans opacity-40 my-3">&amp;</p>
+            <h1 className="font-sans text-4xl sm:text-5xl font-bold leading-tight">
               {brideName}
             </h1>
 

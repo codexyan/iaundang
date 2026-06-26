@@ -91,10 +91,10 @@ export default function Navbar() {
         <div
           className={`transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             scrollState === 'scrolled'
-              ? 'mx-3 sm:mx-6 mt-3 rounded-2xl border border-white/60 bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.6)_inset]'
+              ? 'mx-3 sm:mx-6 mt-3 rounded-nav border border-hairline bg-chalk'
               : isLanding
                 ? 'bg-transparent'
-                : 'bg-white/80 backdrop-blur-xl border-b border-stone-200/40'
+                : 'bg-chalk border-b border-hairline'
           }`}
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -109,8 +109,8 @@ export default function Navbar() {
 
             {/* Desktop nav   center-aligned pill navigation */}
             <div className="hidden md:flex items-center">
-              <div className={`flex items-center gap-0.5 px-1 py-1 rounded-xl transition-all duration-300 ${
-                scrollState === 'scrolled' ? 'bg-stone-100/60' : 'bg-white/40 backdrop-blur-sm'
+              <div className={`flex items-center gap-0.5 px-1 py-1 rounded-nav transition-all duration-300 ${
+                scrollState === 'scrolled' ? 'bg-mist' : 'bg-chalk/40'
               }`}>
                 {NAV_LINKS.map((link, i) => {
                   const isAnchor = link.href.startsWith('/#')
@@ -126,8 +126,8 @@ export default function Navbar() {
                         href={link.href}
                         className={`relative text-[13px] font-medium px-3.5 py-1.5 rounded-lg transition-all duration-200 ${
                           isActive
-                            ? 'text-forest-700 bg-white shadow-sm'
-                            : 'text-stone-500 hover:text-stone-800 hover:bg-white/70'
+                            ? 'text-graphite bg-chalk'
+                            : 'text-concrete hover:text-graphite hover:bg-mist'
                         }`}
                       >
                         {link.label}
@@ -142,12 +142,12 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               {!loaded ? (
                 <div className="flex gap-2">
-                  <div className="w-16 h-7 bg-stone-100/80 rounded-lg animate-pulse" />
-                  <div className="w-20 h-7 bg-stone-100/80 rounded-lg animate-pulse" />
+                  <div className="w-16 h-7 bg-mist rounded-lg animate-pulse" />
+                  <div className="w-20 h-7 bg-mist rounded-lg animate-pulse" />
                 </div>
               ) : user ? (
                 <>
-                  <span className="hidden lg:block text-xs text-stone-400 truncate max-w-[120px]">
+                  <span className="hidden lg:block text-xs text-ash truncate max-w-[120px]">
                     {user.email}
                   </span>
                   <div className="hidden md:flex items-center gap-1">
@@ -157,8 +157,8 @@ export default function Navbar() {
                         href={rl.href}
                         className={`text-[13px] font-medium px-2.5 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 ${
                           pathname === rl.href
-                            ? 'text-forest-700 bg-forest-50'
-                            : 'text-stone-600 hover:text-forest-600 hover:bg-forest-50/60'
+                            ? 'text-graphite bg-mist'
+                            : 'text-concrete hover:text-graphite hover:bg-mist'
                         }`}
                       >
                         {rl.icon}
@@ -168,7 +168,7 @@ export default function Navbar() {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="hidden md:inline-flex text-[13px] text-stone-400 hover:text-stone-600 px-2.5 py-1.5 rounded-lg hover:bg-stone-100/60 transition-all duration-200"
+                    className="hidden md:inline-flex text-[13px] text-ash hover:text-graphite px-2.5 py-1.5 rounded-lg hover:bg-mist transition-all duration-200"
                   >
                     Keluar
                   </button>
@@ -182,18 +182,15 @@ export default function Navbar() {
                 >
                   <Link
                     href="/login"
-                    className="hidden sm:inline-flex text-[13px] font-medium text-stone-600 hover:text-stone-900 px-3.5 py-1.5 rounded-lg hover:bg-stone-100/60 transition-all duration-200"
+                    className="hidden sm:inline-flex text-[13px] font-medium text-concrete hover:text-graphite px-3.5 py-1.5 rounded-lg hover:bg-mist transition-all duration-200"
                   >
                     Masuk
                   </Link>
                   <Link
                     href="/templates"
-                    className="group relative text-[13px] font-semibold text-white px-4 py-2 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-forest-500/20"
-                    style={{
-                      background: 'linear-gradient(135deg, #2c4a34 0%, #3a5a40 100%)',
-                    }}
+                    className="group text-[13px] font-semibold text-chalk bg-graphite px-4 py-2 rounded-button transition-colors hover:bg-carbon"
                   >
-                    <span className="relative z-10 flex items-center gap-1">
+                    <span className="flex items-center gap-1">
                       Buat Undangan
                       <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-200" />
                     </span>
@@ -202,7 +199,7 @@ export default function Navbar() {
               )}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden ml-0.5 p-2 rounded-lg text-stone-500 hover:text-stone-700 hover:bg-stone-100/60 transition-all duration-200"
+                className="md:hidden ml-0.5 p-2 rounded-lg text-concrete hover:text-graphite hover:bg-mist transition-all duration-200"
                 aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               >
                 <AnimatePresence mode="wait">
@@ -231,7 +228,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-40 bg-graphite/20 md:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -241,7 +238,7 @@ export default function Navbar() {
               transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
               className="fixed inset-x-3 top-[72px] z-50 md:hidden"
             >
-              <div className="bg-white/95 backdrop-blur-2xl rounded-2xl border border-stone-200/60 shadow-2xl shadow-stone-900/10 overflow-hidden">
+              <div className="bg-chalk rounded-card border border-hairline overflow-hidden">
                 <div className="p-2 space-y-0.5">
                   {NAV_LINKS.map((link, i) => {
                     const isAnchor = link.href.startsWith('/#')
@@ -256,33 +253,33 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center justify-between text-sm font-medium px-4 py-3 rounded-xl transition-all duration-200 ${
+                          className={`flex items-center justify-between text-sm font-medium px-4 py-3 rounded-nav transition-all duration-200 ${
                             isActive
-                              ? 'text-forest-700 bg-forest-50'
-                              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                              ? 'text-graphite bg-mist'
+                              : 'text-concrete hover:text-graphite hover:bg-mist'
                           }`}
                         >
                           {link.label}
-                          <ChevronRight size={14} className="text-stone-300" />
+                          <ChevronRight size={14} className="text-smoke" />
                         </Link>
                       </motion.div>
                     )
                   })}
                 </div>
 
-                <div className="border-t border-stone-100 p-2 space-y-0.5">
+                <div className="border-t border-hairline p-2 space-y-0.5">
                   {user ? (
                     <>
-                      <p className="px-4 py-2 text-xs text-stone-400 truncate">{user.email}</p>
+                      <p className="px-4 py-2 text-xs text-ash truncate">{user.email}</p>
                       {roleLinks.map((rl) => (
                         <Link
                           key={rl.href}
                           href={rl.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-2.5 text-sm font-medium px-4 py-3 rounded-xl transition-all duration-200 ${
+                          className={`flex items-center gap-2.5 text-sm font-medium px-4 py-3 rounded-nav transition-all duration-200 ${
                             pathname === rl.href
-                              ? 'text-forest-700 bg-forest-50'
-                              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                              ? 'text-graphite bg-mist'
+                              : 'text-concrete hover:text-graphite hover:bg-mist'
                           }`}
                         >
                           {rl.icon}
@@ -291,7 +288,7 @@ export default function Navbar() {
                       ))}
                       <button
                         onClick={() => { setMobileOpen(false); handleLogout() }}
-                        className="w-full flex items-center gap-2.5 text-sm font-medium text-red-500 hover:bg-red-50 px-4 py-3 rounded-xl transition-all duration-200"
+                        className="w-full flex items-center gap-2.5 text-sm font-medium text-concrete hover:text-graphite hover:bg-mist px-4 py-3 rounded-nav transition-all duration-200"
                       >
                         Keluar
                       </button>
@@ -301,15 +298,14 @@ export default function Navbar() {
                       <Link
                         href="/login"
                         onClick={() => setMobileOpen(false)}
-                        className="block text-sm font-medium text-stone-600 text-center px-4 py-2.5 rounded-xl hover:bg-stone-50 transition-all duration-200"
+                        className="block text-sm font-medium text-concrete text-center px-4 py-2.5 rounded-nav hover:bg-mist transition-all duration-200"
                       >
                         Masuk
                       </Link>
                       <Link
                         href="/templates"
                         onClick={() => setMobileOpen(false)}
-                        className="block text-sm font-semibold text-center text-white px-4 py-2.5 rounded-xl transition-all duration-200"
-                        style={{ background: 'linear-gradient(135deg, #2c4a34 0%, #3a5a40 100%)' }}
+                        className="block text-sm font-semibold text-center text-chalk bg-graphite px-4 py-2.5 rounded-button transition-colors hover:bg-carbon"
                       >
                         Buat Undangan
                       </Link>

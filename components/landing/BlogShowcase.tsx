@@ -20,7 +20,7 @@ export default async function BlogShowcase() {
           <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-forest-600 bg-forest-50/80 border border-forest-100 px-3.5 py-1.5 rounded-full mb-5">
             Blog
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900">
             Inspirasi &amp; Tips
           </h2>
           <p className="mt-3 text-stone-400 text-[15px] max-w-lg mx-auto">

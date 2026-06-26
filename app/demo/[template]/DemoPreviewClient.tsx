@@ -60,7 +60,7 @@ export default function DemoPreviewClient({
           </Link>
 
           <div className="flex items-center gap-2 min-w-0">
-            <p className="text-sm font-serif font-bold text-gray-800 truncate">
+            <p className="text-sm font-sans font-bold text-gray-800 truncate">
               {displayGroom} <span className="text-rose-400">&amp;</span> {displayBride}
             </p>
             {!isCustomized && (

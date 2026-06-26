@@ -13,22 +13,22 @@ const defaultSteps = [
   },
   {
     title: 'Bayar sekali, langsung aktif',
-    description: 'Sudah cocok? Pilih paket mulai Rp 79.000 — sekali bayar, tanpa langganan. Transfer bank atau QRIS, aktif dalam 1x24 jam.',
+    description: 'Sudah cocok? Pilih paket mulai Rp 79.000, sekali bayar, tanpa langganan. Transfer bank atau QRIS, aktif dalam 1x24 jam.',
   },
   {
     title: 'Lengkapi & bagikan ke tamu',
-    description: 'Isi detail acara, upload foto, pilih musik. Salin link undangan dan kirim ke tamu lewat WhatsApp — setiap tamu dapat undangan personal.',
+    description: 'Isi detail acara, upload foto, pilih musik. Salin link undangan dan kirim ke tamu lewat WhatsApp. Setiap tamu dapat undangan personal.',
   },
 ]
 
 const ICONS = [Palette, CreditCard, Share2]
 const HIGHLIGHTS = ['Gratis, tanpa registrasi', 'Tanpa biaya bulanan', 'Setiap tamu dapat link unik']
-const COLORS = ['#2c4a34', '#c9a961', '#4a6355']
+const COLORS = ['#0a0a0a', '#0a0a0a', '#0a0a0a']
 
 function StepVisual1() {
   return (
     <div className="relative w-full max-w-[260px] mx-auto">
-      <div className="bg-white rounded-2xl shadow-xl shadow-stone-200/60 border border-stone-100 p-4 space-y-2.5">
+      <div className="bg-chalk rounded-2xl border border-hairline p-4 space-y-2.5">
         {[
           { name: 'Javanese Gold', color: '#1a4a1a', accent: '#d4af37', active: true },
           { name: 'Modern White', color: '#f5f5f4', accent: '#1c1c1e', active: false },
@@ -38,8 +38,8 @@ function StepVisual1() {
             key={t.name}
             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all ${
               t.active
-                ? 'bg-forest-50/80 border border-forest-200 shadow-sm'
-                : 'border border-transparent hover:bg-stone-50'
+                ? 'bg-mist border border-hairline'
+                : 'border border-transparent hover:bg-mist'
             }`}
           >
             <div
@@ -54,14 +54,14 @@ function StepVisual1() {
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <p className={`text-[11px] font-semibold leading-tight ${t.active ? 'text-forest-700' : 'text-stone-600'}`}>
+              <p className={`text-[11px] font-semibold leading-tight ${t.active ? 'text-graphite' : 'text-concrete'}`}>
                 {t.name}
               </p>
-              <p className="text-[9px] text-stone-400 mt-0.5">Template undangan</p>
+              <p className="text-[9px] text-ash mt-0.5">Template undangan</p>
             </div>
             {t.active && (
-              <div className="w-5 h-5 rounded-full bg-forest-500 flex items-center justify-center shrink-0">
-                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="w-5 h-5 rounded-full bg-graphite flex items-center justify-center shrink-0">
+                <svg className="w-3 h-3 text-chalk" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -69,7 +69,7 @@ function StepVisual1() {
           </div>
         ))}
         <div className="pt-1">
-          <div className="flex items-center gap-2 text-[10px] text-forest-600 font-semibold px-1">
+          <div className="flex items-center gap-2 text-[10px] text-graphite font-semibold px-1">
             <MousePointerClick size={12} />
             Langsung preview dengan nama kalian
           </div>
@@ -82,10 +82,10 @@ function StepVisual1() {
 function StepVisual2() {
   return (
     <div className="relative w-full max-w-[260px] mx-auto">
-      <div className="bg-white rounded-2xl shadow-xl shadow-stone-200/60 border border-stone-100 p-4">
+      <div className="bg-chalk rounded-2xl border border-hairline p-4">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] font-bold text-stone-800">Pilih Paket</p>
-          <span className="text-[8px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100">
+          <p className="text-[11px] font-bold text-graphite">Pilih Paket</p>
+          <span className="text-[8px] font-semibold text-graphite bg-mist px-2 py-0.5 rounded-full border border-hairline">
             Sekali bayar
           </span>
         </div>
@@ -99,25 +99,25 @@ function StepVisual2() {
               key={p.name}
               className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition-all ${
                 p.active
-                  ? 'bg-stone-900 shadow-md'
-                  : 'bg-stone-50 border border-stone-100'
+                  ? 'bg-graphite'
+                  : 'bg-mist border border-hairline'
               }`}
             >
               <div>
-                <p className={`text-[11px] font-semibold ${p.active ? 'text-white' : 'text-stone-700'}`}>{p.name}</p>
-                <p className={`text-[9px] mt-0.5 ${p.active ? 'text-white/50' : 'text-stone-400'}`}>{p.days}</p>
+                <p className={`text-[11px] font-semibold ${p.active ? 'text-chalk' : 'text-carbon'}`}>{p.name}</p>
+                <p className={`text-[9px] mt-0.5 ${p.active ? 'text-chalk/50' : 'text-ash'}`}>{p.days}</p>
               </div>
-              <p className={`text-[12px] font-bold ${p.active ? 'text-white' : 'text-stone-600'}`}>{p.price}</p>
+              <p className={`text-[12px] font-bold ${p.active ? 'text-chalk' : 'text-concrete'}`}>{p.price}</p>
             </div>
           ))}
         </div>
         <div className="mt-3 flex items-center gap-2">
           <div className="flex gap-1">
             {['BCA', 'QRIS'].map((m) => (
-              <span key={m} className="text-[8px] font-semibold text-stone-500 bg-stone-100 px-2 py-1 rounded-md">{m}</span>
+              <span key={m} className="text-[8px] font-semibold text-concrete bg-mist px-2 py-1 rounded-md">{m}</span>
             ))}
           </div>
-          <QrCode size={12} className="text-stone-300 ml-auto" />
+          <QrCode size={12} className="text-smoke ml-auto" />
         </div>
       </div>
     </div>
@@ -127,7 +127,7 @@ function StepVisual2() {
 function StepVisual3() {
   return (
     <div className="relative w-full max-w-[260px] mx-auto">
-      <div className="bg-white rounded-2xl shadow-xl shadow-stone-200/60 border border-stone-100 p-4">
+      <div className="bg-chalk rounded-2xl border border-hairline p-4">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
             <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
@@ -135,31 +135,31 @@ function StepVisual3() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-[11px] font-bold text-stone-800">Bagikan ke tamu</p>
-            <p className="text-[8px] text-stone-400">Salin link, kirim via WA</p>
+            <p className="text-[11px] font-bold text-graphite">Bagikan ke tamu</p>
+            <p className="text-[8px] text-ash">Salin link, kirim via WA</p>
           </div>
         </div>
-        <div className="bg-stone-50 rounded-xl px-3 py-2 mb-2.5 flex items-center gap-2 border border-stone-100">
-          <span className="text-[9px] text-stone-500 font-mono truncate flex-1">
-            <span className="text-stone-700 font-semibold">rizky-aulia</span>.iaundang.id
+        <div className="bg-mist rounded-xl px-3 py-2 mb-2.5 flex items-center gap-2 border border-hairline">
+          <span className="text-[9px] text-concrete font-mono truncate flex-1">
+            <span className="text-graphite font-semibold">rizky-aulia</span>.iaundang.id
           </span>
-          <span className="text-[8px] font-semibold text-forest-600 bg-forest-50 px-2 py-0.5 rounded shrink-0">Salin</span>
+          <span className="text-[8px] font-semibold text-graphite bg-mist px-2 py-0.5 rounded shrink-0">Salin</span>
         </div>
         <div className="space-y-1.5">
-          {['Bpk. Andi — terkirim ✓', 'Ibu Sinta — terkirim ✓', 'Hendra W. — terkirim ✓'].map((g) => (
+          {['Bpk. Andi · terkirim ✓', 'Ibu Sinta · terkirim ✓', 'Hendra W. · terkirim ✓'].map((g) => (
             <div key={g} className="flex items-center gap-2 px-2 py-1">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                <svg className="w-2.5 h-2.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+              <div className="w-4 h-4 rounded-full bg-mist flex items-center justify-center shrink-0">
+                <svg className="w-2.5 h-2.5 text-graphite" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <p className="text-[9px] text-stone-600">{g}</p>
+              <p className="text-[9px] text-concrete">{g}</p>
             </div>
           ))}
         </div>
         <div className="mt-2.5 flex items-center gap-1.5 px-1">
-          <Sparkles size={10} className="text-amber-500" />
-          <p className="text-[9px] text-stone-400">Nama tamu muncul otomatis di undangan</p>
+          <Sparkles size={10} className="text-ash" />
+          <p className="text-[9px] text-ash">Nama tamu muncul otomatis di undangan</p>
         </div>
       </div>
     </div>
@@ -174,11 +174,11 @@ export default function HowItWorks({ steps: propSteps }: { steps?: { title: stri
     title: s.title,
     desc: s.description,
     highlight: HIGHLIGHTS[i] ?? '',
-    color: COLORS[i] ?? '#2c4a34',
+    color: COLORS[i] ?? '#0a0a0a',
   }))
 
   return (
-    <section id="cara-kerja" className="py-20 sm:py-28 lg:py-32 bg-white overflow-hidden">
+    <section id="cara-kerja" className="py-20 sm:py-28 lg:py-32 bg-chalk overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
         <motion.div
@@ -188,14 +188,14 @@ export default function HowItWorks({ steps: propSteps }: { steps?: { title: stri
           transition={{ duration: 0.6, ease: EASE }}
           className="text-center mb-16 sm:mb-20"
         >
-          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-forest-600 bg-forest-50/80 border border-forest-100 px-3.5 py-1.5 rounded-full mb-5">
+          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-graphite bg-graphite/[0.04] border border-hairline px-3.5 py-1.5 rounded-full mb-5">
             Cara Kerja
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
-            Tiga langkah, undangan siap dikirim
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-graphite">
+            3 langkah. 5 menit. Selesai.
           </h2>
-          <p className="mt-3 text-stone-400 text-[15px] max-w-md mx-auto">
-            Tanpa skill desain, tanpa download aplikasi — semua lewat browser.
+          <p className="mt-3 text-ash text-[15px] max-w-md mx-auto">
+            Tanpa skill desain, tanpa download aplikasi. Semua lewat browser.
           </p>
         </motion.div>
 
@@ -210,7 +210,7 @@ export default function HowItWorks({ steps: propSteps }: { steps?: { title: stri
                 {/* Connector line (desktop) */}
                 {i < steps.length - 1 && (
                   <div className="hidden sm:block absolute left-1/2 -translate-x-1/2 top-full w-px h-8 z-0">
-                    <div className="w-full h-full bg-gradient-to-b from-stone-200 to-transparent" />
+                    <div className="w-full h-full bg-gradient-to-b from-hairline to-transparent" />
                   </div>
                 )}
 
@@ -226,37 +226,32 @@ export default function HowItWorks({ steps: propSteps }: { steps?: { title: stri
                     <div className="flex items-center gap-3.5 mb-5">
                       <div className="relative">
                         <div
-                          className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
-                          style={{
-                            background: `linear-gradient(135deg, ${step.color}, ${step.color}bb)`,
-                            boxShadow: `0 8px 24px -4px ${step.color}30`,
-                          }}
+                          className="w-12 h-12 rounded-2xl flex items-center justify-center bg-graphite"
                         >
-                          <Icon size={20} className="text-white" />
+                          <Icon size={20} className="text-chalk" />
                         </div>
                         <div
-                          className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold text-white shadow-sm"
-                          style={{ background: `linear-gradient(135deg, ${step.color}dd, ${step.color})` }}
+                          className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold text-chalk bg-graphite"
                         >
                           {i + 1}
                         </div>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold text-stone-300 tracking-[0.12em] uppercase">
+                        <p className="text-[10px] font-bold text-smoke tracking-[0.12em] uppercase">
                           Langkah {i + 1}
                         </p>
-                        <h3 className="font-semibold text-stone-900 text-lg sm:text-xl leading-snug">
+                        <h3 className="font-semibold text-graphite text-lg sm:text-xl leading-snug">
                           {step.title}
                         </h3>
                       </div>
                     </div>
 
-                    <p className="text-[15px] text-stone-500 leading-relaxed mb-5 sm:pl-[62px]">
+                    <p className="text-[15px] text-concrete leading-relaxed mb-5 sm:pl-[62px]">
                       {step.desc}
                     </p>
 
                     <div className="sm:pl-[62px]">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-forest-600 bg-forest-50 px-3.5 py-1.5 rounded-full border border-forest-100">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-graphite bg-mist px-3.5 py-1.5 rounded-full border border-hairline">
                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
@@ -292,14 +287,13 @@ export default function HowItWorks({ steps: propSteps }: { steps?: { title: stri
             <motion.span
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 text-white font-semibold px-7 py-3.5 rounded-xl text-[14px] shadow-lg shadow-forest-500/15 hover:shadow-xl hover:shadow-forest-500/20 transition-shadow"
-              style={{ background: 'linear-gradient(135deg, #2c4a34, #3a5a40)' }}
+              className="inline-flex items-center gap-2 text-chalk bg-graphite hover:bg-carbon font-semibold px-7 py-3.5 rounded-button text-[14px] transition-colors"
             >
               Mulai buat undangan
               <ArrowRight size={15} />
             </motion.span>
           </Link>
-          <p className="text-[12px] text-stone-400">Coba gratis, bayar saat siap publish.</p>
+          <p className="text-[12px] text-ash">Coba gratis, bayar saat siap publish.</p>
         </motion.div>
 
       </div>

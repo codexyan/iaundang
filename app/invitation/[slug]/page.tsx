@@ -145,7 +145,7 @@ function UnpublishedPage({ message }: { message?: string }) {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center px-4">
         <div className="text-5xl mb-4">💌</div>
-        <h1 className="text-2xl font-serif font-bold text-gray-800">Undangan Belum Aktif</h1>
+        <h1 className="text-2xl font-sans font-bold text-gray-800">Undangan Belum Aktif</h1>
         <p className="text-gray-500 mt-3 max-w-sm">
           {message ?? 'Undangan ini belum dipublikasikan oleh pemiliknya.'}
         </p>
@@ -159,7 +159,7 @@ function ExpiredPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center px-4">
         <div className="text-5xl mb-4">⏰</div>
-        <h1 className="text-2xl font-serif font-bold text-gray-800">Undangan Sudah Berakhir</h1>
+        <h1 className="text-2xl font-sans font-bold text-gray-800">Undangan Sudah Berakhir</h1>
         <p className="text-gray-500 mt-3 max-w-sm">
           Masa aktif undangan ini telah habis. Terima kasih telah hadir.
         </p>

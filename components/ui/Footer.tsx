@@ -27,13 +27,13 @@ const socials = [
 function FooterLinkGroup({ title, links }: { title: string; links: { href: string; label: string }[] }) {
   return (
     <div>
-      <h4 className="text-stone-800 font-semibold text-[13px] mb-4">{title}</h4>
+      <h4 className="text-graphite font-semibold text-[13px] mb-4">{title}</h4>
       <ul className="space-y-2.5">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-[13px] text-stone-400 hover:text-stone-700 transition-colors duration-200"
+              className="text-[13px] text-ash hover:text-graphite transition-colors duration-200"
             >
               {link.label}
             </Link>
@@ -72,7 +72,7 @@ export default function Footer() {
       ]
 
   return (
-    <footer className="relative bg-[#fafaf9] border-t border-stone-100">
+    <footer className="relative bg-mist border-t border-hairline">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8">
@@ -87,8 +87,8 @@ export default function Footer() {
                 priority
               />
             </Link>
-            <p className="text-stone-400 text-[13px] leading-relaxed mb-5 max-w-[280px]">
-              Platform undangan digital premium — personal untuk setiap tamu, elegan di setiap layar.
+            <p className="text-ash text-[13px] leading-relaxed mb-5 max-w-[280px]">
+              Platform undangan digital premium. Personal untuk setiap tamu, elegan di setiap layar.
             </p>
             <div className="flex items-center gap-2">
               {socials.map(({ href, icon: Icon, label }) => (
@@ -98,7 +98,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-white border border-stone-200/60 flex items-center justify-center text-stone-400 hover:text-stone-600 hover:border-stone-300 hover:shadow-sm transition-all duration-200"
+                  className="w-9 h-9 rounded-xl bg-chalk border border-hairline flex items-center justify-center text-ash hover:text-graphite hover:border-hairline transition-all duration-200"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -113,12 +113,12 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="text-stone-800 font-semibold text-[13px] mb-4">Kontak</h4>
+            <h4 className="text-graphite font-semibold text-[13px] mb-4">Kontak</h4>
             <ul className="space-y-2.5 mb-5">
               <li>
                 <a
                   href="mailto:halo@iaundang.id"
-                  className="text-[13px] text-stone-400 hover:text-stone-700 transition-colors duration-200 flex items-center gap-2"
+                  className="text-[13px] text-ash hover:text-graphite transition-colors duration-200 flex items-center gap-2"
                 >
                   <Mail className="w-3.5 h-3.5 shrink-0" />
                   halo@iaundang.id
@@ -127,7 +127,7 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.me/628123456789"
-                  className="text-[13px] text-stone-400 hover:text-stone-700 transition-colors duration-200 flex items-center gap-2"
+                  className="text-[13px] text-ash hover:text-graphite transition-colors duration-200 flex items-center gap-2"
                 >
                   <MessageCircle className="w-3.5 h-3.5 shrink-0" />
                   WhatsApp
@@ -136,23 +136,23 @@ export default function Footer() {
             </ul>
             <Link
               href="/templates"
-              className="inline-flex items-center justify-center px-4 py-2 bg-forest-500 text-white text-[13px] font-semibold rounded-lg hover:bg-forest-600 transition-all shadow-sm"
+              className="inline-flex items-center justify-center px-4 py-2 bg-graphite text-chalk text-[13px] font-semibold rounded-button hover:bg-carbon transition-colors"
             >
               Buat Undangan
             </Link>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-stone-200/50">
+        <div className="mt-12 pt-6 border-t border-hairline">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-stone-400 text-[12px]">
-              &copy; {currentYear} <span className="text-stone-500 font-medium">iaundang</span>. Semua hak dilindungi.
+            <p className="text-ash text-[12px]">
+              &copy; {currentYear} <span className="text-concrete font-medium">iaundang</span>. Semua hak dilindungi.
             </p>
             <div className="flex items-center gap-5 text-[12px]">
-              <Link href="/privacy" className="text-stone-400 hover:text-stone-600 transition-colors">
+              <Link href="/privacy" className="text-ash hover:text-graphite transition-colors">
                 Privasi
               </Link>
-              <Link href="/terms" className="text-stone-400 hover:text-stone-600 transition-colors">
+              <Link href="/terms" className="text-ash hover:text-graphite transition-colors">
                 Syarat &amp; Ketentuan
               </Link>
             </div>

@@ -69,11 +69,11 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
               </p>
               <div className="h-px w-12 bg-amber-400/50" />
             </div>
-            <h1 className="font-serif text-5xl sm:text-6xl font-bold text-white leading-tight">
+            <h1 className="font-sans text-5xl sm:text-6xl font-bold text-white leading-tight">
               {d.groomName}
             </h1>
-            <p className="text-3xl font-serif text-amber-400 my-4">&</p>
-            <h1 className="font-serif text-5xl sm:text-6xl font-bold text-white leading-tight">
+            <p className="text-3xl font-sans text-amber-400 my-4">&</p>
+            <h1 className="font-sans text-5xl sm:text-6xl font-bold text-white leading-tight">
               {d.brideName}
             </h1>
             <p className="text-amber-300/70 text-sm mt-8">{formatDate(d.akadDate)}</p>
@@ -88,7 +88,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
 
         {/* Acara */}
         <section className="py-16 px-6">
-          <h2 className="font-serif text-2xl font-bold text-center mb-10 text-amber-100">Detail Acara</h2>
+          <h2 className="font-sans text-2xl font-bold text-center mb-10 text-amber-100">Detail Acara</h2>
           <div className="max-w-2xl mx-auto space-y-6">
             {[
               { label: 'Akad Nikah', venue: d.akadVenue, date: d.akadDate, time: d.akadTime, address: d.akadAddress, maps: d.akadMapsUrl },
@@ -96,7 +96,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
             ].map((ev) => (
               <div key={ev.label} className="rounded-2xl p-6 text-center border border-amber-900/50" style={{ background: '#1a1a1a' }}>
                 <p className="text-xs uppercase tracking-[0.3em] text-amber-400 mb-2">{ev.label}</p>
-                <p className="font-serif text-xl font-bold text-amber-100">{ev.venue}</p>
+                <p className="font-sans text-xl font-bold text-amber-100">{ev.venue}</p>
                 <p className="text-sm text-amber-200/60 mt-1">{formatDate(ev.date)} • {ev.time}</p>
                 <p className="text-sm text-amber-200/40 mt-0.5">{ev.address}</p>
                 {ev.maps && (
@@ -113,7 +113,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
         {/* Gallery */}
         {galleries.length > 0 && (
           <section className="py-16 px-6" style={{ background: '#1a1a1a' }}>
-            <h2 className="font-serif text-2xl font-bold text-center mb-8 text-amber-100">Galeri</h2>
+            <h2 className="font-sans text-2xl font-bold text-center mb-8 text-amber-100">Galeri</h2>
             <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-3">
               {galleries.map((g) => (
                 <div key={g.id} className="aspect-square rounded-xl overflow-hidden border border-amber-900/30">
@@ -127,7 +127,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
         {/* RSVP */}
         <section className="py-16 px-6">
           <div className="max-w-md mx-auto">
-            <h2 className="font-serif text-2xl font-bold text-center text-amber-100 mb-2">RSVP</h2>
+            <h2 className="font-sans text-2xl font-bold text-center text-amber-100 mb-2">RSVP</h2>
             {attending > 0 && <p className="text-center text-sm text-amber-200/50 mb-6">{attending} tamu telah konfirmasi hadir</p>}
             <RSVPForm invitationId={invitation.id} accentColor="#d4af37" />
           </div>
@@ -136,7 +136,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
         {/* Wishes */}
         <section className="py-16 px-6" style={{ background: '#1a1a1a' }}>
           <div className="max-w-md mx-auto">
-            <h2 className="font-serif text-2xl font-bold text-center text-amber-100 mb-8">Buku Ucapan</h2>
+            <h2 className="font-sans text-2xl font-bold text-center text-amber-100 mb-8">Buku Ucapan</h2>
             <WishesSection invitationId={invitation.id} initialWishes={wishes} />
           </div>
         </section>
@@ -144,7 +144,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
         {/* Share */}
         <section className="py-14 text-center px-6" style={{ background: '#0a0a0a' }}>
           <div className="h-px w-16 bg-amber-400/30 mx-auto mb-8" />
-          <p className="font-serif text-xl font-bold text-amber-100 mb-6">Bagikan Undangan</p>
+          <p className="font-sans text-xl font-bold text-amber-100 mb-6">Bagikan Undangan</p>
           <a
             href={`https://wa.me/?text=Yth. Bapak/Ibu/Saudara/i, kami mengundang kehadiran Anda di pernikahan kami. Selengkapnya: ${url}`}
             target="_blank" rel="noopener noreferrer"

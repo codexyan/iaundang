@@ -16,13 +16,13 @@ const steps = [
   {
     icon: MapPin,
     title: 'Lokasi satu ketukan',
-    desc: 'Tamu tap sekali — Google Maps terbuka dan langsung mengarahkan ke lokasi acara.',
+    desc: 'Tamu tap sekali, Google Maps terbuka dan langsung mengarahkan ke lokasi acara.',
     color: '#c9a961',
   },
   {
     icon: CheckCircle2,
     title: 'RSVP cepat & mudah',
-    desc: 'Isi nama, pilih hadir atau tidak — selesai dalam 10 detik. Kalian langsung tahu siapa yang datang.',
+    desc: 'Isi nama, pilih hadir atau tidak. Selesai dalam 10 detik. Kalian langsung tahu siapa yang datang.',
     color: '#4a6355',
   },
   {
@@ -48,11 +48,11 @@ export default function GuestExperience() {
           <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-forest-600 bg-forest-50/80 border border-forest-100 px-3.5 py-1.5 rounded-full mb-5">
             Pengalaman Tamu
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900">
             Pengalaman tamu yang berkesan
           </h2>
           <p className="mt-3 text-stone-400 text-[15px] max-w-md mx-auto">
-            Bukan sekadar info acara — ini pengalaman interaktif yang tamu nikmati langsung di browser.
+            Bukan sekadar info acara. Ini pengalaman interaktif yang tamu nikmati langsung di browser.
           </p>
         </motion.div>
 
@@ -89,7 +89,7 @@ export default function GuestExperience() {
           className="text-center"
         >
           <p className="text-[14px] text-stone-400 mb-5">
-            Semua ini terjadi dalam hitungan detik —{' '}
+            Semua ini terjadi dalam hitungan detik.{' '}
             <span className="text-stone-700 font-medium">tamu tidak perlu install apapun.</span>
           </p>
           <Link

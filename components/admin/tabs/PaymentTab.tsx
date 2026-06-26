@@ -410,7 +410,7 @@ function PaymentConfigTab({ config, onUpdate }: { config: PaymentConfig; onUpdat
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-semibold text-gray-700">Upload gambar QRIS</p>
-                    <p className="text-xs text-gray-400 mt-0.5">JPG, PNG, atau WebP — maks 5MB</p>
+                    <p className="text-xs text-gray-400 mt-0.5">JPG, PNG, atau WebP, maks 5MB</p>
                   </div>
                 </>
               )}

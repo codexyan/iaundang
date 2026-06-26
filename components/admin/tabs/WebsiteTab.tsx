@@ -957,7 +957,7 @@ function PreviewPanel({ form }: { form: ArticleData }) {
             ))}
           </div>
           {/* Title */}
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, color: '#1c1917', lineHeight: 1.25, marginBottom: '0.75rem' }}>
+          <h1 style={{ fontFamily: "var(--font-geist-sans), sans-serif", fontSize: '2rem', fontWeight: 700, color: '#1c1917', lineHeight: 1.25, marginBottom: '0.75rem' }}>
             {form.title || 'Judul Artikel'}
           </h1>
           {form.excerpt && <p style={{ fontSize: '1.1rem', color: '#a8a29e', lineHeight: 1.6, marginBottom: '2rem' }}>{form.excerpt}</p>}

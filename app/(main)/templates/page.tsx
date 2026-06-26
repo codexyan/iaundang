@@ -74,19 +74,19 @@ function TemplateCard({ rec, tier, flashSale }: {
               Undangan Pernikahan
             </p>
             <p
-              className="font-serif text-3xl font-bold text-center leading-tight"
+              className="font-sans text-3xl font-bold text-center leading-tight"
               style={{ color: cs.text }}
             >
               Namamu
             </p>
             <p
-              className="font-serif text-xl my-2"
+              className="font-sans text-xl my-2"
               style={{ color: cs.accent, fontStyle: 'italic' }}
             >
               &amp;
             </p>
             <p
-              className="font-serif text-3xl font-bold text-center leading-tight"
+              className="font-sans text-3xl font-bold text-center leading-tight"
               style={{ color: cs.text }}
             >
               Namanya
@@ -139,7 +139,7 @@ function TemplateCard({ rec, tier, flashSale }: {
 
       {/* Info */}
       <div className="p-5 flex flex-col flex-1">
-        <h2 className="font-serif text-lg font-bold text-stone-900">{rec.name}</h2>
+        <h2 className="font-sans text-lg font-bold text-stone-900">{rec.name}</h2>
 
         {/* Price display */}
         <div className="flex items-center gap-2 mt-1.5">
@@ -213,7 +213,7 @@ export default async function TemplatesPage() {
           <Link href="/" className="text-sm text-stone-400 hover:text-forest-600 transition-colors mb-6 inline-block">
             ← Kembali ke beranda
           </Link>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-2">
+          <h1 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900 mt-2">
             Pilih gaya undanganmu
           </h1>
           <p className="mt-3 text-stone-500 text-sm max-w-md mx-auto">

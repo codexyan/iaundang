@@ -217,7 +217,7 @@ export default function OpeningForm({
           <p className="text-xs text-stone-400">
             Gaya: {OPENING_STYLES.find(s => s.id === openingType)?.icon} {OPENING_STYLES.find(s => s.id === openingType)?.name}
           </p>
-          <p className="text-sm font-serif text-stone-700 leading-relaxed">
+          <p className="text-sm font-sans text-stone-700 leading-relaxed">
             {openingGreeting || 'Salam pembuka...'}
           </p>
           <div className="w-12 h-px bg-gold-400 mx-auto" />

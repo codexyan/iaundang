@@ -49,41 +49,40 @@ function PricingCard({
       transition={{ duration: 0.55, delay, ease: EASE }}
       className={`relative rounded-2xl h-full flex flex-col overflow-hidden transition-all duration-300 ${
         isDark
-          ? 'bg-stone-900 text-white shadow-2xl shadow-stone-900/20 ring-1 ring-white/10'
+          ? 'bg-graphite text-white ring-1 ring-white/10'
           : isGold
-            ? 'bg-gradient-to-b from-amber-50/80 to-white border border-amber-200/60 hover:border-amber-300/80 hover:shadow-xl hover:shadow-amber-100/50'
-            : 'bg-white border border-stone-200/60 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-100/60'
+            ? 'bg-mist border border-hairline hover:border-smoke'
+            : 'bg-chalk border border-hairline hover:border-smoke'
       }`}
     >
       {popular && (
-        <div className="absolute top-0 inset-x-0 h-0.5"
-          style={{ background: 'linear-gradient(90deg, #2c4a34, #4a6355, #c9a961)' }} />
+        <div className="absolute top-0 inset-x-0 h-px bg-graphite" />
       )}
 
       {discountLabel && (
-        <div className={`absolute top-3 right-3 text-[9px] font-bold px-2 py-1 rounded-lg animate-pulse ${
-          isDark ? 'bg-amber-500 text-white' : 'bg-red-500 text-white'
+        <div className={`absolute top-3 right-3 text-[9px] font-bold px-2 py-1 rounded-lg ${
+          isDark ? 'bg-chalk text-graphite' : 'bg-graphite text-chalk'
         }`}>
           {discountLabel}
         </div>
       )}
 
-      <div className={`px-6 pt-6 pb-5 ${isDark ? 'border-b border-white/8' : 'border-b border-stone-100'}`}>
+      <div className={`px-6 pt-6 pb-5 ${isDark ? 'border-b border-white/8' : 'border-b border-hairline'}`}>
         <span className={`inline-block text-[10px] font-bold tracking-[0.12em] uppercase px-2.5 py-1 rounded-lg mb-4 ${
-          isDark ? 'bg-forest-500/20 text-forest-400'
-            : isGold ? 'bg-amber-100/80 text-amber-700'
-              : 'bg-stone-100 text-stone-500'
+          isDark ? 'bg-chalk/10 text-chalk/70'
+            : isGold ? 'bg-hairline text-graphite'
+              : 'bg-mist text-concrete'
         }`}>
           {badge}
         </span>
-        <p className={`text-[13px] font-medium mb-2 ${isDark ? 'text-white/60' : 'text-stone-500'}`}>{name}</p>
+        <p className={`text-[13px] font-medium mb-2 ${isDark ? 'text-white/60' : 'text-concrete'}`}>{name}</p>
         <div className="flex items-baseline gap-2">
-          <span className={`text-3xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-stone-900'}`}>{price}</span>
+          <span className={`text-3xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-graphite'}`}>{price}</span>
           {originalPrice && (
-            <span className={`text-sm line-through ${isDark ? 'text-white/30' : 'text-stone-400'}`}>{originalPrice}</span>
+            <span className={`text-sm line-through ${isDark ? 'text-white/30' : 'text-ash'}`}>{originalPrice}</span>
           )}
         </div>
-        <p className={`text-[12px] mt-2 ${isDark ? 'text-white/35' : 'text-stone-400'}`}>
+        <p className={`text-[12px] mt-2 ${isDark ? 'text-white/35' : 'text-ash'}`}>
           sekali bayar · aktif {duration}
         </p>
       </div>
@@ -94,15 +93,15 @@ function PricingCard({
             const isHL = feature === highlightedFeature
             return (
               <li key={feature} className={`flex items-start gap-2.5 ${
-                isHL ? `rounded-lg px-2.5 py-1.5 -mx-2.5 ${isDark ? 'bg-forest-500/10' : 'bg-amber-50/80'}` : ''
+                isHL ? `rounded-lg px-2.5 py-1.5 -mx-2.5 ${isDark ? 'bg-chalk/[0.06]' : 'bg-mist'}` : ''
               }`}>
                 <div className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${
-                  isDark ? 'bg-forest-500/20' : 'bg-forest-500/10'
+                  isDark ? 'bg-chalk/10' : 'bg-mist'
                 }`}>
-                  <Check size={10} strokeWidth={3} className={isDark ? 'text-forest-400' : 'text-forest-500'} />
+                  <Check size={10} strokeWidth={3} className={isDark ? 'text-chalk/70' : 'text-graphite'} />
                 </div>
                 <span className={`text-[13px] leading-snug ${
-                  isHL ? `font-semibold ${isDark ? 'text-forest-300' : 'text-amber-700'}` : isDark ? 'text-white/65' : 'text-stone-600'
+                  isHL ? `font-semibold ${isDark ? 'text-chalk' : 'text-graphite'}` : isDark ? 'text-white/65' : 'text-concrete'
                 }`}>
                   {feature}
                 </span>
@@ -117,17 +116,17 @@ function PricingCard({
           <motion.span
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            className={`w-full font-semibold py-3 rounded-xl text-[13px] transition-all flex items-center justify-center gap-1.5 ${
-              isDark ? 'bg-white text-stone-900 hover:bg-stone-50 shadow-lg'
-                : isGold ? 'bg-stone-900 text-white hover:bg-stone-800 shadow-lg shadow-stone-900/10'
-                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+            className={`w-full font-semibold py-3 rounded-button text-[13px] transition-colors flex items-center justify-center gap-1.5 ${
+              isDark ? 'bg-chalk text-graphite hover:bg-mist'
+                : isGold ? 'bg-graphite text-chalk hover:bg-carbon'
+                  : 'bg-mist text-graphite hover:bg-hairline'
             }`}
           >
             {ctaLabel}
             <ArrowRight size={14} />
           </motion.span>
         </Link>
-        <p className={`text-[11px] mt-2.5 text-center ${isDark ? 'text-white/30' : 'text-stone-400'}`}>{ctaHint}</p>
+        <p className={`text-[11px] mt-2.5 text-center ${isDark ? 'text-white/30' : 'text-ash'}`}>{ctaHint}</p>
       </div>
     </motion.div>
   )
@@ -175,7 +174,7 @@ export default function Pricing({ priceTiers, flashSales }: PricingProps) {
   const sales = flashSales ?? []
 
   return (
-    <section id="harga" className="py-20 sm:py-28 lg:py-32 bg-white">
+    <section id="harga" className="py-20 sm:py-28 lg:py-32 bg-chalk">
       <div className="max-w-6xl mx-auto px-4 sm:px-8">
 
         <motion.div
@@ -185,13 +184,13 @@ export default function Pricing({ priceTiers, flashSales }: PricingProps) {
           transition={{ duration: 0.6, ease: EASE }}
           className="text-center mb-12 sm:mb-16"
         >
-          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-forest-600 bg-forest-50/80 border border-forest-100 px-3.5 py-1.5 rounded-full mb-5">
+          <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-graphite bg-graphite/[0.04] border border-hairline px-3.5 py-1.5 rounded-full mb-5">
             Harga
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
-            Harga transparan, tanpa kejutan
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-graphite">
+            Sekali bayar. Tanpa langganan.
           </h2>
-          <p className="mt-3 text-stone-400 text-[15px] max-w-md mx-auto">
+          <p className="mt-3 text-ash text-[15px] max-w-md mx-auto">
             Sekali bayar, langsung aktif. Tidak ada biaya bulanan atau biaya tersembunyi.
           </p>
         </motion.div>
@@ -260,26 +259,26 @@ export default function Pricing({ priceTiers, flashSales }: PricingProps) {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-10 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl mx-auto"
         >
-          <div className="flex items-center gap-3.5 bg-[#fafaf9] rounded-xl px-5 py-4 border border-stone-100">
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <ShieldCheck size={18} className="text-emerald-600" />
+          <div className="flex items-center gap-3.5 bg-mist rounded-xl px-5 py-4 border border-hairline">
+            <div className="shrink-0 w-10 h-10 rounded-xl bg-chalk flex items-center justify-center border border-hairline">
+              <ShieldCheck size={18} className="text-graphite" />
             </div>
             <div>
-              <p className="text-[13px] font-semibold text-stone-800 leading-snug">
+              <p className="text-[13px] font-semibold text-graphite leading-snug">
                 Lihat hasilnya dulu, bayar kalau suka
               </p>
-              <p className="text-[11px] text-stone-400 mt-0.5">Tanpa risiko, tanpa komitmen</p>
+              <p className="text-[11px] text-ash mt-0.5">Tanpa risiko, tanpa komitmen</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 bg-[#fafaf9] rounded-xl px-5 py-4 border border-stone-100">
-            <div className="shrink-0 w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <MessageCircle size={18} className="text-blue-600" />
+          <div className="flex items-center gap-3.5 bg-mist rounded-xl px-5 py-4 border border-hairline">
+            <div className="shrink-0 w-10 h-10 rounded-xl bg-chalk flex items-center justify-center border border-hairline">
+              <MessageCircle size={18} className="text-graphite" />
             </div>
             <div>
-              <p className="text-[13px] font-semibold text-stone-800 leading-snug">
+              <p className="text-[13px] font-semibold text-graphite leading-snug">
                 Tim kami siap membantu via WhatsApp
               </p>
-              <p className="text-[11px] text-stone-400 mt-0.5">Balas dalam 1 hari kerja</p>
+              <p className="text-[11px] text-ash mt-0.5">Balas dalam 1 hari kerja</p>
             </div>
           </div>
         </motion.div>
@@ -289,10 +288,10 @@ export default function Pricing({ priceTiers, flashSales }: PricingProps) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-8 text-center text-[13px] text-stone-400"
+          className="mt-8 text-center text-[13px] text-ash"
         >
           Ada pertanyaan?{' '}
-          <Link href="/#faq" className="font-medium text-stone-600 hover:text-stone-900 underline underline-offset-2 transition-colors">
+          <Link href="/#faq" className="font-medium text-concrete hover:text-graphite underline underline-offset-2 transition-colors">
             Lihat FAQ
           </Link>
         </motion.p>

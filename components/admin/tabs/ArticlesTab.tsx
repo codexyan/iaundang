@@ -596,7 +596,7 @@ function PreviewPanel({ form }: { form: ArticleData }) {
               <span key={i} className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full text-[10px]">{tag.trim()}</span>
             ))}
           </div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, color: '#1c1917', lineHeight: 1.25, marginBottom: '0.75rem' }}>
+          <h1 style={{ fontFamily: "var(--font-geist-sans), sans-serif", fontSize: '2rem', fontWeight: 700, color: '#1c1917', lineHeight: 1.25, marginBottom: '0.75rem' }}>
             {form.title || 'Judul Artikel'}
           </h1>
           {form.excerpt && <p style={{ fontSize: '1.1rem', color: '#a8a29e', lineHeight: 1.6, marginBottom: '2rem' }}>{form.excerpt}</p>}

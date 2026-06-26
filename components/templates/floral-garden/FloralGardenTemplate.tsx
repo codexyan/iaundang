@@ -65,7 +65,7 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
           <p className="text-pink-400 text-xs uppercase tracking-[0.3em] mb-4">
             {d.openingText || 'Undangan Pernikahan'}
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold text-pink-900 leading-tight">
+          <h1 className="font-sans text-4xl sm:text-5xl font-bold text-pink-900 leading-tight">
             {d.groomName} <span className="text-pink-400">&</span> {d.brideName}
           </h1>
           <div className="mt-6 flex items-center gap-3">
@@ -83,7 +83,7 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
 
         {/* Acara */}
         <section className="py-16 px-6">
-          <h2 className="font-serif text-2xl font-bold text-center mb-10">Detail Acara</h2>
+          <h2 className="font-sans text-2xl font-bold text-center mb-10">Detail Acara</h2>
           <div className="max-w-2xl mx-auto space-y-6">
             {[
               { label: 'Akad Nikah', venue: d.akadVenue, date: d.akadDate, time: d.akadTime, address: d.akadAddress, maps: d.akadMapsUrl },
@@ -91,7 +91,7 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
             ].map((ev) => (
               <div key={ev.label} className="rounded-2xl p-6 text-center border border-pink-200 bg-white/70">
                 <p className="text-xs uppercase tracking-widest text-pink-400 mb-2">{ev.label}</p>
-                <p className="font-serif text-xl font-bold">{ev.venue}</p>
+                <p className="font-sans text-xl font-bold">{ev.venue}</p>
                 <p className="text-sm opacity-70 mt-1">{formatDate(ev.date)} • {ev.time}</p>
                 <p className="text-sm opacity-50 mt-0.5">{ev.address}</p>
                 {ev.maps && (
@@ -108,7 +108,7 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
         {/* Gallery */}
         {galleries.length > 0 && (
           <section className="py-16 px-6" style={{ background: '#fce7f3' }}>
-            <h2 className="font-serif text-2xl font-bold text-center mb-8">Galeri Foto 💐</h2>
+            <h2 className="font-sans text-2xl font-bold text-center mb-8">Galeri Foto 💐</h2>
             <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-3">
               {galleries.map((g) => (
                 <div key={g.id} className="aspect-square rounded-2xl overflow-hidden border border-pink-200">
@@ -122,7 +122,7 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
         {/* RSVP */}
         <section className="py-16 px-6">
           <div className="max-w-md mx-auto">
-            <h2 className="font-serif text-2xl font-bold text-center mb-2">RSVP 🌷</h2>
+            <h2 className="font-sans text-2xl font-bold text-center mb-2">RSVP 🌷</h2>
             {attending > 0 && <p className="text-center text-sm opacity-60 mb-6">{attending} tamu sudah konfirmasi</p>}
             <RSVPForm invitationId={invitation.id} accentColor="#be185d" />
           </div>
@@ -131,14 +131,14 @@ export default function FloralGardenTemplate({ invitation, galleries, wishes, gu
         {/* Wishes */}
         <section className="py-16 px-6" style={{ background: '#fce7f3' }}>
           <div className="max-w-md mx-auto">
-            <h2 className="font-serif text-2xl font-bold text-center mb-8">Buku Ucapan 💌</h2>
+            <h2 className="font-sans text-2xl font-bold text-center mb-8">Buku Ucapan 💌</h2>
             <WishesSection invitationId={invitation.id} initialWishes={wishes} />
           </div>
         </section>
 
         {/* Share & Footer */}
         <section className="py-14 text-center px-6" style={{ background: '#be185d', color: 'white' }}>
-          <p className="font-serif text-xl font-bold mb-6">Bagikan Undangan 🌸</p>
+          <p className="font-sans text-xl font-bold mb-6">Bagikan Undangan 🌸</p>
           <a
             href={`https://wa.me/?text=Yth. Bapak/Ibu/Saudara/i, kami mengundang kehadiran Anda di pernikahan kami. Selengkapnya: ${url}`}
             target="_blank" rel="noopener noreferrer"

@@ -74,7 +74,7 @@ export default async function BlogArticlePage({ params }: { params: { slug: stri
           )}
 
           {/* Title */}
-          <h1 className="font-serif text-2xl sm:text-4xl lg:text-[2.75rem] font-bold text-stone-900 leading-tight">
+          <h1 className="font-sans text-2xl sm:text-4xl lg:text-[2.75rem] font-bold text-stone-900 leading-tight">
             {article.title}
           </h1>
 
@@ -153,7 +153,7 @@ export default async function BlogArticlePage({ params }: { params: { slug: stri
         {related.length > 0 && (
           <section className="border-t border-stone-100 bg-stone-50/50">
             <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-stone-900 mb-8 text-center">
+              <h2 className="font-sans text-xl sm:text-2xl font-bold text-stone-900 mb-8 text-center">
                 Artikel Lainnya
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">

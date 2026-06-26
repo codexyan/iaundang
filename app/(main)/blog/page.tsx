@@ -26,7 +26,7 @@ export default async function BlogPage() {
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <p className="text-xs font-semibold tracking-[.18em] uppercase text-emerald-600 mb-3">Blog</p>
-            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-stone-900 leading-tight">
+            <h1 className="font-sans text-3xl sm:text-5xl font-bold text-stone-900 leading-tight">
               Tips & Inspirasi Pernikahan
             </h1>
             <p className="mt-4 text-stone-500 text-base sm:text-lg leading-relaxed">
@@ -92,7 +92,7 @@ export default async function BlogPage() {
                         </span>
                       )}
                     </div>
-                    <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-stone-900 group-hover:text-emerald-800 transition-colors leading-snug mb-3">
+                    <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-bold text-stone-900 group-hover:text-emerald-800 transition-colors leading-snug mb-3">
                       {featured.title}
                     </h2>
                     {featured.excerpt && (

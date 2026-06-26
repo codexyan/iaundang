@@ -5,10 +5,8 @@ import TrustBar         from '@/components/landing/TrustBar'
 import TemplatePreview  from '@/components/landing/TemplatePreview'
 import FeatureShowcase  from '@/components/landing/FeatureShowcase'
 import HowItWorks       from '@/components/landing/HowItWorks'
-import Testimonials     from '@/components/landing/Testimonials'
 import Pricing          from '@/components/landing/Pricing'
 import FAQ              from '@/components/landing/FAQ'
-import BlogShowcase     from '@/components/landing/BlogShowcase'
 import ClosingCTA       from '@/components/landing/ClosingCTA'
 
 export const dynamic = 'force-dynamic'
@@ -27,9 +25,7 @@ const SECTION_MAP: Record<string, React.FC<PageData>> = {
   templatePreview: ({ landing, activeTemplates }) => <TemplatePreview showcase={landing.templateShowcase} templates={activeTemplates} />,
   featureShowcase: ({ landing }) => <FeatureShowcase personalisasi={landing.personalisasiMockup} />,
   howItWorks: ({ landing }) => <HowItWorks steps={landing.howItWorks.steps} />,
-  testimonials: ({ landing }) => <Testimonials reviews={landing.testimonials.items} />,
   pricing: ({ priceTiers, flashSales }) => <Pricing priceTiers={priceTiers} flashSales={flashSales} />,
-  blogShowcase: () => <BlogShowcase />,
   faq: ({ landing, whatsapp }) => <FAQ items={landing.faq.items} whatsapp={whatsapp} />,
   closingCta: ({ whatsapp }) => <ClosingCTA whatsapp={whatsapp} />,
 }

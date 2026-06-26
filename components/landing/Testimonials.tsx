@@ -18,7 +18,7 @@ const VALUE_PROPS = [
   {
     icon: Eye,
     title: 'Coba Dulu, Bayar Kalau Suka',
-    desc: 'Preview undangan dengan nama pasangan kalian sendiri — gratis, tanpa registrasi. Bayar hanya saat sudah puas.',
+    desc: 'Preview undangan dengan nama pasangan kalian sendiri, gratis, tanpa registrasi. Bayar hanya saat sudah puas.',
     color: '#2c4a34',
   },
   {
@@ -30,7 +30,7 @@ const VALUE_PROPS = [
   {
     icon: Sparkles,
     title: 'Personal untuk Setiap Tamu',
-    desc: 'Nama tamu muncul otomatis di halaman pembuka — bukan broadcast massal, tapi undangan yang terasa spesial.',
+    desc: 'Nama tamu muncul otomatis di halaman pembuka. Bukan broadcast massal, tapi undangan yang terasa spesial.',
     color: '#4a6355',
   },
   {
@@ -42,13 +42,13 @@ const VALUE_PROPS = [
   {
     icon: Headphones,
     title: 'Support Cepat via WhatsApp',
-    desc: 'Tim kami siap membantu jika ada kendala. Balas di hari kerja — langsung ke orang, bukan chatbot.',
+    desc: 'Tim kami siap membantu jika ada kendala. Balas di hari kerja, langsung ke orang, bukan chatbot.',
     color: '#5d7a6a',
   },
   {
     icon: Globe,
     title: 'Buka di Semua Perangkat',
-    desc: 'Undangan tampil sempurna di HP, tablet, dan laptop. Tamu cukup tap link — tanpa install apapun.',
+    desc: 'Undangan tampil sempurna di HP, tablet, dan laptop. Tamu cukup tap link, tanpa install apapun.',
     color: '#b8954d',
   },
 ]
@@ -68,7 +68,7 @@ export default function Testimonials({ reviews: _propReviews }: { reviews?: Revi
           <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-forest-600 bg-forest-50/80 border border-forest-100 px-3.5 py-1.5 rounded-full mb-5">
             Kenapa iaundang
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900">
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900">
             Dibangun untuk hari spesial kalian
           </h2>
           <p className="mt-3 text-stone-400 text-[15px] max-w-md mx-auto">
