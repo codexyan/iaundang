@@ -351,10 +351,10 @@ export default function AdminPanel({
         logoVerticalUrl={appSettings.logoVerticalUrl ?? '/logos/logo-vertical.png'}
       />
 
-      <main className={`flex-1 ${activeTab === 'lab' ? 'overflow-hidden flex flex-col' : 'overflow-y-auto'}`}>
+      <main className={`flex-1 min-h-0 ${activeTab === 'lab' ? 'overflow-hidden flex flex-col' : 'overflow-y-auto scrollbar-hide'}`}>
         <div
           ref={contentRef}
-          className={`h-full transition-opacity duration-150 ease-in-out ${transitioning ? 'opacity-0 translate-y-1' : 'opacity-100 translate-y-0'}`}
+          className={`${activeTab === 'lab' ? 'flex-1 min-h-0' : 'h-full'} transition-opacity duration-150 ease-in-out ${transitioning ? 'opacity-0 translate-y-1' : 'opacity-100 translate-y-0'}`}
           style={{ transition: 'opacity 150ms ease, transform 150ms ease' }}
         >
         {activeTab === 'dashboard' && (
@@ -577,7 +577,7 @@ function Sidebar({
       </div>
 
       {/* Nav groups */}
-      <nav className="flex-1 px-2 py-3 space-y-4 overflow-y-auto overflow-x-hidden">
+      <nav className="flex-1 px-2 py-3 space-y-4 overflow-y-auto scrollbar-hide overflow-x-hidden">
         {NAV_GROUPS.map(group => (
           <div key={group.label}>
             {!collapsed && (

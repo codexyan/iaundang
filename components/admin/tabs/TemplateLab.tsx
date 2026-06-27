@@ -174,132 +174,131 @@ const COLOR_PALETTES = [
 // Mini-mockup visual per variant menggunakan warna template aktif
 function VariantThumb({ type, variant, p, a, t }: { type: string; variant: string; p: string; a: string; t: string }) {
   const base: React.CSSProperties = { width: 54, height: 76, backgroundColor: p, borderRadius: 6, overflow: 'hidden', flexShrink: 0, position: 'relative', display: 'flex', flexDirection: 'column' }
+  const heroBase: React.CSSProperties = { width: 72, height: 100, backgroundColor: p, borderRadius: 8, overflow: 'hidden', flexShrink: 0, position: 'relative', display: 'flex', flexDirection: 'column' }
 
   if (type === 'hero') {
-    // Centered   crosshair + centered text block
+    // Default — centered symmetric: bismillah → divider → names → divider → scroll
     if (variant === 'default') return (
-      <div style={base}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-          {/* Crosshair lines */}
-          <div style={{ position: 'absolute', width: 1, height: '100%', left: '50%', backgroundColor: `${a}15` }} />
-          <div style={{ position: 'absolute', height: 1, width: '100%', top: '50%', backgroundColor: `${a}15` }} />
-          {/* Content block */}
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, backgroundColor: `${p}ee`, padding: '6px 4px' }}>
-            <div style={{ fontSize: 6, color: `${a}88`, fontStyle: 'italic', lineHeight: 1 }}>بسم</div>
-            <div style={{ fontSize: 7, fontWeight: 700, color: t, lineHeight: 1, letterSpacing: -0.3 }}>A & B</div>
-            <div style={{ width: 16, height: 0.5, backgroundColor: a }} />
-            <div style={{ fontSize: 4, color: `${t}66`, lineHeight: 1 }}>scroll ↓</div>
-          </div>
+      <div style={heroBase}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 0 }}>
+          <div style={{ fontSize: 4.5, letterSpacing: 1.5, color: `${a}aa`, lineHeight: 1, marginBottom: 5 }}>بسم</div>
+          <div style={{ width: 24, height: 0.5, backgroundColor: `${a}66`, marginBottom: 6 }} />
+          <div style={{ fontSize: 11, fontWeight: 700, color: t, lineHeight: 1, letterSpacing: -0.3 }}>A</div>
+          <div style={{ fontSize: 6, fontStyle: 'italic', color: a, lineHeight: 1, margin: '3px 0' }}>&amp;</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: t, lineHeight: 1, letterSpacing: -0.3 }}>B</div>
+          <div style={{ width: 24, height: 0.5, backgroundColor: `${a}66`, marginTop: 6 }} />
+          <div style={{ fontSize: 3.5, letterSpacing: 1, color: `${t}44`, lineHeight: 1, marginTop: 8 }}>SCROLL</div>
+          <div style={{ width: 0.5, height: 8, backgroundColor: `${a}44`, marginTop: 2 }} />
         </div>
       </div>
     )
-    // Bottom   gradient fade, text anchored to bottom
+    // Bottom — full bleed photo with gradient, text anchored bottom
     if (variant === 'bottom') return (
-      <div style={{ ...base, justifyContent: 'flex-end', background: `linear-gradient(135deg, ${a}22, ${p})` }}>
-        <div style={{ position: 'absolute', inset: 0, background: `url("data:image/svg+xml,%3Csvg width='54' height='76' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='54' height='76' fill='%23999' opacity='0.08'/%3E%3C/svg%3E")` }} />
-        <div style={{ position: 'absolute', inset: '30% 0 0 0', background: `linear-gradient(to bottom, transparent, ${p}ee)` }} />
-        <div style={{ position: 'relative', padding: '0 5px 6px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5 }}>
-          <div style={{ fontSize: 7, fontWeight: 700, color: '#fff', lineHeight: 1, textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>A & B</div>
-          <div style={{ width: 18, display: 'flex', alignItems: 'center', gap: 2 }}>
-            <div style={{ flex: 1, height: 0.5, backgroundColor: `${a}88` }} />
-            <div style={{ width: 2, height: 2, borderRadius: '50%', backgroundColor: a }} />
-            <div style={{ flex: 1, height: 0.5, backgroundColor: `${a}88` }} />
-          </div>
+      <div style={{ ...heroBase, justifyContent: 'flex-end' }}>
+        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(180deg, ${a}15 0%, ${p}22 30%, ${p} 100%)` }} />
+        <div style={{ position: 'relative', padding: '0 8px 10px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+          <div style={{ fontSize: 3.5, letterSpacing: 1.5, color: `${a}99`, lineHeight: 1, marginBottom: 4, textTransform: 'uppercase' }}>bismillah</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: t, lineHeight: 1, textShadow: `0 1px 6px ${p}` }}>A</div>
+          <div style={{ fontSize: 5.5, fontStyle: 'italic', color: a, lineHeight: 1, margin: '2px 0' }}>&amp;</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: t, lineHeight: 1, textShadow: `0 1px 6px ${p}` }}>B</div>
+          <div style={{ width: 20, height: 0.5, backgroundColor: `${a}55`, marginTop: 4 }} />
         </div>
       </div>
     )
-    // Minimal   double border frame, geometric center
+    // Minimal — bordered frame with corner squares, diamond separator
     if (variant === 'minimal') return (
-      <div style={{ ...base, alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: 42, height: 58, border: `1px solid ${a}55`, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-          <div style={{ position: 'absolute', inset: 3, border: `0.5px solid ${a}22` }} />
-          {[{ top: -3, left: -3 }, { top: -3, right: -3 }, { bottom: -3, left: -3 }, { bottom: -3, right: -3 }].map((pos, i) => (
-            <div key={i} style={{ position: 'absolute', ...pos, width: 5, height: 5, backgroundColor: a, opacity: 0.6 }} />
+      <div style={{ ...heroBase, alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 56, height: 82, border: `1px solid ${a}44`, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 0 }}>
+          <div style={{ position: 'absolute', inset: 3, border: `0.5px solid ${a}20` }} />
+          {[{ top: -2.5, left: -2.5 }, { top: -2.5, right: -2.5 }, { bottom: -2.5, left: -2.5 }, { bottom: -2.5, right: -2.5 }].map((pos, i) => (
+            <div key={i} style={{ position: 'absolute', ...pos, width: 5, height: 5, backgroundColor: a, opacity: 0.5 }} />
           ))}
-          <div style={{ fontSize: 7, fontWeight: 600, color: t, lineHeight: 1 }}>A</div>
-          <div style={{ width: 8, height: 8, border: `0.8px solid ${a}`, transform: 'rotate(45deg)' }} />
-          <div style={{ fontSize: 7, fontWeight: 600, color: t, lineHeight: 1 }}>B</div>
+          <div style={{ fontSize: 3.5, letterSpacing: 1, color: `${a}88`, lineHeight: 1, marginBottom: 6 }}>بسم</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: t, lineHeight: 1 }}>A</div>
+          <div style={{ width: 7, height: 7, border: `0.8px solid ${a}88`, transform: 'rotate(45deg)', margin: '5px 0' }} />
+          <div style={{ fontSize: 10, fontWeight: 600, color: t, lineHeight: 1 }}>B</div>
+          <div style={{ fontSize: 3.5, fontStyle: 'italic', color: `${t}55`, lineHeight: 1, marginTop: 6 }}>tagline</div>
         </div>
       </div>
     )
-    // Split   foto kiri, nama kanan
+    // Split — photo left, text right aligned left
     if (variant === 'split') return (
-      <div style={{ ...base, flexDirection: 'row' }}>
-        <div style={{ flex: 1, background: `linear-gradient(135deg, ${a}33, ${a}11)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
-            <rect x="2" y="2" width="16" height="16" rx="2" stroke={`${a}88`} strokeWidth="1" />
-            <circle cx="7" cy="8" r="2.5" fill={`${a}44`} />
-            <path d="M2,16 Q6,10 10,12 Q14,14 18,10 L18,18 L2,18 Z" fill={`${a}33`} />
+      <div style={{ ...heroBase, flexDirection: 'row' }}>
+        <div style={{ width: '45%', height: '100%', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${a}22, ${a}08)` }} />
+          <svg viewBox="0 0 32 100" width="100%" height="100%" style={{ position: 'absolute', opacity: 0.3 }}>
+            <circle cx="12" cy="35" r="8" fill={`${a}44`} />
+            <path d="M0,60 Q10,45 20,52 Q28,56 32,48 L32,100 L0,100 Z" fill={`${a}22`} />
           </svg>
         </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', padding: '0 5px', gap: 2 }}>
-          <div style={{ fontSize: 6, fontWeight: 700, color: t, lineHeight: 1 }}>A</div>
-          <div style={{ width: 12, height: 0.5, backgroundColor: a }} />
-          <div style={{ fontSize: 6, fontWeight: 700, color: t, lineHeight: 1 }}>B</div>
-          <div style={{ fontSize: 3.5, color: `${t}55`, lineHeight: 1, marginTop: 2 }}>tagline</div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 7px', gap: 0 }}>
+          <div style={{ fontSize: 3.5, letterSpacing: 1, color: `${a}88`, lineHeight: 1, marginBottom: 4 }}>بسم</div>
+          <div style={{ fontSize: 9, fontWeight: 700, color: t, lineHeight: 1 }}>A</div>
+          <div style={{ width: 14, height: 0.5, backgroundColor: `${a}66`, margin: '4px 0' }} />
+          <div style={{ fontSize: 9, fontWeight: 700, color: t, lineHeight: 1 }}>B</div>
+          <div style={{ fontSize: 3.5, fontStyle: 'italic', color: `${t}44`, lineHeight: 1, marginTop: 5 }}>tagline</div>
         </div>
       </div>
     )
-    // Glass Card   frosted card floating on gradient
+    // Overlay Card — frosted glass card floating on gradient
     if (variant === 'overlay-card') return (
-      <div style={{ ...base, alignItems: 'center', justifyContent: 'center', background: `linear-gradient(150deg, ${a}44 0%, ${p} 50%, ${a}22 100%)` }}>
+      <div style={{ ...heroBase, alignItems: 'center', justifyContent: 'center', background: `linear-gradient(160deg, ${a}33 0%, ${p} 60%, ${a}18 100%)` }}>
         <div style={{
-          width: 36, height: 46, borderRadius: 5,
-          background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.25)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2,
+          width: 50, padding: '10px 0', borderRadius: 5,
+          background: 'rgba(255,255,255,0.15)', border: '0.5px solid rgba(255,255,255,0.22)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
         }}>
-          <div style={{ fontSize: 6, fontWeight: 700, color: '#fff', lineHeight: 1, textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>A</div>
-          <div style={{ fontSize: 5, color: a, fontStyle: 'italic', lineHeight: 1 }}>&amp;</div>
-          <div style={{ fontSize: 6, fontWeight: 700, color: '#fff', lineHeight: 1, textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>B</div>
-          <div style={{ width: 16, height: 0.5, backgroundColor: `${a}66`, marginTop: 1 }} />
+          <div style={{ fontSize: 3.5, letterSpacing: 1, color: 'rgba(255,255,255,0.5)', lineHeight: 1, marginBottom: 4 }}>بسم</div>
+          <div style={{ fontSize: 9, fontWeight: 700, color: '#fff', lineHeight: 1, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>A</div>
+          <div style={{ fontSize: 5, fontStyle: 'italic', color: a, lineHeight: 1, margin: '3px 0' }}>&amp;</div>
+          <div style={{ fontSize: 9, fontWeight: 700, color: '#fff', lineHeight: 1, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>B</div>
+          <div style={{ width: 22, height: 0.5, backgroundColor: `${a}55`, marginTop: 5 }} />
         </div>
       </div>
     )
-    // Editorial   oversized dramatic text
+    // Editorial — dramatic large ultra-thin text, cinematic
     if (variant === 'editorial') return (
-      <div style={{ ...base, alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-        <div style={{ fontSize: 3.5, letterSpacing: 1.5, textTransform: 'uppercase', color: `${a}77`, lineHeight: 1 }}>THE WEDDING</div>
-        <div style={{ fontSize: 12, fontWeight: 200, color: t, lineHeight: 0.9, letterSpacing: 1 }}>A</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 3, margin: '1px 0' }}>
-          <div style={{ width: 10, height: 0.5, backgroundColor: `${a}44` }} />
-          <div style={{ fontSize: 4, color: `${a}88` }}>&amp;</div>
-          <div style={{ width: 10, height: 0.5, backgroundColor: `${a}44` }} />
+      <div style={{ ...heroBase, alignItems: 'center', justifyContent: 'center', gap: 0 }}>
+        <div style={{ fontSize: 3.5, letterSpacing: 2.5, textTransform: 'uppercase', color: `${a}88`, lineHeight: 1, marginBottom: 6 }}>THE WEDDING</div>
+        <div style={{ fontSize: 20, fontWeight: 200, color: t, lineHeight: 0.85, letterSpacing: 1.5 }}>A</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, margin: '5px 0' }}>
+          <div style={{ width: 14, height: 0.5, backgroundColor: `${a}44` }} />
+          <div style={{ fontSize: 5, color: `${a}aa`, letterSpacing: 1.5 }}>&amp;</div>
+          <div style={{ width: 14, height: 0.5, backgroundColor: `${a}44` }} />
         </div>
-        <div style={{ fontSize: 12, fontWeight: 200, color: t, lineHeight: 0.9, letterSpacing: 1 }}>B</div>
+        <div style={{ fontSize: 20, fontWeight: 200, color: t, lineHeight: 0.85, letterSpacing: 1.5 }}>B</div>
+        <div style={{ fontSize: 3, fontStyle: 'italic', color: `${t}44`, lineHeight: 1, marginTop: 8 }}>tagline here</div>
       </div>
     )
-    // Arch   SVG arch frame
+    // Arch — elegant arch frame with names inside
     if (variant === 'arch') return (
-      <div style={{ ...base, alignItems: 'center', justifyContent: 'center' }}>
-        <svg viewBox="0 0 42 64" width="42" height="64" fill="none" style={{ position: 'absolute' }}>
-          <path d="M8,64 L8,24 Q8,5 21,5 Q34,5 34,24 L34,64" stroke={`${a}55`} strokeWidth="1" />
-          <path d="M12,64 L12,26 Q12,10 21,10 Q30,10 30,26 L30,64" stroke={`${a}22`} strokeWidth="0.5" />
+      <div style={{ ...heroBase, alignItems: 'center', justifyContent: 'center' }}>
+        <svg viewBox="0 0 60 90" width="60" height="90" fill="none" style={{ position: 'absolute' }}>
+          <path d="M12,90 L12,32 Q12,8 30,8 Q48,8 48,32 L48,90" stroke={`${a}55`} strokeWidth="1" />
+          <path d="M16,90 L16,35 Q16,14 30,14 Q44,14 44,35 L44,90" stroke={`${a}22`} strokeWidth="0.5" />
         </svg>
-        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 4 }}>
-          <div style={{ fontSize: 4, color: `${a}88`, lineHeight: 1 }}>بسم الله</div>
-          <div style={{ fontSize: 7, fontWeight: 600, color: t, lineHeight: 1 }}>A</div>
-          <div style={{ fontSize: 5, color: a, fontStyle: 'italic', lineHeight: 1 }}>&amp;</div>
-          <div style={{ fontSize: 7, fontWeight: 600, color: t, lineHeight: 1 }}>B</div>
+        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, marginTop: 4 }}>
+          <div style={{ fontSize: 3.5, color: `${a}88`, lineHeight: 1, marginBottom: 5 }}>بسم الله</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: t, lineHeight: 1 }}>A</div>
+          <div style={{ fontSize: 5.5, fontStyle: 'italic', color: a, lineHeight: 1, margin: '3px 0' }}>&amp;</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: t, lineHeight: 1 }}>B</div>
+          <div style={{ fontSize: 3, fontStyle: 'italic', color: `${t}55`, lineHeight: 1, marginTop: 5 }}>tagline</div>
         </div>
       </div>
     )
-    // Magazine   circle photo + horizontal name
+    // Magazine — circle photo + label + horizontal name
     if (variant === 'magazine') return (
-      <div style={{ ...base, alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-        <div style={{ width: 18, height: 18, borderRadius: '50%', border: `1.5px solid ${a}`, backgroundColor: `${a}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg viewBox="0 0 12 12" width="10" height="10" fill="none">
-            <circle cx="6" cy="4.5" r="2.5" fill={`${a}44`} />
-            <ellipse cx="6" cy="10" rx="4" ry="2.5" fill={`${a}33`} />
+      <div style={{ ...heroBase, alignItems: 'center', justifyContent: 'center', gap: 0 }}>
+        <div style={{ width: 24, height: 24, borderRadius: '50%', border: `1.5px solid ${a}66`, backgroundColor: `${a}18`, marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg viewBox="0 0 14 14" width="14" height="14" fill="none">
+            <circle cx="7" cy="5" r="3" fill={`${a}44`} />
+            <ellipse cx="7" cy="12" rx="4.5" ry="2.5" fill={`${a}33`} />
           </svg>
         </div>
-        <div style={{ fontSize: 3.5, letterSpacing: 1, textTransform: 'uppercase', color: `${a}77`, lineHeight: 1 }}>UNDANGAN</div>
-        <div style={{ fontSize: 6.5, fontWeight: 700, color: t, lineHeight: 1 }}>A & B</div>
-        <div style={{ width: 18, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <div style={{ flex: 1, height: 0.5, backgroundColor: `${a}44` }} />
-          <div style={{ width: 1.5, height: 1.5, borderRadius: '50%', backgroundColor: a }} />
-          <div style={{ flex: 1, height: 0.5, backgroundColor: `${a}44` }} />
-        </div>
+        <div style={{ fontSize: 3.5, letterSpacing: 1.5, textTransform: 'uppercase', color: `${a}77`, lineHeight: 1, marginBottom: 4 }}>UNDANGAN</div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: t, lineHeight: 1 }}>A & B</div>
+        <div style={{ width: 26, height: 0.5, backgroundColor: `${a}44`, marginTop: 5 }} />
+        <div style={{ fontSize: 3, fontStyle: 'italic', color: `${t}44`, lineHeight: 1, marginTop: 4 }}>tagline here</div>
       </div>
     )
   }
@@ -831,7 +830,9 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [setupName, setSetupName] = useState('')
   const [setupDesc, setSetupDesc] = useState('')
-  const [activeTab, setActiveTab] = useState<ConfigTab>('tampilan')
+  const [activeTab, _setActiveTab] = useState<ConfigTab>('tampilan')
+  const tabContentRef = useRef<HTMLDivElement>(null)
+  const setActiveTab = useCallback((tab: ConfigTab) => { _setActiveTab(tab); tabContentRef.current?.scrollTo(0, 0) }, [])
   const [previewMode, setPreviewMode] = useState<'invitation' | 'opening' | 'loading'>('opening')
   const [previewGuestName, setPreviewGuestName] = useState('Bapak Budi dan Keluarga')
   const [previewData, setPreviewData] = useState<NewInvitationData>(PREVIEW_DATA_DEFAULT)
@@ -897,6 +898,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   const [draggingSectionId, setDraggingSectionId]   = useState<string | null>(null)
   const [dragOverSectionId, setDragOverSectionId]   = useState<string | null>(null)
   const [lockedSectionIds, setLockedSectionIds]     = useState<Set<string>>(new Set())
+  const [dragModeEnabled, setDragModeEnabled]       = useState(false)
   const [musicLibraryCat, setMusicLibraryCat]       = useState('Semua')
   const [musicPreviewId, setMusicPreviewId]         = useState<string | null>(null)
   const [musicLibrary, setMusicLibrary]             = useState<{ id: string; title: string; artist: string; category: string; url: string }[]>([])
@@ -1456,7 +1458,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
     return (
       <div className="flex h-full overflow-hidden">
-        <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 overflow-y-auto">
+        <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 overflow-y-auto scrollbar-hide">
 
           {/*  Header  */}
           <div className="px-8 pt-8 pb-4 flex items-center justify-between">
@@ -1686,13 +1688,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   }
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex flex-1 min-h-0 h-full overflow-hidden">
 
       {/*  Left: Config Editor  */}
-      <div className="w-[420px] shrink-0 flex flex-col border-r border-gray-200 bg-white overflow-hidden">
+      <div className="w-[420px] shrink-0 flex flex-col border-r border-gray-200 bg-white overflow-hidden min-h-0">
 
         {/* Header */}
-        <div className="px-5 py-4 border-b border-gray-100 bg-white">
+        <div className="px-5 py-4 border-b border-gray-100 bg-white shrink-0">
           <div className="flex items-center gap-2 mb-3">
             <button onClick={() => {
               if (changeCount > 0 && config.name.trim() && !isEditMode) {
@@ -1769,7 +1771,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
         </div>
 
         {/* Tab content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        <div ref={tabContentRef} className="flex-1 overflow-y-auto scrollbar-hide p-5 space-y-5">
 
           {/*  Identitas  */}
           {activeTab === 'tampilan' && (() => {
@@ -3938,141 +3940,200 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
           {/*  Konten (Sections)  */}
           {activeTab === 'konten' && (
-            <div className="space-y-3">
-              <p className="text-xs text-gray-500">Atur section yang tampil, urutan, dan warna latar masing-masing.</p>
+            <div className="space-y-2">
+              {/* Section manager header */}
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-500">Atur section yang tampil, urutan, dan warna latar.</p>
+                <button
+                  onClick={() => { setDragModeEnabled(!dragModeEnabled); if (dragModeEnabled) { setDraggingSectionId(null); setDragOverSectionId(null) } }}
+                  className={`flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1.5 rounded-lg transition-all ${
+                    dragModeEnabled
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  <GripVertical className="w-3 h-3" />
+                  {dragModeEnabled ? 'Selesai' : 'Susun Urutan'}
+                </button>
+              </div>
+
+              {/* Section count summary */}
+              <div className="flex items-center gap-3 px-3 py-2 bg-gray-50/80 rounded-lg border border-gray-100">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] text-gray-500">{sections.filter(s => s.enabled).length} aktif</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                  <span className="text-[10px] text-gray-500">{sections.filter(s => !s.enabled).length} nonaktif</span>
+                </div>
+                <span className="text-[10px] text-gray-300 ml-auto">{sections.length} total</span>
+              </div>
 
               {sections.map((s, idx) => (
                 <div
                   key={s.id}
-                  draggable={!lockedSectionIds.has(s.id)}
-                  onDragStart={() => { if (!lockedSectionIds.has(s.id)) setDraggingSectionId(s.id) }}
-                  onDragOver={e => { e.preventDefault(); if (!lockedSectionIds.has(s.id)) setDragOverSectionId(s.id) }}
+                  draggable={dragModeEnabled && !lockedSectionIds.has(s.id)}
+                  onDragStart={() => { if (dragModeEnabled && !lockedSectionIds.has(s.id)) setDraggingSectionId(s.id) }}
+                  onDragOver={e => { e.preventDefault(); if (dragModeEnabled && !lockedSectionIds.has(s.id)) setDragOverSectionId(s.id) }}
                   onDrop={() => handleSectionDrop(s.id)}
                   onDragEnd={() => { setDraggingSectionId(null); setDragOverSectionId(null) }}
-                  className={`border rounded-xl overflow-hidden transition-all ${
+                  className={`rounded-xl overflow-hidden transition-all ${
+                    !s.enabled ? 'opacity-50' : ''
+                  } ${
                     draggingSectionId === s.id
-                      ? 'opacity-40 scale-[0.98] border-indigo-300'
+                      ? 'opacity-40 scale-[0.98] ring-2 ring-indigo-300 border border-indigo-200'
                       : dragOverSectionId === s.id && draggingSectionId !== s.id
-                      ? 'border-indigo-400 ring-2 ring-indigo-200'
-                      : lockedSectionIds.has(s.id)
-                      ? 'border-yellow-200'
-                      : 'border-gray-100'
+                      ? 'ring-2 ring-indigo-200 border border-indigo-300'
+                      : expandedSectionId === s.id
+                      ? 'border border-indigo-200 shadow-sm'
+                      : 'border border-gray-100 hover:border-gray-200'
                   }`}
                 >
-                  <div className="flex items-center gap-2 px-3 py-2.5 bg-gray-50">
-                    {/* Drag handle   disabled when locked */}
-                    <div className={`shrink-0 ${lockedSectionIds.has(s.id) ? 'text-yellow-400 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500'}`}>
-                      {lockedSectionIds.has(s.id)
-                        ? <Lock className="w-3.5 h-3.5" />
-                        : <GripVertical className="w-3.5 h-3.5" />
-                      }
-                    </div>
-                    {/* Reorder arrows (fallback)   disabled when locked */}
-                    <div className="flex flex-col gap-0.5">
-                      <button onClick={() => moveSection(s.id, 'up')} disabled={idx === 0 || lockedSectionIds.has(s.id) || (idx > 0 && lockedSectionIds.has(sections[idx - 1].id))}
-                        className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20">
-                        <ChevronUp className="w-3 h-3" />
-                      </button>
-                      <button onClick={() => moveSection(s.id, 'down')} disabled={idx === sections.length - 1 || lockedSectionIds.has(s.id) || (idx < sections.length - 1 && lockedSectionIds.has(sections[idx + 1].id))}
-                        className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20">
-                        <ChevronDown className="w-3 h-3" />
-                      </button>
-                    </div>
+                  {/* Section row header */}
+                  <div className={`flex items-center gap-2 px-3 py-2 transition-colors ${
+                    expandedSectionId === s.id ? 'bg-indigo-50/50' : 'bg-white hover:bg-gray-50/60'
+                  }`}>
+                    {/* Drag handle — only visible in drag mode */}
+                    {dragModeEnabled && (
+                      <div className={`shrink-0 transition-colors ${
+                        lockedSectionIds.has(s.id)
+                          ? 'text-yellow-400 cursor-not-allowed'
+                          : 'cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500'
+                      }`}>
+                        {lockedSectionIds.has(s.id)
+                          ? <Lock className="w-3.5 h-3.5" />
+                          : <GripVertical className="w-3.5 h-3.5" />
+                        }
+                      </div>
+                    )}
 
-                    {/* Background indicator */}
+                    {/* Order number badge */}
+                    <span className="shrink-0 w-5 h-5 rounded-md bg-gray-100 flex items-center justify-center text-[9px] font-bold text-gray-400 tabular-nums">
+                      {idx + 1}
+                    </span>
+
+                    {/* Background color swatch */}
                     {s.background.type === 'color' ? (
                       <input
                         type="color"
                         value={s.background.value ?? cfg.meta.color_scheme.primary}
                         onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
-                        className="w-6 h-6 rounded cursor-pointer border border-gray-200 shrink-0"
-                        title="Warna latar section"
+                        className="w-5 h-5 rounded-md cursor-pointer border border-gray-200 shrink-0 p-0"
+                        title="Warna latar"
                       />
                     ) : (
-                      <div className="w-6 h-6 rounded border border-gray-200 shrink-0 flex items-center justify-center bg-gray-100"
-                        title={s.background.type === 'image' ? 'Latar: gambar/GIF' : 'Latar: video'}>
-                        <span className="text-[8px]">{s.background.type === 'image' ? '🖼' : '🎬'}</span>
+                      <div className="w-5 h-5 rounded-md border border-gray-200 shrink-0 flex items-center justify-center bg-gray-100"
+                        title={s.background.type === 'image' ? 'Latar: gambar' : 'Latar: video'}>
+                        <span className="text-[7px]">{s.background.type === 'image' ? '🖼' : '🎬'}</span>
                       </div>
                     )}
 
-                    {/* Label */}
-                    <span className="text-xs font-medium text-gray-700 flex-1 truncate">
-                      {SECTION_LABELS[s.type] ?? s.type}
-                    </span>
-
-                    {/* Lock drag position */}
-                    <button
-                      onClick={() => setLockedSectionIds(prev => {
-                        const next = new Set(prev)
-                        next.has(s.id) ? next.delete(s.id) : next.add(s.id)
-                        return next
-                      })}
-                      className={`p-1 rounded-lg transition-colors ${lockedSectionIds.has(s.id) ? 'text-yellow-500 hover:bg-yellow-50' : 'text-gray-300 hover:bg-gray-100'}`}
-                      title={lockedSectionIds.has(s.id) ? 'Unlock posisi' : 'Lock posisi'}
-                    >
-                      {lockedSectionIds.has(s.id) ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
-                    </button>
-
-                    {/* Toggle visibility */}
-                    <button
-                      onClick={() => updateSection(s.id, { enabled: !s.enabled })}
-                      className={`p-1 rounded-lg transition-colors ${s.enabled ? 'text-emerald-500 hover:bg-emerald-50' : 'text-gray-300 hover:bg-gray-100'}`}
-                      title={s.enabled ? 'Sembunyikan' : 'Tampilkan'}
-                    >
-                      {s.enabled ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                    </button>
-
-                    {/* Expand/collapse toggle */}
+                    {/* Section label */}
                     <button
                       onClick={() => setExpandedSectionId(expandedSectionId === s.id ? null : s.id)}
-                      className={`p-1 rounded-lg transition-colors ${expandedSectionId === s.id ? 'bg-indigo-100 text-indigo-600' : 'text-gray-300 hover:text-gray-600'}`}
-                      title={expandedSectionId === s.id ? 'Minimize' : 'Expand controls'}
+                      className="flex-1 text-left min-w-0"
                     >
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expandedSectionId === s.id ? 'rotate-180' : ''}`} />
+                      <span className={`text-[11px] font-semibold truncate block ${s.enabled ? 'text-gray-700' : 'text-gray-400'}`}>
+                        {SECTION_LABELS[s.type] ?? s.type}
+                      </span>
+                    </button>
+
+                    {/* Reorder arrows + lock — only in drag mode */}
+                    {dragModeEnabled && (
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <button onClick={() => moveSection(s.id, 'up')}
+                          disabled={idx === 0 || lockedSectionIds.has(s.id) || (idx > 0 && lockedSectionIds.has(sections[idx - 1].id))}
+                          className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20 rounded">
+                          <ChevronUp className="w-3 h-3" />
+                        </button>
+                        <button onClick={() => moveSection(s.id, 'down')}
+                          disabled={idx === sections.length - 1 || lockedSectionIds.has(s.id) || (idx < sections.length - 1 && lockedSectionIds.has(sections[idx + 1].id))}
+                          className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20 rounded">
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={() => setLockedSectionIds(prev => {
+                            const next = new Set(prev)
+                            next.has(s.id) ? next.delete(s.id) : next.add(s.id)
+                            return next
+                          })}
+                          className={`p-0.5 rounded transition-colors ${lockedSectionIds.has(s.id) ? 'text-yellow-500' : 'text-gray-300 hover:text-gray-500'}`}
+                          title={lockedSectionIds.has(s.id) ? 'Unlock posisi' : 'Lock posisi'}
+                        >
+                          {lockedSectionIds.has(s.id) ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Visibility toggle switch */}
+                    <button
+                      onClick={() => updateSection(s.id, { enabled: !s.enabled })}
+                      className={`shrink-0 relative w-8 h-[18px] rounded-full transition-colors ${
+                        s.enabled ? 'bg-emerald-500' : 'bg-gray-200'
+                      }`}
+                      title={s.enabled ? 'Nonaktifkan' : 'Aktifkan'}
+                    >
+                      <span className={`absolute top-[2px] w-[14px] h-[14px] rounded-full bg-white shadow-sm transition-transform ${
+                        s.enabled ? 'left-[16px]' : 'left-[2px]'
+                      }`} />
+                    </button>
+
+                    {/* Expand/collapse */}
+                    <button
+                      onClick={() => setExpandedSectionId(expandedSectionId === s.id ? null : s.id)}
+                      className={`shrink-0 p-1 rounded-lg transition-all ${
+                        expandedSectionId === s.id ? 'text-indigo-500 bg-indigo-100' : 'text-gray-300 hover:text-gray-500'
+                      }`}
+                    >
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expandedSectionId === s.id ? 'rotate-180' : ''}`} />
                     </button>
 
                     {/* Delete */}
                     {s.type !== 'hero' && (
                       <button onClick={() => removeSection(s.id)}
-                        className="p-1 text-gray-200 hover:text-red-400 rounded-lg transition-colors">
-                        <Trash2 className="w-3.5 h-3.5" />
+                        className="shrink-0 p-1 text-gray-200 hover:text-red-400 rounded-lg transition-colors">
+                        <Trash2 className="w-3 h-3" />
                       </button>
                     )}
                   </div>
 
-                  {/* Advanced controls */}
+                  {/* Expanded controls */}
                   {s.enabled && expandedSectionId === s.id && (
-                    <div className="bg-white border-t border-gray-100 divide-y divide-gray-100">
+                    <div className="bg-gray-50/30 border-t border-gray-100">
 
-                      {/* Style variant selector */}
+                      {/* ── Gaya Tampilan ── */}
                       {SECTION_VARIANTS[s.type] && (
-                        <div className="px-3 py-2.5">
-                          <p className="text-[9px] font-semibold text-gray-500 mb-2">
-                            Gaya Tampilan
-                          </p>
-                          <div className="flex gap-2 flex-wrap">
+                        <div className="px-3.5 py-3 border-b border-gray-100">
+                          <div className="flex items-center gap-1.5 mb-3">
+                            <Palette className="w-3 h-3 text-indigo-400" />
+                            <p className="text-[10px] font-bold text-gray-600">Gaya Tampilan</p>
+                            <span className="text-[9px] text-gray-300 ml-auto">{SECTION_VARIANTS[s.type].length} varian</span>
+                          </div>
+                          <div className={`grid gap-2 ${s.type === 'hero' ? 'grid-cols-4' : 'grid-cols-3'}`}>
                             {SECTION_VARIANTS[s.type].map(v => {
                               const active = (s.style_variant ?? 'default') === v.value
                               return (
                                 <button key={v.value}
-                                  onClick={() => { updateSection(s.id, { style_variant: v.value }); setPreviewMode('invitation'); setSectionReplay(p => ({ id: s.id, key: (p?.id === s.id ? p.key + 1 : 0) })) }}
-                                  className={`flex flex-col items-center gap-1.5 p-1.5 rounded-xl border-2 transition-all ${
-                                    active ? 'border-indigo-500' : 'border-transparent hover:border-gray-300'
+                                  onClick={() => { const scrollY = tabContentRef.current?.scrollTop ?? 0; updateSection(s.id, { style_variant: v.value }); setPreviewMode('invitation'); setSectionReplay(p => ({ id: s.id, key: (p?.id === s.id ? p.key + 1 : 0) })); requestAnimationFrame(() => { tabContentRef.current?.scrollTo(0, scrollY) }) }}
+                                  className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all ${
+                                    active
+                                      ? 'bg-white border-2 border-indigo-500 shadow-sm shadow-indigo-100'
+                                      : 'bg-white/60 border-2 border-transparent hover:border-gray-200 hover:bg-white'
                                   }`}
                                   title={v.desc}
                                 >
-                                  <div className={`overflow-hidden rounded-md ${active ? 'ring-2 ring-indigo-300' : ''}`}>
-                                    <VariantThumb
-                                      type={s.type}
-                                      variant={v.value}
-                                      p={cfg.meta.color_scheme.primary}
-                                      a={cfg.meta.color_scheme.accent}
-                                      t={cfg.meta.color_scheme.text}
-                                    />
+                                  <div className={`overflow-hidden rounded-lg transition-all ${active ? 'ring-2 ring-indigo-200 ring-offset-1' : 'group-hover:ring-1 group-hover:ring-gray-200'}`}>
+                                    <VariantThumb type={s.type} variant={v.value} p={cfg.meta.color_scheme.primary} a={cfg.meta.color_scheme.accent} t={cfg.meta.color_scheme.text} />
                                   </div>
-                                  <p className={`text-[9px] font-semibold ${active ? 'text-indigo-700' : 'text-gray-500'}`}>
-                                    {v.label}
-                                  </p>
+                                  <div className="text-center">
+                                    <p className={`text-[8px] font-bold ${active ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-600'}`}>{v.label}</p>
+                                  </div>
+                                  {active && (
+                                    <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-indigo-500 flex items-center justify-center">
+                                      <Check className="w-2 h-2 text-white" />
+                                    </div>
+                                  )}
                                 </button>
                               )
                             })}
@@ -4080,137 +4141,164 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         </div>
                       )}
 
-                      {/* Background */}
-                      <div className="px-3 py-2.5">
-                        <p className="text-[9px] font-semibold text-gray-500 mb-2">Latar Belakang</p>
-                        <div className="flex gap-1 mb-2.5">
+                      {/* ── Latar Belakang ── */}
+                      <div className="px-3.5 py-3 border-b border-gray-100">
+                        <div className="flex items-center gap-1.5 mb-2.5">
+                          <ImageIcon className="w-3 h-3 text-indigo-400" />
+                          <p className="text-[10px] font-bold text-gray-600">Latar Belakang</p>
+                        </div>
+                        <div className="flex gap-1 mb-3 bg-gray-100 p-0.5 rounded-lg">
                           {(['color', 'image', 'video'] as const).map(t => (
                             <button key={t} type="button"
                               onClick={() => updateSection(s.id, { background: { ...s.background, type: t, ...(t === 'color' ? { url: undefined } : {}) } })}
-                              className={`flex-1 py-1.5 rounded-lg text-[10px] font-semibold transition-colors ${
-                                s.background.type === t ? 'bg-indigo-600 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:border-indigo-300'
+                              className={`flex-1 py-1.5 rounded-md text-[10px] font-semibold transition-all ${
+                                s.background.type === t ? 'bg-white text-gray-700 shadow-sm' : 'text-gray-400 hover:text-gray-600'
                               }`}>
-                              {t === 'color' ? 'Warna' : t === 'image' ? 'Gambar / GIF' : 'Video'}
+                              {t === 'color' ? 'Warna' : t === 'image' ? 'Gambar' : 'Video'}
                             </button>
                           ))}
                         </div>
                         {s.background.type === 'color' && (
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="color"
+                          <div className="flex items-center gap-2.5">
+                            <input type="color"
                               value={s.background.value ?? cfg.meta.color_scheme.primary}
                               onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
-                              className="w-8 h-8 rounded-lg cursor-pointer border border-gray-200 shrink-0"
-                            />
-                            <input
-                              value={s.background.value ?? cfg.meta.color_scheme.primary}
-                              onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
-                              className="flex-1 text-xs font-mono border border-gray-100 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-400"
-                            />
+                              className="w-9 h-9 rounded-lg cursor-pointer border border-gray-200 shrink-0 p-0.5" />
+                            <div className="flex-1">
+                              <input
+                                value={s.background.value ?? cfg.meta.color_scheme.primary}
+                                onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
+                                className="w-full text-[11px] font-mono bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
+                                placeholder="#000000" />
+                            </div>
                           </div>
                         )}
                         {s.background.type === 'image' && (
-                          <div className="space-y-2">
-                            <ImageUploadField
-                              value={s.background.url}
-                              onChange={url => updateSection(s.id, { background: { ...s.background, url, type: 'image' } })}
-                              hint="JPG, PNG, WebP, atau GIF animasi"
-                            />
+                          <div className="space-y-2.5">
+                            <ImageUploadField value={s.background.url} onChange={url => updateSection(s.id, { background: { ...s.background, url, type: 'image' } })} hint="JPG, PNG, WebP, atau GIF animasi" />
                             {s.background.url && (
-                              <div className="flex items-center gap-2">
-                                <p className="text-[9px] text-gray-500 shrink-0">Overlay gelap</p>
+                              <div className="bg-white rounded-lg border border-gray-200 p-2.5">
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <p className="text-[9px] font-semibold text-gray-500">Overlay Gelap</p>
+                                  <span className="text-[10px] font-bold text-gray-700 tabular-nums bg-gray-100 px-1.5 py-0.5 rounded">{Math.round((s.background.overlay_opacity ?? 0.4) * 100)}%</span>
+                                </div>
                                 <input type="range" min={0} max={0.9} step={0.05}
                                   value={s.background.overlay_opacity ?? 0.4}
                                   onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
-                                  className="flex-1 accent-indigo-600 h-1" />
-                                <div className="flex items-center gap-0.5 shrink-0">
-                                  <input type="number" min={0} max={90} step={5}
-                                    value={Math.round((s.background.overlay_opacity ?? 0.4) * 100)}
-                                    onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0 && v <= 0.9) updateSection(s.id, { background: { ...s.background, overlay_opacity: v } }) }}
-                                    className="w-12 px-1 py-0.5 text-[9px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
-                                  <span className="text-[8px] text-gray-400">%</span>
-                                </div>
+                                  className="w-full accent-indigo-500 h-1.5 rounded-full" />
                               </div>
                             )}
                           </div>
                         )}
                         {s.background.type === 'video' && (
-                          <div className="space-y-2">
-                            <VideoUploadField
-                              value={s.background.url}
-                              onChange={url => updateSection(s.id, { background: { ...s.background, url, type: 'video' } })}
-                              hint="MP4, WebM (maks 50MB) · autoplay, muted, loop"
-                            />
+                          <div className="space-y-2.5">
+                            <VideoUploadField value={s.background.url} onChange={url => updateSection(s.id, { background: { ...s.background, url, type: 'video' } })} hint="MP4, WebM (maks 50MB)" />
                             {s.background.url && (
-                              <div className="flex items-center gap-2">
-                                <p className="text-[9px] text-gray-500 shrink-0">Overlay gelap</p>
+                              <div className="bg-white rounded-lg border border-gray-200 p-2.5">
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <p className="text-[9px] font-semibold text-gray-500">Overlay Gelap</p>
+                                  <span className="text-[10px] font-bold text-gray-700 tabular-nums bg-gray-100 px-1.5 py-0.5 rounded">{Math.round((s.background.overlay_opacity ?? 0.45) * 100)}%</span>
+                                </div>
                                 <input type="range" min={0} max={0.9} step={0.05}
                                   value={s.background.overlay_opacity ?? 0.45}
                                   onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
-                                  className="flex-1 accent-indigo-600 h-1" />
-                                <div className="flex items-center gap-0.5 shrink-0">
-                                  <input type="number" min={0} max={90} step={5}
-                                    value={Math.round((s.background.overlay_opacity ?? 0.45) * 100)}
-                                    onChange={e => { const v = Number(e.target.value) / 100; if (v >= 0 && v <= 0.9) updateSection(s.id, { background: { ...s.background, overlay_opacity: v } }) }}
-                                    className="w-12 px-1 py-0.5 text-[9px] text-center border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none font-mono" />
-                                  <span className="text-[8px] text-gray-400">%</span>
-                                </div>
+                                  className="w-full accent-indigo-500 h-1.5 rounded-full" />
                               </div>
                             )}
                           </div>
                         )}
                       </div>
 
-                      {/* Animation */}
-                      <div className="px-3 py-2.5 flex gap-2">
-                        <div className="flex-1">
-                          <p className="text-[9px] font-semibold text-gray-500 mb-1">Animasi Masuk</p>
-                          <div className="flex gap-1">
+                      {/* ── Animasi Transisi ── */}
+                      <div className="px-3.5 py-3 border-b border-gray-100">
+                        <div className="flex items-center justify-between mb-2.5">
+                          <div className="flex items-center gap-1.5">
+                            <Sparkles className="w-3 h-3 text-indigo-400" />
+                            <p className="text-[10px] font-bold text-gray-600">Animasi Transisi</p>
+                          </div>
+                          <button
+                            onClick={() => { setPreviewMode('invitation'); setSectionReplay(p => ({ id: s.id, key: (p?.id === s.id ? p.key + 1 : 0) })) }}
+                            className="flex items-center gap-1 text-[9px] font-semibold text-indigo-500 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded-md transition-colors"
+                          >
+                            <Play className="w-2.5 h-2.5 fill-current" /> Preview
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <div>
+                            <p className="text-[9px] text-gray-400 font-medium mb-1">Masuk</p>
                             <select value={s.transition_in} onChange={e => updateSection(s.id, { transition_in: e.target.value })}
-                              className="flex-1 text-xs border border-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-400">
+                              className="w-full text-[11px] bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 appearance-none cursor-pointer">
                               {TRANSITION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                             </select>
-                            <button
-                              onClick={() => {
-                                setPreviewMode('invitation')
-                                setSectionReplay(p => ({ id: s.id, key: (p?.id === s.id ? p.key + 1 : 0) }))
-                              }}
-                              className="px-1.5 py-1 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors"
-                              title="Preview di mockup, scroll ke section ini"
-                            >
-                              <Play className="w-2.5 h-2.5 fill-current" />
-                            </button>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-gray-400 font-medium mb-1">Keluar</p>
+                            <select value={s.transition_out} onChange={e => updateSection(s.id, { transition_out: e.target.value })}
+                              className="w-full text-[11px] bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 appearance-none cursor-pointer">
+                              {TRANSITION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
                           </div>
                         </div>
-                        <div className="flex-1">
-                          <p className="text-[9px] font-semibold text-gray-500 mb-1">Animasi Keluar</p>
-                          <select value={s.transition_out} onChange={e => updateSection(s.id, { transition_out: e.target.value })}
-                            className="w-full text-xs border border-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-400">
-                            {TRANSITION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                          </select>
-                        </div>
-                      </div>
-                      {/* Label hint saat section di-preview */}
-                      {sectionReplay?.id === s.id && (
-                        <div className="px-3 pb-2">
-                          <p className="text-[9px] text-emerald-600 font-medium">
-                            ↑ Scroll di preview untuk lihat animasi section ini
+                        {sectionReplay?.id === s.id && (
+                          <p className="text-[9px] text-indigo-500 font-medium mt-2 flex items-center gap-1">
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                            Scroll di preview untuk lihat animasi
                           </p>
+                        )}
+                      </div>
+
+                      {/* ── Konten Section ── */}
+                      <div className="px-3.5 py-3">
+                        <div className="flex items-center gap-1.5 mb-2.5">
+                          <Layers className="w-3 h-3 text-indigo-400" />
+                          <p className="text-[10px] font-bold text-gray-600">Konten & Foto</p>
                         </div>
-                      )}
 
-                      {/*  Konten Section  */}
-                      <div className="px-3 pb-3 border-t border-gray-100 bg-gray-50/40">
-                        <p className="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mt-2.5 mb-2">
-                          Konten & Foto
-                        </p>
-
-                        {/* HERO   editor lengkap */}
+                        {/* HERO */}
                         {s.type === 'hero' && (
-                          <div className="space-y-3">
+                          <div className="space-y-4">
+
+                            {/* Icon / Logo kecil */}
+                            <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
+                              <div className="flex items-center justify-between">
+                                <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Icon / Logo</p>
+                                {s.hero_icon_url && (
+                                  <button type="button" onClick={() => updateSection(s.id, { hero_icon_url: undefined })}
+                                    className="text-[8px] font-semibold text-gray-400 hover:text-red-400 transition-colors">Hapus</button>
+                                )}
+                              </div>
+                              <p className="text-[8px] text-gray-400">Monogram, emblem, atau logo kecil di atas cover (opsional)</p>
+                              <div className="flex items-start gap-3">
+                                {s.hero_icon_url && (
+                                  <div className="shrink-0 w-12 h-12 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden">
+                                    <img src={s.hero_icon_url} alt="icon" className="w-10 h-10 object-contain" />
+                                  </div>
+                                )}
+                                <div className="flex-1">
+                                  <ImageUploadField
+                                    value={s.hero_icon_url}
+                                    onChange={url => updateSection(s.id, { hero_icon_url: url })}
+                                    hint="PNG transparan, SVG, atau WebP"
+                                  />
+                                </div>
+                              </div>
+                              {s.hero_icon_url && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <p className="text-[9px] text-gray-400 font-medium">Ukuran</p>
+                                    <span className="text-[9px] font-bold text-gray-600 tabular-nums">{s.hero_icon_size ?? 40}px</span>
+                                  </div>
+                                  <input type="range" min={20} max={80} step={2}
+                                    value={s.hero_icon_size ?? 40}
+                                    onChange={e => updateSection(s.id, { hero_icon_size: Number(e.target.value) })}
+                                    className="w-full h-1.5 accent-indigo-500 rounded-full" />
+                                </div>
+                              )}
+                            </div>
 
                             {/* Nama & konten */}
-                            <div className="space-y-2">
+                            <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
+                              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Data Utama</p>
                               <div className="grid grid-cols-2 gap-2">
                                 <SectionField label="Nama Lengkap Pria">
                                   <input className={miniInput} value={previewData.groom_name} onChange={e => setPreviewData(d => ({ ...d, groom_name: e.target.value }))} />
@@ -4228,13 +4316,13 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                             </div>
 
                             {/* Bismillah */}
-                            <div className="border-t border-gray-200/60 pt-2.5 space-y-1.5">
-                              <p className="text-[9px] font-semibold text-gray-500 mb-1">Bismillah</p>
-                              <div className="flex gap-1">
+                            <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2">
+                              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Bismillah</p>
+                              <div className="flex gap-1 bg-gray-100 p-0.5 rounded-lg">
                                 {([['none','Tanpa'],['text','Teks'],['arabic','Arab']] as const).map(([v,lbl]) => (
                                   <button key={v} type="button"
                                     onClick={() => updateSection(s.id, { hero_bismillah: v })}
-                                    className={`flex-1 py-1.5 rounded-lg text-[10px] font-semibold transition-colors ${(s.hero_bismillah ?? 'text') === v ? 'bg-indigo-600 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:border-indigo-300'}`}>
+                                    className={`flex-1 py-1.5 rounded-md text-[10px] font-semibold transition-all ${(s.hero_bismillah ?? 'text') === v ? 'bg-white text-gray-700 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}>
                                     {lbl}
                                   </button>
                                 ))}
@@ -4251,19 +4339,19 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                             </div>
 
                             {/* Tipografi */}
-                            <div className="border-t border-gray-200/60 pt-2.5">
-                              <p className="text-[9px] font-semibold text-gray-500 mb-1.5">Ukuran Font (px)</p>
-                              <div className="grid grid-cols-4 gap-1.5">
+                            <div className="bg-white rounded-xl border border-gray-200 p-3">
+                              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-2">Ukuran Font (px)</p>
+                              <div className="grid grid-cols-4 gap-2">
                                 {([
                                   ['Nama', 'hero_title_size', 36],
                                   ['&', 'hero_and_size', 22],
                                   ['Tagline', 'hero_tagline_size', 11],
                                   ['Label', 'hero_label_size', 9],
                                 ] as const).map(([lbl, key, def]) => (
-                                  <div key={key} className="text-center">
-                                    <p className="text-[8px] text-gray-400 mb-0.5">{lbl}</p>
+                                  <div key={key}>
+                                    <p className="text-[8px] text-gray-400 text-center mb-1">{lbl}</p>
                                     <input type="number" min={6} max={120} step={1}
-                                      className="w-full text-[10px] text-center px-1 py-1 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white"
+                                      className="w-full text-[11px] text-center px-1.5 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 bg-white font-mono"
                                       value={s[key] ?? def}
                                       onChange={e => updateSection(s.id, { [key]: Number(e.target.value) })} />
                                   </div>
@@ -4271,81 +4359,77 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                               </div>
                             </div>
 
-                            {/* Animasi */}
-                            <div className="border-t border-gray-200/60 pt-2.5">
-                              <p className="text-[9px] font-semibold text-gray-500 mb-1.5">Animasi</p>
-                              <div className="grid grid-cols-2 gap-2">
+                            {/* Animasi Hero */}
+                            <div className="bg-white rounded-xl border border-gray-200 p-3">
+                              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-2">Animasi</p>
+                              <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                  <p className="text-[8px] text-gray-400 mb-0.5">Durasi (dtk)</p>
-                                  <div className="flex items-center gap-1">
-                                    <input type="range" min={0.2} max={2.0} step={0.1}
-                                      value={s.hero_anim_duration ?? 0.8}
-                                      onChange={e => updateSection(s.id, { hero_anim_duration: Number(e.target.value) })}
-                                      className="flex-1 h-1 accent-indigo-500" />
-                                    <input type="number" min={0.2} max={2.0} step={0.1}
-                                      value={s.hero_anim_duration ?? 0.8}
-                                      onChange={e => { const v = Number(e.target.value); if (v >= 0.2 && v <= 2.0) updateSection(s.id, { hero_anim_duration: v }) }}
-                                      className="w-11 px-1 py-0.5 text-[9px] text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none font-mono bg-white" />
+                                  <div className="flex items-center justify-between mb-1">
+                                    <p className="text-[9px] text-gray-400 font-medium">Durasi</p>
+                                    <span className="text-[9px] font-bold text-gray-600 tabular-nums">{s.hero_anim_duration ?? 0.8}s</span>
                                   </div>
+                                  <input type="range" min={0.2} max={2.0} step={0.1}
+                                    value={s.hero_anim_duration ?? 0.8}
+                                    onChange={e => updateSection(s.id, { hero_anim_duration: Number(e.target.value) })}
+                                    className="w-full h-1.5 accent-indigo-500 rounded-full" />
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-gray-400 mb-0.5">Jeda (stagger)</p>
-                                  <div className="flex items-center gap-1">
-                                    <input type="range" min={0} max={0.5} step={0.05}
-                                      value={s.hero_anim_stagger ?? 0.15}
-                                      onChange={e => updateSection(s.id, { hero_anim_stagger: Number(e.target.value) })}
-                                      className="flex-1 h-1 accent-indigo-500" />
-                                    <input type="number" min={0} max={0.5} step={0.05}
-                                      value={s.hero_anim_stagger ?? 0.15}
-                                      onChange={e => { const v = Number(e.target.value); if (v >= 0 && v <= 0.5) updateSection(s.id, { hero_anim_stagger: v }) }}
-                                      className="w-11 px-1 py-0.5 text-[9px] text-center border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none font-mono bg-white" />
+                                  <div className="flex items-center justify-between mb-1">
+                                    <p className="text-[9px] text-gray-400 font-medium">Jeda</p>
+                                    <span className="text-[9px] font-bold text-gray-600 tabular-nums">{s.hero_anim_stagger ?? 0.15}s</span>
                                   </div>
+                                  <input type="range" min={0} max={0.5} step={0.05}
+                                    value={s.hero_anim_stagger ?? 0.15}
+                                    onChange={e => updateSection(s.id, { hero_anim_stagger: Number(e.target.value) })}
+                                    className="w-full h-1.5 accent-indigo-500 rounded-full" />
                                 </div>
                               </div>
                             </div>
 
-                            {/* Layout */}
-                            <div className="border-t border-gray-200/60 pt-2.5">
-                              <p className="text-[9px] font-semibold text-gray-500 mb-1.5">Layout</p>
-                              <div className="grid grid-cols-2 gap-2">
-                                <div className="text-center">
-                                  <p className="text-[8px] text-gray-400 mb-0.5">Padding Atas</p>
+                            {/* Layout Hero */}
+                            <div className="bg-white rounded-xl border border-gray-200 p-3">
+                              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-2">Layout</p>
+                              <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                  <p className="text-[9px] text-gray-400 font-medium mb-1">Padding Atas</p>
                                   <input type="number" min={0} max={200} step={4}
-                                    className="w-full text-[10px] text-center px-1 py-1 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white"
+                                    className="w-full text-[11px] text-center px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 bg-white font-mono"
                                     value={s.hero_padding_top ?? 0}
                                     onChange={e => updateSection(s.id, { hero_padding_top: Number(e.target.value) })} />
                                 </div>
-                                <div className="text-center">
-                                  <p className="text-[8px] text-gray-400 mb-0.5">Padding Bawah</p>
+                                <div>
+                                  <p className="text-[9px] text-gray-400 font-medium mb-1">Padding Bawah</p>
                                   <input type="number" min={0} max={200} step={4}
-                                    className="w-full text-[10px] text-center px-1 py-1 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white"
+                                    className="w-full text-[11px] text-center px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 bg-white font-mono"
                                     value={s.hero_padding_bottom ?? 0}
                                     onChange={e => updateSection(s.id, { hero_padding_bottom: Number(e.target.value) })} />
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-gray-400 mb-0.5">Overlay</p>
-                                  <div className="flex items-center gap-1">
-                                    <input type="range" min={0} max={0.95} step={0.05}
-                                      value={s.hero_overlay ?? 0.52}
-                                      onChange={e => updateSection(s.id, { hero_overlay: Number(e.target.value) })}
-                                      className="flex-1 h-1 accent-indigo-500" />
-                                    <span className="text-[9px] text-gray-500 font-mono w-8 text-right">{Math.round((s.hero_overlay ?? 0.52) * 100)}%</span>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <p className="text-[9px] text-gray-400 font-medium">Overlay</p>
+                                    <span className="text-[9px] font-bold text-gray-600 tabular-nums">{Math.round((s.hero_overlay ?? 0.52) * 100)}%</span>
                                   </div>
+                                  <input type="range" min={0} max={0.95} step={0.05}
+                                    value={s.hero_overlay ?? 0.52}
+                                    onChange={e => updateSection(s.id, { hero_overlay: Number(e.target.value) })}
+                                    className="w-full h-1.5 accent-indigo-500 rounded-full" />
                                 </div>
-                                <div className="flex flex-col gap-1.5 pt-1">
-                                  <label className="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="checkbox" id={`scroll-${s.id}`}
-                                      checked={s.hero_show_scroll !== false}
-                                      onChange={e => updateSection(s.id, { hero_show_scroll: e.target.checked })}
-                                      className="accent-indigo-500 w-3 h-3 rounded" />
-                                    <span className="text-[9px] text-gray-500">Scroll indicator</span>
+                                <div className="flex flex-col gap-2 pt-0.5">
+                                  <label className="flex items-center gap-2 cursor-pointer group">
+                                    <span className={`relative w-7 h-4 rounded-full transition-colors ${s.hero_show_scroll !== false ? 'bg-indigo-500' : 'bg-gray-200'}`}>
+                                      <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${s.hero_show_scroll !== false ? 'left-[14px]' : 'left-0.5'}`} />
+                                    </span>
+                                    <input type="checkbox" className="sr-only" checked={s.hero_show_scroll !== false}
+                                      onChange={e => updateSection(s.id, { hero_show_scroll: e.target.checked })} />
+                                    <span className="text-[9px] text-gray-500 group-hover:text-gray-700">Scroll indicator</span>
                                   </label>
-                                  <label className="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="checkbox" id={`shadow-${s.id}`}
-                                      checked={s.hero_text_shadow !== false}
-                                      onChange={e => updateSection(s.id, { hero_text_shadow: e.target.checked })}
-                                      className="accent-indigo-500 w-3 h-3 rounded" />
-                                    <span className="text-[9px] text-gray-500">Text shadow</span>
+                                  <label className="flex items-center gap-2 cursor-pointer group">
+                                    <span className={`relative w-7 h-4 rounded-full transition-colors ${s.hero_text_shadow !== false ? 'bg-indigo-500' : 'bg-gray-200'}`}>
+                                      <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${s.hero_text_shadow !== false ? 'left-[14px]' : 'left-0.5'}`} />
+                                    </span>
+                                    <input type="checkbox" className="sr-only" checked={s.hero_text_shadow !== false}
+                                      onChange={e => updateSection(s.id, { hero_text_shadow: e.target.checked })} />
+                                    <span className="text-[9px] text-gray-500 group-hover:text-gray-700">Text shadow</span>
                                   </label>
                                 </div>
                               </div>
@@ -4357,10 +4441,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         {/* PROFILES */}
                         {s.type === 'profiles' && (
                           <div className="space-y-3">
-                            {/* Pria */}
-                            <div className="rounded-lg border border-blue-100 bg-blue-50/30 p-2.5 space-y-1.5">
-                              <p className="text-[9px] font-bold text-blue-600 uppercase tracking-widest">Mempelai Pria</p>
-                              <div className="grid grid-cols-2 gap-1.5">
+                            <div className="bg-white rounded-xl border border-indigo-100 p-3 space-y-2.5">
+                              <div className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-md bg-blue-100 flex items-center justify-center text-[9px] font-bold text-blue-600">P</span>
+                                <p className="text-[10px] font-bold text-gray-600">Mempelai Pria</p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
                                 <SectionField label="Nama Lengkap"><input className={miniInput} value={previewData.groom_name} onChange={e => setPreviewData(d => ({ ...d, groom_name: e.target.value }))} /></SectionField>
                                 <SectionField label="Panggilan"><input className={miniInput} value={previewData.groom_nickname ?? ''} placeholder="Opsional" onChange={e => setPreviewData(d => ({ ...d, groom_nickname: e.target.value || undefined }))} /></SectionField>
                               </div>
@@ -4368,10 +4454,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                               <SectionField label="Bio Singkat"><input className={miniInput} value={previewData.groom_bio ?? ''} placeholder="Profesi, usia, dll" onChange={e => setPreviewData(d => ({ ...d, groom_bio: e.target.value }))} /></SectionField>
                               <SectionField label="Foto Profil"><ImageUploadField value={previewData.groom_photo_url} onChange={url => setPreviewData(d => ({ ...d, groom_photo_url: url }))} /></SectionField>
                             </div>
-                            {/* Wanita */}
-                            <div className="rounded-lg border border-rose-100 bg-rose-50/30 p-2.5 space-y-1.5">
-                              <p className="text-[9px] font-bold text-rose-600 uppercase tracking-widest">Mempelai Wanita</p>
-                              <div className="grid grid-cols-2 gap-1.5">
+                            <div className="bg-white rounded-xl border border-indigo-100 p-3 space-y-2.5">
+                              <div className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-md bg-rose-100 flex items-center justify-center text-[9px] font-bold text-rose-600">W</span>
+                                <p className="text-[10px] font-bold text-gray-600">Mempelai Wanita</p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
                                 <SectionField label="Nama Lengkap"><input className={miniInput} value={previewData.bride_name} onChange={e => setPreviewData(d => ({ ...d, bride_name: e.target.value }))} /></SectionField>
                                 <SectionField label="Panggilan"><input className={miniInput} value={previewData.bride_nickname ?? ''} placeholder="Opsional" onChange={e => setPreviewData(d => ({ ...d, bride_nickname: e.target.value || undefined }))} /></SectionField>
                               </div>
@@ -4384,7 +4472,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
                         {/* STORY */}
                         {s.type === 'story' && (
-                          <div className="space-y-2">
+                          <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
                             <SectionField label="Judul Kisah"><input className={miniInput} value={previewData.story_title ?? ''} onChange={e => setPreviewData(d => ({ ...d, story_title: e.target.value }))} /></SectionField>
                             <SectionField label="Teks Kisah"><textarea className={miniInput + ' resize-none'} rows={3} value={previewData.story_text ?? ''} onChange={e => setPreviewData(d => ({ ...d, story_text: e.target.value }))} /></SectionField>
                             <SectionField label="Foto"><ImageUploadField value={previewData.couple_photo_url} onChange={url => setPreviewData(d => ({ ...d, couple_photo_url: url }))} /></SectionField>
@@ -4394,10 +4482,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                         {/* EVENTS */}
                         {s.type === 'events' && (
                           <div className="space-y-3">
-                            {/* Akad */}
-                            <div className="rounded-lg border border-amber-100 bg-amber-50/30 p-2.5 space-y-1.5">
-                              <p className="text-[9px] font-bold text-amber-600 uppercase tracking-widest">Akad Nikah</p>
-                              <div className="grid grid-cols-2 gap-1.5">
+                            <div className="bg-white rounded-xl border border-indigo-100 p-3 space-y-2.5">
+                              <div className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-md bg-amber-100 flex items-center justify-center text-[9px] font-bold text-amber-700">A</span>
+                                <p className="text-[10px] font-bold text-gray-600">Akad Nikah</p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
                                 <SectionField label="Tanggal">
                                   <input type="date" className={miniInput} value={previewData.akad?.date ?? ''}
                                     onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, date: e.target.value } }))} />
@@ -4408,8 +4498,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                 </SectionField>
                               </div>
                               <SectionField label="Nama Tempat">
-                                <input className={miniInput} placeholder="Masjid Al-Ikhlas"
-                                  value={previewData.akad?.venue_name ?? ''}
+                                <input className={miniInput} placeholder="Masjid Al-Ikhlas" value={previewData.akad?.venue_name ?? ''}
                                   onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_name: e.target.value } }))} />
                               </SectionField>
                               <SectionField label="Alamat">
@@ -4423,18 +4512,17 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                   onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, maps_url: e.target.value || undefined } }))} />
                               </SectionField>
                               <SectionField label="Foto Lokasi">
-                                <ImageUploadField
-                                  value={previewData.akad?.venue_photo_url}
-                                  onChange={url => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_photo_url: url } }))}
-                                  hint="Foto masjid/gedung"
-                                />
+                                <ImageUploadField value={previewData.akad?.venue_photo_url}
+                                  onChange={url => setPreviewData(d => ({ ...d, akad: { ...d.akad!, venue_photo_url: url } }))} hint="Foto masjid/gedung" />
                               </SectionField>
                             </div>
 
-                            {/* Resepsi */}
-                            <div className="rounded-lg border border-emerald-100 bg-emerald-50/30 p-2.5 space-y-1.5">
-                              <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Resepsi</p>
-                              <div className="grid grid-cols-2 gap-1.5">
+                            <div className="bg-white rounded-xl border border-indigo-100 p-3 space-y-2.5">
+                              <div className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-md bg-emerald-100 flex items-center justify-center text-[9px] font-bold text-emerald-700">R</span>
+                                <p className="text-[10px] font-bold text-gray-600">Resepsi</p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
                                 <SectionField label="Tanggal">
                                   <input type="date" className={miniInput} value={previewData.resepsi?.date ?? ''}
                                     onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, date: e.target.value } }))} />
@@ -4445,8 +4533,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                 </SectionField>
                               </div>
                               <SectionField label="Nama Tempat">
-                                <input className={miniInput} placeholder="Ballroom Grand Hotel"
-                                  value={previewData.resepsi?.venue_name ?? ''}
+                                <input className={miniInput} placeholder="Ballroom Grand Hotel" value={previewData.resepsi?.venue_name ?? ''}
                                   onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_name: e.target.value } }))} />
                               </SectionField>
                               <SectionField label="Alamat">
@@ -4460,11 +4547,8 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                   onChange={e => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, maps_url: e.target.value || undefined } }))} />
                               </SectionField>
                               <SectionField label="Foto Lokasi">
-                                <ImageUploadField
-                                  value={previewData.resepsi?.venue_photo_url}
-                                  onChange={url => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_photo_url: url } }))}
-                                  hint="Foto ballroom/gedung"
-                                />
+                                <ImageUploadField value={previewData.resepsi?.venue_photo_url}
+                                  onChange={url => setPreviewData(d => ({ ...d, resepsi: { ...d.resepsi!, venue_photo_url: url } }))} hint="Foto ballroom/gedung" />
                               </SectionField>
                             </div>
                           </div>
@@ -4472,21 +4556,23 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
                         {/* COUNTDOWN */}
                         {s.type === 'countdown' && (
-                          <div className="space-y-2">
-                            <SectionField label="Tanggal Akad"><input type="date" className={miniInput} value={previewData.akad?.date ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, date: e.target.value } }))} /></SectionField>
-                            <SectionField label="Jam"><input className={miniInput} placeholder="08:00" value={previewData.akad?.time ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, time: e.target.value } }))} /></SectionField>
+                          <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
+                            <div className="grid grid-cols-2 gap-2">
+                              <SectionField label="Tanggal Akad"><input type="date" className={miniInput} value={previewData.akad?.date ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, date: e.target.value } }))} /></SectionField>
+                              <SectionField label="Jam"><input className={miniInput} placeholder="08:00" value={previewData.akad?.time ?? ''} onChange={e => setPreviewData(d => ({ ...d, akad: { ...d.akad!, time: e.target.value } }))} /></SectionField>
+                            </div>
                           </div>
                         )}
 
                         {/* CLOSING */}
                         {s.type === 'closing' && (
-                          <div className="space-y-2">
+                          <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
                             <SectionField label="Teks Penutup"><textarea className={miniInput + ' resize-none'} rows={3} value={previewData.closing_text ?? ''} onChange={e => setPreviewData(d => ({ ...d, closing_text: e.target.value }))} /></SectionField>
                             <SectionField label="Ucapan Terima Kasih"><input className={miniInput} value={previewData.thank_you_message ?? ''} onChange={e => setPreviewData(d => ({ ...d, thank_you_message: e.target.value }))} /></SectionField>
                           </div>
                         )}
 
-                        {/* GIFT   amplop digital settings */}
+                        {/* GIFT */}
                         {s.type === 'gift' && (() => {
                           const activeSet = new Set(
                             (previewData.gift_accounts ?? []).map(a => a.type === 'bank' ? a.bank : a.platform)
@@ -4505,17 +4591,16 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           return (
                             <div className="space-y-3">
 
-                              {/*  Provider preview picker  */}
-                              <div className="space-y-1.5">
+                              {/* Provider preview picker */}
+                              <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
                                 <div className="flex items-center justify-between">
-                                  <p className="text-[9px] font-semibold text-gray-500">Preview Provider</p>
-                                  <div className="flex gap-1.5">
+                                  <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Provider</p>
+                                  <div className="flex gap-2">
                                     <button type="button"
                                       onClick={() => setPreviewData(d => ({ ...d, gift_accounts: Object.entries(GIFT_LAB_BRANDS).slice(0, MAX_GIFT).map(([n, b]) => makeGiftAccount(n, b)) }))}
                                       className="text-[8px] font-semibold text-indigo-500 hover:text-indigo-700 transition-colors">
                                       Maks 3
                                     </button>
-                                    <span className="text-[8px] text-gray-300">·</span>
                                     <button type="button"
                                       onClick={() => setPreviewData(d => ({ ...d, gift_accounts: [] }))}
                                       className="text-[8px] font-semibold text-gray-400 hover:text-red-400 transition-colors">
@@ -4524,7 +4609,6 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                   </div>
                                 </div>
 
-                                {/* Mini card grid   5 per row */}
                                 <div className="grid grid-cols-5 gap-1.5">
                                   {Object.entries(GIFT_LAB_BRANDS).map(([name, b]) => {
                                     const active = activeSet.has(name)
@@ -4557,41 +4641,39 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                                     )
                                   })}
                                 </div>
-                                <p className="text-[7px] text-gray-400">Klik provider untuk tampilkan / sembunyi di preview (maks {MAX_GIFT})</p>
+                                <p className="text-[7px] text-gray-400">Klik untuk tampilkan / sembunyikan di preview (maks {MAX_GIFT})</p>
                               </div>
 
-                              {/*  Toggles  */}
-                              {([
-                                ['gift_show_logo',    'Logo Brand',           'Tampilkan logo pada kartu'],
-                                ['gift_proof_enabled','Upload Bukti Transfer', 'Tombol & form kirim bukti'],
-                              ] as const).map(([key, label, desc]) => (
-                                <div key={key} className="flex items-center justify-between border-t border-gray-200/60 pt-2.5">
-                                  <div>
-                                    <p className="text-[10px] font-semibold text-gray-600">{label}</p>
-                                    <p className="text-[8px] text-gray-400">{desc}</p>
+                              {/* Toggles */}
+                              <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2.5">
+                                {([
+                                  ['gift_show_logo',    'Logo Brand',           'Tampilkan logo pada kartu'],
+                                  ['gift_proof_enabled','Upload Bukti Transfer', 'Tombol & form kirim bukti'],
+                                ] as const).map(([key, label, desc]) => (
+                                  <div key={key} className="flex items-center justify-between">
+                                    <div>
+                                      <p className="text-[10px] font-semibold text-gray-600">{label}</p>
+                                      <p className="text-[8px] text-gray-400">{desc}</p>
+                                    </div>
+                                    <button type="button"
+                                      onClick={() => updateSection(s.id, { [key]: !(s[key] ?? true) })}
+                                      className={`relative w-8 h-[18px] rounded-full transition-colors ${(s[key] ?? true) ? 'bg-indigo-500' : 'bg-gray-200'}`}>
+                                      <span className={`absolute top-[2px] w-[14px] h-[14px] rounded-full bg-white shadow-sm transition-transform ${(s[key] ?? true) ? 'left-[16px]' : 'left-[2px]'}`} />
+                                    </button>
                                   </div>
-                                  <button type="button"
-                                    onClick={() => updateSection(s.id, { [key]: !(s[key] ?? true) })}
-                                    style={{ color: (s[key] ?? true) ? '#7c3aed' : '#d1d5db' }}>
-                                    {(s[key] ?? true)
-                                      ? <svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16" fill="currentColor"><rect width="28" height="16" rx="8"/><circle cx="20" cy="8" r="6" fill="white"/></svg>
-                                      : <svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16" fill="currentColor"><rect width="28" height="16" rx="8" fill="#e5e7eb"/><circle cx="8" cy="8" r="6" fill="white"/></svg>
-                                    }
-                                  </button>
-                                </div>
-                              ))}
+                                ))}
+                              </div>
 
-                              {/*  Thank you text  */}
+                              {/* Thank you text */}
                               {(s.gift_proof_enabled ?? true) && (
-                                <div className="border-t border-gray-200/60 pt-2.5 space-y-1">
-                                  <p className="text-[9px] font-semibold text-gray-500">Pesan Terima Kasih</p>
+                                <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-1.5">
+                                  <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Pesan Terima Kasih</p>
                                   <textarea
                                     value={s.gift_thankyou_text ?? ''}
                                     onChange={e => updateSection(s.id, { gift_thankyou_text: e.target.value || undefined })}
-                                    className="w-full text-[10px] border border-gray-100 rounded-lg px-2 py-1.5 resize-none focus:outline-none focus:ring-1 focus:ring-violet-400 text-gray-600"
-                                    rows={4}
-                                    placeholder="Terima kasih telah memberikan hadiah... (kosong = pesan default)"
-                                  />
+                                    className={miniInput + ' resize-none'}
+                                    rows={3}
+                                    placeholder="Terima kasih telah memberikan hadiah... (kosong = pesan default)" />
                                 </div>
                               )}
 
@@ -4599,9 +4681,10 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           )
                         })()}
 
-                        {/* HERO/PROFILES/STORY: no extra content beyond above */}
                         {!['hero','profiles','story','events','countdown','closing','gift'].includes(s.type) && (
-                          <p className="text-[9px] text-gray-400 italic">Konten section ini diisi oleh user saat membuat undangan.</p>
+                          <div className="bg-white rounded-xl border border-gray-200 p-3">
+                            <p className="text-[9px] text-gray-400">Konten section ini diisi oleh user saat membuat undangan.</p>
+                          </div>
                         )}
                       </div>
 
@@ -4611,14 +4694,17 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
               ))}
 
               {/* Add section */}
-              <div className="pt-2">
-                <p className="text-[10px] font-semibold text-gray-400 mb-2">Tambah Section</p>
+              <div className="pt-3 mt-1 border-t border-gray-100">
+                <div className="flex items-center gap-1.5 mb-2.5">
+                  <Plus className="w-3 h-3 text-gray-400" />
+                  <p className="text-[10px] font-bold text-gray-500">Tambah Section</p>
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {SECTION_TYPES.filter(t => !sections.find(s => s.type === t)).map(t => (
                     <button
                       key={t}
                       onClick={() => addSection(t)}
-                      className="flex items-center gap-1 text-[10px] font-medium bg-white border border-gray-200 hover:border-indigo-300 hover:text-indigo-600 text-gray-500 px-2.5 py-1.5 rounded-lg transition-colors"
+                      className="flex items-center gap-1 text-[10px] font-medium bg-white border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 text-gray-500 px-2.5 py-1.5 rounded-lg transition-all"
                     >
                       <Plus className="w-2.5 h-2.5" />
                       {SECTION_LABELS[t] ?? t}
@@ -4733,7 +4819,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                               <p className="text-[10px] text-gray-500">Belum ada musik di perpustakaan. Tambahkan melalui tab Musik di sidebar admin.</p>
                             </div>
                           ) : (
-                            <div className="space-y-1.5 max-h-[320px] overflow-y-auto pr-1">
+                            <div className="space-y-1.5 max-h-[320px] overflow-y-auto scrollbar-hide pr-1">
                               {filtered.map(song => {
                                 const selected = musicCfg.url === song.url
                                 const isPreviewing = musicPreviewId === song.id
@@ -5095,7 +5181,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
           Menggunakan visibility (bukan display:none) + position:absolute agar
           kedua preview selalu punya dimensi, tidak collapse saat tidak aktif.
         */}
-        <div className="flex-1 overflow-y-auto flex items-start justify-center py-8 px-4">
+        <div className="flex-1 overflow-y-auto scrollbar-hide flex items-start justify-center py-8 px-4">
           <div className="relative">
             <div className="relative bg-gray-950 rounded-[52px] shadow-2xl shadow-black/40 ring-1 ring-white/10"
               style={{ width: 360, padding: 10 }}>
@@ -5882,13 +5968,13 @@ function KfFields({ label, state, color, onUpdate, onClear }: {
 function SectionField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-[8px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
+      <p className="text-[8px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{label}</p>
       {children}
     </div>
   )
 }
 
-const miniInput = 'w-full text-[11px] px-2.5 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-400 bg-white'
+const miniInput = 'w-full text-[11px] px-2.5 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 bg-white transition-shadow'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

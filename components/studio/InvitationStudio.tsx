@@ -3,12 +3,14 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import toast from 'react-hot-toast'
 import dynamic from 'next/dynamic'
+import { Reorder, useDragControls, motion, AnimatePresence } from 'framer-motion'
 import {
   CheckSquare, MessageSquare, BookOpen, Eye, X, Loader2, Check, RefreshCw,
   User, Calendar, Sparkles, Music, Quote, Image, Gift, FileText,
   Maximize2, ExternalLink, Lock, Video, Radio, Instagram, QrCode, ShoppingBag,
+  GripVertical, ArrowUpDown,
 } from 'lucide-react'
-import type { Invitation, NewInvitationData, TemplateRecord, OpeningType } from '@/lib/types'
+import type { Invitation, NewInvitationData, TemplateRecord, OpeningType, TierFeatures } from '@/lib/types'
 import type { PackageTier } from '@/lib/packages'
 import { usePackageGating } from '@/hooks/usePackageGating'
 import InvitationPreview from '@/components/renderer/InvitationPreview'
@@ -114,7 +116,7 @@ function calculateProgress(data: NewInvitationData) {
   return { percentage: Math.round((filled / total) * 100), requiredFieldsCount: filled, totalRequiredFields: total, missingFields: missing }
 }
 
-interface NavItem { id: string; label: string; icon: React.ElementType; locked?: boolean; requiredTier?: string }
+interface NavItem { id: string; label: string; icon: React.ElementType; locked?: boolean; requiredTier?: string; group: string }
 interface NavGroup { label: string; items: NavItem[] }
 
 const NAV_SECTION_TYPE: Record<string, string> = {
@@ -130,47 +132,47 @@ function buildNavGroups(
 ): { groups: NavGroup[]; sections: NavItem[] } {
   const enabledTypes = new Set(templateSections.filter(s => s.enabled).map(s => s.type))
 
-  function item(id: string, label: string, icon: React.ElementType, gateKey?: string): NavItem | null {
+  function item(id: string, label: string, icon: React.ElementType, groupLabel: string, gateKey?: string): NavItem | null {
     const sectionType = NAV_SECTION_TYPE[id]
     if (sectionType && !enabledTypes.has(sectionType)) return null
     const isLocked = gateKey ? !gating.isSectionAllowed(gateKey) : false
-    return { id, label, icon, locked: isLocked, requiredTier: isLocked ? gating.getRequiredTier(gateKey!) : undefined }
+    return { id, label, icon, locked: isLocked, requiredTier: isLocked ? gating.getRequiredTier(gateKey!) : undefined, group: groupLabel }
   }
 
   const allGroups: { label: string; rawItems: (NavItem | null)[] }[] = [
     {
       label: 'Desain',
       rawItems: [
-        item('opening', 'Pembuka', Sparkles),
-        item('loading', 'Loading', Loader2),
+        item('opening', 'Pembuka', Sparkles, 'Desain'),
+        item('loading', 'Loading', Loader2, 'Desain'),
       ],
     },
     {
       label: 'Konten',
       rawItems: [
-        item('info', 'Mempelai', User),
-        item('acara', 'Acara', Calendar),
-        item('cerita', 'Cerita', BookOpen, 'cerita'),
-        item('quote', 'Doa', Quote),
+        item('info', 'Mempelai', User, 'Konten'),
+        item('acara', 'Acara', Calendar, 'Konten'),
+        item('cerita', 'Cerita', BookOpen, 'Konten', 'cerita'),
+        item('quote', 'Doa', Quote, 'Konten'),
       ],
     },
     {
       label: 'Media',
       rawItems: [
-        item('galeri', 'Galeri', Image, 'galeri'),
-        item('musik', 'Musik', Music, 'musik'),
-        item('video', 'Video', Video, 'video'),
-        item('livestream', 'Live', Radio, 'livestream'),
-        item('ig_story', 'IG Story', Instagram, 'ig_story'),
+        item('galeri', 'Galeri', Image, 'Media', 'galeri'),
+        item('musik', 'Musik', Music, 'Media', 'musik'),
+        item('video', 'Video', Video, 'Media', 'video'),
+        item('livestream', 'Live', Radio, 'Media', 'livestream'),
+        item('ig_story', 'IG Story', Instagram, 'Media', 'ig_story'),
       ],
     },
     {
       label: 'Lainnya',
       rawItems: [
-        item('hadiah', 'Hadiah', Gift, 'hadiah'),
-        item('gift_registry', 'Registry', ShoppingBag, 'gift_registry'),
-        item('qrcode', 'QR Code', QrCode, 'qrcode'),
-        item('penutup', 'Penutup', FileText),
+        item('hadiah', 'Hadiah', Gift, 'Lainnya', 'hadiah'),
+        item('gift_registry', 'Registry', ShoppingBag, 'Lainnya', 'gift_registry'),
+        item('qrcode', 'QR Code', QrCode, 'Lainnya', 'qrcode'),
+        item('penutup', 'Penutup', FileText, 'Lainnya'),
       ],
     },
   ]
@@ -182,14 +184,104 @@ function buildNavGroups(
   return { groups, sections: groups.flatMap(g => g.items) }
 }
 
+/* ─── Draggable Section Item ─── */
+
+function DraggableSectionItem({ section, active, onClick }: { section: NavItem; active: boolean; onClick: () => void }) {
+  const controls = useDragControls()
+  const SIcon = section.icon
+
+  return (
+    <Reorder.Item
+      value={section.id}
+      dragListener={false}
+      dragControls={controls}
+      className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl cursor-pointer transition-all group ${
+        active
+          ? 'bg-stone-900 text-white'
+          : section.locked
+            ? 'text-stone-300 hover:bg-stone-50'
+            : 'text-stone-500 hover:bg-stone-100 hover:text-stone-700'
+      }`}
+    >
+      <div
+        className={`shrink-0 cursor-grab active:cursor-grabbing p-0.5 rounded ${
+          active ? 'text-white/40 hover:text-white/70' : 'text-stone-300 hover:text-stone-500'
+        }`}
+        onPointerDown={(e) => controls.start(e)}
+      >
+        <GripVertical size={14} />
+      </div>
+      <button onClick={onClick} className="flex items-center gap-2.5 flex-1 min-w-0 text-left">
+        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+          active ? 'bg-white/15' : section.locked ? 'bg-stone-100' : 'bg-stone-100 group-hover:bg-stone-200/70'
+        }`}>
+          <SIcon size={14} strokeWidth={active ? 2.2 : 1.8} />
+          {section.locked && !active && (
+            <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-400 flex items-center justify-center">
+              <Lock size={7} className="text-white" />
+            </div>
+          )}
+        </div>
+        <span className={`text-[12px] font-medium truncate ${active ? 'font-semibold' : ''}`}>
+          {section.label}
+        </span>
+      </button>
+    </Reorder.Item>
+  )
+}
+
+/* ─── Static Section Item ─── */
+
+function StaticSectionItem({ section, active, onClick }: { section: NavItem; active: boolean; onClick: () => void }) {
+  const SIcon = section.icon
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all text-left group ${
+        active
+          ? 'bg-stone-900 text-white'
+          : section.locked
+            ? 'text-stone-300 hover:bg-stone-50'
+            : 'text-stone-500 hover:bg-stone-100 hover:text-stone-700'
+      }`}
+    >
+      <div className={`relative w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+        active ? 'bg-white/15' : section.locked ? 'bg-stone-100' : 'bg-stone-100 group-hover:bg-stone-200/70'
+      }`}>
+        <SIcon size={14} strokeWidth={active ? 2.2 : 1.8} />
+        {section.locked && !active && (
+          <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-400 flex items-center justify-center">
+            <Lock size={7} className="text-white" />
+          </div>
+        )}
+      </div>
+      <span className={`text-[12px] font-medium truncate flex-1 ${active ? 'font-semibold' : ''}`}>
+        {section.label}
+      </span>
+      {section.locked && section.requiredTier && (
+        <span className="text-[9px] font-semibold text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded-md shrink-0">
+          {section.requiredTier}
+        </span>
+      )}
+    </button>
+  )
+}
+
+const SECTION_TYPE_FEATURE: Record<string, keyof TierFeatures> = {
+  story: 'story', gift: 'gift', gallery: 'gallery', countdown: 'countdown',
+  video: 'video', livestream: 'livestream', 'ig-story': 'ig_story',
+  qrcode: 'qrcode', 'gift-registry': 'gift_registry', wishes: 'wishes', rsvp: 'rsvp',
+}
+
 export default function InvitationStudio({ invitation, template, onSaved, embedded, isAdmin }: Props) {
   const [data, setData] = useState<NewInvitationData>(() => initData(invitation))
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const [showPreview, setShowPreview] = useState(false)
   const [activeSection, setActiveSection] = useState<string>('opening')
   const [previewKey, setPreviewKey] = useState(0)
-
   const [showFullscreen, setShowFullscreen] = useState(false)
+  const [reorderMode, setReorderMode] = useState(false)
+  const [sectionOrder, setSectionOrder] = useState<string[]>([])
 
   const [debouncedData, setDebouncedData] = useState(data)
   const debounceTimer = useRef<ReturnType<typeof setTimeout>>()
@@ -205,11 +297,16 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
 
   const { groups: NAV_GROUPS, sections: SECTIONS } = useMemo(() => buildNavGroups(gating, template.config.sections), [gating, template.config.sections])
 
-  const SECTION_TYPE_FEATURE: Record<string, keyof import('@/lib/types').TierFeatures> = {
-    story: 'story', gift: 'gift', gallery: 'gallery', countdown: 'countdown',
-    video: 'video', livestream: 'livestream', 'ig-story': 'ig_story',
-    qrcode: 'qrcode', 'gift-registry': 'gift_registry', wishes: 'wishes', rsvp: 'rsvp',
-  }
+  useEffect(() => {
+    setSectionOrder(SECTIONS.map(s => s.id))
+  }, [SECTIONS])
+
+  const orderedSections = useMemo(() => {
+    if (sectionOrder.length === 0) return SECTIONS
+    return sectionOrder
+      .map(id => SECTIONS.find(s => s.id === id))
+      .filter((s): s is NavItem => s !== undefined)
+  }, [sectionOrder, SECTIONS])
 
   const previewTemplate = useMemo<TemplateRecord>(() => ({
     ...template,
@@ -526,39 +623,98 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
 
     return (
       <div className="flex h-full">
-        {/* Left: vertical icon sidebar nav */}
-        <div className="hidden md:flex flex-col shrink-0 w-16 bg-white border-r border-stone-200/60 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex flex-col py-1.5">
-            {NAV_GROUPS.map((group, gi) => (
-              <div key={group.label}>
-                {gi > 0 && <div className="mx-3 my-1 border-t border-stone-100" />}
-                <p className="text-[7px] font-bold text-stone-300 uppercase tracking-[0.2em] text-center py-1 select-none">{group.label}</p>
-                {group.items.map(s => {
-                  const active = activeSection === s.id
-                  const SIcon = s.icon
-                  return (
-                    <button key={s.id} onClick={() => setActiveSection(s.id)} title={s.locked ? `${s.label} (${s.requiredTier})` : s.label}
-                      className={`w-full flex flex-col items-center gap-0.5 py-1.5 px-1 transition-all relative group ${
-                        active ? 'text-stone-900' : s.locked ? 'text-stone-300' : 'text-stone-400 hover:text-stone-600'
-                      }`}
-                    >
-                      {active && <div className="absolute left-0 top-1 bottom-1 w-[3px] rounded-r-full bg-stone-900" />}
-                      <div className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
-                        active ? 'bg-stone-900 text-white shadow-sm' : s.locked ? 'bg-stone-50' : 'group-hover:bg-stone-100'
-                      }`}>
-                        <SIcon size={14} strokeWidth={active ? 2.2 : 1.5} />
-                        {s.locked && !active && (
-                          <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber-400 flex items-center justify-center">
-                            <Lock size={6} className="text-white" />
-                          </div>
-                        )}
-                      </div>
-                      <span className={`text-[8px] font-medium leading-tight ${active ? 'text-stone-800 font-semibold' : s.locked ? 'text-stone-300' : ''}`}>{s.label}</span>
-                    </button>
-                  )
-                })}
+        {/* Left: Section navigation sidebar */}
+        <div className="hidden md:flex flex-col shrink-0 bg-white border-r border-stone-200/60 overflow-hidden" style={{ width: 210 }}>
+          {/* Sidebar header */}
+          <div className="shrink-0 px-3.5 pt-3.5 pb-2 border-b border-stone-100">
+            <div className="flex items-center justify-between mb-2.5">
+              <h3 className="text-[11px] font-bold text-stone-800 uppercase tracking-wider">Konten</h3>
+              <button
+                onClick={() => setReorderMode(!reorderMode)}
+                className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg transition-all ${
+                  reorderMode
+                    ? 'bg-stone-900 text-white'
+                    : 'text-stone-400 hover:text-stone-600 hover:bg-stone-100'
+                }`}
+                title={reorderMode ? 'Selesai menyusun' : 'Susun ulang section'}
+              >
+                <ArrowUpDown size={11} />
+                {reorderMode ? 'Selesai' : 'Susun'}
+              </button>
+            </div>
+            {/* Progress bar */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress.percentage}%` }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ background: progress.percentage === 100 ? '#10b981' : '#f59e0b' }}
+                />
               </div>
-            ))}
+              <span className="text-[10px] font-bold text-stone-400 tabular-nums">{progress.percentage}%</span>
+            </div>
+          </div>
+
+          {/* Section list */}
+          <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+            <div className="p-2">
+              <AnimatePresence mode="wait">
+                {reorderMode ? (
+                  <motion.div
+                    key="reorder"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Reorder.Group
+                      axis="y"
+                      values={sectionOrder}
+                      onReorder={setSectionOrder}
+                      className="space-y-0.5"
+                    >
+                      {orderedSections.map(section => (
+                        <DraggableSectionItem
+                          key={section.id}
+                          section={section}
+                          active={activeSection === section.id}
+                          onClick={() => setActiveSection(section.id)}
+                        />
+                      ))}
+                    </Reorder.Group>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="static"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="space-y-3"
+                  >
+                    {NAV_GROUPS.map((group) => (
+                      <div key={group.label}>
+                        <p className="text-[9px] font-bold text-stone-300 uppercase tracking-[0.15em] px-3 py-1 select-none">
+                          {group.label}
+                        </p>
+                        <div className="space-y-0.5">
+                          {group.items.map(section => (
+                            <StaticSectionItem
+                              key={section.id}
+                              section={section}
+                              active={activeSection === section.id}
+                              onClick={() => setActiveSection(section.id)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -590,40 +746,58 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
         {/* Center: form content */}
         <div className="flex-1 min-w-0 flex flex-col min-h-0">
           {/* Section header bar */}
-          <div className="shrink-0 bg-white/80 backdrop-blur-xl border-b border-stone-100 px-4 py-2.5 flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
-              <ActiveIcon size={14} className="text-stone-600" strokeWidth={2} />
+          <div className="shrink-0 bg-white/80 backdrop-blur-xl border-b border-stone-100 px-4 sm:px-5 py-2.5 flex items-center gap-3">
+            <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+              activeItem?.locked ? 'bg-amber-50 text-amber-500' : 'bg-stone-100 text-stone-600'
+            }`}>
+              <ActiveIcon size={15} strokeWidth={2} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-[13px] font-bold text-stone-800">{activeItem?.label ?? 'Editor'}</h2>
-                {saveStatus === 'saving' && (
-                  <span className="inline-flex items-center gap-1 text-[9px] text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded-full">
-                    <Loader2 size={8} className="animate-spin" /> Menyimpan
-                  </span>
-                )}
-                {saveStatus === 'saved' && (
-                  <span className="inline-flex items-center gap-1 text-[9px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
-                    <Check size={8} /> Tersimpan
-                  </span>
-                )}
+                <h2 className="text-sm font-bold text-stone-800">{activeItem?.label ?? 'Editor'}</h2>
+                <AnimatePresence mode="wait">
+                  {saveStatus === 'saving' && (
+                    <motion.span
+                      key="saving"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="inline-flex items-center gap-1 text-[10px] text-stone-400 bg-stone-50 px-2 py-0.5 rounded-full"
+                    >
+                      <Loader2 size={9} className="animate-spin" /> Menyimpan…
+                    </motion.span>
+                  )}
+                  {saveStatus === 'saved' && (
+                    <motion.span
+                      key="saved"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="inline-flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full"
+                    >
+                      <Check size={9} /> Tersimpan
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </div>
-              <div className="flex items-center gap-1 mt-0.5">
-                <div className="w-20 h-1 bg-stone-100 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress.percentage}%`, background: progress.percentage === 100 ? '#10b981' : '#f59e0b' }} />
-                </div>
-                <span className="text-[9px] font-bold text-stone-400">{progress.percentage}%</span>
-              </div>
+              {activeItem?.locked && activeItem.requiredTier && (
+                <p className="text-[10px] text-amber-500 font-medium mt-0.5">
+                  Tersedia mulai paket {activeItem.requiredTier}
+                </p>
+              )}
             </div>
 
-            <button onClick={() => setShowPreview(true)} className="xl:hidden flex items-center gap-1.5 bg-stone-900 text-white text-[11px] font-semibold px-3 py-2 rounded-xl hover:bg-stone-800 transition-colors">
+            <button
+              onClick={() => setShowPreview(true)}
+              className="xl:hidden flex items-center gap-1.5 bg-stone-900 text-white text-[11px] font-semibold px-3 py-2 rounded-xl hover:bg-stone-800 transition-colors"
+            >
               <Eye size={13} /> Preview
             </button>
           </div>
 
           {/* Active form */}
           <div className="flex-1 overflow-y-auto min-h-0" style={{ scrollbarWidth: 'thin' }}>
-            <div className="px-4 py-4 max-w-xl mx-auto">
+            <div className="px-4 sm:px-5 py-4 max-w-xl mx-auto">
               <div className="relative">
                 {renderActiveForm()}
                 {activeItem?.locked && activeItem.requiredTier && (
@@ -675,7 +849,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
           </div>
         )}
 
-        {/* Fullscreen preview: phone-width container like admin studio */}
+        {/* Fullscreen preview */}
         {showFullscreen && (
           <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
             <button
@@ -707,7 +881,7 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
     )
   }
 
-  //  Standalone mode (full page) 
+  //  Standalone mode (full page)
   return (
     <div className="min-h-screen bg-stone-50">
       <StudioHeader

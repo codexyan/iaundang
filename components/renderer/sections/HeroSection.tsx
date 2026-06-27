@@ -56,16 +56,6 @@ function Bismillah({ section, font, accent, delay }: {
         }}>
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </p>
-        <p style={{
-          fontSize: labelSz,
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: `${accent}66`,
-          fontFamily: `'${font.body}', serif`,
-          marginTop: 4,
-        }}>
-          Bismillahirrahmanirrahim
-        </p>
       </motion.div>
     )
   }
@@ -88,7 +78,25 @@ function Bismillah({ section, font, accent, delay }: {
   )
 }
 
-//  Divider component 
+//  Hero Icon/Logo component
+function HeroIcon({ section, delay, dur }: { section: SectionConfig; delay: number; dur: number }) {
+  if (!section.hero_icon_url) return null
+  const size = section.hero_icon_size ?? 40
+  return (
+    <motion.div
+      variants={{ hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1, transition: { delay, duration: dur } } }}
+      style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}
+    >
+      <img
+        src={section.hero_icon_url}
+        alt=""
+        style={{ width: size, height: size, objectFit: 'contain' }}
+      />
+    </motion.div>
+  )
+}
+
+//  Divider component
 function Divider({ accent, delay, dur }: { accent: string; delay: number; dur: number }) {
   return (
     <motion.div
@@ -123,6 +131,8 @@ function HeroDefault({ section, data, font, accent, text }: {
       textAlign: 'center', width: '100%', maxWidth: 360, margin: '0 auto',
       paddingTop: padT, paddingBottom: padB,
     }}>
+      <HeroIcon section={section} delay={stagger * 0.3} dur={dur} />
+
       <Bismillah section={section} font={font} accent={accent} delay={stagger * 0.5} />
 
       <Divider accent={accent} delay={stagger * 1} dur={dur * 0.8} />
@@ -225,6 +235,18 @@ function HeroBottom({ section, data, font, accent, text, primary }: {
         background: `radial-gradient(ellipse at center bottom, transparent 50%, ${primary}55 100%)`,
       }} />
 
+      {/* Top icon — positioned absolute at top center */}
+      {section.hero_icon_url && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: stagger * 0.3, duration: dur }}
+          style={{ position: 'absolute', top: 24, left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 2 }}
+        >
+          <img src={section.hero_icon_url} alt="" style={{ width: section.hero_icon_size ?? 40, height: section.hero_icon_size ?? 40, objectFit: 'contain' }} />
+        </motion.div>
+      )}
+
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', paddingLeft: 28, paddingRight: 28 }}>
 
         {/* Date badge (placeholder acara) */}
@@ -309,6 +331,7 @@ function HeroMinimal({ section, data, font, accent, text }: {
 
   return (
     <div style={{ textAlign: 'center', maxWidth: 300, margin: '0 auto', paddingLeft: 24, paddingRight: 24, width: '100%', paddingTop: padT, paddingBottom: padB }}>
+      <HeroIcon section={section} delay={stagger * 0.3} dur={dur} />
       <motion.div
         variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: ts(1) } }}
         style={{ border: `1px solid ${accent}44`, padding: '36px 24px', position: 'relative' }}
@@ -380,6 +403,7 @@ function HeroSplit({ section, data, font, accent, text }: {
         flex: 1, display: 'flex', flexDirection: 'column',
         justifyContent: 'center', padding: '32px 24px', textAlign: 'left',
       }}>
+        <HeroIcon section={section} delay={stagger * 0.3} dur={dur} />
         <Bismillah section={section} font={font} accent={accent} delay={stagger * 1} />
 
         <motion.h1
@@ -425,7 +449,8 @@ function HeroOverlayCard({ section, data, font, accent, text }: {
   const ts = (n: number) => ({ delay: n * stagger, duration: dur })
 
   return (
-    <div style={{ textAlign: 'center', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div style={{ textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <HeroIcon section={section} delay={stagger * 0.3} dur={dur} />
       <motion.div
         variants={{ hidden: { opacity: 0, scale: 0.92 }, visible: { opacity: 1, scale: 1, transition: ts(1) } }}
         style={{
@@ -488,6 +513,8 @@ function HeroEditorial({ section, data, font, accent, text }: {
       textAlign: 'center', width: '100%', maxWidth: 360, margin: '0 auto',
       paddingTop: padT, paddingBottom: padB,
     }}>
+      <HeroIcon section={section} delay={stagger * 0.3} dur={dur} />
+
       <motion.p
         variants={{ hidden: { opacity: 0, y: -8 }, visible: { opacity: 1, y: 0, transition: ts(1) } }}
         style={{ fontSize: labelSz, letterSpacing: '0.4em', textTransform: 'uppercase', color: `${accent}99`, fontFamily: `'${font.body}', serif`, marginBottom: 24 }}
@@ -549,6 +576,8 @@ function HeroArch({ section, data, font, accent, text }: {
             stroke={`${accent}35`} strokeWidth="0.8" fill="none" />
         </svg>
 
+        <HeroIcon section={section} delay={stagger * 0.5} dur={dur} />
+
         <Bismillah section={section} font={font} accent={accent} delay={stagger * 2} />
 
         <motion.h1
@@ -577,7 +606,7 @@ function HeroArch({ section, data, font, accent, text }: {
   )
 }
 
-//  Variant: Magazine (foto circle + layout majalah) 
+//  Variant: Magazine (foto circle + layout majalah)
 function HeroMagazine({ section, data, font, accent, text }: {
   section: SectionConfig
   data: NewInvitationData
@@ -599,6 +628,8 @@ function HeroMagazine({ section, data, font, accent, text }: {
       textAlign: 'center', width: '100%', maxWidth: 340, margin: '0 auto',
       paddingTop: padT, paddingBottom: padB,
     }}>
+      <HeroIcon section={section} delay={stagger * 0.3} dur={dur} />
+
       {data.couple_photo_url && (
         <motion.div
           variants={{ hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1, transition: ts(1) } }}

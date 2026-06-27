@@ -214,6 +214,8 @@ export interface SectionConfig {
   hero_anim_duration?: number       // durasi animasi masuk (detik, default 0.8)
   hero_anim_stagger?: number        // jeda antar elemen (detik, default 0.15)
   hero_text_shadow?: boolean        // bayangan teks untuk keterbacaan
+  hero_icon_url?: string            // URL icon/logo kecil di atas hero (monogram/emblem)
+  hero_icon_size?: number           // px ukuran icon (default 40)
 }
 
 export type AssetPosition =
