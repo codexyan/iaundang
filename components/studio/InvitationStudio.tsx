@@ -8,7 +8,7 @@ import {
   CheckSquare, MessageSquare, BookOpen, Eye, X, Loader2, Check, RefreshCw,
   User, Calendar, Sparkles, Music, Quote, Image, Gift, FileText,
   Maximize2, ExternalLink, Lock, Video, Radio, Instagram, QrCode, ShoppingBag,
-  GripVertical, ArrowUpDown,
+  GripVertical, ArrowUpDown, Palette,
 } from 'lucide-react'
 import type { Invitation, NewInvitationData, TemplateRecord, OpeningType, TierFeatures } from '@/lib/types'
 import type { PackageTier } from '@/lib/packages'
@@ -33,6 +33,7 @@ import LivestreamForm from './forms/LivestreamForm'
 import IGStoryForm from './forms/IGStoryForm'
 import QRCodeForm from './forms/QRCodeForm'
 import GiftRegistryForm from './forms/GiftRegistryForm'
+import ColorPaletteForm from './forms/ColorPaletteForm'
 import InfoCard from './ui/InfoCard'
 import FormField, { textareaClass } from './ui/FormField'
 import SectionCard from './ui/SectionCard'
@@ -145,6 +146,7 @@ function buildNavGroups(
       rawItems: [
         item('opening', 'Pembuka', Sparkles, 'Desain'),
         item('loading', 'Loading', Loader2, 'Desain'),
+        item('warna', 'Tema Warna', Palette, 'Desain'),
       ],
     },
     {
@@ -421,6 +423,24 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
           onChange={(cfg) => updateData({ loading_config: cfg })}
         />
       )
+      case 'warna': return (
+        <ColorPaletteForm
+          primaryColor={data.primary_color ?? '#2c4a34'}
+          accentColor={data.accent_color ?? '#c9a961'}
+          textColor={data.text_color ?? '#1a1a1a'}
+          backgroundColor={data.background_color ?? '#fefdf8'}
+          onPrimaryColorChange={(color) => updateData({ primary_color: color })}
+          onAccentColorChange={(color) => updateData({ accent_color: color })}
+          onTextColorChange={(color) => updateData({ text_color: color })}
+          onBackgroundColorChange={(color) => updateData({ background_color: color })}
+          onPresetApply={(colors) => updateData({
+            primary_color: colors.primary,
+            accent_color: colors.accent,
+            text_color: colors.text,
+            background_color: colors.background,
+          })}
+        />
+      )
       case 'musik': return (
         <MusicForm
           musicUrl={data.music_url || ''} musicTitle={data.music_title || ''}
@@ -537,6 +557,21 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
         onOpeningGroomNameChange={(val) => updateData({ opening_groom_name: val })}
         onOpeningBrideNameChange={(val) => updateData({ opening_bride_name: val })}
         onNameGapChange={(val) => updateData({ opening_name_gap: val })} />
+      <ColorPaletteForm
+        primaryColor={data.primary_color ?? '#2c4a34'}
+        accentColor={data.accent_color ?? '#c9a961'}
+        textColor={data.text_color ?? '#1a1a1a'}
+        backgroundColor={data.background_color ?? '#fefdf8'}
+        onPrimaryColorChange={(color) => updateData({ primary_color: color })}
+        onAccentColorChange={(color) => updateData({ accent_color: color })}
+        onTextColorChange={(color) => updateData({ text_color: color })}
+        onBackgroundColorChange={(color) => updateData({ background_color: color })}
+        onPresetApply={(colors) => updateData({
+          primary_color: colors.primary,
+          accent_color: colors.accent,
+          text_color: colors.text,
+          background_color: colors.background,
+        })} />
       <MusicForm musicUrl={data.music_url || ''} musicTitle={data.music_title || ''}
         onMusicUrlChange={(val) => updateData({ music_url: val })}
         onMusicTitleChange={(val) => updateData({ music_title: val })} />
