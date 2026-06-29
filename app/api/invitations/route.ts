@@ -3,6 +3,8 @@ import { cookies } from 'next/headers'
 import { z } from 'zod'
 import { getSession } from '@/lib/session-server'
 import { invitations, templateRecords } from '@/lib/db'
+import { subscriptions } from '@/lib/subscription'
+import { notifyUser } from '@/lib/notifications'
 import { LEGACY_TEMPLATE_IDS } from '@/lib/types'
 import type { InvitationData } from '@/lib/types'
 
@@ -54,6 +56,9 @@ export async function POST(req: NextRequest) {
   const cookieStore = cookies()
   const referralCode = cookieStore.get('ref')?.value || null
 
+  const trialExpiresAt = new Date()
+  trialExpiresAt.setDate(trialExpiresAt.getDate() + 7)
+
   const inv = await invitations.create({
     user_id: session.userId,
     slug,
@@ -61,9 +66,12 @@ export async function POST(req: NextRequest) {
     data: data as unknown as InvitationData,
     is_published: false,
     is_paid: false,
-    expires_at: null,
+    expires_at: trialExpiresAt.toISOString(),
     referred_by: referralCode,
   })
+
+  await subscriptions.createTrial(inv.id, session.userId)
+  notifyUser('trial_started', session.email, { slug, name: session.email }).catch(() => {})
 
   return NextResponse.json({ invitation: inv }, { status: 201 })
 }

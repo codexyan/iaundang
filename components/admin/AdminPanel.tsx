@@ -7,6 +7,7 @@ import {
   Globe, Music, Package, CreditCard, FlaskConical,
   PanelLeftClose, PanelLeftOpen, AlertTriangle, X, Megaphone,
   FileText, PenLine, Home, ExternalLink, Copy, Save,
+  MessageSquarePlus,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,6 +25,8 @@ import LandingPageTab from './tabs/LandingPageTab'
 import ArticlesTab from './tabs/ArticlesTab'
 import WriterTab from './tabs/WriterTab'
 import AffiliatesTab from './tabs/AffiliatesTab'
+import FeedbackTab from './tabs/FeedbackTab'
+import ExperimentsTab from './tabs/ExperimentsTab'
 // PackagesTab removed  tier management consolidated into TemplatesTab config drawer
 import NewSettingsTab from './tabs/SettingsTab'
 import type { SiteSettings } from './tabs/SettingsTab'
@@ -132,9 +135,9 @@ interface Props {
   adminEmail: string
 }
 
-type NavTab = 'dashboard' | 'users' | 'template' | 'lab' | 'music' | 'orders' | 'payment' | 'landing' | 'articles' | 'writers' | 'affiliates' | 'settings'
+type NavTab = 'dashboard' | 'users' | 'template' | 'lab' | 'music' | 'orders' | 'payment' | 'landing' | 'articles' | 'writers' | 'affiliates' | 'feedback' | 'experiments' | 'settings'
 
-const VALID_TABS: NavTab[] = ['dashboard', 'users', 'template', 'lab', 'music', 'orders', 'payment', 'landing', 'articles', 'writers', 'affiliates', 'settings']
+const VALID_TABS: NavTab[] = ['dashboard', 'users', 'template', 'lab', 'music', 'orders', 'payment', 'landing', 'articles', 'writers', 'affiliates', 'feedback', 'experiments', 'settings']
 
 //  Main Component 
 
@@ -218,15 +221,18 @@ export default function AdminPanel({
   const [stats, setStats] = useState(initialStats)
   const [appSettings, setAppSettings] = useState(initialSettings)
 
-  function recalc(invs: AdminInvitation[], usrs: AdminUser[], price = appSettings.price) {
+  function recalc(invs: AdminInvitation[], usrs: AdminUser[]) {
     const paid = invs.filter((i) => i.is_paid)
+    const totalRevenue = orders
+      .filter((o) => o.status === 'approved')
+      .reduce((sum, o) => sum + o.total_amount, 0)
     setStats({
       totalUsers: usrs.length,
       totalInvitations: invs.length,
       totalActive: invs.filter((i) => i.is_published && i.is_paid).length,
       totalPaid: paid.length,
       totalUnpaid: invs.filter((i) => !i.is_paid).length,
-      totalRevenue: paid.length * price,
+      totalRevenue,
     })
   }
 
@@ -315,7 +321,7 @@ export default function AdminPanel({
     })
     if (!res.ok) { toast.error('Gagal simpan pengaturan'); return }
     setAppSettings(newSettings)
-    recalc(invitations, users, newSettings.price)
+    recalc(invitations, users)
     toast.success('Pengaturan tersimpan!')
   }
 
@@ -438,6 +444,8 @@ export default function AdminPanel({
         {activeTab === 'articles' && <ArticlesTab />}
         {activeTab === 'writers' && <WriterTab />}
         {activeTab === 'affiliates' && <AffiliatesTab />}
+        {activeTab === 'feedback' && <FeedbackTab />}
+        {activeTab === 'experiments' && <ExperimentsTab />}
         {activeTab === 'settings' && (
           <NewSettingsTab
             settings={{
@@ -546,6 +554,13 @@ const NAV_GROUPS = [
     label: 'Marketing',
     items: [
       { id: 'affiliates'  as NavTab, label: 'Afiliasi',           icon: Megaphone,       desc: 'Kelola program affiliate' },
+    ],
+  },
+  {
+    label: 'Insights',
+    items: [
+      { id: 'feedback'     as NavTab, label: 'Feedback',           icon: MessageSquarePlus, desc: 'NPS & feedback pengguna' },
+      { id: 'experiments'  as NavTab, label: 'A/B Testing',        icon: FlaskConical,      desc: 'Eksperimen & variant test' },
     ],
   },
   {

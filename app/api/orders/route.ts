@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { orders, invitations } from '@/lib/db'
+import { notifyUser } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,6 +49,7 @@ export async function POST(req: NextRequest) {
 
     const order = await orders.create({
       order_number: generateOrderNumber(),
+      invitation_id: null,
       email: email.toLowerCase(),
       phone: phone || '',
       groom_name, bride_name,
@@ -71,6 +73,11 @@ export async function POST(req: NextRequest) {
       admin_notes: '',
       referred_by: referred_by || null,
     })
+
+    notifyUser('order_created', order.email, {
+      orderNumber: order.order_number,
+      amount: order.total_amount.toLocaleString('id-ID'),
+    }).catch(() => {})
 
     return NextResponse.json({ order }, { status: 201 })
   } catch (error) {

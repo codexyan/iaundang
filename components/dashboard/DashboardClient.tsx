@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic'
 import {
   LayoutDashboard, FileEdit, Users, LogOut,
   ExternalLink, Copy, Menu, X, ChevronRight, Eye, Send,
-  Settings, MessageSquare,
+  Settings, MessageSquare, BarChart3, Gift,
   Sparkles, Crown, Globe, ArrowUpRight, ShieldCheck,
 } from 'lucide-react'
 import type { Invitation, NewInvitationData } from '@/lib/types'
@@ -23,6 +23,9 @@ import SubscriptionInfo from './SubscriptionInfo'
 import TemplateModule from './TemplateModule'
 import OnboardingWizard from './OnboardingWizard'
 import SupportTickets from './SupportTickets'
+import AnalyticsPanel from './AnalyticsPanel'
+import ReferralPanel from './ReferralPanel'
+import FeedbackWidget from './FeedbackWidget'
 
 const InvitationRenderer = dynamic(() => import('@/components/renderer/InvitationRenderer'), { ssr: false })
 
@@ -43,13 +46,15 @@ interface Props {
   isAdmin?: boolean
 }
 
-type Tab = 'overview' | 'undangan' | 'guest' | 'rsvp' | 'subscription' | 'support' | 'settings'
+type Tab = 'overview' | 'undangan' | 'guest' | 'rsvp' | 'analytics' | 'referral' | 'subscription' | 'support' | 'settings'
 
 const NAV: { id: Tab; label: string; icon: React.ElementType; badge?: string }[] = [
   { id: 'overview',     label: 'Beranda',    icon: LayoutDashboard },
   { id: 'undangan',     label: 'Undangan',   icon: FileEdit },
   { id: 'guest',        label: 'Tamu',       icon: Send },
   { id: 'rsvp',         label: 'RSVP',       icon: Users },
+  { id: 'analytics',    label: 'Analitik',   icon: BarChart3 },
+  { id: 'referral',     label: 'Referral',   icon: Gift },
   { id: 'subscription', label: 'Langganan',  icon: ShieldCheck },
   { id: 'support',      label: 'Bantuan',    icon: MessageSquare },
   { id: 'settings',     label: 'Settings',   icon: Settings },
@@ -311,6 +316,8 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
                   )}
                   {tab === 'guest' && <GuestManager invitation={inv} />}
                   {tab === 'rsvp' && <RSVPList invitationId={inv.id} />}
+                  {tab === 'analytics' && <AnalyticsPanel invitation={inv} />}
+                  {tab === 'referral' && <ReferralPanel />}
                   {tab === 'subscription' && <SubscriptionInfo invitation={inv} />}
                   {tab === 'support' && <SupportTickets />}
                   {tab === 'settings' && <SettingsPanel invitation={inv} userEmail={user.email} onDeleted={() => { setInv(null); setTab('overview') }} />}
@@ -405,11 +412,13 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
           </div>
         </div>
       )}
+
+      {inv && <FeedbackWidget />}
     </div>
   )
 }
 
-//  Upgrade Banner 
+//  Upgrade Banner
 
 function UpgradeBanner({}: {
   invitation: Invitation

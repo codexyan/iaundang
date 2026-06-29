@@ -31,12 +31,16 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
 
   useEffect(() => {
     if (isLegacy) return
-    import('@/lib/template-configs/javanese-gold').then(m => {
-      if (m.default.id === invitation.template_id) {
-        setTemplateRecord(m.default)
-      }
-      setLoadingTemplate(false)
-    }).catch(() => setLoadingTemplate(false))
+    const loaders: Record<string, () => Promise<{ default: import('@/lib/types').TemplateRecord }>> = {
+      'javanese-gold': () => import('@/lib/template-configs/javanese-gold'),
+      'rose-garden': () => import('@/lib/template-configs/rose-garden'),
+      'midnight-luxe': () => import('@/lib/template-configs/midnight-luxe'),
+    }
+    const loader = loaders[invitation.template_id]
+    if (!loader) { setLoadingTemplate(false); return }
+    loader()
+      .then(m => { setTemplateRecord(m.default); setLoadingTemplate(false) })
+      .catch(() => setLoadingTemplate(false))
   }, [invitation.template_id, isLegacy])
 
   if (isLegacy) {

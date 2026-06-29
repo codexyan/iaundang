@@ -61,25 +61,44 @@ function getExpiryStatus(days: number | null): { label: string; cls: string; ico
   return { label: `${days} hari lagi`, cls: 'text-emerald-700 bg-emerald-50 border-emerald-200', icon: Shield }
 }
 
+interface SubRecord {
+  id: string
+  tier: string
+  tierName: string
+  status: string
+  startsAt: string
+  expiresAt: string
+  daysRemaining: number
+}
+
 export default function SubscriptionInfo({ invitation }: Props) {
   const [proofs, setProofs] = useState<PaymentProof[]>([])
+  const [sub, setSub] = useState<SubRecord | null>(null)
   const [loading, setLoading] = useState(true)
 
   const isPaid = invitation.is_paid
-  const tierKey = (invitation as unknown as Record<string, unknown>).package_tier as string | undefined
-  const tier = TIER_MAP[tierKey?.toLowerCase() ?? ''] ?? TIER_MAP.popular
-  const TierIcon = tier.icon
-  const daysLeft = getDaysRemaining(invitation.expires_at)
-  const expiry = getExpiryStatus(daysLeft)
-  const ExpiryIcon = expiry.icon
 
   useEffect(() => {
-    fetch('/api/payment/proof')
-      .then(r => r.json())
-      .then(data => setProofs(data.proofs ?? []))
-      .catch(() => {})
-      .finally(() => setLoading(false))
+    Promise.all([
+      fetch('/api/payment/proof').then(r => r.json()).catch(() => ({ proofs: [] })),
+      fetch('/api/user/subscription').then(r => r.json()).catch(() => ({ subscriptions: [] })),
+    ]).then(([proofData, subData]) => {
+      setProofs(proofData.proofs ?? [])
+      const active = (subData.subscriptions ?? []).find(
+        (s: SubRecord) => s.status === 'active' || s.status === 'expiring_soon'
+      ) ?? (subData.subscriptions ?? [])[0] ?? null
+      setSub(active)
+    }).finally(() => setLoading(false))
   }, [])
+
+  const tierKey = sub?.tier
+    ?? ((invitation as unknown as Record<string, unknown>).package_tier as string | undefined)
+  const tier = TIER_MAP[tierKey?.toLowerCase() ?? ''] ?? TIER_MAP.popular
+  const TierIcon = tier.icon
+  const daysLeft = sub ? sub.daysRemaining : getDaysRemaining(invitation.expires_at)
+  const expiry = getExpiryStatus(daysLeft)
+  const ExpiryIcon = expiry.icon
+  const expiresAtDisplay = sub?.expiresAt ?? invitation.expires_at
 
   const hasPending = proofs.some(p => p.status === 'pending')
 
@@ -150,8 +169,8 @@ export default function SubscriptionInfo({ invitation }: Props) {
             <div className="bg-white p-4 text-center col-span-2 sm:col-span-1">
               <p className="text-[10px] text-stone-400 uppercase tracking-wider font-medium mb-1">Berlaku Hingga</p>
               <p className="text-sm font-semibold text-stone-900">
-                {invitation.expires_at
-                  ? new Date(invitation.expires_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                {expiresAtDisplay
+                  ? new Date(expiresAtDisplay).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
                   : '-'
                 }
               </p>

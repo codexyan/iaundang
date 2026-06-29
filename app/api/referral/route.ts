@@ -1,7 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { affiliates } from '@/lib/db'
+import { getSession } from '@/lib/session-server'
+import { affiliates, users, userReferrals } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
+
+function generateCode(email: string): string {
+  const base = email.split('@')[0].replace(/[^a-z0-9]/gi, '').slice(0, 8).toUpperCase()
+  const suffix = Math.random().toString(36).slice(2, 5).toUpperCase()
+  return `${base}-${suffix}`
+}
+
+export async function GET() {
+  const session = await getSession()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const user = await users.findById(session.userId)
+  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+
+  let referralCode = user.referral_code
+  if (!referralCode) {
+    referralCode = generateCode(user.email)
+    await users.setReferralCode(user.id, referralCode)
+  }
+
+  const stats = await userReferrals.countByReferrer(user.id)
+  const referrals = await userReferrals.findByReferrerId(user.id)
+
+  return NextResponse.json({
+    referralCode,
+    referralLink: `https://iaundang.id/order?ref=${referralCode}`,
+    stats,
+    referrals,
+  })
+}
 
 export async function POST(req: NextRequest) {
   const { code } = await req.json()

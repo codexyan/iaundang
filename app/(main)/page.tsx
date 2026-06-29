@@ -7,6 +7,9 @@ import FeatureShowcase  from '@/components/landing/FeatureShowcase'
 import Pricing          from '@/components/landing/Pricing'
 import FAQ              from '@/components/landing/FAQ'
 import ClosingCTA       from '@/components/landing/ClosingCTA'
+import HowItWorks       from '@/components/landing/HowItWorks'
+import Testimonials     from '@/components/landing/Testimonials'
+import BlogShowcase     from '@/components/landing/BlogShowcase'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,6 +28,9 @@ const SECTION_MAP: Record<string, React.FC<PageData>> = {
   featureShowcase: ({ landing }) => <FeatureShowcase personalisasi={landing.personalisasiMockup} />,
   pricing: ({ priceTiers, flashSales }) => <Pricing priceTiers={priceTiers} flashSales={flashSales} />,
   faq: ({ landing, whatsapp }) => <FAQ items={landing.faq.items} whatsapp={whatsapp} />,
+  howItWorks: () => <HowItWorks />,
+  testimonials: () => <Testimonials />,
+  blogShowcase: () => <BlogShowcase />,
   closingCta: ({ whatsapp }) => <ClosingCTA whatsapp={whatsapp} />,
 }
 
@@ -45,8 +51,26 @@ export default async function LandingPage() {
     .filter(s => s.visible)
     .sort((a, b) => a.order - b.order)
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'iaundang',
+    url: 'https://iaundang.id',
+    description: 'Platform undangan digital premium self-service. Pilih template, kustomisasi, dan kirim link personal ke tamu.',
+    applicationCategory: 'DesignApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'AggregateOffer',
+      lowPrice: '79000',
+      highPrice: '249000',
+      priceCurrency: 'IDR',
+      offerCount: priceTiers.length,
+    },
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {visibleSections.map(section => {
         const Component = SECTION_MAP[section.id]
         if (!Component) return null

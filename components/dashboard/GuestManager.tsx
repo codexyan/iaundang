@@ -1,34 +1,27 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
 import {
   Plus, Trash2, Send, Copy, Download, Search, Users,
   CheckCircle2, Clock, MessageSquare, Lock, Crown,
-  ChevronDown, ChevronUp, Filter,
+  Loader2,
 } from 'lucide-react'
-import type { Invitation } from '@/lib/types'
+import type { Invitation, Guest } from '@/lib/types'
 import { getPackage, type PackageTier } from '@/lib/packages'
 import { getInvitationUrl } from '@/lib/utils'
-
-//  Types 
-
-interface GuestContact {
-  id: string
-  name: string
-  phone: string
-  group?: string
-  sent?: boolean
-  sentAt?: string
-  note?: string
-}
 
 interface Props {
   invitation: Invitation
 }
 
-//  Helpers 
+interface GuestStats {
+  total: number
+  attending: number
+  declined: number
+  pending: number
+}
 
 function normalizePhone(phone: string): string {
   const digits = phone.replace(/\D/g, '')
@@ -39,24 +32,10 @@ function generateWaLink(phone: string, message: string): string {
   return `https://wa.me/${normalizePhone(phone)}?text=${encodeURIComponent(message)}`
 }
 
-// Load/save guests from localStorage (local dev only)
-const STORAGE_KEY = (id: string) => `ku_guests_${id}`
-
-function loadGuests(invId: string): GuestContact[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY(invId))
-    return raw ? JSON.parse(raw) : []
-  } catch { return [] }
-}
-
-function saveGuests(invId: string, guests: GuestContact[]) {
-  try { localStorage.setItem(STORAGE_KEY(invId), JSON.stringify(guests)) } catch { }
-}
-
-//  Main 
-
 export default function GuestManager({ invitation }: Props) {
-  const [contacts, setContacts] = useState<GuestContact[]>(() => loadGuests(invitation.id))
+  const [contacts, setContacts] = useState<Guest[]>([])
+  const [stats, setStats] = useState<GuestStats>({ total: 0, attending: 0, declined: 0, pending: 0 })
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [filterSent, setFilterSent] = useState<'all' | 'sent' | 'unsent'>('all')
   const [showAddForm, setShowAddForm] = useState(false)
@@ -70,8 +49,23 @@ export default function GuestManager({ invitation }: Props) {
 
   const invUrl = getInvitationUrl(invitation.slug)
 
-  const defaultMessage = (name: string) =>
-    `Assalamu'alaikum Yth. ${name},\n\nKami mengundang kehadiran Bapak/Ibu/Saudara/i dalam acara pernikahan kami.\n\n🔗 Undangan digital: ${invUrl}\n\nMohon hadir ya, terima kasih 💝`
+  const defaultMessage = useCallback((name: string) =>
+    `Assalamu'alaikum Yth. ${name},\n\nKami mengundang kehadiran Bapak/Ibu/Saudara/i dalam acara pernikahan kami.\n\n🔗 Undangan digital: ${invUrl}\n\nMohon hadir ya, terima kasih 💝`,
+    [invUrl])
+
+  const fetchGuests = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/guests?invitation_id=${invitation.id}`)
+      if (!res.ok) return
+      const data = await res.json()
+      setContacts(data.guests ?? [])
+      setStats(data.stats ?? { total: 0, attending: 0, declined: 0, pending: 0 })
+    } catch { /* ignore */ }
+  }, [invitation.id])
+
+  useEffect(() => {
+    fetchGuests().finally(() => setLoading(false))
+  }, [fetchGuests])
 
   const filtered = useMemo(() => {
     return contacts.filter(c => {
@@ -79,71 +73,82 @@ export default function GuestManager({ invitation }: Props) {
         c.phone.includes(search)
       const matchFilter = filterSent === 'all'
         ? true
-        : filterSent === 'sent' ? c.sent : !c.sent
+        : filterSent === 'sent' ? !!c.blast_sent_at : !c.blast_sent_at
       return matchSearch && matchFilter
     })
   }, [contacts, search, filterSent])
 
-  const sentCount = contacts.filter(c => c.sent).length
-  const unsentCount = contacts.length - sentCount
+  const sentCount = contacts.filter(c => c.blast_sent_at).length
+  const unsentCount = contacts.filter(c => c.phone && !c.blast_sent_at).length
 
-  function updateContacts(updated: GuestContact[]) {
-    setContacts(updated)
-    saveGuests(invitation.id, updated)
-  }
-
-  function addGuest() {
+  async function addGuest() {
     if (!newGuest.name.trim()) { toast.error('Nama wajib diisi'); return }
     if (!newGuest.phone.trim()) { toast.error('Nomor WA wajib diisi'); return }
     if (newGuest.phone.replace(/\D/g, '').length < 9) { toast.error('Nomor WA tidak valid'); return }
     if (isAtLimit) { toast.error(`Batas ${maxGuests} tamu di paket ${pkg.name}`); return }
 
-    const guest: GuestContact = {
-      id: Date.now().toString(),
-      name: newGuest.name.trim(),
-      phone: newGuest.phone.trim(),
-      group: newGuest.group.trim() || undefined,
-      note: newGuest.note.trim() || undefined,
-      sent: false,
-    }
+    const res = await fetch('/api/guests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        invitation_id: invitation.id,
+        name: newGuest.name.trim(),
+        phone: newGuest.phone.trim(),
+        group: newGuest.group.trim(),
+        note: newGuest.note.trim(),
+      }),
+    })
+    if (!res.ok) { toast.error('Gagal menambah tamu'); return }
 
-    updateContacts([...contacts, guest])
+    const { guest } = await res.json()
+    setContacts(prev => [guest, ...prev])
     setNewGuest({ name: '', phone: '', group: '', note: '' })
     setShowAddForm(false)
     toast.success('Tamu ditambahkan!')
   }
 
-  function removeGuest(id: string) {
-    updateContacts(contacts.filter(c => c.id !== id))
+  async function removeGuest(id: string) {
+    const res = await fetch(`/api/guests?id=${id}`, { method: 'DELETE' })
+    if (!res.ok) { toast.error('Gagal menghapus'); return }
+    setContacts(prev => prev.filter(c => c.id !== id))
     toast.success('Tamu dihapus')
   }
 
-  function markSent(id: string) {
-    updateContacts(contacts.map(c => c.id === id ? { ...c, sent: true, sentAt: new Date().toISOString() } : c))
+  async function markSent(ids: string[]) {
+    await fetch('/api/guests/blast-sent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    }).catch(() => {})
+    const now = new Date().toISOString()
+    setContacts(prev => prev.map(c => ids.includes(c.id) ? { ...c, blast_sent_at: now } : c))
   }
 
-  function openWa(contact: GuestContact) {
+  function openWa(contact: Guest) {
     const msg = defaultMessage(contact.name)
     window.open(generateWaLink(contact.phone, msg), '_blank')
-    markSent(contact.id)
+    markSent([contact.id])
   }
 
-  function blastAll(targets: GuestContact[]) {
+  function blastAll() {
+    const targets = contacts.filter(c => c.phone && !c.blast_sent_at)
     if (targets.length === 0) { toast.error('Tidak ada tamu yang belum dikirimi'); return }
+    const ids: string[] = []
     targets.forEach(c => {
-      const msg = defaultMessage(c.name)
-      const link = generateWaLink(c.phone, msg)
-      window.open(link, '_blank')
-      setTimeout(() => markSent(c.id), 500)
+      window.open(generateWaLink(c.phone, defaultMessage(c.name)), '_blank')
+      ids.push(c.id)
     })
+    markSent(ids)
     toast.success(`${targets.length} pesan WhatsApp dibuka`)
     setShowBlast(false)
   }
 
   function exportCsv() {
-    const rows = [['Nama', 'Nomor WA', 'Grup', 'Status', 'Catatan']]
+    const rows = [['Nama', 'Nomor WA', 'Grup', 'RSVP', 'Status Blast', 'Catatan']]
     contacts.forEach(c => rows.push([
-      c.name, c.phone, c.group ?? '', c.sent ? 'Terkirim' : 'Belum', c.note ?? '',
+      c.name, c.phone, c.group ?? '',
+      c.attending === true ? 'Hadir' : c.attending === false ? 'Berhalangan' : 'Belum RSVP',
+      c.blast_sent_at ? 'Terkirim' : 'Belum', c.note ?? '',
     ]))
     const csv = rows.map(r => r.map(v => `"${v.replace(/"/g, '""')}"`).join(',')).join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
@@ -154,14 +159,22 @@ export default function GuestManager({ invitation }: Props) {
     toast.success('Daftar tamu diexport!')
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 size={24} className="animate-spin text-stone-300" />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4">
       {/* Header stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: 'Total Tamu', value: contacts.length, icon: Users, color: 'bg-blue-50 text-blue-600 border-blue-100' },
-          { label: 'Sudah Dikirimi', value: sentCount, icon: CheckCircle2, color: 'bg-green-50 text-green-600 border-green-100' },
-          { label: 'Belum Dikirimi', value: unsentCount, icon: Clock, color: 'bg-amber-50 text-amber-600 border-amber-100' },
+          { label: 'Hadir (RSVP)', value: stats.attending, icon: CheckCircle2, color: 'bg-green-50 text-green-600 border-green-100' },
+          { label: 'Belum Blast', value: unsentCount, icon: Clock, color: 'bg-amber-50 text-amber-600 border-amber-100' },
           { label: 'Batas Paket', value: maxGuests === -1 ? '∞' : maxGuests, icon: Crown, color: 'bg-gold-50 text-gold-600 border-rose-100' },
         ].map(s => (
           <div key={s.label} className={`rounded-2xl border p-4 ${s.color}`}>
@@ -309,7 +322,7 @@ export default function GuestManager({ invitation }: Props) {
                 </p>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => blastAll(contacts.filter(c => !c.sent))}
+                    onClick={blastAll}
                     className="flex-1 py-2.5 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 transition-colors"
                   >
                     Ya, Kirim Sekarang
@@ -400,30 +413,41 @@ export default function GuestManager({ invitation }: Props) {
                           {contact.group}
                         </span>
                       )}
+                      {contact.attending === true && (
+                        <span className="text-[10px] bg-green-100 text-green-600 px-2 py-0.5 rounded-full shrink-0">Hadir</span>
+                      )}
+                      {contact.attending === false && (
+                        <span className="text-[10px] bg-red-100 text-red-500 px-2 py-0.5 rounded-full shrink-0">Berhalangan</span>
+                      )}
+                      {contact.source === 'rsvp' && (
+                        <span className="text-[10px] bg-blue-100 text-blue-500 px-2 py-0.5 rounded-full shrink-0">RSVP</span>
+                      )}
                     </div>
-                    <p className="text-xs text-gray-400 font-mono">{contact.phone}</p>
+                    {contact.phone && <p className="text-xs text-gray-400 font-mono">{contact.phone}</p>}
                     {contact.note && <p className="text-xs text-gray-400 mt-0.5 italic">{contact.note}</p>}
                   </div>
 
                   {/* Status + Actions */}
                   <div className="flex items-center gap-2 shrink-0">
-                    {contact.sent ? (
+                    {contact.blast_sent_at ? (
                       <span className="flex items-center gap-1 text-xs text-green-600 font-medium">
                         <CheckCircle2 size={12} /> Terkirim
                       </span>
-                    ) : (
+                    ) : contact.phone ? (
                       <span className="flex items-center gap-1 text-xs text-amber-500">
                         <Clock size={12} /> Belum
                       </span>
-                    )}
+                    ) : null}
 
-                    <button
-                      onClick={() => openWa(contact)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded-lg transition-colors"
-                    >
-                      <MessageSquare size={11} />
-                      {contact.sent ? 'Kirim Lagi' : 'Kirim WA'}
-                    </button>
+                    {contact.phone && (
+                      <button
+                        onClick={() => openWa(contact)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded-lg transition-colors"
+                      >
+                        <MessageSquare size={11} />
+                        {contact.blast_sent_at ? 'Kirim Lagi' : 'Kirim WA'}
+                      </button>
+                    )}
 
                     <button
                       onClick={() => removeGuest(contact.id)}

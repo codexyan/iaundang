@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
     const guest = await guests.create({
       invitation_id: invitationId,
       name,
+      phone: '',
+      group: '',
+      note: '',
+      source: 'rsvp',
       attending,
       total_guests: totalGuests,
     })

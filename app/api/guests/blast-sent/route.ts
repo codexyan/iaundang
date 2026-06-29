@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { getSession } from '@/lib/session-server'
+import { guests } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
+
+const schema = z.object({
+  ids: z.array(z.string().min(1)).min(1),
+})
+
+export async function POST(req: NextRequest) {
+  const session = await getSession()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const body = await req.json()
+  const parsed = schema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Data tidak valid' }, { status: 400 })
+  }
+
+  await guests.markBlastSent(parsed.data.ids)
+  return NextResponse.json({ success: true })
+}

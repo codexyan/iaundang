@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { invitations, galleries, wishes, guests, templateRecords } from '@/lib/db'
 import { isExpired } from '@/lib/utils'
 import { getPackage, type PackageTier } from '@/lib/packages'
+import { subscriptions, isActive as isSubActive, isTrial, isInGracePeriod } from '@/lib/subscription'
 
 export const dynamic = 'force-dynamic'
 import { LEGACY_TEMPLATE_IDS } from '@/lib/types'
@@ -16,6 +17,7 @@ import DarkElegantTemplate from '@/components/templates/dark-elegant/DarkElegant
 
 // New JSON-driven renderer
 import InvitationRenderer from '@/components/renderer/InvitationRenderer'
+import ViewTracker from '@/components/analytics/ViewTracker'
 
 interface Props {
   params: { slug: string }
@@ -51,7 +53,15 @@ export default async function InvitationPage({ params }: Props) {
     return <UnpublishedPage />
   }
 
-  if (invitation.is_paid && isExpired(invitation.expires_at)) {
+  const sub = await subscriptions.findByInvitation(invitation.id)
+  const expired = sub
+    ? !isSubActive(sub)
+    : invitation.is_paid && isExpired(invitation.expires_at)
+
+  if (expired) {
+    if (sub && isTrial(sub) && isInGracePeriod(sub)) {
+      return <TrialGracePage slug={invitation.slug} />
+    }
     return <ExpiredPage />
   }
 
@@ -59,7 +69,23 @@ export default async function InvitationPage({ params }: Props) {
   const pkg = getPackage(tier)
   const showWatermark = !invitation.is_paid || !pkg.hasWatermarkFree
 
-  //  JSON-driven renderer path 
+  // Build Event structured data for SEO
+  const isLegacyData = (LEGACY_TEMPLATE_IDS as string[]).includes(invitation.template_id)
+  const seoData = isLegacyData
+    ? { groom: invitation.data.groomName, bride: invitation.data.brideName, date: invitation.data.akadDate, venue: invitation.data.akadVenue }
+    : (() => { const d = invitation.data as unknown as NewInvitationData; return { groom: d.groom_name, bride: d.bride_name, date: d.akad?.date, venue: d.akad?.venue_name } })()
+
+  const eventJsonLd = seoData.groom ? {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `Pernikahan ${seoData.groom} & ${seoData.bride}`,
+    ...(seoData.date && { startDate: seoData.date }),
+    ...(seoData.venue && { location: { '@type': 'Place', name: seoData.venue } }),
+    url: `https://iaundang.id/invitation/${invitation.slug}`,
+    organizer: { '@type': 'Organization', name: 'iaundang', url: 'https://iaundang.id' },
+  } : null
+
+  //  JSON-driven renderer path
   const isLegacy = (LEGACY_TEMPLATE_IDS as string[]).includes(invitation.template_id)
 
   if (!isLegacy) {
@@ -80,10 +106,11 @@ export default async function InvitationPage({ params }: Props) {
       />
     )
 
-    return showWatermark ? <WatermarkShell>{content}</WatermarkShell> : content
+    const page = showWatermark ? <WatermarkShell>{content}</WatermarkShell> : content
+    return <>{eventJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />}{page}<ViewTracker invitationId={invitation.id} /></>
   }
 
-  //  Legacy hardcoded templates path 
+  //  Legacy hardcoded templates path
   const props = {
     invitation: invitation as Invitation,
     galleries: await galleries.findByInvitationId(invitation.id) as Gallery[],
@@ -101,7 +128,8 @@ export default async function InvitationPage({ params }: Props) {
       content = <ModernWhiteTemplate {...props} />; break
   }
 
-  return showWatermark ? <WatermarkShell>{content}</WatermarkShell> : content
+  const page = showWatermark ? <WatermarkShell>{content}</WatermarkShell> : content
+  return <>{eventJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />}{page}<ViewTracker invitationId={invitation.id} /></>
 }
 
 function WatermarkShell({ children }: { children: React.ReactNode }) {
@@ -149,6 +177,26 @@ function UnpublishedPage({ message }: { message?: string }) {
         <p className="text-gray-500 mt-3 max-w-sm">
           {message ?? 'Undangan ini belum dipublikasikan oleh pemiliknya.'}
         </p>
+      </div>
+    </div>
+  )
+}
+
+function TrialGracePage({ slug }: { slug: string }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center px-4 max-w-md">
+        <div className="text-5xl mb-4">🔒</div>
+        <h1 className="text-2xl font-sans font-bold text-gray-800">Masa Percobaan Berakhir</h1>
+        <p className="text-gray-500 mt-3">
+          Free trial untuk undangan <strong>{slug}</strong> telah habis. Undangan masih tersimpan — upgrade ke paket berbayar untuk mengaktifkan kembali.
+        </p>
+        <Link
+          href="/templates"
+          className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-stone-900 text-white text-sm font-semibold rounded-xl hover:bg-stone-800 transition-colors"
+        >
+          Pilih Paket & Aktifkan
+        </Link>
       </div>
     </div>
   )

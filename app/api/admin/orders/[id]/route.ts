@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { getSession } from '@/lib/session-server'
 import { isAdmin } from '@/lib/auth'
-import { orders, users, invitations, settings } from '@/lib/db'
+import { orders, users, invitations } from '@/lib/db'
+import { subscriptions } from '@/lib/subscription'
+import { PACKAGES, type PackageTier } from '@/lib/packages'
+import { notifyUser } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,6 +36,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         admin_notes: admin_notes || '',
         reviewed_at: new Date().toISOString(),
       })
+      notifyUser('order_rejected', order.email, {
+        orderNumber: order.order_number,
+        reason: admin_notes || '',
+      }).catch(() => {})
       return NextResponse.json({ success: true })
     }
 
@@ -41,8 +48,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         return NextResponse.json({ error: 'Pesanan sudah diapprove' }, { status: 409 })
       }
 
-      const appSettings = await settings.get()
-      const packageDuration = appSettings.packageDuration || 3
+      const tier = order.package_tier as PackageTier
+      const pkg = PACKAGES[tier] ?? PACKAGES.popular
+      const packageDuration = pkg.activeMonths
 
       const plainPassword = generatePassword()
       const passwordHash = await bcrypt.hash(plainPassword, 10)
@@ -82,11 +90,27 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         referred_by: order.referred_by,
       })
 
+      const subscription = await subscriptions.create({
+        invitationId: inv.id,
+        userId: user.id,
+        orderId: id,
+        tier: order.package_tier as PackageTier,
+      })
+
       await orders.update(id, {
         status: 'approved',
         admin_notes: admin_notes || '',
         reviewed_at: new Date().toISOString(),
+        invitation_id: inv.id,
       })
+
+      notifyUser('order_approved', order.email, {
+        orderNumber: order.order_number,
+        slug: order.subdomain,
+        email: order.email,
+        tierName: pkg.name,
+        expiresAt: expiresAt.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+      }).catch(() => {})
 
       return NextResponse.json({
         success: true,
@@ -96,6 +120,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         },
         invitation_id: inv.id,
         slug: order.subdomain,
+        subscription_id: subscription.id,
       })
     }
 

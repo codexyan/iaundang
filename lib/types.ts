@@ -61,8 +61,13 @@ export interface Guest {
   id: string
   invitation_id: string
   name: string
-  attending: boolean
+  phone: string
+  group: string
+  note: string
+  source: 'manual' | 'rsvp'
+  attending: boolean | null
   total_guests: number
+  blast_sent_at: string | null
   created_at: string
 }
 
@@ -573,6 +578,7 @@ export interface MusicCategory {
 export interface Order {
   id: string
   order_number: string
+  invitation_id: string | null
   email: string
   phone: string
   groom_name: string

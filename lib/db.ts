@@ -18,6 +18,7 @@ export interface DbUser {
   email: string
   password_hash: string
   role?: UserRole
+  referral_code?: string | null
   created_at: string
 }
 
@@ -102,8 +103,8 @@ export interface PaymentProof {
 
 //  MAPPERS 
 
-function mapUser(u: { id: string; email: string; passwordHash: string; role: string; createdAt: Date }): DbUser {
-  return { id: u.id, email: u.email, password_hash: u.passwordHash, role: u.role as UserRole, created_at: u.createdAt.toISOString() }
+function mapUser(u: { id: string; email: string; passwordHash: string; role: string; referralCode: string | null; createdAt: Date }): DbUser {
+  return { id: u.id, email: u.email, password_hash: u.passwordHash, role: u.role as UserRole, referral_code: u.referralCode, created_at: u.createdAt.toISOString() }
 }
 
 function mapInvitation(i: {
@@ -126,8 +127,17 @@ function mapGallery(g: { id: string; invitationId: string; url: string; order: n
   return { id: g.id, invitation_id: g.invitationId, url: g.url, order: g.order }
 }
 
-function mapGuest(g: { id: string; invitationId: string; name: string; attending: boolean; totalGuests: number; createdAt: Date }): Guest {
-  return { id: g.id, invitation_id: g.invitationId, name: g.name, attending: g.attending, total_guests: g.totalGuests, created_at: g.createdAt.toISOString() }
+function mapGuest(g: {
+  id: string; invitationId: string; name: string; phone: string; group: string; note: string; source: string
+  attending: boolean | null; totalGuests: number; blastSentAt: Date | null; createdAt: Date
+}): Guest {
+  return {
+    id: g.id, invitation_id: g.invitationId, name: g.name,
+    phone: g.phone, group: g.group, note: g.note, source: g.source as Guest['source'],
+    attending: g.attending, total_guests: g.totalGuests,
+    blast_sent_at: g.blastSentAt?.toISOString() ?? null,
+    created_at: g.createdAt.toISOString(),
+  }
 }
 
 function mapWish(w: { id: string; invitationId: string; name: string; message: string; createdAt: Date }): Wish {
@@ -193,9 +203,82 @@ export const users = {
   async updateRole(id: string, role: UserRole): Promise<void> {
     await prisma.user.update({ where: { id }, data: { role } })
   },
+  async findByReferralCode(code: string): Promise<DbUser | null> {
+    const u = await prisma.user.findUnique({ where: { referralCode: code } })
+    return u ? mapUser(u) : null
+  },
+  async setReferralCode(id: string, code: string): Promise<void> {
+    await prisma.user.update({ where: { id }, data: { referralCode: code } })
+  },
 }
 
-//  INVITATIONS 
+// ─── USER REFERRALS ──────────────────────────────────────────
+
+export interface UserReferralRecord {
+  id: string
+  referrer_id: string
+  referred_id: string
+  order_id: string | null
+  status: 'pending' | 'completed' | 'rewarded'
+  reward_type: string
+  reward_value: number
+  claimed_at: string | null
+  created_at: string
+}
+
+export const userReferrals = {
+  async create(data: { referrer_id: string; referred_id: string; order_id?: string }): Promise<UserReferralRecord> {
+    const r = await prisma.userReferral.create({
+      data: {
+        referrerId: data.referrer_id,
+        referredId: data.referred_id,
+        orderId: data.order_id || null,
+        rewardType: 'discount',
+        rewardValue: 15000,
+      },
+    })
+    return mapUserReferral(r)
+  },
+
+  async findByReferrerId(referrerId: string): Promise<UserReferralRecord[]> {
+    const all = await prisma.userReferral.findMany({
+      where: { referrerId },
+      orderBy: { createdAt: 'desc' },
+    })
+    return all.map(mapUserReferral)
+  },
+
+  async countByReferrer(referrerId: string): Promise<{ total: number; completed: number; totalReward: number }> {
+    const all = await prisma.userReferral.findMany({
+      where: { referrerId },
+      select: { status: true, rewardValue: true },
+    })
+    return {
+      total: all.length,
+      completed: all.filter(r => r.status === 'completed' || r.status === 'rewarded').length,
+      totalReward: all.filter(r => r.status === 'rewarded').reduce((s, r) => s + r.rewardValue, 0),
+    }
+  },
+
+  async markCompleted(referrerId: string, referredId: string): Promise<void> {
+    await prisma.userReferral.updateMany({
+      where: { referrerId, referredId, status: 'pending' },
+      data: { status: 'completed' },
+    })
+  },
+}
+
+function mapUserReferral(r: { id: string; referrerId: string; referredId: string; orderId: string | null; status: string; rewardType: string; rewardValue: number; claimedAt: Date | null; createdAt: Date }): UserReferralRecord {
+  return {
+    id: r.id, referrer_id: r.referrerId, referred_id: r.referredId,
+    order_id: r.orderId, status: r.status as UserReferralRecord['status'],
+    reward_type: r.rewardType, reward_value: r.rewardValue,
+    claimed_at: r.claimedAt?.toISOString() ?? null,
+    created_at: r.createdAt.toISOString(),
+  }
+}
+
+//  INVITATIONS
 
 export const invitations = {
   async findBySlug(slug: string): Promise<Invitation | null> {
@@ -284,14 +367,48 @@ export const guests = {
     const all = await prisma.guest.findMany({ where: { invitationId }, orderBy: { createdAt: 'desc' } })
     return all.map(mapGuest)
   },
-  async create(data: Omit<Guest, 'id' | 'created_at'>): Promise<Guest> {
+  async create(data: Omit<Guest, 'id' | 'created_at' | 'blast_sent_at'>): Promise<Guest> {
     const g = await prisma.guest.create({
       data: {
         invitationId: data.invitation_id, name: data.name,
+        phone: data.phone || '', group: data.group || '', note: data.note || '',
+        source: data.source || 'manual',
         attending: data.attending, totalGuests: data.total_guests,
       },
     })
     return mapGuest(g)
+  },
+  async update(id: string, data: Partial<Pick<Guest, 'name' | 'phone' | 'group' | 'note' | 'attending' | 'total_guests'>>): Promise<Guest> {
+    const g = await prisma.guest.update({
+      where: { id },
+      data: {
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.phone !== undefined && { phone: data.phone }),
+        ...(data.group !== undefined && { group: data.group }),
+        ...(data.note !== undefined && { note: data.note }),
+        ...(data.attending !== undefined && { attending: data.attending }),
+        ...(data.total_guests !== undefined && { totalGuests: data.total_guests }),
+      },
+    })
+    return mapGuest(g)
+  },
+  async delete(id: string): Promise<void> {
+    await prisma.guest.delete({ where: { id } })
+  },
+  async markBlastSent(ids: string[]): Promise<void> {
+    await prisma.guest.updateMany({
+      where: { id: { in: ids } },
+      data: { blastSentAt: new Date() },
+    })
+  },
+  async countByInvitation(invitationId: string): Promise<{ total: number; attending: number; declined: number; pending: number }> {
+    const all = await prisma.guest.findMany({ where: { invitationId }, select: { attending: true } })
+    return {
+      total: all.length,
+      attending: all.filter(g => g.attending === true).length,
+      declined: all.filter(g => g.attending === false).length,
+      pending: all.filter(g => g.attending === null).length,
+    }
   },
 }
 
@@ -947,7 +1064,8 @@ export const paymentProofs = {
 
 function mapOrder(o: any): Order {
   return {
-    id: o.id, order_number: o.orderNumber, email: o.email, phone: o.phone,
+    id: o.id, order_number: o.orderNumber, invitation_id: o.invitationId ?? null,
+    email: o.email, phone: o.phone,
     groom_name: o.groomName, bride_name: o.brideName,
     groom_nickname: o.groomNickname, bride_nickname: o.brideNickname,
     groom_father: o.groomFather, groom_mother: o.groomMother,
@@ -1006,6 +1124,7 @@ export const orders = {
           ...(data.status !== undefined && { status: data.status }),
           ...(data.admin_notes !== undefined && { adminNotes: data.admin_notes }),
           ...(data.proof_url !== undefined && { proofUrl: data.proof_url }),
+          ...(data.invitation_id !== undefined && { invitationId: data.invitation_id }),
           ...(data.reviewed_at !== undefined && { reviewedAt: data.reviewed_at ? new Date(data.reviewed_at) : null }),
         },
       })
@@ -1359,5 +1478,136 @@ export const landingSections = {
       update: { value: sections as unknown as import('@prisma/client').Prisma.InputJsonValue },
       create: { key: 'landing_sections', value: sections as unknown as import('@prisma/client').Prisma.InputJsonValue },
     })
+  },
+}
+
+// ─── INVITATION VIEWS (analytics) ─────────────────────────────
+
+export interface InvitationViewRecord {
+  id: string
+  invitation_id: string
+  viewed_at: string
+  referrer: string
+  user_agent: string
+  country: string
+}
+
+export const invitationViews = {
+  async record(data: { invitation_id: string; referrer?: string; user_agent?: string }): Promise<void> {
+    await prisma.invitationView.create({
+      data: {
+        invitationId: data.invitation_id,
+        referrer: data.referrer || '',
+        userAgent: data.user_agent || '',
+      },
+    })
+  },
+
+  async countByInvitation(invitationId: string): Promise<number> {
+    return prisma.invitationView.count({ where: { invitationId } })
+  },
+
+  async countByDateRange(invitationId: string, from: Date, to: Date): Promise<number> {
+    return prisma.invitationView.count({
+      where: { invitationId, viewedAt: { gte: from, lte: to } },
+    })
+  },
+
+  async dailyCounts(invitationId: string, days: number = 30): Promise<{ date: string; count: number }[]> {
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    since.setHours(0, 0, 0, 0)
+
+    const views = await prisma.invitationView.findMany({
+      where: { invitationId, viewedAt: { gte: since } },
+      select: { viewedAt: true },
+      orderBy: { viewedAt: 'asc' },
+    })
+
+    const map = new Map<string, number>()
+    for (let i = 0; i < days; i++) {
+      const d = new Date(since)
+      d.setDate(d.getDate() + i)
+      map.set(d.toISOString().slice(0, 10), 0)
+    }
+    for (const v of views) {
+      const key = v.viewedAt.toISOString().slice(0, 10)
+      map.set(key, (map.get(key) ?? 0) + 1)
+    }
+    return Array.from(map.entries()).map(([date, count]) => ({ date, count }))
+  },
+
+  async topReferrers(invitationId: string, limit: number = 10): Promise<{ referrer: string; count: number }[]> {
+    const views = await prisma.invitationView.findMany({
+      where: { invitationId, referrer: { not: '' } },
+      select: { referrer: true },
+    })
+    const map = new Map<string, number>()
+    for (const v of views) {
+      map.set(v.referrer, (map.get(v.referrer) ?? 0) + 1)
+    }
+    return Array.from(map.entries())
+      .map(([referrer, count]) => ({ referrer, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit)
+  },
+}
+
+// ─── USER FEEDBACK ────────────────────────────────────────────
+
+export interface FeedbackRecord {
+  id: string
+  user_id: string
+  type: string
+  score: number
+  comment: string
+  page: string
+  created_at: string
+}
+
+export const userFeedback = {
+  async create(data: { user_id: string; type?: string; score: number; comment?: string; page?: string }): Promise<FeedbackRecord> {
+    const r = await prisma.userFeedback.create({
+      data: {
+        userId: data.user_id,
+        type: data.type || 'nps',
+        score: data.score,
+        comment: data.comment || '',
+        page: data.page || '',
+      },
+    })
+    return { id: r.id, user_id: r.userId, type: r.type, score: r.score, comment: r.comment, page: r.page, created_at: r.createdAt.toISOString() }
+  },
+
+  async findByUserId(userId: string): Promise<FeedbackRecord[]> {
+    const all = await prisma.userFeedback.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } })
+    return all.map(r => ({ id: r.id, user_id: r.userId, type: r.type, score: r.score, comment: r.comment, page: r.page, created_at: r.createdAt.toISOString() }))
+  },
+
+  async hasRecentFeedback(userId: string, days: number = 30): Promise<boolean> {
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    const count = await prisma.userFeedback.count({
+      where: { userId, createdAt: { gte: since } },
+    })
+    return count > 0
+  },
+
+  async getAverageNps(): Promise<{ average: number; total: number; promoters: number; passives: number; detractors: number }> {
+    const all = await prisma.userFeedback.findMany({
+      where: { type: 'nps' },
+      select: { score: true },
+    })
+    if (all.length === 0) return { average: 0, total: 0, promoters: 0, passives: 0, detractors: 0 }
+    const promoters = all.filter(f => f.score >= 9).length
+    const detractors = all.filter(f => f.score <= 6).length
+    const passives = all.length - promoters - detractors
+    const nps = Math.round(((promoters - detractors) / all.length) * 100)
+    return { average: nps, total: all.length, promoters, passives, detractors }
+  },
+
+  async findAll(limit: number = 100): Promise<FeedbackRecord[]> {
+    const all = await prisma.userFeedback.findMany({ orderBy: { createdAt: 'desc' }, take: limit })
+    return all.map(r => ({ id: r.id, user_id: r.userId, type: r.type, score: r.score, comment: r.comment, page: r.page, created_at: r.createdAt.toISOString() }))
   },
 }

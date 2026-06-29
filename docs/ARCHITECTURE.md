@@ -1,0 +1,474 @@
+# IAUndang — Architecture & Technical Reference
+
+**Last updated:** 29 Juni 2026
+**Stack:** Next.js 14.2 (App Router) · Prisma · PostgreSQL (Supabase) · Resend · TypeScript
+
+---
+
+## Daftar Isi
+
+1. [Tech Stack](#tech-stack)
+2. [Project Structure](#project-structure)
+3. [Database Schema](#database-schema)
+4. [Domain Services](#domain-services)
+5. [API Routes](#api-routes)
+6. [Dashboard Modules](#dashboard-modules)
+7. [Admin Panel](#admin-panel)
+8. [Template Engine](#template-engine)
+9. [Authentication & Authorization](#authentication--authorization)
+10. [Subscription Lifecycle](#subscription-lifecycle)
+11. [Notification System](#notification-system)
+12. [Analytics System](#analytics-system)
+13. [A/B Testing](#ab-testing)
+14. [Referral Program](#referral-program)
+15. [SEO Infrastructure](#seo-infrastructure)
+16. [Environment Variables](#environment-variables)
+17. [Deployment](#deployment)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 14.2, App Router, React 18 |
+| Language | TypeScript (strict) |
+| Database | PostgreSQL via Supabase |
+| ORM | Prisma 5.22 |
+| Auth | JWT via `jose`, cookie-based sessions |
+| Storage | Supabase Storage (images, music) |
+| Email | Resend (fallback: console) |
+| Styling | Tailwind CSS + custom design tokens |
+| Animation | Framer Motion |
+| Font | Geist Sans + Geist Mono |
+| Icons | Lucide React |
+
+---
+
+## Project Structure
+
+```
+app/
+├── (main)/           # Public pages (landing, blog, templates, order)
+│   ├── page.tsx      # Landing page (JSON-LD WebApplication)
+│   ├── blog/         # Blog listing + [slug] detail
+│   ├── templates/    # Template gallery + [slug] detail (JSON-LD Product)
+│   └── layout.tsx    # Public layout (Navbar + Footer)
+├── (app)/            # Authenticated pages
+│   ├── dashboard/    # User dashboard
+│   └── admin/        # Admin panel
+├── (auth)/           # Login, register, forgot-password, reset-password
+├── invitation/[slug]/ # Public invitation view (JSON-LD Event)
+├── api/              # All API routes (see API Routes section)
+├── robots.ts         # Dynamic robots.txt
+├── sitemap.ts        # Dynamic XML sitemap
+└── layout.tsx        # Root layout (Geist font, Toaster)
+
+components/
+├── admin/            # Admin panel components
+│   ├── AdminPanel.tsx # Main admin shell (sidebar + content)
+│   └── tabs/         # 15 admin tabs
+├── dashboard/        # User dashboard modules (10 components)
+├── landing/          # Landing page sections (9 sections)
+├── templates/        # Legacy hardcoded templates (3)
+├── renderer/         # JSON-driven template renderer (v2)
+├── analytics/        # ViewTracker component
+├── blog/             # Blog components
+└── ui/               # Shared UI (Button, Logo, Navbar, Footer)
+
+lib/
+├── db.ts             # Database service layer (all Prisma queries)
+├── prisma.ts         # Prisma client singleton
+├── types.ts          # TypeScript interfaces
+├── auth.ts           # Auth helpers (isAdmin, isAffiliate, etc.)
+├── session.ts        # JWT session encode/decode/verify
+├── session-server.ts # Server-side getSession()
+├── subscription.ts   # Subscription domain service
+├── notifications.ts  # Notification service (12 types, Resend transport)
+├── experiments.ts    # A/B testing service
+├── packages.ts       # Package/tier definitions (starter, popular, eksklusif)
+├── utils.ts          # Shared utilities
+├── demo-data.ts      # Demo/preview data
+└── template-configs/ # JSON template definitions (3 templates)
+    ├── javanese-gold.ts
+    ├── rose-garden.ts
+    └── midnight-luxe.ts
+
+docs/
+├── COMPANY_BLUEPRINT.md  # 15-section company & product masterplan
+├── ARCHITECTURE.md       # This file
+└── CHANGELOG.md          # Sprint-by-sprint technical changelog
+```
+
+---
+
+## Database Schema
+
+### 22 Models (Prisma)
+
+#### Core Product
+| Model | Purpose | Key Fields |
+|-------|---------|------------|
+| `User` | User accounts | email, passwordHash, role, referralCode |
+| `Invitation` | Wedding invitations | slug, templateId, data (JSON), packageTier, isPublished, isPaid, expiresAt |
+| `Gallery` | Invitation photos | invitationId, url, order |
+| `Guest` | Unified contacts + RSVP | invitationId, name, phone, group, note, source, attending, blastSentAt |
+| `Wish` | Guest messages | invitationId, name, message |
+| `GiftProof` | Digital envelope proofs | invitationId, name, proofUrl |
+
+#### Commerce
+| Model | Purpose | Key Fields |
+|-------|---------|------------|
+| `Order` | Purchase orders | orderNumber, email, subdomain, templateId, packageTier, amount, status, invitationId |
+| `PaymentProof` | Payment verification | invitationId, userId, orderId, amount, proofUrl, status |
+| `Subscription` | Access lifecycle | invitationId, userId, tier, status, startsAt, expiresAt |
+
+#### Content & Template
+| Model | Purpose | Key Fields |
+|-------|---------|------------|
+| `TemplateRecord` | Template definitions | name, slug, config (JSON), status, requiredPackage, price |
+| `MusicTrack` | Background music library | title, artist, category, url |
+| `MusicCategory` | Music categorization | name, sortOrder |
+| `Article` | Blog posts | title, slug, content, isPublished, viewsCount |
+
+#### Ecosystem
+| Model | Purpose | Key Fields |
+|-------|---------|------------|
+| `Affiliate` | Partner affiliates | userId, referralCode, commissionRate, totalEarnings |
+| `Referral` | Affiliate referral tracking | affiliateId, buyerEmail, saleAmount, commission, status |
+| `UserReferral` | User-to-user referrals | referrerId, referredId, status, rewardValue (Rp 15k) |
+
+#### Intelligence
+| Model | Purpose | Key Fields |
+|-------|---------|------------|
+| `InvitationView` | Page view tracking | invitationId, viewedAt, referrer, userAgent |
+| `Experiment` | A/B test config | key, name, variants (JSON), traffic, isActive |
+| `ExperimentEvent` | A/B test events | experimentId, variant, event (view/conversion), sessionId |
+| `UserFeedback` | NPS + user feedback | userId, type, score (0-10), comment, page |
+
+#### System
+| Model | Purpose | Key Fields |
+|-------|---------|------------|
+| `SupportTicket` | User support | userId, subject, message, status, priority |
+| `TicketReply` | Support replies | ticketId, userId, message, isAdmin |
+| `PasswordResetToken` | Password reset | userId, token, expiresAt |
+| `AppSetting` | App configuration | key, value (JSON) |
+| `AffiliateWithdrawal` | Affiliate payouts | affiliateId, amount, status |
+
+---
+
+## Domain Services
+
+### `lib/db.ts` — Database Layer
+Central data access layer. All Prisma queries wrapped in typed functions.
+
+**Service objects:**
+- `users` — findByEmail, findById, create, findAll, delete, updatePassword, updateRole, findByReferralCode, setReferralCode
+- `invitations` — findBySlug, findByUserId, findById, findAll, create, update, delete, slugExists
+- `galleries` — findByInvitationId, findById, create, update, delete, reorder
+- `guests` — findByInvitationId, create, update, delete, markBlastSent, countByInvitation
+- `wishes` — findByInvitationId, create, delete
+- `giftProofs` — create, findByInvitationId
+- `templateRecords` — findAll, findById, findBySlug, findActive, create, update, delete
+- `orders` — findAll, findById, findByOrderNumber, create, update, subdomainExists
+- `paymentProofs` — findAll, findById, findByInvitationId, create, update
+- `settings` — get, save
+- `articles` — findAll, findPublished, findById, findBySlug, create, update, delete
+- `affiliates` — findByUserId, findByCode, create, updateBank, incrementClicks
+- `referrals` — findByAffiliateId, create
+- `userReferrals` — create, findByReferrerId, countByReferrer, markCompleted
+- `invitationViews` — record, countByInvitation, countByDateRange, dailyCounts, topReferrers
+- `userFeedback` — create, findByUserId, hasRecentFeedback, getAverageNps, findAll
+- `landingSections` — get, save
+
+### `lib/subscription.ts` — Subscription Domain
+Lifecycle: `active` → `expiring_soon` → `expired` → `cancelled`
+
+- `subscriptions.create()` / `createTrial()` — new subscription or 7-day trial
+- `subscriptions.findByInvitation()` / `findByUser()`
+- `subscriptions.renew()` / `cancel()` / `markExpired()` / `syncExpiredStatuses()`
+- Helpers: `resolveStatus()`, `daysRemaining()`, `isActive()`, `isTrial()`, `isInGracePeriod()`
+- Trial: 7 days active + 14 days grace period (read-only)
+
+### `lib/notifications.ts` — Notification Service
+12 notification types with Indonesian templates.
+
+Transport: Resend (with `RESEND_API_KEY`) or console fallback.
+
+Types: `welcome`, `trial_started`, `trial_expiring`, `trial_expired`, `order_created`, `order_approved`, `order_rejected`, `payment_received`, `subscription_active`, `subscription_expiring`, `subscription_expired`, `password_reset`
+
+### `lib/experiments.ts` — A/B Testing Service
+Hash-based deterministic variant assignment (same session → same variant).
+
+- `experiments.assign(key, sessionId)` — pick variant + record view
+- `experiments.trackConversion(key, sessionId, variant)` — record conversion
+- `experiments.getReport(id)` — per-variant stats (views, conversions, rate)
+
+### `lib/packages.ts` — Tier Definitions
+
+| Tier | Price | Duration | Max Guests | Max Photos | Features |
+|------|-------|----------|------------|------------|----------|
+| Starter | Rp 79.000 | 1 bulan | 100 | 5 | Basic |
+| Popular | Rp 149.000 | 3 bulan | 500 | 20 | + Gift, Video |
+| Eksklusif | Rp 249.000 | 6 bulan | Unlimited | Unlimited | + Custom Domain, No Watermark |
+| Trial | Free | 7 hari | 50 | 5 | Basic with watermark |
+
+---
+
+## API Routes
+
+### Public (No Auth)
+| Method | Route | Purpose |
+|--------|-------|---------|
+| POST | `/api/auth/login` | Login |
+| POST | `/api/auth/register` | Register |
+| POST | `/api/auth/logout` | Logout |
+| POST | `/api/auth/forgot-password` | Request reset |
+| POST | `/api/auth/reset-password` | Execute reset |
+| GET | `/api/auth/me` | Current session |
+| POST | `/api/orders` | Create order |
+| GET | `/api/orders?order_number=X` | Check order |
+| POST | `/api/rsvp` | Submit RSVP |
+| GET | `/api/rsvp?invitationId=X` | Get RSVPs |
+| POST | `/api/wishes` | Submit wish |
+| GET | `/api/wishes?invitationId=X` | Get wishes |
+| GET | `/api/music` | Music library |
+| POST | `/api/views` | Record invitation view |
+| POST | `/api/referral` | Affiliate click tracking |
+| POST | `/api/experiments/assign` | A/B variant assignment |
+| GET | `/api/articles` | Published articles |
+| GET | `/api/payment/config` | Payment config |
+
+### User Auth Required
+| Method | Route | Purpose |
+|--------|-------|---------|
+| GET/POST/PATCH/DELETE | `/api/guests` | Guest CRUD |
+| POST | `/api/guests/blast-sent` | Mark guests as blast-sent |
+| GET | `/api/analytics?invitation_id=X` | Invitation analytics |
+| GET | `/api/referral` | User referral code + stats |
+| GET | `/api/user/subscription` | Subscription status |
+| POST | `/api/feedback` | Submit NPS feedback |
+| GET | `/api/feedback` | Feedback history |
+| POST/GET | `/api/invitations` | Invitation CRUD |
+| POST | `/api/payment/proof` | Upload payment proof |
+| POST | `/api/galleries/upload` | Upload gallery image |
+| POST/GET | `/api/tickets` | Support tickets |
+
+### Admin Only
+| Method | Route | Purpose |
+|--------|-------|---------|
+| GET/POST | `/api/admin/orders` | Order management |
+| PATCH | `/api/admin/orders/[id]` | Approve/reject order |
+| GET/PATCH | `/api/admin/proofs/[id]` | Payment verification |
+| GET/POST/DELETE | `/api/admin/users` | User management |
+| GET/POST/PATCH | `/api/admin/template-records` | Template CRUD |
+| GET/PUT | `/api/admin/settings` | App settings |
+| GET | `/api/admin/feedback` | All feedback + NPS stats |
+| GET/POST | `/api/experiments` | A/B test CRUD |
+| GET/PATCH/DELETE | `/api/experiments/[id]` | A/B test management |
+
+### Cron
+| Method | Route | Purpose |
+|--------|-------|---------|
+| POST | `/api/cron/sync-subscriptions` | Batch expire + notify (CRON_SECRET) |
+
+---
+
+## Dashboard Modules
+
+User dashboard (`/dashboard`) — 9 tabs:
+
+| Tab | Component | Purpose |
+|-----|-----------|---------|
+| Beranda | `DashboardOverview` | Stats, checklist, quick actions |
+| Undangan | `TemplateModule` + `InvitationEditor` | Edit invitation content |
+| Tamu | `GuestManager` | Contact management, WA blast (database-backed) |
+| RSVP | `RSVPList` | View RSVP responses |
+| Analitik | `AnalyticsPanel` | Views chart, RSVP breakdown, referrers |
+| Referral | `ReferralPanel` | Referral code, share, stats, history |
+| Langganan | `SubscriptionInfo` | Subscription status + upgrade |
+| Bantuan | `SupportTickets` | Support ticket system |
+| Settings | `SettingsPanel` | Account settings, delete invitation |
+
+Additional: `FeedbackWidget` — floating NPS popup (appears after 10s if no recent feedback)
+
+---
+
+## Admin Panel
+
+Admin panel (`/admin`) — 15 tabs in 6 groups:
+
+**Overview:** Dashboard (stats, revenue, recent activity)
+**Konten:** Users, Templates, Template Lab, Music Library
+**Transaksi:** Orders, Payment Proofs
+**Marketing:** Affiliates
+**Halaman:** Landing Page, Articles, Writers
+**Insights:** Feedback (NPS dashboard), A/B Testing (experiments)
+**Sistem:** Settings (branding, payment, domain)
+
+---
+
+## Template Engine
+
+### v1: Legacy Hardcoded (3 templates)
+- `modern-white`, `floral-garden`, `dark-elegant`
+- React components in `components/templates/`
+- Props: invitation, galleries, wishes, guests
+
+### v2: JSON-driven Renderer (current)
+- Template = JSON config (`TemplateRecord.config`)
+- 16 section types: opening, couple, event, gallery, rsvp, wishes, gift, countdown, story, video, streaming, closing, loading, payment, navigation, music
+- Renderer: `components/renderer/InvitationRenderer.tsx`
+- 3 active templates: Javanese Gold, Rose Garden, Midnight Luxe
+- Section-level tier gating (sections locked by package tier)
+
+---
+
+## Authentication & Authorization
+
+- **JWT sessions** via `jose` library
+- Cookie: `iaundang_session` (httpOnly, secure, sameSite: lax)
+- `SessionPayload`: `{ userId, email, role }`
+- Roles: `admin` | `content_writer` | `affiliate` | `user`
+- Server: `getSession()` from `lib/session-server.ts`
+- API: `getSessionFromRequest(req)` from `lib/session.ts`
+- Guards: `isAdmin(session)`, `isAffiliate(session)` from `lib/auth.ts`
+- Middleware: `middleware.ts` protects `/dashboard`, `/admin`, `/writer`
+
+---
+
+## Subscription Lifecycle
+
+```
+Invitation Created
+    ↓
+Trial (7 days, basic features, watermark)
+    ↓
+Trial Expiring (notification sent)
+    ↓
+Trial Expired → Grace Period (14 days, read-only)
+    ↓
+User Orders Package → Payment → Admin Approves
+    ↓
+Subscription Active (1/3/6 months based on tier)
+    ↓
+Expiring Soon (7 days before, notification)
+    ↓
+Expired → Invitation hidden from public
+```
+
+Order → Invitation → Subscription traceability chain fully linked.
+
+---
+
+## Notification System
+
+12 notification types, all with Indonesian templates.
+
+**Transport priority:**
+1. Resend email (if `RESEND_API_KEY` configured)
+2. Console log (development fallback)
+
+**HTML template:** Responsive, branded email with iaundang footer.
+
+**Integration points:**
+- Invitation creation → `trial_started`
+- Order creation → `order_created`
+- Admin order review → `order_approved` / `order_rejected`
+- Cron sync → `subscription_expiring` / `subscription_expired`
+
+---
+
+## Analytics System
+
+- `InvitationView` records every public page visit
+- `ViewTracker` client component fires POST on mount
+- Dashboard `AnalyticsPanel`: daily views chart, RSVP breakdown, top referrers
+- Date range selector: 7/14/30 days
+- Stats: totalViews, viewsThisWeek, attending rate
+
+---
+
+## A/B Testing
+
+- `Experiment` defines test with variants (JSON: weight + value per variant)
+- `ExperimentEvent` tracks views and conversions per variant
+- Hash-based assignment ensures deterministic variant per session
+- Admin UI: create/toggle/delete experiments, view conversion reports
+- Public API: `POST /api/experiments/assign` for client-side assignment
+
+---
+
+## Referral Program
+
+### User Referrals (all users)
+- Auto-generated referral code per user (format: `EMAIL-XXX`)
+- Reward: Rp 15.000 per successful referral
+- Status: pending → completed → rewarded
+- Dashboard tab with share via WA, stats, history
+
+### Affiliate Program (partners only)
+- Role-based: requires `affiliate` role
+- Commission-based: configurable rate per affiliate
+- Click tracking, conversion tracking, withdrawal system
+- Admin management in Affiliates tab
+
+---
+
+## SEO Infrastructure
+
+| Feature | Implementation |
+|---------|---------------|
+| robots.txt | `app/robots.ts` — block /api, /dashboard, /admin, /auth |
+| sitemap.xml | `app/sitemap.ts` — static pages + blog articles + published invitations |
+| Landing page | JSON-LD `WebApplication` with `AggregateOffer` |
+| Invitation pages | JSON-LD `Event` with startDate, location, organizer |
+| Template detail | JSON-LD `Product` with price, brand, availability |
+| Blog articles | Dynamic `generateMetadata()` with OG tags |
+| Template gallery | Dynamic `generateMetadata()` per template slug |
+
+---
+
+## Environment Variables
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `DATABASE_URL` | Yes | PostgreSQL connection (Supabase pooler) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key |
+| `JWT_SECRET` | Yes | JWT signing secret |
+| `ADMIN_EMAIL` | Yes | Admin email address |
+| `NEXT_PUBLIC_APP_URL` | Yes | App base URL |
+| `NEXT_PUBLIC_APP_DOMAIN` | Yes | App domain for cookies |
+| `RESEND_API_KEY` | No | Resend email API key (falls back to console) |
+| `EMAIL_FROM` | No | Email sender address |
+| `CRON_SECRET` | No | Bearer token for cron endpoints |
+
+---
+
+## Deployment
+
+- **Database:** Supabase PostgreSQL (ap-south-1)
+- **Hosting:** Vercel (recommended) or any Node.js host
+- **Storage:** Supabase Storage for images, music files
+- **Email:** Resend (configure `RESEND_API_KEY`)
+- **Cron:** Vercel Cron or external scheduler for `/api/cron/sync-subscriptions`
+- **Domain:** iaundang.id
+
+### Build & Deploy
+```bash
+npm install
+npx prisma generate
+npx prisma migrate deploy
+npm run build
+npm start
+```
+
+### Development
+```bash
+npm install
+npx prisma generate
+npx prisma migrate dev
+npm run dev
+```

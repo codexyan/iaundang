@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session-server'
 import { isAdmin } from '@/lib/auth'
 import { paymentProofs, invitations, affiliates, users } from '@/lib/db'
+import { subscriptions } from '@/lib/subscription'
+import { PACKAGES, type PackageTier } from '@/lib/packages'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,16 +25,25 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     })
 
     if (body.status === 'approved') {
-      const duration = body.packageDuration ?? 6
+      const invitation = await invitations.findById(proof.invitation_id)
+      const tier = (invitation?.package_tier || 'popular') as PackageTier
+      const pkg = PACKAGES[tier] ?? PACKAGES.popular
       const expiresAt = new Date()
-      expiresAt.setMonth(expiresAt.getMonth() + duration)
+      expiresAt.setMonth(expiresAt.getMonth() + pkg.activeMonths)
+
       await invitations.update(proof.invitation_id, {
         is_paid: true,
         is_published: true,
         expires_at: expiresAt.toISOString(),
       })
 
-      const invitation = await invitations.findById(proof.invitation_id)
+      if (invitation) {
+        await subscriptions.create({
+          invitationId: proof.invitation_id,
+          userId: proof.user_id,
+          tier,
+        })
+      }
       if (invitation?.referred_by) {
         const affiliate = await affiliates.findByCode(invitation.referred_by)
         if (affiliate && affiliate.isActive) {

@@ -64,8 +64,13 @@ export const DEMO_WISHES: Wish[] = [
   },
 ]
 
+const demoGuest = (id: string, name: string, attending: boolean, total_guests: number): Guest => ({
+  id, invitation_id: 'demo', name, phone: '', group: '', note: '', source: 'rsvp' as const,
+  attending, total_guests, blast_sent_at: null, created_at: new Date().toISOString(),
+})
+
 export const DEMO_GUESTS: Guest[] = [
-  { id: '1', invitation_id: 'demo', name: 'Keluarga Besar Santoso', attending: true, total_guests: 4, created_at: new Date().toISOString() },
-  { id: '2', invitation_id: 'demo', name: 'Reza Firmansyah', attending: true, total_guests: 2, created_at: new Date().toISOString() },
-  { id: '3', invitation_id: 'demo', name: 'Indah Kurniawati', attending: false, total_guests: 0, created_at: new Date().toISOString() },
+  demoGuest('1', 'Keluarga Besar Santoso', true, 4),
+  demoGuest('2', 'Reza Firmansyah', true, 2),
+  demoGuest('3', 'Indah Kurniawati', false, 0),
 ]

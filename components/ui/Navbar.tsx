@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: '/#templates', label: 'Template' },
   { href: '/#harga', label: 'Harga' },
   { href: '/#faq', label: 'FAQ' },
+  { href: '/blog', label: 'Blog' },
 ]
 
 const ROLE_LINKS: Record<string, { href: string; label: string; icon: React.ReactNode }[]> = {
