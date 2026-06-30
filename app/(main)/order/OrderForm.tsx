@@ -222,7 +222,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
       `📧 Email: ${email}`,
       `📦 Paket: ${tier?.label ?? packageTier}`,
       `💰 Total: Rp ${order.total_amount.toLocaleString('id-ID')}`,
-      `🌐 Subdomain: ${subdomain}.iaundang.id`,
+      `🌐 Subdomain: ${subdomain}.iaundang.online`,
       ``,
       `Mohon diverifikasi. Terima kasih! 🙏`,
     ].join('\n')
@@ -360,7 +360,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                       className="flex-1 px-4 py-3 text-sm border border-stone-200 rounded-l-xl bg-white focus:outline-none focus:ring-2 focus:ring-forest-500/20 focus:border-forest-400 transition-colors"
                     />
                     <span className="px-4 py-3 text-sm bg-stone-100 border border-l-0 border-stone-200 rounded-r-xl text-stone-500 font-mono whitespace-nowrap">
-                      .iaundang.id
+                      .iaundang.online
                     </span>
                   </div>
                   {subdomain.length >= 3 && (
@@ -374,7 +374,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                       ) : null}
                     </div>
                   )}
-                  <p className="text-[11px] text-stone-400 mt-1">Ini akan menjadi alamat undangan kalian. Contoh: rizky-aulia.iaundang.id</p>
+                  <p className="text-[11px] text-stone-400 mt-1">Ini akan menjadi alamat undangan kalian. Contoh: rizky-aulia.iaundang.online</p>
                 </div>
 
                 <div>
@@ -510,7 +510,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                   <p className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">Ringkasan Pesanan</p>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between"><span className="text-stone-500">Mempelai</span><span className="font-medium text-stone-800">{groomNickname} & {brideNickname}</span></div>
-                    <div className="flex justify-between"><span className="text-stone-500">Subdomain</span><span className="font-mono text-stone-800">{subdomain}.iaundang.id</span></div>
+                    <div className="flex justify-between"><span className="text-stone-500">Subdomain</span><span className="font-mono text-stone-800">{subdomain}.iaundang.online</span></div>
                     <div className="flex justify-between"><span className="text-stone-500">Template</span><span className="font-medium text-stone-800">{templateName}</span></div>
                     <div className="flex justify-between"><span className="text-stone-500">Paket</span><span className="font-medium text-stone-800">{selectedTier.label}</span></div>
                     <div className="border-t border-stone-200 my-2" />

@@ -81,8 +81,8 @@ export default async function InvitationPage({ params }: Props) {
     name: `Pernikahan ${seoData.groom} & ${seoData.bride}`,
     ...(seoData.date && { startDate: seoData.date }),
     ...(seoData.venue && { location: { '@type': 'Place', name: seoData.venue } }),
-    url: `https://iaundang.id/invitation/${invitation.slug}`,
-    organizer: { '@type': 'Organization', name: 'iaundang', url: 'https://iaundang.id' },
+    url: `https://iaundang.online/invitation/${invitation.slug}`,
+    organizer: { '@type': 'Organization', name: 'iaundang', url: 'https://iaundang.online' },
   } : null
 
   //  JSON-driven renderer path

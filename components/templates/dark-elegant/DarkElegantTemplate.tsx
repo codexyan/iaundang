@@ -152,7 +152,7 @@ export default function DarkElegantTemplate({ invitation, galleries, wishes, gue
           >
             💬 Share via WhatsApp
           </a>
-          <p className="text-amber-900 text-xs mt-10">Dibuat dengan iaundang.id</p>
+          <p className="text-amber-900 text-xs mt-10">Dibuat dengan iaundang.online</p>
         </section>
       </div>
     </>

@@ -236,7 +236,7 @@ function MiniDomain() {
             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd"/>
           </svg>
           <span className="text-[8px] text-ash font-mono">
-            <span className="text-graphite font-semibold">rizky-aulia</span>.iaundang.id
+            <span className="text-graphite font-semibold">rizky-aulia</span>.iaundang.online
           </span>
         </div>
       </div>
@@ -438,7 +438,7 @@ export default function FeatureShowcase({ personalisasi }: { personalisasi?: Per
             tag="Link Undangan"
             title="Alamat undangan atas nama kalian"
             points={[
-              'Format: nama.iaundang.id',
+              'Format: nama.iaundang.online',
               'Bagikan langsung via WhatsApp',
               'Aktif hingga 6 bulan',
             ]}

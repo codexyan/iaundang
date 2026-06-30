@@ -55,7 +55,7 @@ export default async function LandingPage() {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'iaundang',
-    url: 'https://iaundang.id',
+    url: 'https://iaundang.online',
     description: 'Platform undangan digital premium self-service. Pilih template, kustomisasi, dan kirim link personal ke tamu.',
     applicationCategory: 'DesignApplication',
     operatingSystem: 'Web',

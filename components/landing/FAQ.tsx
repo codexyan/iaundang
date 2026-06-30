@@ -11,7 +11,7 @@ const defaultFaqs = [
   { q: 'Apa tamu perlu install aplikasi?', a: 'Tidak. Tamu cukup tap link yang kalian kirim via WhatsApp, undangan langsung terbuka di browser HP mereka.' },
   { q: 'Berapa lama undangan tetap aktif?', a: 'Tergantung paket yang dipilih. Mulai dari 30 hari hingga 180 hari. Cukup untuk persiapan, hari H, dan beberapa bulan setelahnya sebagai kenangan.' },
   { q: 'Bisa edit setelah dipublish?', a: 'Bisa, kapan saja. Ganti foto, ubah detail acara, ganti musik. Semua tanpa biaya tambahan.' },
-  { q: 'Bagaimana cara kirim undangan ke tamu?', a: 'Setelah publish, kalian dapat link unik (contoh: rizky-aulia.iaundang.id). Salin dan kirim ke tamu lewat WhatsApp atau media lainnya.' },
+  { q: 'Bagaimana cara kirim undangan ke tamu?', a: 'Setelah publish, kalian dapat link unik (contoh: rizky-aulia.iaundang.online). Salin dan kirim ke tamu lewat WhatsApp atau media lainnya.' },
   { q: 'iaundang baru diluncurkan, apakah bisa dipercaya?', a: 'Kami membangun iaundang dengan standar kualitas tinggi. Teknologi modern, desain premium, dan tim yang responsif via WhatsApp. Kalian bisa coba gratis dulu dan lihat sendiri kualitasnya sebelum memutuskan.' },
   { q: 'Bagaimana kalau butuh bantuan?', a: 'Hubungi kami via WhatsApp. Tim kami siap membantu dan membalas dalam 1 hari kerja.' },
 ]

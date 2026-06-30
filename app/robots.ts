@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/', '/admin/', '/auth/'],
       },
     ],
-    sitemap: 'https://iaundang.id/sitemap.xml',
+    sitemap: 'https://iaundang.online/sitemap.xml',
   }
 }

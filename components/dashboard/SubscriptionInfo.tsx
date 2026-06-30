@@ -142,7 +142,7 @@ export default function SubscriptionInfo({ invitation }: Props) {
                 </div>
               </div>
               <p className="text-white/70 text-xs">
-                {invitation.slug}.iaundang.id
+                {invitation.slug}.iaundang.online
               </p>
             </div>
           </div>

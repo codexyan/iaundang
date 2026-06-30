@@ -28,7 +28,7 @@ export async function GET() {
 
   return NextResponse.json({
     referralCode,
-    referralLink: `https://iaundang.id/order?ref=${referralCode}`,
+    referralLink: `https://iaundang.online/order?ref=${referralCode}`,
     stats,
     referrals,
   })

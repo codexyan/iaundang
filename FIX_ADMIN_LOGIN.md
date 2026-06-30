@@ -17,7 +17,7 @@
 
 ### **Langkah 2: Login Ulang**
 ```
-Email: superadmin@iaundang.id
+Email: superadmin@iaundang.online
 Password: superadmin123
 
 Klik "Masuk"
@@ -39,7 +39,7 @@ Setelah login, lihat navbar:
 ```json
 {
   "userId": "...",
-  "email": "superadmin@iaundang.id"
+  "email": "superadmin@iaundang.online"
   // TIDAK ADA role field! ❌
 }
 ```
@@ -48,7 +48,7 @@ Setelah login, lihat navbar:
 ```json
 {
   "userId": "...",
-  "email": "superadmin@iaundang.id",
+  "email": "superadmin@iaundang.online",
   "role": "admin"  // ← Ada role! ✅
 }
 ```
@@ -144,7 +144,7 @@ fetch('/api/auth/me')
 # Expected BEFORE logout:
 {
   user: {
-    email: "superadmin@iaundang.id",
+    email: "superadmin@iaundang.online",
     role: undefined  // ← No role! ❌
   }
 }
@@ -152,7 +152,7 @@ fetch('/api/auth/me')
 # Expected AFTER fresh login:
 {
   user: {
-    email: "superadmin@iaundang.id",
+    email: "superadmin@iaundang.online",
     role: "admin"  // ← Has role! ✅
   }
 }
@@ -215,7 +215,7 @@ Chrome/Edge:
 ### **Admin Login Flow:**
 ```
 1. Open /login
-2. Enter superadmin@iaundang.id / superadmin123
+2. Enter superadmin@iaundang.online / superadmin123
 3. Click "Masuk"
 4. API creates session with role: "admin"
 5. Redirect to /dashboard (atau langsung /admin)

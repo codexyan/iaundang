@@ -19,7 +19,7 @@ const companyLinks = [
 ]
 
 const socials = [
-  { href: 'https://instagram.com/iaundang.id', icon: Instagram, label: 'Instagram' },
+  { href: 'https://instagram.com/iaundang.online', icon: Instagram, label: 'Instagram' },
   { href: 'https://wa.me/628123456789', icon: MessageCircle, label: 'WhatsApp' },
 ]
 
@@ -116,11 +116,11 @@ export default function Footer() {
             <ul className="space-y-2.5 mb-5">
               <li>
                 <a
-                  href="mailto:halo@iaundang.id"
+                  href="mailto:halo@iaundang.online"
                   className="text-[13px] text-ash hover:text-graphite transition-colors duration-200 flex items-center gap-2"
                 >
                   <Mail className="w-3.5 h-3.5 shrink-0" />
-                  halo@iaundang.id
+                  halo@iaundang.online
                 </a>
               </li>
               <li>

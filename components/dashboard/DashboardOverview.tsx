@@ -218,7 +218,7 @@ export default function DashboardOverview({ invitation, onNavigate, onTogglePubl
 
                   <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-1.5 w-fit mt-2">
                     <Link2 size={12} className="text-white/70" />
-                    <p className="font-mono text-sm font-medium text-white/90 truncate">{invitation.slug}.iaundang.id</p>
+                    <p className="font-mono text-sm font-medium text-white/90 truncate">{invitation.slug}.iaundang.online</p>
                   </div>
 
                   {invitation.expires_at && (

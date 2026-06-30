@@ -198,7 +198,7 @@ function BrandingPanel({
         <FieldGroup>
           <Field
             label="Domain Utama" icon={Globe2} value={form.appDomain ?? ''} onChange={(v) => update('appDomain', v)}
-            placeholder="iaundang.id" hint="Domain utama website (tanpa http://)"
+            placeholder="iaundang.online" hint="Domain utama website (tanpa http://)"
           />
           <Field
             label="Subdomain Demo" icon={Server} value={form.demoSubdomain ?? ''} onChange={(v) => update('demoSubdomain', v)}
@@ -210,8 +210,8 @@ function BrandingPanel({
           <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3">Pola URL</p>
           <div className="space-y-2">
             {[
-              { label: 'Undangan', url: `nama-pasangan.${form.appDomain || 'iaundang.id'}` },
-              { label: 'Demo', url: `${form.demoSubdomain || 'demo'}.${form.appDomain || 'iaundang.id'}` },
+              { label: 'Undangan', url: `nama-pasangan.${form.appDomain || 'iaundang.online'}` },
+              { label: 'Demo', url: `${form.demoSubdomain || 'demo'}.${form.appDomain || 'iaundang.online'}` },
               { label: 'Lokal', url: `localhost:3000?slug=nama-pasangan` },
             ].map(({ label, url }) => (
               <div key={label} className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-gray-100">
@@ -524,7 +524,7 @@ function ContactPanel({
   update: <K extends keyof SiteSettings>(key: K, value: SiteSettings[K]) => void
 }) {
   const socialLinks = [
-    { label: 'Instagram', icon: Instagram, value: form.socialInstagram, key: 'socialInstagram' as const, placeholder: 'iaundang.id', prefix: '@', hint: 'Username tanpa @' },
+    { label: 'Instagram', icon: Instagram, value: form.socialInstagram, key: 'socialInstagram' as const, placeholder: 'iaundang.online', prefix: '@', hint: 'Username tanpa @' },
     { label: 'Twitter / X', icon: Twitter, value: form.socialTwitter, key: 'socialTwitter' as const, placeholder: 'iaundang', prefix: '@', hint: 'Username tanpa @' },
     { label: 'GitHub', icon: Github, value: form.socialGithub, key: 'socialGithub' as const, placeholder: 'iaundang', prefix: '', hint: 'Repository atau organisasi' },
   ]
@@ -535,7 +535,7 @@ function ContactPanel({
       <SectionHeader icon={Phone} title="Informasi Kontak" desc="Kontak utama yang ditampilkan di landing page, footer, dan bantuan" />
       <Card>
         <FieldGroup>
-          <Field label="Email Kontak" icon={Mail} value={form.contactEmail} onChange={(v) => update('contactEmail', v)} placeholder="halo@iaundang.id" type="email" hint="Ditampilkan di footer website" />
+          <Field label="Email Kontak" icon={Mail} value={form.contactEmail} onChange={(v) => update('contactEmail', v)} placeholder="halo@iaundang.online" type="email" hint="Ditampilkan di footer website" />
           <Field label="WhatsApp" icon={Phone} value={form.contactWhatsapp} onChange={(v) => update('contactWhatsapp', v)} placeholder="628123456789" hint="Format internasional tanpa +" />
         </FieldGroup>
       </Card>

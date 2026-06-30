@@ -140,7 +140,7 @@ function StepVisual3() {
         </div>
         <div className="bg-mist rounded-xl px-3 py-2 mb-2.5 flex items-center gap-2 border border-hairline">
           <span className="text-[9px] text-concrete font-mono truncate flex-1">
-            <span className="text-graphite font-semibold">rizky-aulia</span>.iaundang.id
+            <span className="text-graphite font-semibold">rizky-aulia</span>.iaundang.online
           </span>
           <span className="text-[8px] font-semibold text-graphite bg-chalk px-2 py-0.5 rounded border border-hairline shrink-0">Salin</span>
         </div>

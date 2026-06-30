@@ -502,7 +502,7 @@ function StepNames({
             placeholder="ahmad-siti"
             className="flex-1 pl-3.5 pr-1 py-2.5 text-sm font-mono text-stone-800 bg-transparent focus:outline-none text-right"
           />
-          <span className="pr-3.5 pl-1 text-sm text-stone-400 shrink-0 select-none">.iaundang.id</span>
+          <span className="pr-3.5 pl-1 text-sm text-stone-400 shrink-0 select-none">.iaundang.online</span>
           <span className={`pr-3 text-xs font-medium shrink-0 ${slugIndicator.color}`}>
             {slugStatus === 'checking'
               ? <Loader2 size={12} className="animate-spin inline" />
@@ -512,7 +512,7 @@ function StepNames({
         {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
         {!slugError && form.slug && (
           <p className="text-xs text-stone-400 mt-1.5">
-            Undangan Anda akan tersedia di <span className="font-mono font-medium text-stone-600">{form.slug}.iaundang.id</span>
+            Undangan Anda akan tersedia di <span className="font-mono font-medium text-stone-600">{form.slug}.iaundang.online</span>
           </p>
         )}
         {!slugError && !form.slug && (
@@ -626,7 +626,7 @@ function StepKonfirmasi({ form, allTemplates }: { form: FormData; allTemplates: 
         <Row icon={<Users size={14} className="text-stone-400" />}
           label="Pasangan" value={`${form.groomName} & ${form.brideName}`} />
         <Row icon={<Link2 size={14} className="text-stone-400" />}
-          label="Link" value={`${form.slug}.iaundang.id`} mono />
+          label="Link" value={`${form.slug}.iaundang.online`} mono />
         <Row icon={<Calendar size={14} className="text-stone-400" />}
           label="Masa aktif" value={`${pkg.activeMonths} bulan`} />
         {form.akadVenue && (

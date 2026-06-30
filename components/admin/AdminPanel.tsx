@@ -453,12 +453,12 @@ export default function AdminPanel({
               siteTagline: appSettings.siteTagline ?? 'Digital Wedding Invitation',
               logoHorizontalUrl: appSettings.logoHorizontalUrl ?? '/logos/logo-horizontal.png',
               logoVerticalUrl: appSettings.logoVerticalUrl ?? '/logos/logo-vertical.png',
-              contactEmail: appSettings.contactEmail ?? 'halo@iaundang.id',
+              contactEmail: appSettings.contactEmail ?? 'halo@iaundang.online',
               contactWhatsapp: appSettings.confirmationWhatsapp ?? '628123456789',
-              socialInstagram: appSettings.socialInstagram ?? 'iaundang.id',
+              socialInstagram: appSettings.socialInstagram ?? 'iaundang.online',
               socialTwitter: appSettings.socialTwitter ?? 'iaundang',
               socialGithub: appSettings.socialGithub ?? 'iaundang',
-              appDomain: appSettings.appDomain ?? 'iaundang.id',
+              appDomain: appSettings.appDomain ?? 'iaundang.online',
               demoSubdomain: appSettings.demoSubdomain ?? 'demo',
             }}
             adminEmail={adminEmail}
@@ -801,7 +801,7 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
 
   function copyCredentials() {
     if (!credentials || !selectedOrder) return
-    const text = `Halo kak ${selectedOrder.groom_nickname} & ${selectedOrder.bride_nickname}! 🎉\n\nUndangan digital kalian sudah aktif!\n\n🔑 Login:\nEmail: ${credentials.email}\nPassword: ${credentials.password}\nDashboard: ${window.location.origin}/login\n\n🌐 Alamat undangan:\n${selectedOrder.subdomain}.iaundang.id\n\nSilakan login dan lengkapi detail undangan. Terima kasih! 🙏`
+    const text = `Halo kak ${selectedOrder.groom_nickname} & ${selectedOrder.bride_nickname}! 🎉\n\nUndangan digital kalian sudah aktif!\n\n🔑 Login:\nEmail: ${credentials.email}\nPassword: ${credentials.password}\nDashboard: ${window.location.origin}/login\n\n🌐 Alamat undangan:\n${selectedOrder.subdomain}.iaundang.online\n\nSilakan login dan lengkapi detail undangan. Terima kasih! 🙏`
     navigator.clipboard.writeText(text)
     toast.success('Pesan kredensial disalin! Kirim ke user via WA.')
   }
@@ -866,7 +866,7 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
                     </td>
                     <td className="px-4 py-3">
                       <span className="font-mono text-xs text-indigo-600">{o.subdomain}</span>
-                      <span className="text-[10px] text-gray-400">.iaundang.id</span>
+                      <span className="text-[10px] text-gray-400">.iaundang.online</span>
                     </td>
                     <td className="px-4 py-3">
                       <Badge variant={o.package_tier === 'eksklusif' ? 'yellow' : o.package_tier === 'popular' ? 'blue' : 'gray'}>
@@ -965,7 +965,7 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
 
                   <div className="rounded-xl bg-indigo-50 border border-indigo-100 p-3">
                     <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mb-1">Subdomain</p>
-                    <p className="text-sm font-mono font-bold text-indigo-700">{selectedOrder.subdomain}<span className="text-indigo-400 font-normal">.iaundang.id</span></p>
+                    <p className="text-sm font-mono font-bold text-indigo-700">{selectedOrder.subdomain}<span className="text-indigo-400 font-normal">.iaundang.online</span></p>
                   </div>
 
                   {/* Payment info */}
@@ -1005,7 +1005,7 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
                     <div className="bg-white rounded-lg p-3 font-mono text-xs space-y-1">
                       <p>Email: <strong>{credentials.email}</strong></p>
                       <p>Password: <strong>{credentials.password}</strong></p>
-                      <p>Subdomain: <strong>{selectedOrder.subdomain}.iaundang.id</strong></p>
+                      <p>Subdomain: <strong>{selectedOrder.subdomain}.iaundang.online</strong></p>
                     </div>
                     <button onClick={copyCredentials}
                       className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white text-xs font-bold rounded-xl hover:bg-green-700 transition-colors">

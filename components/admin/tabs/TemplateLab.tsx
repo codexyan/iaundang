@@ -97,7 +97,7 @@ const PREVIEW_DATA_DEFAULT: NewInvitationData = {
     { label: 'Furnitur rumah tangga', url: 'https://shopee.co.id/wishlist/2', marketplace: 'shopee', image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=300&fit=crop' },
   ],
   ig_story_image_url: 'https://images.unsplash.com/photo-1604017011826-d3b4c23f8914?w=400&h=710&fit=crop',
-  qr_target_url: 'https://iaundang.id/ikhwal-fani',
+  qr_target_url: 'https://iaundang.online/ikhwal-fani',
   qr_label: 'Pindai untuk membagikan undangan ini',
 }
 

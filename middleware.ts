@@ -3,7 +3,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { isAdmin, isWriter, isAffiliate } from '@/lib/auth'
 
 const PROTECTED_PATHS = ['/dashboard', '/admin', '/writer', '/affiliate']
-const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || 'iaundang.id'
+const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || 'iaundang.online'
 
 export async function middleware(req: NextRequest) {
   const hostname = req.headers.get('host') || ''
@@ -19,9 +19,15 @@ export async function middleware(req: NextRequest) {
 
   const isMainDomain = !slug || slug === 'www' || slug === APP_DOMAIN.split('.')[0]
 
-  if (!isMainDomain && slug) {
+  const pathname = req.nextUrl.pathname
+  const isApiOrInternal = pathname.startsWith('/api') || pathname.startsWith('/_next')
+
+  if (!isMainDomain && slug && !isApiOrInternal) {
     const url = req.nextUrl.clone()
-    url.pathname = `/invitation/${slug}${req.nextUrl.pathname}`
+    const invPath = pathname === '/'
+      ? `/invitation/${slug}`
+      : `/invitation/${slug}${pathname}`
+    url.pathname = invPath
     return NextResponse.rewrite(url)
   }
 

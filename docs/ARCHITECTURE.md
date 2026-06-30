@@ -454,7 +454,7 @@ Order → Invitation → Subscription traceability chain fully linked.
 - **Storage:** Supabase Storage for images, music files
 - **Email:** Resend (configure `RESEND_API_KEY`)
 - **Cron:** Vercel Cron or external scheduler for `/api/cron/sync-subscriptions`
-- **Domain:** iaundang.id
+- **Domain:** iaundang.online
 
 ### Build & Deploy
 ```bash

@@ -207,7 +207,7 @@ export default function DashboardClient({ user, invitation, selectedTemplateId, 
                   <Globe size={10} className="text-white/30" />
                   <p className="text-[9px] text-white/30 uppercase tracking-[0.15em] font-medium">Link Undangan</p>
                 </div>
-                <p className="text-[11px] font-mono text-amber-400/90 truncate">{inv.slug}.iaundang.id</p>
+                <p className="text-[11px] font-mono text-amber-400/90 truncate">{inv.slug}.iaundang.online</p>
                 {inv.expires_at && (
                   <p className="text-[9px] text-white/25 mt-1">
                     s/d {new Date(inv.expires_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}

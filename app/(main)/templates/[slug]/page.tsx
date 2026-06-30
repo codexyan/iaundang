@@ -55,7 +55,7 @@ export default async function TemplateDetailPage({ params }: Props) {
     '@type': 'Product',
     name: `Template ${template.name}`,
     description: `Template undangan digital "${template.name}" dari iaundang`,
-    url: `https://iaundang.id/templates/${template.slug}`,
+    url: `https://iaundang.online/templates/${template.slug}`,
     ...(template.thumbnail_url && { image: template.thumbnail_url }),
     brand: { '@type': 'Brand', name: 'iaundang' },
     category: 'Undangan Digital',

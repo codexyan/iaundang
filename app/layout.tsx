@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'iaundang: Undangan Digital Premium Tanpa Coding',
     description: 'Pilih template sinematik, kustomisasi dari dashboard, bagikan link personal ke tamu. Tanpa ribet.',
-    url: 'https://iaundang.id',
+    url: 'https://iaundang.online',
     siteName: 'iaundang',
     locale: 'id_ID',
     type: 'website',

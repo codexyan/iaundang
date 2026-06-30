@@ -65,7 +65,7 @@ const TEMPLATES: Record<NotificationType, (data: Record<string, string | number 
   }),
   order_approved: (d) => ({
     subject: 'Pesanan Disetujui — Undangan Siap!',
-    body: `Pesanan ${d.orderNumber} telah disetujui. Undanganmu sudah aktif di ${d.slug}.iaundang.id. Login dengan email: ${d.email}`,
+    body: `Pesanan ${d.orderNumber} telah disetujui. Undanganmu sudah aktif di ${d.slug}.iaundang.online. Login dengan email: ${d.email}`,
   }),
   order_rejected: (d) => ({
     subject: 'Pesanan Tidak Dapat Diproses',
@@ -96,7 +96,7 @@ const TEMPLATES: Record<NotificationType, (data: Record<string, string | number 
 // ─── Transport ───────────────────────────────────────────────
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY
-const EMAIL_FROM = process.env.EMAIL_FROM || 'IAUndang <noreply@iaundang.id>'
+const EMAIL_FROM = process.env.EMAIL_FROM || 'IAUndang <noreply@iaundang.online>'
 
 async function sendViaEmail(to: string, template: NotificationTemplate): Promise<NotificationResult> {
   if (!RESEND_API_KEY) {
@@ -137,7 +137,7 @@ h1{font-size:18px;color:#1c1917;margin:0 0 16px}
 p{font-size:14px;color:#57534e;line-height:1.6;margin:0 0 12px}
 .footer{text-align:center;padding:24px 0 0;font-size:11px;color:#a8a29e}</style></head>
 <body><div class="c"><div class="card"><h1>${template.subject}</h1><p>${template.body}</p></div>
-<div class="footer">Dikirim oleh <strong>IAUndang</strong> · iaundang.id</div></div></body></html>`
+<div class="footer">Dikirim oleh <strong>IAUndang</strong> · iaundang.online</div></div></body></html>`
 }
 
 // ─── Public API ──────────────────────────────────────────────

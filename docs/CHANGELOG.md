@@ -124,7 +124,7 @@ Catatan perubahan teknis berdasarkan [Company Blueprint](./COMPANY_BLUEPRINT.md)
 **`app/robots.ts` (BARU):**
 - Dynamic `robots.txt` via Next.js Metadata API
 - Allow semua path kecuali `/api/`, `/dashboard/`, `/admin/`, `/auth/`
-- Sitemap URL: `https://iaundang.id/sitemap.xml`
+- Sitemap URL: `https://iaundang.online/sitemap.xml`
 
 **`app/sitemap.ts` (BARU):**
 - Dynamic XML sitemap via Next.js Metadata API

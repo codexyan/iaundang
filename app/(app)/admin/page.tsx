@@ -81,11 +81,11 @@ export default async function AdminPage() {
         siteTagline: appSettings.siteTagline ?? 'Digital Wedding Invitation',
         logoHorizontalUrl: appSettings.logoHorizontalUrl ?? '/logos/logo-horizontal.png',
         logoVerticalUrl: appSettings.logoVerticalUrl ?? '/logos/logo-vertical.png',
-        contactEmail: appSettings.contactEmail ?? 'halo@iaundang.id',
-        socialInstagram: appSettings.socialInstagram ?? 'iaundang.id',
+        contactEmail: appSettings.contactEmail ?? 'halo@iaundang.online',
+        socialInstagram: appSettings.socialInstagram ?? 'iaundang.online',
         socialTwitter: appSettings.socialTwitter ?? 'iaundang',
         socialGithub: appSettings.socialGithub ?? 'iaundang',
-        appDomain: appSettings.appDomain ?? 'iaundang.id',
+        appDomain: appSettings.appDomain ?? 'iaundang.online',
         demoSubdomain: appSettings.demoSubdomain ?? 'demo',
       }}
       templateRecords={allTemplateRecords}
