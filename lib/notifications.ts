@@ -1,6 +1,25 @@
 // ─── Notification Domain ─────────────────────────────────────
 // Foundation layer for all platform-to-user communication.
-// Currently logs to console — swap transport when email provider is configured.
+// Transport: Resend email (lib/email.ts), with branded HTML
+// templates per notification type (lib/email-templates.ts).
+// Falls back to a console log when RESEND_API_KEY is not set.
+
+import { sendEmail } from './email'
+import {
+  welcomeTemplate,
+  trialStartedTemplate,
+  trialExpiringTemplate,
+  trialExpiredTemplate,
+  orderCreatedTemplate,
+  orderApprovedTemplate,
+  orderRejectedTemplate,
+  paymentReceivedTemplate,
+  subscriptionActiveTemplate,
+  subscriptionExpiringTemplate,
+  subscriptionExpiredTemplate,
+  passwordResetTemplate,
+  type EmailData,
+} from './email-templates'
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -93,69 +112,50 @@ const TEMPLATES: Record<NotificationType, (data: Record<string, string | number 
   }),
 }
 
-// ─── Transport ───────────────────────────────────────────────
+// ─── HTML Templates ──────────────────────────────────────────
+// Maps each notification type to its branded HTML email template.
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY
-const EMAIL_FROM = process.env.EMAIL_FROM || 'IAUndang <noreply@iaundang.online>'
-
-async function sendViaEmail(to: string, template: NotificationTemplate): Promise<NotificationResult> {
-  if (!RESEND_API_KEY) {
-    console.log(`[Notification:email] To: ${to} | Subject: ${template.subject}`)
-    console.log(`[Notification:email] Body: ${template.body}`)
-    return { success: true, channel: 'email', messageId: `console_${Date.now()}` }
-  }
-
-  try {
-    const { Resend } = await import('resend')
-    const resend = new Resend(RESEND_API_KEY)
-    const { data, error } = await resend.emails.send({
-      from: EMAIL_FROM,
-      to,
-      subject: template.subject,
-      html: buildHtml(template),
-    })
-
-    if (error) {
-      console.error('[Notification:email] Resend error:', error)
-      return { success: false, channel: 'email', error: error.message }
-    }
-
-    return { success: true, channel: 'email', messageId: data?.id }
-  } catch (err) {
-    console.error('[Notification:email] Send failed:', err)
-    return { success: false, channel: 'email', error: String(err) }
-  }
-}
-
-function buildHtml(template: NotificationTemplate): string {
-  return `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f4;margin:0;padding:0}
-.c{max-width:520px;margin:0 auto;padding:40px 20px}
-.card{background:#fff;border-radius:16px;padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-h1{font-size:18px;color:#1c1917;margin:0 0 16px}
-p{font-size:14px;color:#57534e;line-height:1.6;margin:0 0 12px}
-.footer{text-align:center;padding:24px 0 0;font-size:11px;color:#a8a29e}</style></head>
-<body><div class="c"><div class="card"><h1>${template.subject}</h1><p>${template.body}</p></div>
-<div class="footer">Dikirim oleh <strong>IAUndang</strong> · iaundang.online</div></div></body></html>`
+const HTML_TEMPLATES: Record<NotificationType, (d: EmailData) => string> = {
+  welcome: welcomeTemplate,
+  trial_started: trialStartedTemplate,
+  trial_expiring: trialExpiringTemplate,
+  trial_expired: trialExpiredTemplate,
+  order_created: orderCreatedTemplate,
+  order_approved: orderApprovedTemplate,
+  order_rejected: orderRejectedTemplate,
+  payment_received: paymentReceivedTemplate,
+  subscription_active: subscriptionActiveTemplate,
+  subscription_expiring: subscriptionExpiringTemplate,
+  subscription_expired: subscriptionExpiredTemplate,
+  password_reset: passwordResetTemplate,
 }
 
 // ─── Public API ──────────────────────────────────────────────
 
 export async function sendNotification(payload: NotificationPayload): Promise<NotificationResult> {
-  const templateFn = TEMPLATES[payload.type]
-  if (!templateFn) {
-    return { success: false, channel: payload.channel ?? 'email', error: `Unknown notification type: ${payload.type}` }
-  }
-
-  const template = templateFn(payload.data)
+  const subjectFn = TEMPLATES[payload.type]
+  const htmlFn = HTML_TEMPLATES[payload.type]
   const channel = payload.channel ?? 'email'
 
-  if (channel === 'email') {
-    return sendViaEmail(payload.recipientEmail, template)
+  if (!subjectFn || !htmlFn) {
+    return { success: false, channel, error: `Unknown notification type: ${payload.type}` }
   }
 
-  return { success: false, channel, error: `Channel ${channel} not implemented` }
+  if (channel !== 'email') {
+    return { success: false, channel, error: `Channel ${channel} not implemented` }
+  }
+
+  const { subject } = subjectFn(payload.data)
+  const html = htmlFn(payload.data)
+
+  const result = await sendEmail({ to: payload.recipientEmail, subject, html })
+
+  if (result.skipped) {
+    console.log(`[Notification:email] To: ${payload.recipientEmail} | Subject: ${subject} (RESEND_API_KEY not set, skipped)`)
+    return { success: true, channel: 'email', messageId: 'console_skipped' }
+  }
+
+  return { success: result.success, channel: 'email', messageId: result.id, error: result.error }
 }
 
 export async function notifyUser(
