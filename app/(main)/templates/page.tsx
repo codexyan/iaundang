@@ -210,13 +210,13 @@ export default async function TemplatesPage() {
       {/* Header */}
       <div className="bg-white border-b border-stone-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 text-center">
-          <Link href="/" className="text-sm text-stone-400 hover:text-forest-600 transition-colors mb-6 inline-block">
+          <Link href="/" className="text-sm text-ash hover:text-forest transition-colors mb-6 inline-block">
             ← Kembali ke beranda
           </Link>
-          <h1 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900 mt-2">
+          <h1 className="text-display-lg text-graphite mt-2">
             Pilih gaya undanganmu
           </h1>
-          <p className="mt-3 text-stone-500 text-sm max-w-md mx-auto">
+          <p className="mt-3 text-concrete text-body-lg max-w-md mx-auto">
             Klik <strong>Coba Gratis</strong> untuk lihat tampilan undangan dengan nama kalian sendiri.
             Tidak perlu daftar.
           </p>
