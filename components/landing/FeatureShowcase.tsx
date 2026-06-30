@@ -52,7 +52,7 @@ function CardPersonalisasi({ personalisasi }: { personalisasi?: PersonalisasiDat
             Satu link, setiap tamu disambut namanya
           </h3>
           <p className="text-[14px] text-chalk/40 leading-relaxed mb-6">
-            Setiap tamu melihat namanya di halaman pembuka. Terasa eksklusif, bukan broadcast massal.
+            Setiap tamu melihat namanya di halaman pembuka. Terasa personal, bukan sekadar pesan yang dikirim massal.
           </p>
 
           <ul className="space-y-2.5">

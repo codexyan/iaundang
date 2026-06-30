@@ -380,7 +380,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                 <div>
                   <label className={LABEL_CLS}>Email *</label>
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email@contoh.com" className={INPUT_CLS} />
-                  <p className="text-[11px] text-stone-400 mt-1">Kredensial login akan dikirimkan ke email ini setelah pembayaran dikonfirmasi</p>
+                  <p className="text-[11px] text-stone-400 mt-1">Kami akan kirim akses login ke email ini begitu pembayaran kalian terkonfirmasi</p>
                 </div>
 
                 <div>
@@ -516,7 +516,7 @@ export default function OrderForm({ templateId, templateName, tiers, paymentConf
                     <div className="border-t border-stone-200 my-2" />
                     <div className="flex justify-between text-base"><span className="font-semibold text-stone-700">Total</span><span className="font-bold text-stone-900">Rp {selectedTier.price.toLocaleString('id-ID')}</span></div>
                   </div>
-                  <p className="text-[11px] text-stone-400 mt-3">* Kode unik akan ditambahkan saat konfirmasi untuk memudahkan verifikasi</p>
+                  <p className="text-[11px] text-stone-400 mt-3">* Kami tambahkan kode unik kecil saat konfirmasi supaya pembayaran kalian lebih mudah dicek</p>
                 </div>
               )}
             </div>

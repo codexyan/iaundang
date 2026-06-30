@@ -214,7 +214,7 @@ export default async function TemplatesPage() {
             ← Kembali ke beranda
           </Link>
           <h1 className="text-display-lg text-graphite mt-2">
-            Pilih gaya undanganmu
+            Pilih gaya undangan kalian
           </h1>
           <p className="mt-3 text-concrete text-body-lg max-w-md mx-auto">
             Klik <strong>Coba Gratis</strong> untuk lihat tampilan undangan dengan nama kalian sendiri.
