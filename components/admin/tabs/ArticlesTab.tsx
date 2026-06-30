@@ -178,7 +178,14 @@ export default function ArticlesTab() {
   const [editingArticle, setEditingArticle] = useState<ArticleData | null>(null)
   const [isNew, setIsNew] = useState(false)
   const [filterText, setFilterText] = useState('')
+  const [debouncedFilter, setDebouncedFilter] = useState('')
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
+
+  // Debounce the search input so filtering tidak jalan di setiap keystroke
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedFilter(filterText), 250)
+    return () => clearTimeout(t)
+  }, [filterText])
 
   const fetchArticles = useCallback(async () => {
     try {
@@ -233,7 +240,7 @@ export default function ArticlesTab() {
   const filtered = articlesList.filter(a => {
     if (filterStatus === 'published' && !a.isPublished) return false
     if (filterStatus === 'draft' && a.isPublished) return false
-    if (filterText && !a.title.toLowerCase().includes(filterText.toLowerCase())) return false
+    if (debouncedFilter && !a.title.toLowerCase().includes(debouncedFilter.toLowerCase())) return false
     return true
   })
 

@@ -277,6 +277,9 @@ export default function WriterTab() {
                       </button>
                     </div>
                   </div>
+                  {(newEmail.length > 0 || newPassword.length > 0) && !canSubmit && (
+                    <p className="text-[11px] text-amber-600">Email harus valid dan password minimal 6 karakter.</p>
+                  )}
                 </>
               ) : (
                 <div>

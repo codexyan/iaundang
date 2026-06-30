@@ -284,6 +284,14 @@ export default function LandingPageTab() {
 
   useEffect(() => { if (mode === 'layout') fetchLayout() }, [mode, fetchLayout])
 
+  // Warn before leaving the page (refresh/close/navigate) when there are unsaved changes
+  useEffect(() => {
+    if (!dirty && !layoutDirty) return
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = '' }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [dirty, layoutDirty])
+
   const handleSave = async () => {
     if (!landing) return
     setSaving(true)
