@@ -7,7 +7,7 @@ import {
   Landmark, QrCode, Eye, Upload,
   CreditCard, ToggleLeft, ToggleRight, Loader2,
   Phone, FileText, AlertTriangle, Image as ImageIcon,
-  X, Edit3, Building2, Hash, User,
+  X, Edit3, Building2, Hash, User, Info,
 } from 'lucide-react'
 import type { BankAccount, PaymentProof } from '@/lib/db'
 import { formatPrice } from '@/lib/utils'
@@ -439,7 +439,7 @@ function PaymentConfigTab({ config, onUpdate }: { config: PaymentConfig; onUpdat
           <FileText className="w-5 h-5 text-indigo-500" />
           Instruksi Pembayaran
         </h3>
-        <p className="text-xs text-gray-400 mb-4">Teks panduan yang ditampilkan kepada customer di halaman pembayaran</p>
+        <p className="text-xs text-gray-400 mb-4">Instruksi ini ditampilkan ke customer saat mereka pilih transfer manual di halaman pembayaran</p>
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <textarea
@@ -545,6 +545,20 @@ function ProofsTab({ proofs, packageDuration, onReview }: {
 
   return (
     <div className="space-y-5">
+
+      {/* Context: this tab is for manual payments only */}
+      <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex items-start gap-3">
+        <Info className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-sm font-semibold text-indigo-900">
+            Tab ini khusus untuk pembayaran manual (transfer bank)
+          </p>
+          <p className="text-xs text-indigo-600 mt-0.5">
+            Order yang dibayar via Mayar (QRIS/e-wallet) sudah otomatis aktif tanpa perlu verifikasi di sini.
+            Cek tab &ldquo;Pesanan&rdquo; untuk melihat semua order termasuk yang sudah otomatis.
+          </p>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">

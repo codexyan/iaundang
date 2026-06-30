@@ -7,7 +7,7 @@ import {
   Globe, Music, Package, CreditCard, FlaskConical,
   PanelLeftClose, PanelLeftOpen, AlertTriangle, X, Megaphone,
   FileText, PenLine, Home, ExternalLink, Copy, Save,
-  MessageSquarePlus,
+  MessageSquarePlus, Zap, Hand,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -83,6 +83,7 @@ interface AdminOrder {
   notes: string
   status: string
   admin_notes: string
+  payment_method: string | null
   created_at: string
   reviewed_at: string | null
 }
@@ -766,14 +767,22 @@ function Badge({ variant, children }: { variant: 'green' | 'yellow' | 'red' | 'g
 function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
   const [orderList, setOrderList] = useState(initialOrders)
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
+  const [methodFilter, setMethodFilter] = useState<'all' | 'mayar' | 'manual'>('all')
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null)
   const [adminNotes, setAdminNotes] = useState('')
   const [processing, setProcessing] = useState(false)
   const [credentials, setCredentials] = useState<{ email: string; password: string } | null>(null)
 
-  const filtered = filter === 'all' ? orderList : orderList.filter(o => o.status === filter)
+  // Order lama sebelum integrasi Mayar bisa punya payment_method null, anggap manual
+  const orderMethod = (o: AdminOrder): 'mayar' | 'manual' => (o.payment_method === 'mayar' ? 'mayar' : 'manual')
+
+  const filtered = orderList.filter(o =>
+    (filter === 'all' || o.status === filter) &&
+    (methodFilter === 'all' || orderMethod(o) === methodFilter)
+  )
   const pendingCount = orderList.filter(o => o.status === 'pending').length
   const approvedCount = orderList.filter(o => o.status === 'approved').length
+  const mayarCount = orderList.filter(o => orderMethod(o) === 'mayar').length
   const usedSubdomains = orderList.filter(o => o.status !== 'rejected').map(o => o.subdomain)
 
   async function handleAction(action: 'approve' | 'reject') {
@@ -812,7 +821,7 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
       <div className="p-8">
 
         {/* Stats cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
           <div className="bg-white rounded-xl border border-gray-100 p-4">
             <p className="text-[11px] text-gray-400 font-medium">Total Pesanan</p>
             <p className="text-2xl font-bold text-gray-900">{orderList.length}</p>
@@ -825,18 +834,37 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
             <p className="text-[11px] text-emerald-600 font-medium">Disetujui</p>
             <p className="text-2xl font-bold text-emerald-700">{approvedCount}</p>
           </div>
+          <div className="bg-violet-50 rounded-xl border border-violet-100 p-4">
+            <p className="text-[11px] text-violet-600 font-medium flex items-center gap-1"><Zap className="w-3 h-3" /> Via Mayar</p>
+            <p className="text-2xl font-bold text-violet-700">{mayarCount}</p>
+          </div>
           <div className="bg-blue-50 rounded-xl border border-blue-100 p-4">
             <p className="text-[11px] text-blue-600 font-medium">Subdomain Terpakai</p>
             <p className="text-2xl font-bold text-blue-700">{usedSubdomains.length}</p>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex gap-2 mb-4">
+        {/* Filters - status */}
+        <div className="flex flex-wrap gap-2 mb-2">
           {([['all', 'Semua'], ['pending', 'Menunggu'], ['approved', 'Disetujui'], ['rejected', 'Ditolak']] as const).map(([key, label]) => (
             <button key={key} onClick={() => setFilter(key)}
               className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${filter === key ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}>
               {label} {key === 'pending' && pendingCount > 0 && <span className="ml-1 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{pendingCount}</span>}
+            </button>
+          ))}
+        </div>
+
+        {/* Filters - payment method */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-[11px] text-gray-400 font-medium mr-1">Metode:</span>
+          {([['all', 'Semua'], ['mayar', 'Mayar Otomatis'], ['manual', 'Manual']] as const).map(([key, label]) => (
+            <button key={key} onClick={() => setMethodFilter(key)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                methodFilter === key
+                  ? key === 'mayar' ? 'bg-violet-100 text-violet-700' : 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-500 hover:bg-gray-100'
+              }`}>
+              {label}
             </button>
           ))}
         </div>
@@ -875,9 +903,20 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
                     </td>
                     <td className="px-4 py-3 font-medium text-gray-800 text-xs">Rp {o.total_amount.toLocaleString('id-ID')}</td>
                     <td className="px-4 py-3">
-                      <Badge variant={o.status === 'approved' ? 'green' : o.status === 'pending' ? 'yellow' : o.status === 'rejected' ? 'red' : 'gray'}>
-                        {o.status === 'pending' ? 'Menunggu' : o.status === 'approved' ? 'Disetujui' : o.status === 'rejected' ? 'Ditolak' : o.status}
-                      </Badge>
+                      <div className="flex flex-col items-start gap-1">
+                        <Badge variant={o.status === 'approved' ? 'green' : o.status === 'pending' ? 'yellow' : o.status === 'rejected' ? 'red' : 'gray'}>
+                          {o.status === 'pending' ? 'Menunggu' : o.status === 'approved' ? 'Disetujui' : o.status === 'rejected' ? 'Ditolak' : o.status}
+                        </Badge>
+                        {orderMethod(o) === 'mayar' ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">
+                            <Zap className="w-3 h-3" /> Mayar Otomatis
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                            <Hand className="w-3 h-3" /> Manual
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">{new Date(o.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
                     <td className="px-4 py-3">
@@ -928,9 +967,20 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
                     <h3 className="font-semibold text-gray-900">Detail Pesanan</h3>
                     <p className="text-[11px] font-mono text-gray-400 mt-0.5">{selectedOrder.order_number}</p>
                   </div>
-                  <Badge variant={selectedOrder.status === 'approved' ? 'green' : selectedOrder.status === 'pending' ? 'yellow' : 'red'}>
-                    {selectedOrder.status === 'pending' ? 'Menunggu' : selectedOrder.status === 'approved' ? 'Disetujui' : 'Ditolak'}
-                  </Badge>
+                  <div className="flex flex-col items-end gap-1.5">
+                    <Badge variant={selectedOrder.status === 'approved' ? 'green' : selectedOrder.status === 'pending' ? 'yellow' : 'red'}>
+                      {selectedOrder.status === 'pending' ? 'Menunggu' : selectedOrder.status === 'approved' ? 'Disetujui' : 'Ditolak'}
+                    </Badge>
+                    {orderMethod(selectedOrder) === 'mayar' ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">
+                        <Zap className="w-3 h-3" /> Mayar Otomatis
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                        <Hand className="w-3 h-3" /> Manual
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-4 text-sm">
@@ -1014,8 +1064,23 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
                   </div>
                 )}
 
-                {/* Actions for pending orders */}
-                {selectedOrder.status === 'pending' && !credentials && (
+                {/* Mayar orders are processed automatically via webhook, manual verification not needed */}
+                {orderMethod(selectedOrder) === 'mayar' && !credentials && (
+                  <div className="mt-5 rounded-xl bg-violet-50 border border-violet-100 p-4 flex items-start gap-3">
+                    <Zap className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-violet-900">
+                        {selectedOrder.status === 'approved' ? 'Sudah aktif otomatis via Mayar' : 'Diproses otomatis via Mayar'}
+                      </p>
+                      <p className="text-xs text-violet-600 mt-0.5">
+                        Order ini dibayar via Mayar (QRIS/e-wallet) dan diaktifkan otomatis lewat webhook. Verifikasi manual tidak diperlukan.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Actions for pending manual orders */}
+                {selectedOrder.status === 'pending' && !credentials && orderMethod(selectedOrder) !== 'mayar' && (
                   <div className="mt-5 space-y-3">
                     <div className="rounded-xl bg-amber-50 border border-amber-100 p-3">
                       <p className="text-xs text-amber-800 font-medium">Pastikan user sudah transfer Rp {selectedOrder.total_amount.toLocaleString('id-ID')} sebelum approve.</p>
@@ -1038,7 +1103,7 @@ function OrdersTab({ orders: initialOrders }: { orders: AdminOrder[] }) {
                   </div>
                 )}
 
-                {selectedOrder.status !== 'pending' && !credentials && (
+                {(selectedOrder.status !== 'pending' || orderMethod(selectedOrder) === 'mayar') && !credentials && (
                   <button onClick={() => { setSelectedOrder(null); setCredentials(null) }}
                     className="mt-4 w-full px-4 py-2.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-xl hover:bg-gray-200 transition-colors">
                     Tutup
