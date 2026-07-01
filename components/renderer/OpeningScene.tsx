@@ -15,6 +15,10 @@ import VeilLiftOpening from './openings/VeilLiftOpening'
 import MosaicRevealOpening from './openings/MosaicRevealOpening'
 import RingZoomOpening from './openings/RingZoomOpening'
 import PetalFallOpening from './openings/PetalFallOpening'
+import TypewriterOpening from './openings/TypewriterOpening'
+import GoldShimmerOpening from './openings/GoldShimmerOpening'
+import FrostedBlurOpening from './openings/FrostedBlurOpening'
+import ParallaxSplitOpening from './openings/ParallaxSplitOpening'
 
 export type PositionMode = 'fixed' | 'absolute'
 
@@ -47,6 +51,10 @@ export default function OpeningScene({ config, data, meta, onOpen, positionMode 
           case 'mosaic-reveal': return <MosaicRevealOpening key="mosaic-reveal" {...shared} />
           case 'ring-zoom':     return <RingZoomOpening     key="ring-zoom"     {...shared} />
           case 'petal-fall':    return <PetalFallOpening    key="petal-fall"    {...shared} />
+          case 'typewriter':     return <TypewriterOpening    key="typewriter"     {...shared} />
+          case 'gold-shimmer':   return <GoldShimmerOpening   key="gold-shimmer"   {...shared} />
+          case 'frosted-blur':   return <FrostedBlurOpening   key="frosted-blur"   {...shared} />
+          case 'parallax-split': return <ParallaxSplitOpening key="parallax-split" {...shared} />
           case 'fade-reveal':
           default:              return <FadeRevealOpening   key="fade-reveal"   {...shared} />
         }

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import type { Variants, TargetAndTransition, Transition } from 'framer-motion'
 import type { DecorationAsset, AssetPosition, AssetIdleAnimation, AssetExitAnimation, AssetKeyframeState, AssetKeyframeConfig, AssetKeyframeEasing } from '@/lib/types'
+import { resolveAssetUrl } from '@/lib/built-in-assets'
 
 interface LayerProps {
   assets: DecorationAsset[]
@@ -141,6 +142,7 @@ function DecorationAssetItem({ asset, doAnimate, exiting }: ItemProps) {
   const zLayer    = asset.z_layer ?? 0
   const exitAnim  = asset.exit_animation ?? 'none'
   const exitDelay = (asset.exit_delay ?? 0) / 1000
+  const src       = resolveAssetUrl(asset.url)
 
   const anchorStyle = ANCHOR[asset.position] ?? ANCHOR['top-left']
 
@@ -182,7 +184,7 @@ function DecorationAssetItem({ asset, doAnimate, exiting }: ItemProps) {
         animate={exitTarget}
         transition={exitTransition}
       >
-        <img src={asset.url} alt="" draggable={false} style={imgStyle} />
+        <img src={src} alt="" draggable={false} style={imgStyle} />
       </motion.div>
     )
   }
@@ -192,7 +194,7 @@ function DecorationAssetItem({ asset, doAnimate, exiting }: ItemProps) {
   if (!doAnimate || asset.animation === 'none') {
     return (
       <motion.div style={wrapStyle} {...idleProps}>
-        <img src={asset.url} alt="" draggable={false} style={imgStyle} />
+        <img src={src} alt="" draggable={false} style={imgStyle} />
       </motion.div>
     )
   }
@@ -221,7 +223,7 @@ function DecorationAssetItem({ asset, doAnimate, exiting }: ItemProps) {
       onAnimationComplete={() => setEntryDone(true)}
       {...(entryDone ? idleProps : {})}
     >
-      <img src={asset.url} alt="" draggable={false} style={imgStyle} />
+      <img src={src} alt="" draggable={false} style={imgStyle} />
     </motion.div>
   )
 }

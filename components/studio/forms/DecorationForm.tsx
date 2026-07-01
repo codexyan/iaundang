@@ -4,6 +4,8 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { Layers, Trash2, ChevronDown, ChevronUp, ImageIcon, Move } from 'lucide-react'
 import type { DecorationAsset, AssetPosition, AssetAnimation, TemplateRecord, NewInvitationData } from '@/lib/types'
 import { ANIMATION_PRESETS, IDLE_PRESETS, SECTION_LABELS } from '@/lib/decoration-presets'
+import { DECORATION_BUNDLES, type PresetBundle } from '@/lib/decoration-preset-bundles'
+import { resolveAssetUrl } from '@/lib/built-in-assets'
 import SectionCard from '../ui/SectionCard'
 import ImageUploadField from '@/components/admin/ImageUploadField'
 import LockedOverlay from '../ui/LockedOverlay'
@@ -106,6 +108,14 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
     if (expandedId === id) setExpandedId(null)
   }, [assets, selectedId, expandedId, updateAssets])
 
+  const applyPresetBundle = useCallback((bundle: PresetBundle) => {
+    let next = bundle.assets.map((a, i) => ({ ...a, id: makeId(), z_layer: i }))
+    if (maxAssets >= 0 && next.length > maxAssets) next = next.slice(0, maxAssets)
+    updateAssets(next)
+    setSelectedId(null)
+    setExpandedId(null)
+  }, [maxAssets, updateAssets])
+
   const scopeTabs: { id: DecorationScope; label: string }[] = [
     { id: 'opening', label: 'Opening' },
     ...enabledSections.map(s => ({
@@ -144,6 +154,26 @@ export default function DecorationForm({ template, data, onUpdate, canEdit, maxA
                 </button>
               )
             })}
+          </div>
+        </div>
+
+        {/*  Preset bundles  */}
+        <div>
+          <p className="text-xs font-semibold text-stone-700 mb-1">Preset Dekorasi</p>
+          <p className="text-[10px] text-stone-400 mb-2">Terapkan set dekorasi siap pakai, lalu sesuaikan sesuai selera</p>
+          <div className="grid grid-cols-2 gap-2">
+            {DECORATION_BUNDLES.map(bundle => (
+              <button
+                key={bundle.id}
+                type="button"
+                onClick={() => applyPresetBundle(bundle)}
+                className="p-3 rounded-xl border border-stone-200 hover:border-forest-300 hover:bg-forest-50 text-left transition-all"
+              >
+                <span className="text-lg block mb-1">{bundle.thumbnail}</span>
+                <p className="text-[11px] font-semibold text-stone-700">{bundle.name}</p>
+                <p className="text-[9px] text-stone-400 mt-0.5 leading-tight">{bundle.desc}</p>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -325,7 +355,7 @@ function DragCanvas({ assets, selectedId, onSelect, onMove, isOpening }: {
             onPointerDown={(e) => handlePointerDown(e, asset.id)}
           >
             <img
-              src={asset.url} alt="" draggable={false}
+              src={resolveAssetUrl(asset.url)} alt="" draggable={false}
               className="w-full h-auto pointer-events-none"
               style={{
                 opacity: (asset.opacity ?? 100) / 100,
@@ -389,7 +419,7 @@ function AssetCard({ asset, index, isSelected, isExpanded, onSelect, onToggle, o
         className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-stone-50/50 transition-colors"
         onClick={() => { onSelect(); onToggle() }}
       >
-        <img src={asset.url} alt="" draggable={false} className="w-7 h-7 rounded object-contain bg-stone-100 shrink-0" />
+        <img src={resolveAssetUrl(asset.url)} alt="" draggable={false} className="w-7 h-7 rounded object-contain bg-stone-100 shrink-0" />
         <span className="flex-1 text-xs text-stone-600 truncate">Ornamen {index + 1}</span>
         <button
           onClick={(e) => { e.stopPropagation(); onRemove() }}

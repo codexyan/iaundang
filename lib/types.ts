@@ -164,6 +164,10 @@ export type OpeningType =
   | 'mosaic-reveal'
   | 'ring-zoom'
   | 'petal-fall'
+  | 'typewriter'
+  | 'gold-shimmer'
+  | 'frosted-blur'
+  | 'parallax-split'
 
 export interface BackgroundConfig {
   type: 'image' | 'video' | 'color' | 'gradient'
