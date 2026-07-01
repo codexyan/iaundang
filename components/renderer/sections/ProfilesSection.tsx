@@ -156,8 +156,8 @@ function DefaultView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-center gap-2" style={{ marginTop: 24 }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+        <div style={{ marginTop: 24 }}>
+          <SectionOrnament accent={accent} placement="footer" />
         </div>
       </motion.div>
     </SectionWrapper>
@@ -302,8 +302,8 @@ function VerticalView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
           </div>
         ))}
 
-        <div className="flex items-center justify-center gap-2" style={{ marginTop: 20 }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+        <div style={{ marginTop: 20 }}>
+          <SectionOrnament accent={accent} placement="footer" />
         </div>
       </motion.div>
     </SectionWrapper>
@@ -375,8 +375,8 @@ function MagazineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx 
           )
         })}
 
-        <div className="flex items-center justify-center gap-2" style={{ marginTop: 20 }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+        <div style={{ marginTop: 20 }}>
+          <SectionOrnament accent={accent} placement="footer" />
         </div>
       </motion.div>
     </SectionWrapper>
@@ -463,8 +463,8 @@ function OverlapView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }
           </motion.div>
         </div>
 
-        <div className="flex items-center justify-center gap-2" style={{ marginTop: 24 }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+        <div style={{ marginTop: 24 }}>
+          <SectionOrnament accent={accent} placement="footer" />
         </div>
       </motion.div>
     </SectionWrapper>

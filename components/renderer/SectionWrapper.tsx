@@ -124,8 +124,11 @@ export default function SectionWrapper({ section, children, className = '', over
   // Auto-scroll saat section di-replay
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
-    if (!isReplay || !replaySectionKey) return
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // replaySectionKey bisa bernilai 0 (klik pertama)   jangan pakai truthy check
+    if (!isReplay || replaySectionKey === undefined) return
+    // 'nearest' agar tidak memaksa re-align ke atas kalau section sudah terlihat
+    // (mencegah efek "melompat" saat scroll-snap container di-scrollIntoView)
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [replaySectionKey, isReplay])
 
   // Full-bleed: motion.div mengisi seluruh tinggi section (untuk hero bottom, dsb.)

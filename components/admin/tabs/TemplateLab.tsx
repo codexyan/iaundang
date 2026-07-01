@@ -14,6 +14,7 @@ import { getTransitionVariants } from '@/components/renderer/transitions/useTran
 import type { TransitionType, TemplateMeta, ColorScheme, OpeningConfig, MusicConfig, TemplateCategory, ColorPalette, DecorationAsset } from '@/lib/types'
 import type { TemplateRecord, NewInvitationData, Wish, SectionType, GiftAccount } from '@/lib/types'
 import { checkColorScheme, autoFixColorScheme, contrastRatio, wcagLevel, wcagLevelLarge } from '@/lib/color-contrast'
+import { getComponentStyle, btnStyle, cardRadius, inputBorderStyle } from '@/lib/component-styles'
 import DecorationMoodboard from '@/components/admin/DecorationMoodboard'
 import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
 import ImageUploadField from '@/components/admin/ImageUploadField'
@@ -1866,15 +1867,10 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
               {/* Palette presets */}
               <div>
-                <div className="flex items-center justify-between mb-2.5">
+                <div className="mb-2.5">
                   <p className="text-[10px] font-semibold text-gray-500">
                     Palet Tema Siap Pakai
                   </p>
-                  {onGoToManagement && (
-                    <button onClick={onGoToManagement} className="text-[10px] font-semibold text-indigo-600 hover:text-indigo-700">
-                      Kelola di Manajemen &rarr;
-                    </button>
-                  )}
                 </div>
                 {/* Group by category   sumber dari props server (CRUD admin) atau fallback hardcoded */}
                 {paletteGroups.map(cat => (
@@ -2073,48 +2069,33 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                 ))}
               </div>
 
-              {/* Live mini preview */}
+              {/* Live mini preview   pakai fungsi asli (btnStyle/cardRadius/inputBorderStyle)
+                  supaya selalu sinkron dengan render sesungguhnya, tidak duplikat logic */}
               <div className="rounded-2xl overflow-hidden" style={{ background: _p, padding: '20px 16px' }}>
                 <p className="text-center mb-3" style={{ fontSize: 8, color: `${_t}60`, letterSpacing: '0.2em', textTransform: 'uppercase' }}>Live Preview</p>
                 <div className="flex flex-col items-center gap-3">
                   {/* Button with MailOpen icon   opening CTA */}
                   <div style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                    padding: `8px ${_br > 10 ? 24 : 28}px`,
-                    fontSize: 8, fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase' as const,
-                    borderRadius: _br, cursor: 'default', transition: 'all 0.25s',
-                    ...(_cs?.button === 'filled' ? { backgroundColor: _a, color: _t, border: '1px solid transparent' }
-                      : _cs?.button === 'pill' ? { borderRadius: 999, backgroundColor: `${_a}20`, color: _t, border: `1px solid ${_a}45` }
-                      : _cs?.button === 'ghost' ? { backgroundColor: 'transparent', color: _a, border: '1px solid transparent' }
-                      : _cs?.button === 'underline' ? { backgroundColor: 'transparent', color: _t, border: 'none', borderBottom: `1.5px solid ${_a}60`, borderRadius: 0, paddingLeft: 4, paddingRight: 4 }
-                      : { backgroundColor: 'transparent', color: _t, border: `1px solid ${_a}50` }),
+                    ...btnStyle(getComponentStyle(_cs).button, getComponentStyle(_cs).border, _a, _t, { size: 'sm', icon: true }),
+                    cursor: 'default',
                   }}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"/><path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"/></svg>
                     BUKA UNDANGAN
                   </div>
                   {/* Button with Send icon   form submit */}
                   <div style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                    padding: `7px ${_br > 10 ? 18 : 22}px`,
-                    fontSize: 7.5, fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase' as const,
-                    borderRadius: _br, cursor: 'default', transition: 'all 0.25s',
-                    ...(_cs?.button === 'filled' ? { backgroundColor: _a, color: _t, border: '1px solid transparent' }
-                      : _cs?.button === 'pill' ? { borderRadius: 999, backgroundColor: `${_a}20`, color: _t, border: `1px solid ${_a}45` }
-                      : _cs?.button === 'ghost' ? { backgroundColor: 'transparent', color: _a, border: '1px solid transparent' }
-                      : _cs?.button === 'underline' ? { backgroundColor: 'transparent', color: _t, border: 'none', borderBottom: `1.5px solid ${_a}60`, borderRadius: 0, paddingLeft: 4, paddingRight: 4 }
-                      : { backgroundColor: 'transparent', color: _t, border: `1px solid ${_a}50` }),
+                    ...btnStyle(getComponentStyle(_cs).button, getComponentStyle(_cs).border, _a, _t, { size: 'sm', icon: true }),
+                    cursor: 'default',
                   }}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                     KIRIM UCAPAN
                   </div>
                   {/* Input field preview */}
                   <div style={{
-                    width: '80%', padding: _brd === 'sharp' ? '8px 0' : '8px 12px',
+                    width: '80%',
                     fontSize: 8, color: `${_t}50`, fontStyle: 'italic',
                     background: 'transparent', transition: 'all 0.25s',
-                    ...(_brd === 'pill' ? { border: `1px solid ${_a}35`, borderRadius: 999 }
-                      : _brd === 'rounded' ? { border: `1px solid ${_a}35`, borderRadius: 10 }
-                      : { border: 'none', borderBottom: `1px solid ${_a}35`, borderRadius: 0 }),
+                    ...inputBorderStyle(getComponentStyle(_cs).border, _a),
                   }}>
                     Nama Anda...
                   </div>
@@ -2122,7 +2103,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                   <div style={{
                     width: '80%', padding: '10px 14px',
                     background: `${_a}08`, border: `1px solid ${_a}20`,
-                    borderRadius: _brd === 'pill' ? 20 : _brd === 'rounded' ? 12 : 0,
+                    borderRadius: cardRadius(getComponentStyle(_cs).border),
                     fontSize: 7.5, color: `${_t}70`, lineHeight: 1.6,
                   }}>
                     Contoh card container untuk RSVP / ucapan section.
@@ -2520,9 +2501,11 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                     const _iconSvg = <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"/><path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"/></svg>
                     const _swatchStyle: React.CSSProperties =
                       bv.id === 'filled' ? { padding: '5px 12px', background: _a, borderRadius: _br, fontSize: 7.5, color: _t, letterSpacing: '0.12em' }
-                      : bv.id === 'pill' ? { padding: '5px 12px', border: `1.5px solid ${_a}80`, borderRadius: 999, fontSize: 7.5, color: _t, letterSpacing: '0.12em', background: `${_a}20` }
+                      // borderRadius ikut _br (Gaya Sudut/Border)   jangan hardcode 999, biar swatch sinkron dengan btnStyle()
+                      : bv.id === 'pill' ? { padding: '5px 12px', border: `1.5px solid ${_a}80`, borderRadius: _br, fontSize: 7.5, color: _t, letterSpacing: '0.12em', background: `${_a}20` }
                       : bv.id === 'ghost' ? { padding: '5px 12px', fontSize: 7.5, color: _a, letterSpacing: '0.12em' }
-                      : bv.id === 'underline' ? { padding: '5px 6px', borderBottom: `2px solid ${_a}`, borderRadius: 0, fontSize: 7.5, color: _t, letterSpacing: '0.12em' }
+                      // underline juga ikut _br (visual radius-nya subtle karena cuma ada borderBottom, tapi tetap konsisten)
+                      : bv.id === 'underline' ? { padding: '5px 6px', borderBottom: `2px solid ${_a}`, borderRadius: _br, fontSize: 7.5, color: _t, letterSpacing: '0.12em' }
                       : { padding: '5px 12px', border: `1.5px solid ${_a}`, borderRadius: _br, fontSize: 7.5, color: _t, letterSpacing: '0.12em' }
                     return (
                       <button key={bv.id} type="button"
@@ -2578,17 +2561,19 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                             : 'bg-gray-50 border border-gray-200 hover:border-gray-300 hover:bg-gray-100'
                         }`}
                       >
-                        <div className="mx-auto mb-2 flex flex-col items-center gap-1.5" style={{ height: 32 }}>
+                        <div className="mx-auto mb-2 flex flex-col items-center gap-1.5" style={{ height: 68 }}>
+                          {/* BTN swatch   tinggi 30px (setengah=15px) agar radius 'rounded' (10px) jelas di bawah cap, tidak mepet jadi stadium seperti 'pill' (999px) */}
                           <div style={{
-                            width: 48, height: 14,
+                            width: 48, height: 30,
                             border: `1.5px solid ${_a}`,
                             borderRadius: brd.r,
                             background: `${_a}15`,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: 5.5, color: _t, letterSpacing: '0.1em',
                           }}>BTN</div>
+                          {/* Card swatch   tinggi 32px agar radius 'rounded' (12px) masih terlihat medium, bukan full-round seperti 'pill' (20px) */}
                           <div style={{
-                            width: 48, height: 14,
+                            width: 48, height: 32,
                             border: `1px solid ${_a}30`,
                             borderRadius: brd.cr,
                             background: `${_a}08`,

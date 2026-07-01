@@ -7,6 +7,7 @@ import type { PositionMode } from '../OpeningScene'
 import DecorationAssetLayer from '../DecorationAssetLayer'
 import CoupleNameConnector from '../CoupleNameConnector'
 import SeparatorOrnament from '../SeparatorOrnament'
+import { getComponentStyle, btnStyle } from '@/lib/component-styles'
 import { MailOpen } from 'lucide-react'
 
 interface Props {
@@ -25,6 +26,7 @@ function getGuestName(): string | null {
 
 export default function ParallaxSplitOpening({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
   const { primary, accent, text } = meta.color_scheme
+  const cs = getComponentStyle(meta.component_style)
   const pos = positionMode === 'fixed' ? 'fixed' : 'absolute'
 
   const [guestName] = useState(() => getGuestName() || previewGuestName || null)
@@ -114,10 +116,8 @@ export default function ParallaxSplitOpening({ config, data, meta, onOpen, posit
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           style={{
-            marginTop: 36, padding: '12px 32px', border: `1px solid ${accent}`,
-            borderRadius: 40, color: accent, fontSize: 11, letterSpacing: '0.2em',
-            textTransform: 'uppercase', backgroundColor: 'transparent', cursor: 'pointer',
-            display: 'inline-flex', alignItems: 'center', gap: 8,
+            ...btnStyle(cs.button, cs.border, accent, text, { icon: true }),
+            marginTop: 36,
           }}
         >
           <MailOpen size={14} strokeWidth={1.8} />

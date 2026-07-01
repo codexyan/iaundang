@@ -488,11 +488,9 @@ function PoeticView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx })
         </motion.div>
 
         {/* Accent dot divider */}
-        <motion.div className="flex items-center justify-center gap-2" style={{ margin: '24px auto' }}
+        <motion.div style={{ margin: '24px auto' }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}30` }} />
-          <div style={{ width: 4, height: 4, borderRadius: '50%', background: `${accent}50` }} />
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}30` }} />
+          <SectionOrnament accent={accent} placement="footer" />
         </motion.div>
 
         {/* Couple names */}

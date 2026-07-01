@@ -35,6 +35,7 @@ export function btnStyle(
     ? (sz === 'sm' ? 16 : sz === 'lg' ? 40 : 28)
     : (sz === 'sm' ? 20 : sz === 'lg' ? 48 : 36)
   const fs = sz === 'sm' ? 8 : sz === 'lg' ? 11 : 9.5
+  const underlinePx = sz === 'sm' ? 8 : sz === 'lg' ? 14 : 10
 
   const base: React.CSSProperties = {
     display: 'inline-flex',
@@ -63,7 +64,8 @@ export function btnStyle(
     case 'pill':
       return {
         ...base,
-        borderRadius: 999,
+        // borderRadius mengikuti cs.border (base.borderRadius)   jangan hardcode 999,
+        // supaya Gaya Sudut/Border tetap berlaku meski Gaya Tombol = Pill
         backgroundColor: disabled ? `${accent}15` : `${accent}20`,
         color: disabled ? `${text}50` : text,
         border: `1px solid ${disabled ? `${accent}20` : `${accent}45`}`,
@@ -83,9 +85,12 @@ export function btnStyle(
         color: disabled ? `${text}40` : text,
         border: 'none',
         borderBottom: `1.5px solid ${disabled ? `${accent}25` : `${accent}60`}`,
-        borderRadius: 0,
-        paddingLeft: 4,
-        paddingRight: 4,
+        // Underline tanpa sisi kiri/kanan/atas   radius tidak relevan secara visual,
+        // tapi tetap ikut cs.border (base.borderRadius) untuk konsistensi, bukan hardcode 0.
+        // Padding horizontal dikecilkan dari base (tidak butuh ruang box) tapi jangan sampai
+        // mepet ke tepi seperti sebelumnya (4px terlihat "tanpa padding")
+        paddingLeft: underlinePx,
+        paddingRight: underlinePx,
       }
     case 'outlined':
     default:

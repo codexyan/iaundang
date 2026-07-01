@@ -675,8 +675,11 @@ export default function HeroSection({ section, data, meta }: Props) {
   const hasVideo = !!data.hero_video_url
   const hasPhoto = !!data.couple_photo_url && !hasVideo
 
+  // 'magazine' & 'minimal' sengaja tanpa foto background (lihat SECTION_VARIANTS di TemplateLab)
+  const usesBgPhoto = variant !== 'magazine' && variant !== 'minimal'
+
   let sectionCfg: SectionConfig = { ...section }
-  if (hasPhoto && variant !== 'magazine') {
+  if (hasPhoto && usesBgPhoto) {
     sectionCfg = { ...sectionCfg, background: { type: 'image', url: data.couple_photo_url, overlay_opacity: overlay } }
   }
   if (variant === 'bottom') {

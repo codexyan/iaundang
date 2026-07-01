@@ -6,6 +6,7 @@ import type { OpeningConfig, NewInvitationData, TemplateMeta } from '@/lib/types
 import type { PositionMode } from '../OpeningScene'
 import DecorationAssetLayer from '../DecorationAssetLayer'
 import CoupleNameConnector from '../CoupleNameConnector'
+import { getComponentStyle, btnStyle } from '@/lib/component-styles'
 import { MailOpen } from 'lucide-react'
 
 interface Props {
@@ -31,6 +32,7 @@ const PARTICLE_COUNT = 32
 
 export default function GoldShimmerOpening({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
   const { primary, accent, text } = meta.color_scheme
+  const cs = getComponentStyle(meta.component_style)
   const pos = positionMode === 'fixed' ? 'fixed' : 'absolute'
 
   const [guestName] = useState(() => getGuestName() || previewGuestName || null)
@@ -142,11 +144,8 @@ export default function GoldShimmerOpening({ config, data, meta, onOpen, positio
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
         style={{
-          marginTop: 48, padding: '12px 36px',
-          border: `1px solid ${accent}66`, borderRadius: 40, color: accent,
-          fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase',
-          backgroundColor: `${accent}11`, cursor: 'pointer',
-          display: 'inline-flex', alignItems: 'center', gap: 8,
+          ...btnStyle(cs.button, cs.border, accent, text, { icon: true }),
+          marginTop: 48,
         }}
       >
         <MailOpen size={14} strokeWidth={1.8} />

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import type { SectionConfig, NewInvitationData, TemplateMeta } from '@/lib/types'
 import SectionWrapper, { resolveFont, fsh, fsb } from '../SectionWrapper'
+import SectionOrnament from '../SectionOrnament'
 
 //  Types 
 
@@ -66,12 +67,10 @@ function VideoDefault({ section, data, font, accent, text, embed, url, caption }
         {/* Ornament header */}
         <div className="text-center mb-8">
           <motion.div
-            className="flex items-center justify-center gap-2 mb-5"
+            className="mb-5"
             variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1, transition: { duration: 0.5 } } }}
           >
-            <div style={{ width: 28, height: 0.5, background: `linear-gradient(to right, transparent, ${accent}55)` }} />
-            <div style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: `${accent}44` }} />
-            <div style={{ width: 28, height: 0.5, background: `linear-gradient(to left, transparent, ${accent}55)` }} />
+            <SectionOrnament accent={accent} />
           </motion.div>
 
           <motion.p

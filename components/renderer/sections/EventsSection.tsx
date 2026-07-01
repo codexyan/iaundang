@@ -200,9 +200,7 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}>
             <div className="text-center">
               <motion.div variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}>
-                <div className="flex items-center justify-center gap-3">
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', border: '0.5px solid rgba(255,255,255,0.15)' }} />
-                </div>
+                <SectionOrnament accent="rgba(255,255,255,0.5)" />
               </motion.div>
               <motion.p
                 style={{ fontSize: fsb(9), letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: bodyFont, marginTop: 20, marginBottom: 10 }}
@@ -267,15 +265,15 @@ function CinematicView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx
           ))}
         </div>
 
-        <div className="flex items-center justify-center gap-2" style={{ marginTop: 28 }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}35` }} />
+        <div style={{ marginTop: 28 }}>
+          <SectionOrnament accent="rgba(255,255,255,0.5)" placement="footer" />
         </div>
       </div>
     </SectionWrapper>
   )
 }
 
-//  TIMELINE: Vertical line with dots 
+//  TIMELINE: Vertical line with dots
 
 function TimelineView({ section, ctx }: { section: SectionConfig; ctx: StyleCtx }) {
   const { accent, text, headingFont, bodyFont, events, cs } = ctx

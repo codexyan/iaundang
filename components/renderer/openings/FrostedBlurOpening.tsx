@@ -6,6 +6,7 @@ import type { OpeningConfig, NewInvitationData, TemplateMeta } from '@/lib/types
 import type { PositionMode } from '../OpeningScene'
 import DecorationAssetLayer from '../DecorationAssetLayer'
 import CoupleNameConnector from '../CoupleNameConnector'
+import { getComponentStyle, btnStyle, cardRadius } from '@/lib/component-styles'
 import { MailOpen } from 'lucide-react'
 
 interface Props {
@@ -24,6 +25,7 @@ function getGuestName(): string | null {
 
 export default function FrostedBlurOpening({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
   const { primary, accent, text } = meta.color_scheme
+  const cs = getComponentStyle(meta.component_style)
   const pos = positionMode === 'fixed' ? 'fixed' : 'absolute'
 
   const [guestName] = useState(() => getGuestName() || previewGuestName || null)
@@ -77,7 +79,7 @@ export default function FrostedBlurOpening({ config, data, meta, onOpen, positio
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             border: `1px solid ${accent}33`,
-            borderRadius: 24,
+            borderRadius: cardRadius(cs.border),
             padding: '32px 36px',
             textAlign: 'center',
             maxWidth: 300,
@@ -110,10 +112,8 @@ export default function FrostedBlurOpening({ config, data, meta, onOpen, positio
           <button
             onClick={handleOpen}
             style={{
-              marginTop: 24, padding: '10px 28px', border: `1px solid ${accent}88`,
-              borderRadius: 32, color: accent, fontSize: 10, letterSpacing: '0.18em',
-              textTransform: 'uppercase', backgroundColor: 'transparent', cursor: 'pointer',
-              display: 'inline-flex', alignItems: 'center', gap: 7,
+              ...btnStyle(cs.button, cs.border, accent, text, { size: 'sm', icon: true }),
+              marginTop: 24,
             }}
           >
             <MailOpen size={13} strokeWidth={1.8} />

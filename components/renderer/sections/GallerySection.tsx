@@ -65,8 +65,8 @@ function FooterOrnament({ accent, text, bodyFont, count }: { accent: string; tex
           {count} Foto
         </p>
       </div>
-      <div className="flex items-center justify-center gap-2 px-6" style={{ marginTop: 12 }}>
-        <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+      <div className="px-6" style={{ marginTop: 12 }}>
+        <SectionOrnament accent={accent} placement="footer" />
       </div>
     </>
   )

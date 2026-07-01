@@ -279,11 +279,11 @@ function DefaultView({ section, data, meta }: Props) {
 
         {/* Footer ornament */}
         <motion.div
-          className="flex items-center justify-center gap-2 px-6"
+          className="px-6"
           style={{ marginTop: 24 }}
           initial="hidden" whileInView="visible" viewport={{ once: true }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+          <SectionOrnament accent={accent} placement="footer" />
         </motion.div>
 
         {hasChapters && (
@@ -401,9 +401,9 @@ function TimelineView({ section, data, meta }: Props) {
           ))}
         </div>
 
-        <motion.div className="flex items-center justify-center gap-2" style={{ marginTop: 28 }}
+        <motion.div style={{ marginTop: 28 }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-          <div style={{ width: 3, height: 3, borderRadius: '50%', background: `${accent}25` }} />
+          <SectionOrnament accent={accent} placement="footer" />
         </motion.div>
       </div>
     </SectionWrapper>
