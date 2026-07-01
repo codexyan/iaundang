@@ -19,6 +19,8 @@ import DecorationMoodboard from '@/components/admin/DecorationMoodboard'
 import JAVANESE_GOLD from '@/lib/template-configs/javanese-gold'
 import ImageUploadField from '@/components/admin/ImageUploadField'
 import VideoUploadField from '@/components/admin/VideoUploadField'
+import SectionBackgroundControl from '@/components/controls/SectionBackgroundControl'
+import SectionTransitionControl from '@/components/controls/SectionTransitionControl'
 
 // Dynamic import   hindari SSR issue
 const InvitationPreview = dynamic(() => import('@/components/renderer/InvitationPreview'), { ssr: false })
@@ -132,7 +134,6 @@ function makeGiftAccount(name: string, b: GiftLabBrand): GiftAccount {
 //  Constants 
 const SECTION_TYPES = ['hero', 'profiles', 'countdown', 'events', 'story', 'gallery', 'rsvp', 'wishes', 'closing', 'gift', 'livestream', 'quote', 'video', 'gift-registry', 'ig-story', 'qrcode'] as const
 const OPENING_TYPES = ['fade-reveal', 'ring-zoom', 'petal-fall'] as const
-const TRANSITION_TYPES = ['fade', 'slide-up', 'slide-left', 'slide-right', 'zoom-in'] as const
 
 const OPENING_META: Record<string, { icon: string; label: string }> = {
   'fade-reveal':   { icon: '✨', label: 'Fade Reveal' },
@@ -4149,66 +4150,11 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                           <ImageIcon className="w-3 h-3 text-indigo-400" />
                           <p className="text-[10px] font-bold text-gray-600">Latar Belakang</p>
                         </div>
-                        <div className="flex gap-1 mb-3 bg-gray-100 p-0.5 rounded-lg">
-                          {(['color', 'image', 'video'] as const).map(t => (
-                            <button key={t} type="button"
-                              onClick={() => updateSection(s.id, { background: { ...s.background, type: t, ...(t === 'color' ? { url: undefined } : {}) } })}
-                              className={`flex-1 py-1.5 rounded-md text-[10px] font-semibold transition-all ${
-                                s.background.type === t ? 'bg-white text-gray-700 shadow-sm' : 'text-gray-400 hover:text-gray-600'
-                              }`}>
-                              {t === 'color' ? 'Warna' : t === 'image' ? 'Gambar' : 'Video'}
-                            </button>
-                          ))}
-                        </div>
-                        {s.background.type === 'color' && (
-                          <div className="flex items-center gap-2.5">
-                            <input type="color"
-                              value={s.background.value ?? cfg.meta.color_scheme.primary}
-                              onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
-                              className="w-9 h-9 rounded-lg cursor-pointer border border-gray-200 shrink-0 p-0.5" />
-                            <div className="flex-1">
-                              <input
-                                value={s.background.value ?? cfg.meta.color_scheme.primary}
-                                onChange={e => updateSection(s.id, { background: { ...s.background, value: e.target.value } })}
-                                className="w-full text-[11px] font-mono bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
-                                placeholder="#000000" />
-                            </div>
-                          </div>
-                        )}
-                        {s.background.type === 'image' && (
-                          <div className="space-y-2.5">
-                            <ImageUploadField value={s.background.url} onChange={url => updateSection(s.id, { background: { ...s.background, url, type: 'image' } })} hint="JPG, PNG, WebP, atau GIF animasi" />
-                            {s.background.url && (
-                              <div className="bg-white rounded-lg border border-gray-200 p-2.5">
-                                <div className="flex items-center justify-between mb-1.5">
-                                  <p className="text-[9px] font-semibold text-gray-500">Overlay Gelap</p>
-                                  <span className="text-[10px] font-bold text-gray-700 tabular-nums bg-gray-100 px-1.5 py-0.5 rounded">{Math.round((s.background.overlay_opacity ?? 0.4) * 100)}%</span>
-                                </div>
-                                <input type="range" min={0} max={0.9} step={0.05}
-                                  value={s.background.overlay_opacity ?? 0.4}
-                                  onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
-                                  className="w-full accent-indigo-500 h-1.5 rounded-full" />
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        {s.background.type === 'video' && (
-                          <div className="space-y-2.5">
-                            <VideoUploadField value={s.background.url} onChange={url => updateSection(s.id, { background: { ...s.background, url, type: 'video' } })} hint="MP4, WebM (maks 50MB)" />
-                            {s.background.url && (
-                              <div className="bg-white rounded-lg border border-gray-200 p-2.5">
-                                <div className="flex items-center justify-between mb-1.5">
-                                  <p className="text-[9px] font-semibold text-gray-500">Overlay Gelap</p>
-                                  <span className="text-[10px] font-bold text-gray-700 tabular-nums bg-gray-100 px-1.5 py-0.5 rounded">{Math.round((s.background.overlay_opacity ?? 0.45) * 100)}%</span>
-                                </div>
-                                <input type="range" min={0} max={0.9} step={0.05}
-                                  value={s.background.overlay_opacity ?? 0.45}
-                                  onChange={e => updateSection(s.id, { background: { ...s.background, overlay_opacity: Number(e.target.value) } })}
-                                  className="w-full accent-indigo-500 h-1.5 rounded-full" />
-                              </div>
-                            )}
-                          </div>
-                        )}
+                        <SectionBackgroundControl
+                          value={s.background}
+                          onChange={bg => updateSection(s.id, { background: bg })}
+                          defaultColor={cfg.meta.color_scheme.primary}
+                        />
                       </div>
 
                       {/* ── Animasi Transisi ── */}
@@ -4225,22 +4171,12 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                             <Play className="w-2.5 h-2.5 fill-current" /> Preview
                           </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-2.5">
-                          <div>
-                            <p className="text-[9px] text-gray-400 font-medium mb-1">Masuk</p>
-                            <select value={s.transition_in} onChange={e => updateSection(s.id, { transition_in: e.target.value })}
-                              className="w-full text-[11px] bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 appearance-none cursor-pointer">
-                              {TRANSITION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <p className="text-[9px] text-gray-400 font-medium mb-1">Keluar</p>
-                            <select value={s.transition_out} onChange={e => updateSection(s.id, { transition_out: e.target.value })}
-                              className="w-full text-[11px] bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 appearance-none cursor-pointer">
-                              {TRANSITION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                            </select>
-                          </div>
-                        </div>
+                        <SectionTransitionControl
+                          valueIn={s.transition_in}
+                          valueOut={s.transition_out}
+                          onChangeIn={t => updateSection(s.id, { transition_in: t })}
+                          onChangeOut={t => updateSection(s.id, { transition_out: t })}
+                        />
                         {sectionReplay?.id === s.id && (
                           <p className="text-[9px] text-indigo-500 font-medium mt-2 flex items-center gap-1">
                             <span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />

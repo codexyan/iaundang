@@ -203,9 +203,15 @@ export default function InvitationRenderer({
         >
           {activeSections.map((section) => {
             const userAssets = invitationData.section_decoration_overrides?.[section.id]
-            const merged: SectionConfig = userAssets?.length
-              ? { ...section, decoration_assets: mergeDecorationAssets(section.decoration_assets, userAssets) }
-              : section
+            const bgOverride = invitationData.section_background_overrides?.[section.id]
+            const trOverride = invitationData.section_transition_overrides?.[section.id]
+            const merged: SectionConfig = {
+              ...section,
+              ...(userAssets?.length ? { decoration_assets: mergeDecorationAssets(section.decoration_assets, userAssets) } : {}),
+              ...(bgOverride ? { background: bgOverride } : {}),
+              ...(trOverride?.in ? { transition_in: trOverride.in } : {}),
+              ...(trOverride?.out ? { transition_out: trOverride.out } : {}),
+            }
             return (
               <div key={section.id} data-section-id={section.id}>
                 <SectionRenderer

@@ -56,9 +56,15 @@ export default function InvitationPreview({
       }}>
         {activeSections.map(section => {
           const userAssets = data.section_decoration_overrides?.[section.id]
-          const merged: SectionConfig = userAssets?.length
-            ? { ...section, decoration_assets: mergeDecorationAssets(section.decoration_assets, userAssets) }
-            : section
+          const bgOverride = data.section_background_overrides?.[section.id]
+          const trOverride = data.section_transition_overrides?.[section.id]
+          const merged: SectionConfig = {
+            ...section,
+            ...(userAssets?.length ? { decoration_assets: mergeDecorationAssets(section.decoration_assets, userAssets) } : {}),
+            ...(bgOverride ? { background: bgOverride } : {}),
+            ...(trOverride?.in ? { transition_in: trOverride.in } : {}),
+            ...(trOverride?.out ? { transition_out: trOverride.out } : {}),
+          }
           return (
             <SectionRenderer
               key={`${section.id}-${section.style_variant ?? 'default'}`}

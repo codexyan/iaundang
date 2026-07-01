@@ -752,6 +752,10 @@ export interface NewInvitationData {
   // User decoration overrides
   opening_decoration_overrides?: DecorationAsset[]
   section_decoration_overrides?: Record<string, DecorationAsset[]>
+  // User section-level overrides (background & transisi), keyed by section.id.
+  // Kosong = pakai default dari template. Tidak menimpa template global.
+  section_background_overrides?: Record<string, BackgroundConfig>
+  section_transition_overrides?: Record<string, { in?: TransitionType; out?: TransitionType }>
 }
 
 export interface NewInvitation {

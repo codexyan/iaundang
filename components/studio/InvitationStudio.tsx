@@ -39,6 +39,7 @@ import InfoCard from './ui/InfoCard'
 import FormField from './ui/FormField'
 import { StudioInput, StudioTextarea } from './ui/StudioInput'
 import SectionCard from './ui/SectionCard'
+import SectionAppearanceControls from './SectionAppearanceControls'
 
 interface Props {
   invitation: Invitation
@@ -97,6 +98,8 @@ function initData(inv: Invitation): NewInvitationData {
     video_embed_url: d.video_embed_url ?? '',
     video_caption: d.video_caption ?? '',
     section_decoration_overrides: d.section_decoration_overrides ?? {},
+    section_background_overrides: d.section_background_overrides ?? {},
+    section_transition_overrides: d.section_transition_overrides ?? {},
   }
 }
 
@@ -638,6 +641,9 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
     const ActiveIcon = activeItem?.icon ?? Sparkles
 
     const sectionType = NAV_SECTION_TYPE[activeSection]
+    // Section template yang cocok dengan nav item aktif (untuk kontrol Latar Belakang & Transisi).
+    // Hanya nav item konten yang punya padanan section render; item level-template (warna/opening/loading) tidak.
+    const appearanceSection = sectionType ? template.config.sections.find(s => s.type === sectionType) : undefined
     const previewPhase: 'opening' | 'loading' | 'main' =
       activeSection === 'loading' ? 'loading'
       : sectionType ? 'main'
@@ -881,6 +887,16 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
               </div>
               <div className="relative">
                 {renderActiveForm()}
+                {appearanceSection && (
+                  <div className="mt-3.5">
+                    <SectionAppearanceControls
+                      section={appearanceSection}
+                      data={data}
+                      onUpdate={updateData}
+                      primaryColor={data.primary_color ?? '#2c4a34'}
+                    />
+                  </div>
+                )}
                 {activeItem?.locked && activeItem.requiredTier && (
                   <LockedOverlay requiredTier={activeItem.requiredTier} />
                 )}
