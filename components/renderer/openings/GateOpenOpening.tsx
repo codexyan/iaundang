@@ -240,7 +240,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
           </h1>
 
           <div className="flex items-center justify-center my-3">
-            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
           </div>
 
           <h1 style={{
@@ -258,7 +258,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
           {eventDate && (
             <p style={{
               fontSize: 9.5, letterSpacing: '0.25em', textTransform: 'uppercase',
-              color: `${accent}cc`, marginTop: 10,
+              color: `${text}cc`, marginTop: 10,
               fontFamily: `'${meta.font.body}', serif`,
               textShadow: `0 1px 6px ${primary}88`,
             }}>
@@ -306,7 +306,7 @@ export default function GateOpenOpening({ config, data, meta, onOpen, positionMo
           >
             <p style={{
               fontSize: guestLabelSize, letterSpacing: '0.35em', textTransform: 'uppercase',
-              color: `${accent}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
+              color: `${text}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
               textShadow: `0 1px 4px ${primary}88`,
             }}>
               {guestLabel}

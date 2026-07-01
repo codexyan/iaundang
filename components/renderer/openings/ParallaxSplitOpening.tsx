@@ -96,7 +96,7 @@ export default function ParallaxSplitOpening({ config, data, meta, onOpen, posit
           {data.groom_name || 'Ahmad'}
         </h1>
         <div className="flex items-center justify-center my-2.5">
-          <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+          <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
         </div>
         <h1 style={{ fontSize: 34, fontWeight: 800, color: text, fontFamily: `'${meta.font.heading}', serif`, lineHeight: 1.1, margin: 0, letterSpacing: '0.04em' }}>
           {data.bride_name || 'Siti'}
@@ -104,7 +104,7 @@ export default function ParallaxSplitOpening({ config, data, meta, onOpen, posit
 
         {config.show_guest_name !== false && guestName && (
           <p style={{ marginTop: 18, color: `${text}cc`, fontSize: 12, fontFamily: `'${meta.font.heading}', serif` }}>
-            <span style={{ display: 'block', fontSize: 8.5, letterSpacing: '0.3em', color: `${accent}bb`, marginBottom: 3 }}>
+            <span style={{ display: 'block', fontSize: 8.5, letterSpacing: '0.3em', color: `${text}bb`, marginBottom: 3 }}>
               {config.guest_label || 'KEPADA YTH.'}
             </span>
             {guestName}

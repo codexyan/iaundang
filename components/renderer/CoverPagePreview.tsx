@@ -235,7 +235,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
                   {data.opening_groom_name || data.groom_name}
                 </h1>
                 <p style={{
-                  fontSize: 18, color: accent, margin: `0 0 ${nameGap}px 0`,
+                  fontSize: 18, color: text, margin: `0 0 ${nameGap}px 0`,
                   fontFamily: `'${meta.font.heading}', serif`,
                   fontWeight: 300, letterSpacing: '0.1em',
                   textShadow: `0 2px 12px ${primary}aa`,
@@ -280,7 +280,7 @@ export default function CoverPagePreview({ template, data, previewGuestName, con
                 }}>
                   <p style={{
                     fontSize: guestLabelSize, letterSpacing: '0.3em', textTransform: 'uppercase',
-                    color: `${accent}bb`, marginBottom: 2,
+                    color: `${text}bb`, marginBottom: 2,
                     fontFamily: `'${meta.font.body}', serif`,
                     textShadow: `0 1px 4px ${primary}88`,
                   }}>

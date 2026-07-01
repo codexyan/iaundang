@@ -120,7 +120,7 @@ export default function TypewriterOpening({ config, data, meta, onOpen, position
             fontFamily: `'${meta.font.heading}', serif`, textAlign: 'center',
           }}
         >
-          <span style={{ display: 'block', fontSize: 8.5, letterSpacing: '0.3em', color: `${accent}bb`, marginBottom: 4 }}>
+          <span style={{ display: 'block', fontSize: 8.5, letterSpacing: '0.3em', color: `${text}bb`, marginBottom: 4 }}>
             {config.guest_label || 'KEPADA YTH.'}
           </span>
           {guestName}

@@ -9,6 +9,7 @@ import { getComponentStyle, btnStyle } from '@/lib/component-styles'
 import { MailOpen } from 'lucide-react'
 import SeparatorOrnament from '../SeparatorOrnament'
 import CoupleNameConnector from '../CoupleNameConnector'
+import { PREMIUM_EASE, PREMIUM_EXIT_EASE, premiumExit } from './motionPresets'
 
 interface Props {
   config: OpeningConfig
@@ -33,7 +34,7 @@ function formatDate(dateStr: string | undefined): string {
   } catch { return '' }
 }
 
-const stagger = (i: number) => ({ delay: 0.15 + i * 0.13, duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] as const })
+const stagger = (i: number) => ({ delay: 0.15 + i * 0.13, duration: 0.85, ease: PREMIUM_EASE })
 
 export default function FadeRevealOpening({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
   const [guestName] = useState(() => getGuestName() || previewGuestName || null)
@@ -81,9 +82,9 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
       className={`${pos} inset-0 z-40 flex flex-col overflow-hidden`}
       style={{ backgroundColor: primary, pointerEvents: clicked ? 'none' : undefined }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: clicked ? 0 : 1 }}
+      animate={clicked ? premiumExit(9) : { opacity: 1, scale: 1, filter: 'blur(0px)' }}
       exit={{ opacity: 0 }}
-      transition={{ duration: clicked ? 0.2 : 0.8 }}
+      transition={{ duration: clicked ? 0.85 : 0.8, ease: clicked ? PREMIUM_EXIT_EASE : PREMIUM_EASE }}
     >
       {/* Full background photo */}
       {bgPhoto && display === 'background' && (
@@ -212,8 +213,13 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
           animate={{ opacity: 1, y: 0 }}
           transition={stagger(2)}
           className="text-center mb-5"
+          style={{ position: 'relative' }}
         >
-          <h1 style={{
+          <motion.h1
+            initial={{ opacity: 0, y: 14, scale: 0.97, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            transition={{ delay: stagger(2).delay, duration: 0.95, ease: PREMIUM_EASE }}
+            style={{
             fontSize: nameFontSize, fontWeight: 900, lineHeight: 1.1,
             color: text,
             fontFamily: `'${meta.font.heading}', serif`,
@@ -223,13 +229,17 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
             textShadow: `0 2px 16px ${primary}cc, 0 4px 32px ${primary}66`,
           }}>
             {data.groom_name}
-          </h1>
+          </motion.h1>
 
           <div className="flex items-center justify-center my-3">
-            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
           </div>
 
-          <h1 style={{
+          <motion.h1
+            initial={{ opacity: 0, y: 14, scale: 0.97, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            transition={{ delay: stagger(2).delay + 0.28, duration: 0.95, ease: PREMIUM_EASE }}
+            style={{
             fontSize: nameFontSize, fontWeight: 900, lineHeight: 1.1,
             color: text,
             fontFamily: `'${meta.font.heading}', serif`,
@@ -239,13 +249,26 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
             textShadow: `0 2px 16px ${primary}cc, 0 4px 32px ${primary}66`,
           }}>
             {data.bride_name}
-          </h1>
+          </motion.h1>
+
+          {/* One-time light sweep shimmer across the names */}
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(105deg, transparent 42%, ${text}2e 50%, transparent 58%)`,
+              mixBlendMode: 'screen',
+            }}
+            initial={{ x: '-130%', opacity: 0 }}
+            animate={{ x: '130%', opacity: [0, 1, 0] }}
+            transition={{ delay: stagger(2).delay + 0.55, duration: 1.15, ease: PREMIUM_EASE }}
+          />
 
           {/* Event date */}
           {eventDate && (
             <p style={{
               fontSize: 9.5, letterSpacing: '0.25em', textTransform: 'uppercase',
-              color: `${accent}cc`, marginTop: 10,
+              color: `${text}cc`, marginTop: 10,
               fontFamily: `'${meta.font.body}', serif`,
               textShadow: `0 1px 6px ${primary}88`,
             }}>
@@ -293,7 +316,7 @@ export default function FadeRevealOpening({ config, data, meta, onOpen, position
           >
             <p style={{
               fontSize: guestLabelSize, letterSpacing: '0.35em', textTransform: 'uppercase',
-              color: `${accent}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
+              color: `${text}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
               textShadow: `0 1px 4px ${primary}88`,
             }}>
               {guestLabel}

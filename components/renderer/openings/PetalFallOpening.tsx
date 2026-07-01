@@ -8,6 +8,7 @@ import DecorationAssetLayer from '../DecorationAssetLayer'
 import { getComponentStyle, btnStyle } from '@/lib/component-styles'
 import SeparatorOrnament from '../SeparatorOrnament'
 import CoupleNameConnector from '../CoupleNameConnector'
+import { PREMIUM_EASE } from './motionPresets'
 import { MailOpen } from 'lucide-react'
 
 interface Props {
@@ -53,6 +54,9 @@ interface FallingPetal {
   rotation: number
   opacity: number
   shape: number
+  spinX: number
+  spinY: number
+  near: boolean
 }
 
 function generateFallingPetals(
@@ -69,16 +73,21 @@ function generateFallingPetals(
 
   const petals: FallingPetal[] = []
   for (let i = 0; i < count; i++) {
+    const sizeF = sr(i * 11) // 0..1 relative size within range
     petals.push({
       id: i,
       startX: sr(i * 7) * 100,
-      size: sizeBase + sr(i * 11) * sizeRange,
+      size: sizeBase + sizeF * sizeRange,
       delay: sr(i * 13) * 8,
       duration: durBase + sr(i * 17) * durRange,
       swayAmount: swayBase + sr(i * 19) * swayRange,
       rotation: (sr(i * 23) - 0.5) * 720,
       opacity: (peakOpacity / 100) * (0.5 + sr(i * 29) * 0.5),
       shape: Math.floor(sr(i * 31) * 4),
+      // 3D tumble amplitudes (deterministic) + depth-of-field flag
+      spinX: (sr(i * 41) - 0.5) * 70,
+      spinY: (sr(i * 43) - 0.5) * 70,
+      near: sizeF > 0.45, // larger petals feel closer to camera (sharp), smaller ones sit back (soft)
     })
   }
   return petals
@@ -115,7 +124,7 @@ const SHAPE_PATHS: Record<string, string[]> = {
 const stagger = (i: number) => ({
   delay: 0.3 + i * 0.15,
   duration: 0.9,
-  ease: [0.16, 1, 0.3, 1] as const,
+  ease: PREMIUM_EASE,
 })
 
 export default function PetalFallOpening({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
@@ -269,17 +278,24 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
           <DecorationAssetLayer assets={config.decoration_assets ?? []} animate />
 
           {/*  Falling petal particles  */}
-          <div className="absolute inset-0 z-[8] pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 z-[8] pointer-events-none overflow-hidden" style={{ perspective: 700 }}>
             {petals.map((p) => (
               <motion.div
                 key={p.id}
                 className="absolute"
-                style={{ left: `${p.startX}%`, top: -30 }}
-                initial={{ y: -30, x: 0, rotate: 0, opacity: 0 }}
+                style={{
+                  left: `${p.startX}%`, top: -30,
+                  transformStyle: 'preserve-3d',
+                  // Depth of field: petals sitting back get a soft blur
+                  filter: p.near ? 'none' : 'blur(1.1px)',
+                }}
+                initial={{ y: -30, x: 0, rotate: 0, rotateX: 0, rotateY: 0, opacity: 0 }}
                 animate={{
                   y: ['0vh', '110vh'],
                   x: [0, p.swayAmount, -p.swayAmount * 0.6, p.swayAmount * 0.4, 0],
                   rotate: [0, p.rotation],
+                  rotateX: [0, p.spinX, -p.spinX * 0.6, p.spinX * 0.4, 0],
+                  rotateY: [0, p.spinY, -p.spinY * 0.5, p.spinY * 0.3, 0],
                   opacity: [0, p.opacity, p.opacity, p.opacity * 0.6, 0],
                 }}
                 transition={{
@@ -288,6 +304,8 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
                   repeat: Infinity,
                   ease: 'linear',
                   x: { duration: p.duration * 0.8, repeat: Infinity, ease: 'easeInOut' },
+                  rotateX: { duration: p.duration * 0.9, repeat: Infinity, ease: 'easeInOut' },
+                  rotateY: { duration: p.duration * 1.1, repeat: Infinity, ease: 'easeInOut' },
                 }}
               >
                 <svg
@@ -387,7 +405,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ delay: 0.9, duration: 0.8, type: 'spring', damping: 12 }}
               >
-                <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+                <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
               </motion.div>
 
               <motion.h1
@@ -414,7 +432,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
                   transition={{ delay: 1.3, duration: 0.8 }}
                   style={{
                     fontSize: 9.5, letterSpacing: '0.25em', textTransform: 'uppercase',
-                    color: `${accent}cc`, marginTop: 10,
+                    color: `${text}cc`, marginTop: 10,
                     fontFamily: `'${meta.font.body}', serif`,
                     textShadow: `0 1px 6px ${primary}88`,
                   }}
@@ -460,7 +478,7 @@ export default function PetalFallOpening({ config, data, meta, onOpen, positionM
               >
                 <p style={{
                   fontSize: guestLabelSize, letterSpacing: '0.35em', textTransform: 'uppercase',
-                  color: `${accent}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
+                  color: `${text}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
                   textShadow: `0 1px 4px ${primary}88`,
                 }}>
                   {guestLabel}

@@ -8,6 +8,7 @@ import DecorationAssetLayer from '../DecorationAssetLayer'
 import { getComponentStyle, btnStyle } from '@/lib/component-styles'
 import SeparatorOrnament from '../SeparatorOrnament'
 import CoupleNameConnector from '../CoupleNameConnector'
+import { PREMIUM_EASE, PREMIUM_EXIT_EASE, premiumExit } from './motionPresets'
 import { MailOpen } from 'lucide-react'
 
 interface Props {
@@ -33,7 +34,7 @@ function formatDate(dateStr: string | undefined): string {
   } catch { return '' }
 }
 
-const stagger = (i: number) => ({ delay: 0.15 + i * 0.13, duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] as const })
+const stagger = (i: number) => ({ delay: 0.15 + i * 0.13, duration: 0.85, ease: PREMIUM_EASE })
 
 export default function RingZoomOpening({ config, data, meta, onOpen, positionMode = 'fixed', previewGuestName }: Props) {
   const [guestName] = useState(() => getGuestName() || previewGuestName || null)
@@ -85,9 +86,9 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
       className={`${pos} inset-0 z-40 flex flex-col overflow-hidden`}
       style={{ backgroundColor: primary, pointerEvents: clicked ? 'none' : undefined }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: clicked ? 0 : 1 }}
+      animate={clicked ? premiumExit(9) : { opacity: 1, scale: 1, filter: 'blur(0px)' }}
       exit={{ opacity: 0 }}
-      transition={{ duration: clicked ? 0.35 : 0.8, delay: clicked ? 0.65 : 0 }}
+      transition={{ duration: clicked ? 0.8 : 0.8, delay: clicked ? 0.55 : 0, ease: clicked ? PREMIUM_EXIT_EASE : PREMIUM_EASE }}
     >
       {/* Background photo */}
       {bgPhoto && (
@@ -121,8 +122,10 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
         )`,
       }} />
 
-      {/* Concentric pulsing ring outlines */}
-      {rings.map((ring, i) => (
+      {/* Concentric pulsing ring outlines   asymmetric breathing */}
+      {rings.map((ring, i) => {
+        const amp = 0.06 - i * 0.015 // inner ring breathes a touch more
+        return (
         <motion.div
           key={i}
           className="absolute z-[8] pointer-events-none rounded-full"
@@ -136,13 +139,66 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
             border: `${ring.width}px solid ${accent}`,
           }}
           animate={clicked
-            ? { scale: 2, opacity: 0 }
-            : { scale: [0.95, 1.05, 0.95], opacity: [ring.opacity * 0.7, ring.opacity, ring.opacity * 0.7] }
+            // Converge to center   outer ring collapses first (staggered)
+            ? { scale: 0.05, opacity: 0 }
+            : { scale: [1 - amp, 1 + amp, 1 - amp], opacity: [ring.opacity * 0.65, ring.opacity, ring.opacity * 0.65] }
           }
           transition={clicked
-            ? { duration: 0.6, delay: i * 0.08, ease: [0.76, 0, 0.24, 1] }
-            : { duration: 4 + i * 0.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.6 }
+            ? { duration: 0.62, delay: (rings.length - 1 - i) * 0.12, ease: [0.76, 0, 0.24, 1] }
+            : { duration: 4.5 + i * 0.9, repeat: Infinity, ease: 'easeInOut', delay: i * 0.7 }
           }
+        />
+        )
+      })}
+
+      {/* Rotating accent arc   gives the rings a sense of life */}
+      <motion.div
+        className="absolute z-[8] pointer-events-none rounded-full"
+        style={{
+          width: '64vh', height: '64vh', top: '50%', left: '50%',
+          translateX: '-50%', translateY: '-50%',
+          border: `1.5px solid transparent`, borderTopColor: `${accent}`,
+        }}
+        animate={clicked
+          ? { scale: 0.05, opacity: 0, rotate: 220 }
+          : { rotate: 360, opacity: 0.35 }
+        }
+        transition={clicked
+          ? { duration: 0.62, delay: 0.06, ease: [0.76, 0, 0.24, 1] }
+          : { rotate: { duration: 18, repeat: Infinity, ease: 'linear' }, opacity: { duration: 1.2 } }
+        }
+      />
+
+      {/* Orbiting glint dot along the mid ring */}
+      {!clicked && (
+        <motion.div
+          className="absolute z-[9] pointer-events-none"
+          style={{ width: '64vh', height: '64vh', top: '50%', left: '50%', translateX: '-50%', translateY: '-50%' }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+        >
+          <div style={{
+            position: 'absolute', top: -3, left: '50%', marginLeft: -3,
+            width: 6, height: 6, borderRadius: '50%',
+            backgroundColor: accent,
+            boxShadow: `0 0 8px 2px ${accent}88`,
+          }} />
+        </motion.div>
+      )}
+
+      {/* Convergence sparkles   appear briefly at center as the rings meet */}
+      {clicked && [0, 1, 2].map(i => (
+        <motion.div
+          key={`spark-${i}`}
+          className="absolute z-[10] pointer-events-none rounded-full"
+          style={{
+            top: '50%', left: '50%', width: 5, height: 5, marginTop: -2.5, marginLeft: -2.5,
+            backgroundColor: '#fff',
+            boxShadow: `0 0 10px 3px ${accent}, 0 0 18px 6px ${accent}66`,
+          }}
+          initial={{ scale: 0, opacity: 0, x: 0, y: 0 }}
+          animate={{ scale: [0, 1.6, 0], opacity: [0, 1, 0], x: (i - 1) * 10, y: (i % 2 === 0 ? -1 : 1) * 8 }}
+          transition={{ duration: 0.7, delay: 0.5 + i * 0.05, ease: 'easeOut' }}
         />
       ))}
 
@@ -152,9 +208,9 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
       <motion.div
         className="absolute top-0 inset-x-0 z-20 flex justify-center"
         style={{ paddingTop: 'max(5vh, 28px)' }}
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: clicked ? 0 : 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: clicked ? 0 : 1, scale: 1 }}
+        transition={{ delay: 0.3, duration: 0.9, ease: PREMIUM_EASE }}
       >
         <img src="/logos/icons.png" alt="" style={{ width: 40, height: 'auto', opacity: 0.85, filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))' }} />
       </motion.div>
@@ -214,7 +270,7 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
           </h1>
 
           <div className="flex items-center justify-center my-3">
-            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
           </div>
 
           <h1 style={{
@@ -233,7 +289,7 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
           {eventDate && (
             <p style={{
               fontSize: 9.5, letterSpacing: '0.25em', textTransform: 'uppercase',
-              color: `${accent}cc`, marginTop: 10,
+              color: `${text}cc`, marginTop: 10,
               fontFamily: `'${meta.font.body}', serif`,
               textShadow: `0 1px 6px ${primary}88`,
             }}>
@@ -252,7 +308,7 @@ export default function RingZoomOpening({ config, data, meta, onOpen, positionMo
           >
             <p style={{
               fontSize: guestLabelSize, letterSpacing: '0.35em', textTransform: 'uppercase',
-              color: `${accent}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
+              color: `${text}bb`, fontFamily: `'${meta.font.body}', serif`, marginBottom: 3,
               textShadow: `0 1px 4px ${primary}88`,
             }}>
               {guestLabel}

@@ -110,7 +110,7 @@ export default function GoldShimmerOpening({ config, data, meta, onOpen, positio
           {data.groom_name || 'Ahmad'}
         </h1>
         <div className="flex items-center justify-center my-3">
-          <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+          <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
         </div>
         <h1 style={{
           fontSize: 38, fontWeight: 700, textAlign: 'center', margin: 0, lineHeight: 1.15,
@@ -130,7 +130,7 @@ export default function GoldShimmerOpening({ config, data, meta, onOpen, positio
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.6 }}
           style={{ marginTop: 22, color: `${text}cc`, fontSize: 13, fontFamily: `'${meta.font.heading}', serif`, textAlign: 'center' }}
         >
-          <span style={{ display: 'block', fontSize: 8.5, letterSpacing: '0.3em', color: `${accent}bb`, marginBottom: 4 }}>
+          <span style={{ display: 'block', fontSize: 8.5, letterSpacing: '0.3em', color: `${text}bb`, marginBottom: 4 }}>
             {config.guest_label || 'KEPADA YTH.'}
           </span>
           {guestName}

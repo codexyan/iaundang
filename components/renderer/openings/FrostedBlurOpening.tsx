@@ -92,7 +92,7 @@ export default function FrostedBlurOpening({ config, data, meta, onOpen, positio
 
           {config.show_guest_name !== false && guestName && (
             <p style={{ color: `${text}cc`, fontSize: 12, marginBottom: 14, fontFamily: `'${meta.font.heading}', serif` }}>
-              <span style={{ display: 'block', fontSize: 8, letterSpacing: '0.3em', color: `${accent}bb`, marginBottom: 3 }}>
+              <span style={{ display: 'block', fontSize: 8, letterSpacing: '0.3em', color: `${text}bb`, marginBottom: 3 }}>
                 {config.guest_label || 'KEPADA YTH.'}
               </span>
               {guestName}
@@ -103,7 +103,7 @@ export default function FrostedBlurOpening({ config, data, meta, onOpen, positio
             {data.groom_name || 'Ahmad'}
           </h1>
           <div className="flex items-center justify-center my-2">
-            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={accent} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
+            <CoupleNameConnector style={connectorStyle} size={connectorSize} color={text} fontFamily={`'${meta.font.heading}', serif`} primary={primary} />
           </div>
           <h1 style={{ fontSize: 30, fontWeight: 700, color: text, fontFamily: `'${meta.font.heading}', serif`, lineHeight: 1.25, margin: 0 }}>
             {data.bride_name || 'Siti'}
