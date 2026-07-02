@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import {
   TrendingUp, DollarSign, MousePointer, Users, Copy, Check,
   Wallet, ArrowDownToLine, Clock, CheckCircle, XCircle,
@@ -114,9 +115,9 @@ export default function AffiliateDashboard() {
           <p className="text-stone-500 text-sm">
             Akun affiliate kamu belum diaktifkan oleh admin. Hubungi admin untuk mengaktifkan program affiliate.
           </p>
-          <a href="/" className="inline-flex items-center gap-2 mt-6 text-sm text-emerald-600 hover:text-emerald-700">
+          <Link href="/" className="inline-flex items-center gap-2 mt-6 text-sm text-emerald-600 hover:text-emerald-700">
             <ExternalLink className="w-4 h-4" /> Kembali ke beranda
-          </a>
+          </Link>
         </div>
       </div>
     )

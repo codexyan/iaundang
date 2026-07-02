@@ -309,13 +309,13 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
   const [sectionOrder, setSectionOrder] = useState<string[]>([])
 
   const [debouncedData, setDebouncedData] = useState(data)
-  const debounceTimer = useRef<ReturnType<typeof setTimeout>>()
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   useEffect(() => {
     debounceTimer.current = setTimeout(() => setDebouncedData(data), 600)
     return () => clearTimeout(debounceTimer.current)
   }, [data])
 
-  const timer = useRef<ReturnType<typeof setTimeout>>()
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const progress = calculateProgress(data)
   const completeness = calculateCompleteness(data)

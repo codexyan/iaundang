@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import toast from 'react-hot-toast'
 import dynamic from 'next/dynamic'
 import {
@@ -511,13 +512,13 @@ function UpgradeBanner({}: {
             </span>
           </div>
         </div>
-        <a
+        <Link
           href="/templates"
           className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-5 py-3 rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all shrink-0 no-underline"
         >
           <Sparkles size={14} />
           Pilih Template & Upgrade
-        </a>
+        </Link>
       </div>
     </div>
   )

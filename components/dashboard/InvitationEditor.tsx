@@ -915,7 +915,7 @@ export default function InvitationEditor({ invitation, template, onSaved }: Prop
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const [showMobilePreview, setShowMobilePreview] = useState(false)
 
-  const timer = useRef<ReturnType<typeof setTimeout>>()
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   const previewTemplate: TemplateRecord = useMemo(() => ({
     ...template,

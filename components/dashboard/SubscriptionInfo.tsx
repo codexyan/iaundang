@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import {
   Crown, Rocket, Gem, CheckCircle2, Clock, AlertTriangle,
   ArrowUpRight, Shield, Zap, Star, ExternalLink,
@@ -229,14 +230,14 @@ export default function SubscriptionInfo({ invitation }: Props) {
             <p className="text-sm text-stone-500 mb-6 max-w-sm mx-auto">
               Anda sedang dalam mode Free Trial. Upgrade ke paket berbayar untuk menghapus watermark, membuka semua fitur, dan mempublikasikan undangan.
             </p>
-            <a
+            <Link
               href="/templates"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all"
             >
               <Zap size={16} />
               Pilih Paket & Upgrade
               <ArrowUpRight size={14} />
-            </a>
+            </Link>
           </div>
         </div>
       )}
@@ -254,13 +255,13 @@ export default function SubscriptionInfo({ invitation }: Props) {
                 Pilih template baru atau tingkatkan paket untuk fitur lebih lengkap. Hubungi admin untuk perpanjangan.
               </p>
             </div>
-            <a
+            <Link
               href="/templates"
               className="flex items-center justify-center gap-2 px-5 py-2.5 bg-stone-900 text-white text-xs font-bold rounded-xl hover:bg-stone-800 transition-colors shrink-0"
             >
               Lihat Template
               <ExternalLink size={12} />
-            </a>
+            </Link>
           </div>
         </div>
       )}
