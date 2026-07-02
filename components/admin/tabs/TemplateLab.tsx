@@ -818,9 +818,59 @@ const DEFAULT_MUSIC_CFG: MusicConfig = {
   player_animation: 'fade-slide', show_title: true, player_size: 'md',
 }
 
+const MUSIC_STYLES = ['pill', 'circle', 'vinyl', 'minimal'] as const
+const MUSIC_POSITIONS = ['bottom-right', 'bottom-left', 'bottom-center', 'top-right'] as const
+const MUSIC_ANIMATIONS = ['fade-slide', 'scale-bounce', 'slide-up', 'none'] as const
+const MUSIC_SIZES = ['sm', 'md', 'lg'] as const
+
+/**
+ * Coerce an unknown `config.music` value into a valid MusicConfig.
+ * Old/partial template records may store `music` as null, a string, an array,
+ * or an object with missing/mistyped fields. Each field falls back individually
+ * to DEFAULT_MUSIC_CFG so a single bad field can't corrupt the whole config.
+ */
+function normalizeMusicConfig(raw: unknown): MusicConfig {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { ...DEFAULT_MUSIC_CFG }
+  }
+  const m = raw as Record<string, unknown>
+  const bool = (v: unknown, d: boolean) => (typeof v === 'boolean' ? v : d)
+  const str = (v: unknown) => (typeof v === 'string' ? v : undefined)
+  const oneOf = <T extends string>(v: unknown, opts: readonly T[], d: T): T =>
+    typeof v === 'string' && (opts as readonly string[]).includes(v) ? (v as T) : d
+
+  let volume = typeof m.volume === 'number' && Number.isFinite(m.volume) ? m.volume : DEFAULT_MUSIC_CFG.volume
+  volume = Math.min(1, Math.max(0, volume))
+
+  return {
+    enabled: bool(m.enabled, DEFAULT_MUSIC_CFG.enabled),
+    autoplay: bool(m.autoplay, DEFAULT_MUSIC_CFG.autoplay),
+    loop: bool(m.loop, DEFAULT_MUSIC_CFG.loop),
+    show_title: bool(m.show_title, DEFAULT_MUSIC_CFG.show_title),
+    volume,
+    url: str(m.url),
+    title: str(m.title),
+    player_style: oneOf(m.player_style, MUSIC_STYLES, DEFAULT_MUSIC_CFG.player_style),
+    player_position: oneOf(m.player_position, MUSIC_POSITIONS, DEFAULT_MUSIC_CFG.player_position),
+    player_animation: oneOf(m.player_animation, MUSIC_ANIMATIONS, DEFAULT_MUSIC_CFG.player_animation),
+    player_size: oneOf(m.player_size, MUSIC_SIZES, DEFAULT_MUSIC_CFG.player_size),
+  }
+}
+
+/**
+ * Normalize an externally-sourced template record (edit prop, saved lab in
+ * localStorage, or DB record) before it enters component state, so downstream
+ * render code always sees a valid `config.music`. Mutates and returns the
+ * passed record — callers pass a fresh deepClone.
+ */
+function normalizeTemplateRecord(rec: TemplateRecord): TemplateRecord {
+  if (rec?.config) rec.config.music = normalizeMusicConfig(rec.config.music)
+  return rec
+}
+
 export default function TemplateLab({ onGoToManagement, onTemplateReleased, editRecord, categories: categoriesProp, palettes: palettesProp, templateRecords = [], onDirtyChange, onSaveDraftRef }: TemplateLabProps) {
   const [config, setConfig] = useState<TemplateRecord>(() => {
-    if (editRecord) return deepClone(editRecord)
+    if (editRecord) return normalizeTemplateRecord(deepClone(editRecord))
     return {
       ...deepClone(JAVANESE_GOLD),
       id: makeId(),
@@ -990,7 +1040,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
 
   useEffect(() => {
     if (editRecord) {
-      const cloned = deepClone(editRecord)
+      const cloned = normalizeTemplateRecord(deepClone(editRecord))
       setConfig(cloned)
       setIsEditMode(true)
       setPreviewKey(k => k + 1)
@@ -1287,7 +1337,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
   function loadLab(id: string) {
     const entry = savedLabs.find(l => l.id === id)
     if (!entry) return
-    setConfig(deepClone(entry.config))
+    setConfig(normalizeTemplateRecord(deepClone(entry.config)))
     setPreviewKey(k => k + 1)
     setChangeCount(0)
     initialConfigRef.current = JSON.stringify(entry.config.config)
@@ -1556,7 +1606,7 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
                       onClick={() => {
                         if (card.type === 'record') {
                           const rec = templateRecords.find(r => r.id === card.id)
-                          if (rec) { setConfig(deepClone(rec)); setIsEditMode(true); setShowSetup(false) }
+                          if (rec) { setConfig(normalizeTemplateRecord(deepClone(rec))); setIsEditMode(true); setShowSetup(false) }
                         } else {
                           loadLab(card.id); setShowSetup(false)
                         }
