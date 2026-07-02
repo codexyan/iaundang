@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import toast from 'react-hot-toast'
 import {
   LayoutDashboard, Users, ShoppingCart, Settings, LogOut,
@@ -159,6 +159,22 @@ export default function AdminPanel({
   const [pendingTab, setPendingTab] = useState<NavTab | null>(null)
   const [transitioning, setTransitioning] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
+  const [pendingArticles, setPendingArticles] = useState(0)
+  const [articleAuthorFilter, setArticleAuthorFilter] = useState<{ id: string; name: string } | null>(null)
+
+  // Sidebar badge: count articles awaiting review (light polling).
+  const refreshPendingArticles = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/articles/pending-count')
+      if (res.ok) setPendingArticles((await res.json()).count ?? 0)
+    } catch { /* non-blocking */ }
+  }, [])
+
+  useEffect(() => {
+    refreshPendingArticles()
+    const iv = setInterval(refreshPendingArticles, 60000)
+    return () => clearInterval(iv)
+  }, [refreshPendingArticles])
 
   // Baca URL setelah hydration + sinkronisasi back/forward
   useEffect(() => {
@@ -363,6 +379,7 @@ export default function AdminPanel({
         onLogout={handleLogout}
         stats={stats}
         pendingProofs={pendingProofs}
+        pendingArticles={pendingArticles}
         siteName={appSettings.siteName ?? 'iaundang'}
         logoVerticalUrl={appSettings.logoVerticalUrl ?? '/logos/logo-vertical.png'}
       />
@@ -440,8 +457,16 @@ export default function AdminPanel({
             onProofReview={handleProofReview}
           />
         )}
-        {activeTab === 'articles' && <ArticlesTab />}
-        {activeTab === 'writers' && <WriterTab />}
+        {activeTab === 'articles' && (
+          <ArticlesTab
+            authorFilter={articleAuthorFilter}
+            onClearAuthorFilter={() => setArticleAuthorFilter(null)}
+            onReviewed={refreshPendingArticles}
+          />
+        )}
+        {activeTab === 'writers' && (
+          <WriterTab onViewArticles={(id, name) => { setArticleAuthorFilter({ id, name }); handleTabChange('articles') }} />
+        )}
         {activeTab === 'affiliates' && <AffiliatesTab />}
         {activeTab === 'feedback' && <FeedbackTab />}
         {activeTab === 'experiments' && <ExperimentsTab />}
@@ -570,7 +595,7 @@ const NAV_GROUPS = [
 ]
 
 function Sidebar({
-  activeTab, onTabChange, adminEmail, onLogout, stats, pendingProofs, siteName, logoVerticalUrl,
+  activeTab, onTabChange, adminEmail, onLogout, stats, pendingProofs, pendingArticles, siteName, logoVerticalUrl,
 }: {
   activeTab: NavTab
   onTabChange: (t: NavTab) => void
@@ -578,6 +603,7 @@ function Sidebar({
   onLogout: () => void
   stats: Stats
   pendingProofs: number
+  pendingArticles: number
   siteName: string
   logoVerticalUrl: string
 }) {
@@ -615,7 +641,8 @@ function Sidebar({
                 const isActive = activeTab === id
                 const badge =
                   id === 'users'       ? (stats.totalUsers   > 0 ? stats.totalUsers   : null) :
-                  id === 'payment'     ? (pendingProofs      > 0 ? pendingProofs      : null) : null
+                  id === 'payment'     ? (pendingProofs      > 0 ? pendingProofs      : null) :
+                  id === 'articles'    ? (pendingArticles    > 0 ? pendingArticles    : null) : null
                 return (
                   <button
                     key={id}
@@ -636,7 +663,7 @@ function Sidebar({
                     )}
                     {badge != null && (
                       <span className={`${collapsed ? 'absolute -top-0.5 -right-0.5 w-4 h-4 text-[8px] flex items-center justify-center' : 'text-[10px] px-1.5 py-0.5 min-w-[18px] text-center'} font-bold rounded-full leading-none shrink-0 ${
-                        id === 'payment' ? 'bg-red-100 text-red-600 animate-pulse' :
+                        id === 'payment' || id === 'articles' ? 'bg-red-100 text-red-600 animate-pulse' :
                         'bg-gray-100 text-gray-600'
                       }`}>
                         {collapsed ? '' : badge}

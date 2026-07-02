@@ -11,11 +11,37 @@ import {
   AlertCircle, CheckCircle, XCircle,
   Megaphone as AdIcon, Link as LinkIcon,
   Star, Pin, Lock, MessageSquare, Hash, Type,
-  Ban,
+  Ban, Check, CalendarClock, Archive, RotateCcw, Layers,
 } from 'lucide-react'
 import ImagePicker from '@/components/ui/ImagePicker'
 import RichTextEditor from '@/components/ui/RichTextEditor'
 import { parseMarkdownPreview, slugify, wordCount, readTime } from '@/lib/article-markdown'
+import { statusMeta, type ArticleStatus } from '@/lib/article-status'
+import ArticleCategoriesManager from './ArticleCategoriesManager'
+
+interface CategoryOption { id: string; name: string; slug: string }
+
+interface AuthorFilter { id: string; name: string }
+
+// Run async work with bounded concurrency (bulk actions over many articles).
+async function runLimited<T>(items: T[], limit: number, fn: (item: T) => Promise<unknown>) {
+  let cursor = 0
+  const worker = async () => {
+    while (cursor < items.length) {
+      const idx = cursor++
+      await fn(items[idx])
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
+}
+
+// Legacy rows (published before the status column existed) can have
+// status='draft' + isPublished=true — treat those as published for display.
+function effStatus(a: { status?: string; isPublished: boolean }): ArticleStatus {
+  if (a.status && a.status !== 'draft') return a.status as ArticleStatus
+  if (a.isPublished) return 'published'
+  return 'draft'
+}
 
 interface ArticleSettings {
   comments: {
@@ -60,6 +86,8 @@ interface ArticleData {
   isPublished: boolean; publishedAt: string | null
   allowLikes: boolean; allowComments: boolean; likesCount: number; viewsCount: number
   metaTitle: string; metaDesc: string; tags: string; settings: ArticleSettings
+  status: string; submittedAt: string | null; reviewNotes: string
+  scheduledAt: string | null; reviewedBy: string | null; categoryId: string | null
   createdAt: string; updatedAt: string
 }
 
@@ -103,16 +131,42 @@ function analyzeSeo(form: ArticleData): { score: number; checks: SeoCheck[]; gra
   return { score, checks, grade }
 }
 
-export default function ArticlesTab() {
+type ArticleTabView = 'articles' | 'categories'
+type SortKey = 'recent' | 'views' | 'likes'
+
+export default function ArticlesTab({ authorFilter, onClearAuthorFilter, onReviewed }: {
+  authorFilter?: AuthorFilter | null
+  onClearAuthorFilter?: () => void
+  onReviewed?: () => void
+} = {}) {
+  const [view, setView] = useState<ArticleTabView>('articles')
   const [articlesList, setArticlesList] = useState<ArticleData[]>([])
+  const [categories, setCategories] = useState<CategoryOption[]>([])
   const [loading, setLoading] = useState(true)
   const [editingArticle, setEditingArticle] = useState<ArticleData | null>(null)
   const [isNew, setIsNew] = useState(false)
+
+  // Filters
   const [filterText, setFilterText] = useState('')
   const [debouncedFilter, setDebouncedFilter] = useState('')
-  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | ArticleStatus>('all')
+  const [categoryFilter, setCategoryFilter] = useState('')
+  const [authorId, setAuthorId] = useState('')
+  const [dateField, setDateField] = useState<'created' | 'published'>('created')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
+  const [sortBy, setSortBy] = useState<SortKey>('recent')
 
-  // Debounce the search input so filtering tidak jalan di setiap keystroke
+  // Bulk + quick actions
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [processing, setProcessing] = useState(false)
+  const [rejectFor, setRejectFor] = useState<string | null>(null)
+  const [scheduleFor, setScheduleFor] = useState<string | null>(null)
+  const [bulkDelete, setBulkDelete] = useState(false)
+  const [bulkCategory, setBulkCategory] = useState(false)
+
+  const didAutoSelect = useRef(false)
+
   useEffect(() => {
     const t = setTimeout(() => setDebouncedFilter(filterText), 250)
     return () => clearTimeout(t)
@@ -122,11 +176,107 @@ export default function ArticlesTab() {
     try {
       const res = await fetch('/api/admin/articles')
       if (!res.ok) throw new Error()
-      setArticlesList((await res.json()).articles)
+      const list: ArticleData[] = (await res.json()).articles
+      setArticlesList(list)
+      // On first load, jump straight to the review queue if there's work waiting.
+      if (!didAutoSelect.current) {
+        didAutoSelect.current = true
+        if (!authorFilter && list.some(a => effStatus(a) === 'pending_review')) {
+          setStatusFilter('pending_review')
+        }
+      }
     } catch { toast.error('Gagal memuat artikel') }
     finally { setLoading(false) }
+  }, [authorFilter])
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/article-categories')
+      if (res.ok) setCategories((await res.json()).categories)
+    } catch { /* non-blocking */ }
   }, [])
-  useEffect(() => { fetchArticles() }, [fetchArticles])
+
+  useEffect(() => { fetchArticles(); fetchCategories() }, [fetchArticles, fetchCategories])
+
+  // Cross-link from the Writer tab: scope to a specific author.
+  useEffect(() => {
+    if (authorFilter) { setAuthorId(authorFilter.id); setView('articles'); setStatusFilter('all') }
+  }, [authorFilter])
+
+  const refreshAfterAction = async () => {
+    setSelected(new Set())
+    await fetchArticles()
+    onReviewed?.()
+  }
+
+  async function reviewAction(id: string, action: 'approve' | 'reject' | 'schedule' | 'archive', extra?: Record<string, unknown>): Promise<boolean> {
+    const res = await fetch(`/api/admin/articles/${id}/review`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...extra }),
+    })
+    return res.ok
+  }
+
+  async function patchArticle(id: string, data: Record<string, unknown>): Promise<boolean> {
+    const res = await fetch(`/api/admin/articles/${id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+    })
+    return res.ok
+  }
+
+  // ── Quick (single-row) actions ──────────────────────────────────
+  async function quickApprove(id: string) {
+    setProcessing(true)
+    const ok = await reviewAction(id, 'approve')
+    setProcessing(false)
+    if (ok) { toast.success('Artikel disetujui & dipublikaslikan'); await refreshAfterAction() }
+    else toast.error('Gagal menyetujui')
+  }
+  async function submitReject(id: string, notes: string) {
+    setProcessing(true)
+    const ok = await reviewAction(id, 'reject', { notes })
+    setProcessing(false); setRejectFor(null)
+    if (ok) { toast.success('Revisi diminta ke penulis'); await refreshAfterAction() }
+    else toast.error('Gagal meminta revisi')
+  }
+  async function submitSchedule(id: string, scheduledAt: string) {
+    setProcessing(true)
+    const ok = await reviewAction(id, 'schedule', { scheduledAt })
+    setProcessing(false); setScheduleFor(null)
+    if (ok) { toast.success('Artikel dijadwalkan'); await refreshAfterAction() }
+    else toast.error('Gagal menjadwalkan')
+  }
+  // Back to draft (cancel schedule / unarchive) via the generic PATCH endpoint.
+  async function backToDraft(id: string) {
+    setProcessing(true)
+    const ok = await patchArticle(id, { status: 'draft', isPublished: false, scheduledAt: null })
+    setProcessing(false)
+    if (ok) { toast.success('Dikembalikan ke draft'); await refreshAfterAction() }
+    else toast.error('Gagal memproses')
+  }
+
+  // ── Bulk actions ────────────────────────────────────────────────
+  const selectedIds = () => Array.from(selected)
+  async function bulkApprove() {
+    setProcessing(true)
+    await runLimited(selectedIds(), 5, id => reviewAction(id, 'approve'))
+    setProcessing(false); toast.success('Artikel terpilih disetujui'); await refreshAfterAction()
+  }
+  async function bulkArchive() {
+    setProcessing(true)
+    await runLimited(selectedIds(), 5, id => reviewAction(id, 'archive'))
+    setProcessing(false); toast.success('Artikel terpilih diarsipkan'); await refreshAfterAction()
+  }
+  async function applyBulkCategory(categoryId: string | null) {
+    setProcessing(true)
+    await runLimited(selectedIds(), 5, id => patchArticle(id, { categoryId }))
+    setProcessing(false); setBulkCategory(false); toast.success('Kategori diperbarui'); await refreshAfterAction()
+  }
+  async function applyBulkDelete() {
+    setProcessing(true)
+    await runLimited(selectedIds(), 5, id => fetch(`/api/admin/articles/${id}`, { method: 'DELETE' }))
+    setProcessing(false); setBulkDelete(false); toast.success('Artikel terpilih dihapus'); await refreshAfterAction()
+  }
 
   const handleNew = () => {
     setIsNew(true)
@@ -137,6 +287,7 @@ export default function ArticlesTab() {
       allowLikes: true, allowComments: true, likesCount: 0, viewsCount: 0,
       metaTitle: '', metaDesc: '', tags: '',
       settings: { ...DEFAULT_SETTINGS, comments: { ...DEFAULT_SETTINGS.comments }, seo: { ...DEFAULT_SETTINGS.seo }, ads: { ...DEFAULT_SETTINGS.ads }, backlinks: { ...DEFAULT_SETTINGS.backlinks } },
+      status: 'draft', submittedAt: null, reviewNotes: '', scheduledAt: null, reviewedBy: null, categoryId: null,
       createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
     })
   }
@@ -163,109 +314,351 @@ export default function ArticlesTab() {
     )
   }
 
-  const published = articlesList.filter(a => a.isPublished).length
-  const draft = articlesList.length - published
+  // ── Derived data ────────────────────────────────────────────────
+  const counts: Record<string, number> = { all: articlesList.length }
+  for (const a of articlesList) { const s = effStatus(a); counts[s] = (counts[s] ?? 0) + 1 }
   const totalViews = articlesList.reduce((s, a) => s + a.viewsCount, 0)
-  const totalLikes = articlesList.reduce((s, a) => s + a.likesCount, 0)
 
-  const filtered = articlesList.filter(a => {
-    if (filterStatus === 'published' && !a.isPublished) return false
-    if (filterStatus === 'draft' && a.isPublished) return false
-    if (debouncedFilter && !a.title.toLowerCase().includes(debouncedFilter.toLowerCase())) return false
+  const authorOptions = Array.from(
+    articlesList.reduce((m, a) => { if (a.authorId) m.set(a.authorId, a.authorName || 'Penulis'); return m }, new Map<string, string>())
+  ).map(([id, name]) => ({ id, name }))
+
+  const inDateRange = (a: ArticleData): boolean => {
+    if (!dateFrom && !dateTo) return true
+    const raw = dateField === 'published' ? a.publishedAt : a.createdAt
+    if (!raw) return false
+    const t = new Date(raw).getTime()
+    if (dateFrom && t < new Date(dateFrom + 'T00:00:00').getTime()) return false
+    if (dateTo && t > new Date(dateTo + 'T23:59:59').getTime()) return false
     return true
-  })
+  }
+
+  const filtered = articlesList
+    .filter(a => {
+      if (statusFilter !== 'all' && effStatus(a) !== statusFilter) return false
+      if (categoryFilter && a.categoryId !== categoryFilter) return false
+      if (authorId && a.authorId !== authorId) return false
+      if (debouncedFilter && !a.title.toLowerCase().includes(debouncedFilter.toLowerCase())) return false
+      if (!inDateRange(a)) return false
+      return true
+    })
+    .sort((a, b) => {
+      if (sortBy === 'views') return b.viewsCount - a.viewsCount
+      if (sortBy === 'likes') return b.likesCount - a.likesCount
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    })
+
+  const summary = [
+    { key: 'all', label: 'Total', value: articlesList.length, cls: 'text-gray-600 bg-gray-50', icon: FileText },
+    { key: 'published', label: 'Published', value: counts.published ?? 0, cls: 'text-emerald-600 bg-emerald-50', icon: CheckCircle2 },
+    { key: 'draft', label: 'Draft', value: counts.draft ?? 0, cls: 'text-gray-600 bg-gray-100', icon: EyeOff },
+    { key: 'pending_review', label: 'Menunggu Review', value: counts.pending_review ?? 0, cls: 'text-amber-700 bg-amber-100', icon: Clock, accent: true },
+    { key: 'scheduled', label: 'Terjadwal', value: counts.scheduled ?? 0, cls: 'text-blue-600 bg-blue-50', icon: CalendarClock },
+    { key: 'archived', label: 'Diarsipkan', value: counts.archived ?? 0, cls: 'text-stone-600 bg-stone-100', icon: Archive },
+    { key: 'views', label: 'Total Views', value: totalViews, cls: 'text-indigo-600 bg-indigo-50', icon: Eye },
+  ]
+
+  const allVisibleSelected = filtered.length > 0 && filtered.every(a => selected.has(a.id))
+  const toggleAll = () => setSelected(allVisibleSelected ? new Set() : new Set(filtered.map(a => a.id)))
+  const toggleOne = (id: string) => setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
 
   return (
     <div className="h-full flex flex-col">
-      <div className="px-8 pt-5 pb-4 border-b border-gray-100 bg-white">
+      <div className="px-8 pt-5 pb-0 border-b border-gray-100 bg-white">
         <h1 className="text-lg font-bold text-gray-900 tracking-tight">Artikel</h1>
-        <p className="text-xs text-gray-400 mt-0.5">Kelola konten blog & SEO</p>
-      </div>
-      <div className="flex-1 overflow-y-auto p-6 lg:p-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          {[
-            { label: 'Total', value: articlesList.length, icon: FileText, color: 'text-gray-600 bg-gray-50' },
-            { label: 'Dipublikasi', value: published, icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-50' },
-            { label: 'Views', value: totalViews, icon: Eye, color: 'text-blue-600 bg-blue-50' },
-            { label: 'Likes', value: totalLikes, icon: Heart, color: 'text-pink-600 bg-pink-50' },
-          ].map(stat => (
-            <div key={stat.label} className="bg-white rounded-xl border border-gray-100 p-4">
-              <div className="flex items-center gap-3">
-                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${stat.color}`}><stat.icon className="w-4.5 h-4.5" /></div>
-                <div><p className="text-lg font-bold text-gray-900">{stat.value}</p><p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide">{stat.label}</p></div>
-              </div>
-            </div>
+        <p className="text-xs text-gray-400 mt-0.5 mb-3">Kelola konten blog, review & kategori</p>
+        <div className="flex items-center gap-1">
+          {([['articles', 'Artikel'], ['categories', 'Kategori']] as const).map(([id, label]) => (
+            <button key={id} onClick={() => setView(id)}
+              className={`px-3 py-2 text-xs font-semibold border-b-2 -mb-px transition-colors ${view === id ? 'border-forest-500 text-forest-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+              {label}
+            </button>
           ))}
         </div>
+      </div>
 
-        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="relative flex-1 max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-              <input type="text" value={filterText} onChange={e => setFilterText(e.target.value)} placeholder="Cari artikel..."
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 transition-colors" />
-            </div>
-            <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
-              {(['all', 'published', 'draft'] as const).map(s => (
-                <button key={s} onClick={() => setFilterStatus(s)}
-                  className={`px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${filterStatus === s ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
-                  {s === 'all' ? `Semua (${articlesList.length})` : s === 'published' ? `Live (${published})` : `Draft (${draft})`}
-                </button>
-              ))}
-            </div>
-          </div>
-          <button onClick={handleNew}
-            className="flex items-center gap-1.5 text-xs font-semibold bg-forest-500 text-white hover:bg-forest-600 px-4 py-2.5 rounded-lg transition-colors shrink-0">
-            <Plus className="w-3.5 h-3.5" />Artikel Baru
-          </button>
+      {view === 'categories' ? (
+        <div className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <ArticleCategoriesManager onChanged={fetchCategories} />
         </div>
-
-        {filtered.length > 0 ? (
-          <div className="space-y-2">
-            {filtered.map(article => (
-              <button key={article.id} onClick={() => { setIsNew(false); setEditingArticle({ ...article }) }}
-                className="w-full text-left bg-white rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-sm p-4 transition-all group">
-                <div className="flex items-start gap-4">
-                  {article.coverUrl ? (
-                    <img src={article.coverUrl} alt="" className="w-20 h-20 rounded-lg object-cover shrink-0 bg-gray-100" />
-                  ) : (
-                    <div className="w-20 h-20 rounded-lg bg-gray-50 flex items-center justify-center shrink-0"><FileText className="w-7 h-7 text-gray-300" /></div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-sm font-semibold text-gray-900 truncate group-hover:text-forest-700 transition-colors">{article.title || 'Tanpa judul'}</h3>
-                      {article.settings?.featured && <Star className="w-3 h-3 text-amber-400 fill-amber-400 shrink-0" />}
-                      {article.settings?.pinned && <Pin className="w-3 h-3 text-indigo-400 shrink-0" />}
-                      {article.isPublished ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full shrink-0"><CheckCircle2 className="w-2.5 h-2.5" />Live</span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-500 bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded-full shrink-0"><Clock className="w-2.5 h-2.5" />Draft</span>
-                      )}
-                    </div>
-                    {article.excerpt && <p className="text-xs text-gray-400 line-clamp-2 mb-2">{article.excerpt}</p>}
-                    <div className="flex items-center gap-4 text-[11px] text-gray-400">
-                      <span>/blog/{article.slug}</span>
-                      <span>{formatDate(article.updatedAt)}</span>
-                      <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{article.viewsCount}</span>
-                      <span className="flex items-center gap-1"><Heart className="w-3 h-3" />{article.likesCount}</span>
-                      {article.tags && <span className="flex items-center gap-1"><Tag className="w-3 h-3" />{article.tags.split(',').filter(Boolean).length}</span>}
-                    </div>
-                  </div>
-                  <PenLine className="w-4 h-4 text-gray-300 group-hover:text-forest-500 transition-colors shrink-0 mt-1" />
-                </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto p-6 lg:p-8">
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3 mb-6">
+            {summary.map(stat => (
+              <button key={stat.key} onClick={() => stat.key !== 'views' && setStatusFilter(stat.key as 'all' | ArticleStatus)}
+                className={`text-left bg-white rounded-xl border p-3 transition-all ${stat.accent && stat.value > 0 ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-100 hover:border-gray-200'}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2 ${stat.cls}`}><stat.icon className="w-4 h-4" /></div>
+                <p className="text-lg font-bold text-gray-900 leading-none">{stat.value}</p>
+                <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mt-1">{stat.label}</p>
               </button>
             ))}
           </div>
-        ) : articlesList.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-100 py-16 text-center">
-            <FileText className="w-10 h-10 text-gray-200 mx-auto mb-3" />
-            <p className="text-sm text-gray-500 font-medium">Belum ada artikel</p>
-            <p className="text-xs text-gray-400 mt-1 mb-4">Tulis artikel pertama untuk meningkatkan SEO dan engagement</p>
-            <button onClick={handleNew} className="inline-flex items-center gap-1.5 text-xs font-semibold bg-forest-500 text-white hover:bg-forest-600 px-4 py-2 rounded-lg transition-colors"><Plus className="w-3.5 h-3.5" />Tulis Artikel</button>
+
+          {/* Status tabs */}
+          <div className="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1">
+            {(['all', 'draft', 'pending_review', 'needs_revision', 'scheduled', 'published', 'archived'] as const).map(s => {
+              const label = s === 'all' ? 'Semua' : statusMeta(s).label
+              const n = counts[s] ?? 0
+              return (
+                <button key={s} onClick={() => setStatusFilter(s)}
+                  className={`shrink-0 px-3 py-1.5 text-[11px] font-medium rounded-lg transition-colors whitespace-nowrap ${statusFilter === s ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-100'}`}>
+                  {label} <span className="opacity-70">({n})</span>
+                </button>
+              )
+            })}
           </div>
-        ) : (
-          <div className="text-center py-12 text-sm text-gray-400">Tidak ada artikel yang sesuai filter</div>
-        )}
+
+          {/* Filter/sort row */}
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
+            <div className="relative flex-1 min-w-[180px] max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <input type="text" value={filterText} onChange={e => setFilterText(e.target.value)} placeholder="Cari judul..."
+                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400" />
+            </div>
+            <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}
+              className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:border-forest-400 bg-white text-gray-600">
+              <option value="">Semua kategori</option>
+              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+            <select value={authorId} onChange={e => setAuthorId(e.target.value)}
+              className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:border-forest-400 bg-white text-gray-600">
+              <option value="">Semua penulis</option>
+              {authorOptions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </select>
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as SortKey)}
+              className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:border-forest-400 bg-white text-gray-600">
+              <option value="recent">Terbaru</option>
+              <option value="views">Views terbanyak</option>
+              <option value="likes">Likes terbanyak</option>
+            </select>
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <select value={dateField} onChange={e => setDateField(e.target.value as 'created' | 'published')}
+                className="px-2 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:border-forest-400 bg-white text-gray-600">
+                <option value="created">Dibuat</option>
+                <option value="published">Publish</option>
+              </select>
+              <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="px-2 py-1.5 text-xs border border-gray-200 rounded-lg outline-none focus:border-forest-400 text-gray-600" />
+              <span className="text-gray-300">–</span>
+              <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="px-2 py-1.5 text-xs border border-gray-200 rounded-lg outline-none focus:border-forest-400 text-gray-600" />
+            </div>
+            <button onClick={handleNew}
+              className="flex items-center gap-1.5 text-xs font-semibold bg-forest-500 text-white hover:bg-forest-600 px-4 py-2 rounded-lg transition-colors shrink-0 ml-auto">
+              <Plus className="w-3.5 h-3.5" />Artikel Baru
+            </button>
+          </div>
+
+          {authorFilter && (
+            <div className="flex items-center gap-2 mb-3 text-xs text-gray-500">
+              <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full">
+                Penulis: {authorFilter.name}
+                <button onClick={() => { setAuthorId(''); onClearAuthorFilter?.() }} className="hover:text-indigo-900"><X className="w-3 h-3" /></button>
+              </span>
+            </div>
+          )}
+
+          {/* Bulk toolbar */}
+          {selected.size > 0 && (
+            <div className="flex items-center gap-2 mb-3 p-2.5 bg-forest-50 border border-forest-200 rounded-xl flex-wrap">
+              <span className="text-xs font-semibold text-forest-800 px-1">{selected.size} dipilih</span>
+              <button disabled={processing} onClick={bulkApprove} className="flex items-center gap-1 text-xs font-medium text-emerald-700 bg-white border border-emerald-200 hover:bg-emerald-50 px-3 py-1.5 rounded-lg disabled:opacity-50"><Check className="w-3.5 h-3.5" />Setujui</button>
+              <button disabled={processing} onClick={bulkArchive} className="flex items-center gap-1 text-xs font-medium text-stone-700 bg-white border border-stone-200 hover:bg-stone-50 px-3 py-1.5 rounded-lg disabled:opacity-50"><Archive className="w-3.5 h-3.5" />Arsipkan</button>
+              <button disabled={processing} onClick={() => setBulkCategory(true)} className="flex items-center gap-1 text-xs font-medium text-indigo-700 bg-white border border-indigo-200 hover:bg-indigo-50 px-3 py-1.5 rounded-lg disabled:opacity-50"><Layers className="w-3.5 h-3.5" />Ubah Kategori</button>
+              <button disabled={processing} onClick={() => setBulkDelete(true)} className="flex items-center gap-1 text-xs font-medium text-red-600 bg-white border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg disabled:opacity-50"><Trash2 className="w-3.5 h-3.5" />Hapus</button>
+              {processing && <Loader2 className="w-4 h-4 animate-spin text-forest-500" />}
+              <button onClick={() => setSelected(new Set())} className="ml-auto text-xs text-gray-500 hover:text-gray-700 px-2">Batalkan</button>
+            </div>
+          )}
+
+          {/* List */}
+          {filtered.length > 0 ? (
+            <>
+              <label className="flex items-center gap-2 mb-2 px-1 text-[11px] text-gray-400 cursor-pointer select-none">
+                <input type="checkbox" checked={allVisibleSelected} onChange={toggleAll} className="w-3.5 h-3.5 rounded border-gray-300 text-forest-500 focus:ring-forest-400" />
+                Pilih semua ({filtered.length})
+              </label>
+              <div className="space-y-2">
+                {filtered.map(article => {
+                  const st = effStatus(article)
+                  const m = statusMeta(st)
+                  const catName = categories.find(c => c.id === article.categoryId)?.name
+                  return (
+                    <div key={article.id} className={`bg-white rounded-xl border p-4 transition-all ${selected.has(article.id) ? 'border-forest-300 ring-1 ring-forest-200' : 'border-gray-100 hover:border-gray-200'}`}>
+                      <div className="flex items-start gap-3">
+                        <input type="checkbox" checked={selected.has(article.id)} onChange={() => toggleOne(article.id)}
+                          className="mt-1 w-4 h-4 rounded border-gray-300 text-forest-500 focus:ring-forest-400 shrink-0" />
+                        <button onClick={() => { setIsNew(false); setEditingArticle({ ...article }) }} className="flex items-start gap-4 flex-1 min-w-0 text-left group">
+                          {article.coverUrl ? (
+                            <img src={article.coverUrl} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0 bg-gray-100" />
+                          ) : (
+                            <div className="w-16 h-16 rounded-lg bg-gray-50 flex items-center justify-center shrink-0"><FileText className="w-6 h-6 text-gray-300" /></div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <h3 className="text-sm font-semibold text-gray-900 truncate group-hover:text-forest-700 transition-colors">{article.title || 'Tanpa judul'}</h3>
+                              {article.settings?.featured && <Star className="w-3 h-3 text-amber-400 fill-amber-400 shrink-0" />}
+                              {article.settings?.pinned && <Pin className="w-3 h-3 text-indigo-400 shrink-0" />}
+                              <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0 ${m.badgeClass}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${m.dotClass}`} />{m.label}
+                              </span>
+                              {catName && <span className="text-[10px] font-medium bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-full shrink-0">{catName}</span>}
+                            </div>
+                            {st === 'needs_revision' && article.reviewNotes && (
+                              <p className="text-[11px] text-red-700 bg-red-50 border border-red-100 rounded px-2 py-1 mb-1 line-clamp-1"><strong>Revisi:</strong> {article.reviewNotes}</p>
+                            )}
+                            {st === 'scheduled' && article.scheduledAt && (
+                              <p className="text-[11px] text-blue-600 mb-1">Tayang {new Date(article.scheduledAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                            )}
+                            <div className="flex items-center gap-3 text-[11px] text-gray-400 flex-wrap">
+                              <span className="truncate max-w-[160px]">/blog/{article.slug}</span>
+                              <span>{article.authorName}</span>
+                              <span>{formatDate(article.updatedAt)}</span>
+                              <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{article.viewsCount}</span>
+                              <span className="flex items-center gap-1"><Heart className="w-3 h-3" />{article.likesCount}</span>
+                            </div>
+                          </div>
+                        </button>
+                        {/* Quick actions */}
+                        <div className="flex flex-col items-end gap-1.5 shrink-0">
+                          {st === 'pending_review' && (
+                            <div className="flex items-center gap-1">
+                              <button disabled={processing} onClick={() => quickApprove(article.id)} title="Setujui" className="flex items-center gap-1 text-[11px] font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-2.5 py-1.5 rounded-lg disabled:opacity-50"><Check className="w-3.5 h-3.5" />Setujui</button>
+                              <button disabled={processing} onClick={() => setRejectFor(article.id)} title="Minta Revisi" className="p-1.5 text-red-600 border border-red-200 hover:bg-red-50 rounded-lg disabled:opacity-50"><RotateCcw className="w-3.5 h-3.5" /></button>
+                              <button disabled={processing} onClick={() => setScheduleFor(article.id)} title="Jadwalkan" className="p-1.5 text-blue-600 border border-blue-200 hover:bg-blue-50 rounded-lg disabled:opacity-50"><CalendarClock className="w-3.5 h-3.5" /></button>
+                            </div>
+                          )}
+                          {st === 'scheduled' && (
+                            <button disabled={processing} onClick={() => backToDraft(article.id)} className="flex items-center gap-1 text-[11px] font-medium text-gray-600 border border-gray-200 hover:bg-gray-50 px-2.5 py-1.5 rounded-lg disabled:opacity-50"><RotateCcw className="w-3.5 h-3.5" />Batalkan Jadwal</button>
+                          )}
+                          {st === 'archived' && (
+                            <button disabled={processing} onClick={() => backToDraft(article.id)} className="flex items-center gap-1 text-[11px] font-medium text-gray-600 border border-gray-200 hover:bg-gray-50 px-2.5 py-1.5 rounded-lg disabled:opacity-50"><RotateCcw className="w-3.5 h-3.5" />Pulihkan</button>
+                          )}
+                          {article.isPublished && (
+                            <a href={`/blog/${article.slug}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg"><ExternalLink className="w-3.5 h-3.5" /></a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          ) : articlesList.length === 0 ? (
+            <div className="bg-white rounded-xl border border-gray-100 py-16 text-center">
+              <FileText className="w-10 h-10 text-gray-200 mx-auto mb-3" />
+              <p className="text-sm text-gray-500 font-medium">Belum ada artikel</p>
+              <p className="text-xs text-gray-400 mt-1 mb-4">Tulis artikel pertama untuk meningkatkan SEO dan engagement</p>
+              <button onClick={handleNew} className="inline-flex items-center gap-1.5 text-xs font-semibold bg-forest-500 text-white hover:bg-forest-600 px-4 py-2 rounded-lg transition-colors"><Plus className="w-3.5 h-3.5" />Tulis Artikel</button>
+            </div>
+          ) : (
+            <div className="text-center py-12 text-sm text-gray-400">Tidak ada artikel yang sesuai filter</div>
+          )}
+        </div>
+      )}
+
+      {/* Reject (request revision) modal */}
+      {rejectFor && <RejectModal onCancel={() => setRejectFor(null)} onSubmit={notes => submitReject(rejectFor, notes)} processing={processing} />}
+      {/* Schedule modal */}
+      {scheduleFor && <ScheduleModal onCancel={() => setScheduleFor(null)} onSubmit={dt => submitSchedule(scheduleFor, dt)} processing={processing} />}
+      {/* Bulk category modal */}
+      {bulkCategory && <BulkCategoryModal categories={categories} onCancel={() => setBulkCategory(false)} onApply={applyBulkCategory} processing={processing} />}
+      {/* Bulk delete confirm */}
+      {bulkDelete && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-5">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center"><Trash2 className="w-5 h-5 text-red-500" /></div>
+              <div><h3 className="text-sm font-bold text-gray-900">Hapus {selected.size} Artikel?</h3><p className="text-xs text-gray-500">Tindakan ini permanen dan tidak dapat dibatalkan.</p></div>
+            </div>
+            <div className="flex items-center gap-2 justify-end">
+              <button onClick={() => setBulkDelete(false)} className="px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Batal</button>
+              <button onClick={applyBulkDelete} disabled={processing} className="px-4 py-2 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 rounded-lg disabled:opacity-50">
+                {processing && <Loader2 className="w-3.5 h-3.5 animate-spin inline mr-1" />}Hapus Semua
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function RejectModal({ onCancel, onSubmit, processing }: { onCancel: () => void; onSubmit: (notes: string) => void; processing: boolean }) {
+  const [notes, setNotes] = useState('')
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2"><RotateCcw className="w-4 h-4 text-red-500" /><h3 className="font-bold text-gray-900 text-sm">Minta Revisi</h3></div>
+          <button onClick={onCancel} className="text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="px-5 py-4">
+          <FieldLabel>Catatan untuk penulis</FieldLabel>
+          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={4} autoFocus
+            placeholder="Jelaskan apa yang perlu diperbaiki sebelum artikel bisa dipublikasikan..."
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 resize-none" />
+          <p className="text-[10px] text-gray-400 mt-1">Catatan ini tampil di editor penulis (banner revisi).</p>
+        </div>
+        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-gray-100 bg-gray-50">
+          <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Batal</button>
+          <button onClick={() => onSubmit(notes)} disabled={processing || !notes.trim()} className="px-4 py-2 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 rounded-lg disabled:opacity-50">
+            {processing && <Loader2 className="w-3.5 h-3.5 animate-spin inline mr-1" />}Kirim Revisi
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ScheduleModal({ onCancel, onSubmit, processing }: { onCancel: () => void; onSubmit: (dt: string) => void; processing: boolean }) {
+  const [dt, setDt] = useState('')
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2"><CalendarClock className="w-4 h-4 text-blue-500" /><h3 className="font-bold text-gray-900 text-sm">Jadwalkan Publikasi</h3></div>
+          <button onClick={onCancel} className="text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="px-5 py-4">
+          <FieldLabel>Waktu tayang</FieldLabel>
+          <input type="datetime-local" value={dt} onChange={e => setDt(e.target.value)} autoFocus
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400" />
+          <p className="text-[10px] text-gray-400 mt-1">Artikel otomatis dipublikasikan oleh sistem saat waktu tiba.</p>
+        </div>
+        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-gray-100 bg-gray-50">
+          <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Batal</button>
+          <button onClick={() => dt && onSubmit(new Date(dt).toISOString())} disabled={processing || !dt} className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50">
+            {processing && <Loader2 className="w-3.5 h-3.5 animate-spin inline mr-1" />}Jadwalkan
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BulkCategoryModal({ categories, onCancel, onApply, processing }: { categories: CategoryOption[]; onCancel: () => void; onApply: (categoryId: string | null) => void; processing: boolean }) {
+  const [cat, setCat] = useState('')
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2"><Layers className="w-4 h-4 text-indigo-500" /><h3 className="font-bold text-gray-900 text-sm">Ubah Kategori</h3></div>
+          <button onClick={onCancel} className="text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="px-5 py-4">
+          <FieldLabel>Kategori baru</FieldLabel>
+          <select value={cat} onChange={e => setCat(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 bg-white">
+            <option value="">— Tanpa kategori —</option>
+            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
+        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-gray-100 bg-gray-50">
+          <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Batal</button>
+          <button onClick={() => onApply(cat || null)} disabled={processing} className="px-4 py-2 text-xs font-semibold text-white bg-forest-500 hover:bg-forest-600 rounded-lg disabled:opacity-50">
+            {processing && <Loader2 className="w-3.5 h-3.5 animate-spin inline mr-1" />}Terapkan
+          </button>
+        </div>
       </div>
     </div>
   )
