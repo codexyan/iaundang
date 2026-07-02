@@ -55,5 +55,10 @@
     "tailwindcss": "^3.4.4",
     "tsx": "^4.22.3",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@next/eslint-plugin-next": {
+      "glob": "^13.0.0"
+    }
   }
 }
