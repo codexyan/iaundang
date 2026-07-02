@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
     metaDesc: body.metaDesc || '',
     tags: body.tags || '',
     settings: body.settings,
+    categoryId: body.categoryId || null,
   })
   return NextResponse.json({ article }, { status: 201 })
 }

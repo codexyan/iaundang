@@ -56,6 +56,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState('')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [needsRevisionCount, setNeedsRevisionCount] = useState(0)
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -68,6 +69,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         // not authenticated   layout will handle redirect
       })
   }, [])
+
+  // Badge on "Artikel Saya" for revision requests the writer hasn't seen yet.
+  useEffect(() => {
+    if (role !== 'content_writer' && role !== 'admin') return
+    fetch('/api/writer/notifications')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => setNeedsRevisionCount(data.needsRevisionUnseen ?? 0))
+      .catch(() => {})
+  }, [role])
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -127,6 +137,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 >
                   {item.icon}
                   {item.label}
+                  {item.href === '/writer' && needsRevisionCount > 0 && (
+                    <span className="inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                      {needsRevisionCount}
+                    </span>
+                  )}
                 </Link>
               ))}
             </nav>
@@ -179,6 +194,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 >
                   {item.icon}
                   {item.label}
+                  {item.href === '/writer' && needsRevisionCount > 0 && (
+                    <span className="inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                      {needsRevisionCount}
+                    </span>
+                  )}
                 </Link>
               ))}
 

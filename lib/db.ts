@@ -881,6 +881,7 @@ export interface ArticleData {
   scheduledAt: string | null
   reviewedBy: string | null
   categoryId: string | null
+  revisionSeenAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -892,7 +893,7 @@ function mapArticle(row: {
   allowLikes: boolean; allowComments: boolean; likesCount: number; viewsCount: number;
   metaTitle: string; metaDesc: string; tags: string; settings: import('@prisma/client').Prisma.JsonValue;
   status: string; submittedAt: Date | null; reviewNotes: string; scheduledAt: Date | null;
-  reviewedBy: string | null; categoryId: string | null;
+  reviewedBy: string | null; categoryId: string | null; revisionSeenAt: Date | null;
   createdAt: Date; updatedAt: Date;
 }): ArticleData {
   const raw = (typeof row.settings === 'object' && row.settings !== null ? row.settings : {}) as Record<string, unknown>
@@ -930,6 +931,7 @@ function mapArticle(row: {
     scheduledAt: row.scheduledAt?.toISOString() ?? null,
     reviewedBy: row.reviewedBy,
     categoryId: row.categoryId,
+    revisionSeenAt: row.revisionSeenAt?.toISOString() ?? null,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   }
@@ -979,7 +981,7 @@ export const articles = {
     title: string; slug: string; excerpt: string; content: string; coverUrl?: string;
     authorId?: string; authorName?: string; authorAvatar?: string;
     allowLikes?: boolean; allowComments?: boolean; metaTitle?: string; metaDesc?: string; tags?: string;
-    settings?: ArticleSettings;
+    settings?: ArticleSettings; categoryId?: string | null;
   }): Promise<ArticleData> {
     const row = await prisma.article.create({
       data: {
@@ -997,6 +999,7 @@ export const articles = {
         metaDesc: data.metaDesc ?? '',
         tags: data.tags ?? '',
         settings: (data.settings ?? DEFAULT_ARTICLE_SETTINGS) as unknown as import('@prisma/client').Prisma.InputJsonValue,
+        categoryId: data.categoryId ?? null,
       },
     })
     return mapArticle(row)
@@ -1007,7 +1010,7 @@ export const articles = {
     coverUrl: string; authorId: string | null; authorName: string; authorAvatar: string;
     isPublished: boolean; publishedAt: string | null;
     allowLikes: boolean; allowComments: boolean; metaTitle: string; metaDesc: string; tags: string;
-    settings: ArticleSettings;
+    settings: ArticleSettings; categoryId: string | null;
   }>): Promise<ArticleData> {
     const updateData: Record<string, unknown> = { ...data }
     if (data.publishedAt !== undefined) {
@@ -1034,7 +1037,9 @@ export const articles = {
   async requestRevision(id: string, notes: string): Promise<ArticleData> {
     const row = await prisma.article.update({
       where: { id },
-      data: { status: 'needs_revision', reviewNotes: notes },
+      // revisionSeenAt reset to null: this revision is "unseen" until the
+      // writer opens the article again (drives the nav notification badge).
+      data: { status: 'needs_revision', reviewNotes: notes, revisionSeenAt: null },
     })
     return mapArticle(row)
   },
@@ -1084,6 +1089,15 @@ export const articles = {
 
   async findPendingCount(): Promise<number> {
     return prisma.article.count({ where: { status: 'pending_review' } })
+  },
+
+  async markRevisionSeen(id: string): Promise<ArticleData> {
+    const row = await prisma.article.update({ where: { id }, data: { revisionSeenAt: new Date() } })
+    return mapArticle(row)
+  },
+
+  async findUnseenRevisionCount(authorId: string): Promise<number> {
+    return prisma.article.count({ where: { authorId, status: 'needs_revision', revisionSeenAt: null } })
   },
 
   // Cron helper: publish any 'scheduled' article whose scheduledAt has passed.

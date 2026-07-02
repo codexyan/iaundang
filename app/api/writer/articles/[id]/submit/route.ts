@@ -23,9 +23,17 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
 
   const trusted = isAdmin(session) || !!(await writerProfiles.findByUserId(session!.userId))?.isTrusted
 
-  const updated = trusted
-    ? await articles.approve(params.id, session!.userId)
-    : await articles.submitForReview(params.id)
+  let updated
+  if (!trusted) {
+    // Untrusted writers always land back in review — this also covers editing
+    // a 'scheduled' article: resubmitting cancels the schedule pending re-review.
+    updated = await articles.submitForReview(params.id)
+  } else if (article.status === 'scheduled' && article.scheduledAt) {
+    // Trusted writers editing a scheduled article keep the same publish date.
+    updated = await articles.schedule(params.id, article.scheduledAt, session!.userId)
+  } else {
+    updated = await articles.approve(params.id, session!.userId)
+  }
 
-  return NextResponse.json({ article: updated, published: trusted })
+  return NextResponse.json({ article: updated, published: updated.status === 'published' })
 }

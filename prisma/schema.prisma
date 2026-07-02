@@ -224,6 +224,9 @@ model Article {
   scheduledAt    DateTime? @map("scheduled_at")
   reviewedBy     String?   @map("reviewed_by")
   categoryId     String?   @map("category_id")
+  // Set to null whenever an admin requests a revision; the writer clears it
+  // by opening the article, so the nav badge only counts truly-unseen ones.
+  revisionSeenAt DateTime? @map("revision_seen_at")
 
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
