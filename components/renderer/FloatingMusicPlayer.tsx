@@ -43,19 +43,21 @@ export default function FloatingMusicPlayer({ config, musicUrlOverride, musicTit
   const triedAutoplay = useRef(false)
   const noAudio = isStatic && !contained
 
-  const musicUrl = musicUrlOverride || config.url || ''
-  const musicTitle = musicTitleOverride || config.title || 'Background Music'
-  const style = config.player_style || 'pill'
-  const position = config.player_position || 'bottom-right'
-  const animation = config.player_animation || 'fade-slide'
-  const size = config.player_size || 'md'
-  const showTitle = config.show_title !== false
-  const volume = config.volume ?? 0.3
-  const loop = config.loop !== false
+  const musicUrl = musicUrlOverride || config?.url || ''
+  const musicTitle = musicTitleOverride || config?.title || 'Background Music'
+  const style = config?.player_style || 'pill'
+  const position = config?.player_position || 'bottom-right'
+  const animation = config?.player_animation || 'fade-slide'
+  const size = config?.player_size || 'md'
+  const showTitle = config?.show_title !== false
+  const volume = config?.volume ?? 0.3
+  const loop = config?.loop !== false
 
-  const s = sizeMap[size]
-  const anim = animationVariants[animation]
-  const posClass = positionMap[position]
+  // Fall back to defaults if config carries an out-of-range enum value
+  // (raw DB records aren't normalized on the live-renderer path).
+  const s = sizeMap[size] ?? sizeMap.md
+  const anim = animationVariants[animation] ?? animationVariants['fade-slide']
+  const posClass = positionMap[position] ?? positionMap['bottom-right']
 
   const tryPlay = useCallback(() => {
     const audio = audioRef.current
@@ -147,10 +149,12 @@ export default function FloatingMusicPlayer({ config, musicUrlOverride, musicTit
     setUserInteracted(true)
   }
 
-  if (!config.enabled) return null
+  if (!config?.enabled) return null
   if (!musicUrl && !isStatic) return null
 
-  const { accent, primary, text } = colors
+  // Defensive fallbacks: old/partial template records may carry an incomplete
+  // color_scheme (or none at all). Never destructure a possibly-undefined object.
+  const { accent = '#d4af37', primary = '#1a1a1a', text = '#ffffff' } = colors ?? {}
   const isVinyl = style === 'vinyl'
 
   const EqBars = () => (
