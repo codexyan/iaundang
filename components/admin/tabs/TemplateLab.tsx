@@ -1040,7 +1040,9 @@ export default function TemplateLab({ onGoToManagement, onTemplateReleased, edit
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data?.tracks) setMusicLibrary(data.tracks)
-        if (data?.categories?.length) setMusicLibraryCats(data.categories)
+        // /api/admin/music returns categories as MusicCategory objects; extract
+        // the name so musicLibraryCats stays string[] (rendered as filter labels).
+        if (data?.categories?.length) setMusicLibraryCats(data.categories.map((c: { name: string }) => c.name))
       })
       .catch(() => {})
   }, [])
