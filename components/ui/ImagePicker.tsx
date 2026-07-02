@@ -1,8 +1,10 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Upload, X, Loader2, Link as LinkIcon } from 'lucide-react'
+import { Upload, X, Loader2, Link as LinkIcon, AlertTriangle } from 'lucide-react'
 import toast from 'react-hot-toast'
+
+interface UploadMeta { width?: number; height?: number; bytes?: number; lowRes?: boolean }
 
 interface Props {
   value: string
@@ -12,14 +14,27 @@ interface Props {
   folder?: string
   /** Tailwind height class for the preview image, e.g. "h-48" (cover) or "h-32" (modal). */
   previewHeightClass?: string
+  /** Article image variant → triggers server-side resize + shows size guidance. */
+  variant?: 'cover' | 'inline'
 }
 
 const ALLOWED = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+
+function fmtBytes(b?: number): string {
+  if (!b) return ''
+  return b >= 1024 * 1024 ? `${(b / 1024 / 1024).toFixed(1)}MB` : `${Math.round(b / 1024)}KB`
+}
+
+const HELP: Record<'cover' | 'inline', string> = {
+  cover: 'Rekomendasi: 1200×630px, rasio 1.91:1, maksimal 2MB',
+  inline: 'Rekomendasi: lebar maksimal 1600px, maksimal 2MB',
+}
 
 /**
  * Generic image input reused for article cover images and the "Sisipkan Gambar"
  * modal, in both the admin ArticlesTab and the writer dashboard. Supports uploading
  * a real file (drag-drop / click) or pasting an external URL via a small tab toggle.
+ * When `variant` is set the server auto-resizes/compresses and returns dimensions.
  */
 export default function ImagePicker({
   value,
@@ -27,10 +42,12 @@ export default function ImagePicker({
   uploadUrl = '/api/admin/upload',
   folder = 'covers',
   previewHeightClass = 'h-48',
+  variant,
 }: Props) {
   const [tab, setTab] = useState<'upload' | 'url'>('upload')
   const [uploading, setUploading] = useState(false)
   const [dragging, setDragging] = useState(false)
+  const [meta, setMeta] = useState<UploadMeta | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   async function uploadFile(file: File) {
@@ -44,12 +61,17 @@ export default function ImagePicker({
       const formData = new FormData()
       formData.append('file', file)
       formData.append('folder', folder)
-      // Session cookie dikirim otomatis oleh browser
+      if (variant) formData.append('process', variant)
       const res = await fetch(uploadUrl, { method: 'POST', body: formData })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Upload gagal')
       onChange(data.url)
-      toast.success('Gambar berhasil diupload!')
+      setMeta({ width: data.width, height: data.height, bytes: data.bytes, lowRes: data.lowRes })
+      if (data.lowRes) {
+        toast('Gambar di bawah resolusi rekomendasi — bisa tampak buram di layar besar.', { icon: '⚠️' })
+      } else {
+        toast.success('Gambar berhasil diupload!')
+      }
     } catch (e) {
       toast.error((e as Error).message)
     } finally {
@@ -70,6 +92,8 @@ export default function ImagePicker({
     if (file) uploadFile(file)
   }
 
+  function clear() { onChange(''); setMeta(null) }
+
   return (
     <div className="space-y-2">
       {/* Preview gambar yang sudah dipilih */}
@@ -78,12 +102,25 @@ export default function ImagePicker({
           <img src={value} alt="Preview" className="w-full h-full object-cover" onError={e => (e.currentTarget.style.opacity = '0.3')} />
           <button
             type="button"
-            onClick={() => onChange('')}
+            onClick={clear}
             className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
             title="Hapus gambar"
           >
             <X className="w-3.5 h-3.5" />
           </button>
+        </div>
+      )}
+
+      {/* Info dimensi hasil upload */}
+      {value && meta && (meta.width || meta.bytes) && (
+        <p className="text-[10px] text-gray-400">
+          {meta.width && meta.height ? `${meta.width}×${meta.height}px` : ''}{meta.width && meta.bytes ? ' · ' : ''}{fmtBytes(meta.bytes)}
+        </p>
+      )}
+      {value && meta?.lowRes && (
+        <div className="flex items-start gap-1.5 text-[10px] text-amber-600 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5">
+          <AlertTriangle className="w-3 h-3 shrink-0 mt-0.5" />
+          <span>Gambar ini di bawah resolusi rekomendasi, bisa tampak buram di layar besar.</span>
         </div>
       )}
 
@@ -111,9 +148,9 @@ export default function ImagePicker({
         >
           {uploading ? <Loader2 className="w-6 h-6 text-forest-400 animate-spin mb-2" /> : <Upload className="w-6 h-6 text-gray-300 mb-2" />}
           <p className="text-xs font-medium text-gray-500">
-            {uploading ? 'Mengupload...' : value ? 'Klik atau seret untuk ganti gambar' : 'Klik atau seret gambar ke sini'}
+            {uploading ? 'Mengupload & mengoptimasi...' : value ? 'Klik atau seret untuk ganti gambar' : 'Klik atau seret gambar ke sini'}
           </p>
-          <p className="text-[10px] text-gray-400 mt-0.5">JPG, PNG, WebP, GIF · Maks 5MB (GIF 10MB)</p>
+          <p className="text-[10px] text-gray-400 mt-0.5">{variant ? HELP[variant] : 'JPG, PNG, WebP, GIF · Maks 5MB (GIF 10MB)'}</p>
           <input
             ref={fileRef}
             type="file"
@@ -124,13 +161,16 @@ export default function ImagePicker({
           />
         </div>
       ) : (
-        <input
-          type="text"
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          placeholder="https://images.unsplash.com/..."
-          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 transition-colors"
-        />
+        <>
+          <input
+            type="text"
+            value={value}
+            onChange={e => { onChange(e.target.value); setMeta(null) }}
+            placeholder="https://images.unsplash.com/..."
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 transition-colors"
+          />
+          {variant && <p className="text-[10px] text-gray-400">{HELP[variant]}</p>}
+        </>
       )}
     </div>
   )

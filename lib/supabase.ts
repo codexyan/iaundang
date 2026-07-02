@@ -8,7 +8,7 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 const BUCKET = 'uploads'
 
 export async function uploadToStorage(
-  file: Buffer,
+  file: Buffer | Uint8Array,
   filePath: string,
   contentType: string
 ): Promise<string> {

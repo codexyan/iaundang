@@ -415,7 +415,7 @@ export default function WriterDashboard() {
           {/* Cover Image */}
           <div className="mb-6">
             <p className="text-xs font-semibold text-stone-500 mb-1.5">Cover Image</p>
-            <ImagePicker value={coverUrl} onChange={setCoverUrl} uploadUrl="/api/user/upload" folder="photos" />
+            <ImagePicker value={coverUrl} onChange={setCoverUrl} uploadUrl="/api/user/upload" folder="photos" variant="cover" />
           </div>
 
           {/* Content Area */}

@@ -17,7 +17,9 @@ import ImagePicker from '@/components/ui/ImagePicker'
 import RichTextEditor from '@/components/ui/RichTextEditor'
 import { parseMarkdownPreview, slugify, wordCount, readTime } from '@/lib/article-markdown'
 import { statusMeta, type ArticleStatus } from '@/lib/article-status'
+import { SITE_DOMAIN, SITE_URL } from '@/lib/config'
 import ArticleCategoriesManager from './ArticleCategoriesManager'
+import BlogTypographyManager from './BlogTypographyManager'
 
 interface CategoryOption { id: string; name: string; slug: string }
 
@@ -131,7 +133,7 @@ function analyzeSeo(form: ArticleData): { score: number; checks: SeoCheck[]; gra
   return { score, checks, grade }
 }
 
-type ArticleTabView = 'articles' | 'categories'
+type ArticleTabView = 'articles' | 'categories' | 'typography'
 type SortKey = 'recent' | 'views' | 'likes'
 
 export default function ArticlesTab({ authorFilter, onClearAuthorFilter, onReviewed }: {
@@ -368,7 +370,7 @@ export default function ArticlesTab({ authorFilter, onClearAuthorFilter, onRevie
         <h1 className="text-lg font-bold text-gray-900 tracking-tight">Artikel</h1>
         <p className="text-xs text-gray-400 mt-0.5 mb-3">Kelola konten blog, review & kategori</p>
         <div className="flex items-center gap-1">
-          {([['articles', 'Artikel'], ['categories', 'Kategori']] as const).map(([id, label]) => (
+          {([['articles', 'Artikel'], ['categories', 'Kategori'], ['typography', 'Tipografi']] as const).map(([id, label]) => (
             <button key={id} onClick={() => setView(id)}
               className={`px-3 py-2 text-xs font-semibold border-b-2 -mb-px transition-colors ${view === id ? 'border-forest-500 text-forest-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
               {label}
@@ -380,6 +382,10 @@ export default function ArticlesTab({ authorFilter, onClearAuthorFilter, onRevie
       {view === 'categories' ? (
         <div className="flex-1 overflow-y-auto p-6 lg:p-8">
           <ArticleCategoriesManager onChanged={fetchCategories} />
+        </div>
+      ) : view === 'typography' ? (
+        <div className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <BlogTypographyManager />
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto p-6 lg:p-8">
@@ -744,6 +750,14 @@ function ArticleEditor({ article, isNew, onBack }: { article: ArticleData; isNew
     finally { setSaving(false) }
   }
 
+  // Auto-track links inserted from the editor into settings.backlinks (dedup).
+  const addBacklink = (url: string, internal: boolean) => {
+    const key = internal ? 'internal' : 'external'
+    const list = form.settings.backlinks[key]
+    if (!url || list.includes(url)) return
+    updateSettings(`backlinks.${key}`, [...list, url])
+  }
+
   const wc = wordCount(form.content)
   const rt = readTime(form.content)
   const seo = useMemo(() => analyzeSeo(form), [form])
@@ -797,7 +811,7 @@ function ArticleEditor({ article, isNew, onBack }: { article: ArticleData; isNew
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {activePanel === 'write' && <WritePanel form={form} set={set} titleRef={titleRef} />}
+        {activePanel === 'write' && <WritePanel form={form} set={set} titleRef={titleRef} onInsertLink={addBacklink} />}
         {activePanel === 'preview' && <PreviewPanel form={form} />}
       </div>
 
@@ -840,9 +854,10 @@ function ArticleEditor({ article, isNew, onBack }: { article: ArticleData; isNew
   )
 }
 
-function WritePanel({ form, set, titleRef }: {
+function WritePanel({ form, set, titleRef, onInsertLink }: {
   form: ArticleData; set: (k: keyof ArticleData, v: unknown) => void
   titleRef: React.RefObject<HTMLInputElement>
+  onInsertLink: (url: string, internal: boolean) => void
 }) {
   return (
     <div className="max-w-4xl mx-auto px-6 lg:px-8 py-6">
@@ -857,7 +872,7 @@ function WritePanel({ form, set, titleRef }: {
 
       <div className="mb-6">
         <FieldLabel>Cover Image</FieldLabel>
-        <ImagePicker value={form.coverUrl} onChange={url => set('coverUrl', url)} uploadUrl="/api/admin/upload" folder="covers" />
+        <ImagePicker value={form.coverUrl} onChange={url => set('coverUrl', url)} uploadUrl="/api/admin/upload" folder="covers" variant="cover" />
       </div>
 
       <div className="mb-6">
@@ -869,7 +884,7 @@ function WritePanel({ form, set, titleRef }: {
 
       <div className="mb-6">
         <FieldLabel>Konten</FieldLabel>
-        <RichTextEditor value={form.content} onChange={v => set('content', v)} uploadUrl="/api/admin/upload" folder="assets" />
+        <RichTextEditor value={form.content} onChange={v => set('content', v)} uploadUrl="/api/admin/upload" folder="assets" onInsertLink={info => onInsertLink(info.url, info.internal)} />
         <div className="flex items-center justify-end mt-1.5">
           <p className="text-[10px] text-gray-400">{wordCount(form.content)} kata &middot; {readTime(form.content)} mnt baca</p>
         </div>
@@ -924,7 +939,7 @@ function PreviewPanel({ form }: { form: ArticleData }) {
         <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-3">Preview Hasil Pencarian Google</p>
         <div className="space-y-0.5">
           <p className="text-lg text-blue-700 font-medium truncate">{form.metaTitle || form.title || 'Judul Artikel'}</p>
-          <p className="text-sm text-emerald-700">iaundang.vercel.app/blog/{form.slug || 'slug'}</p>
+          <p className="text-sm text-emerald-700">{SITE_DOMAIN}/blog/{form.slug || 'slug'}</p>
           <p className="text-sm text-gray-500 line-clamp-2">{form.metaDesc || form.excerpt || 'Deskripsi artikel akan muncul di sini...'}</p>
         </div>
       </div>
@@ -1127,7 +1142,7 @@ function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection,
                   <div>
                     <FieldLabel>Canonical URL (opsional)</FieldLabel>
                     <input type="text" value={form.settings.seo.canonicalUrl} onChange={e => updateSettings('seo.canonicalUrl', e.target.value)}
-                      placeholder="https://iaundang.vercel.app/blog/..."
+                      placeholder={`${SITE_URL}/blog/...`}
                       className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-forest-400 transition-colors" />
                     <p className="text-[10px] text-gray-400 mt-1">Isi jika konten ini duplikat dari URL lain. Biarkan kosong jika ini konten original.</p>
                   </div>
@@ -1160,10 +1175,30 @@ function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection,
               </Card>
 
               <Card>
+                <div className="flex items-center gap-2 mb-3">
+                  <LinkIcon className="w-4 h-4 text-blue-500" />
+                  <p className="text-xs font-semibold text-gray-600">Daftar Backlink</p>
+                </div>
+                <p className="text-[11px] text-gray-400 mb-2">Terisi otomatis saat kamu menyisipkan link di konten. Internal = navigasi & SEO on-site, Eksternal = kredibilitas.</p>
+                {(form.settings.backlinks.internal.length + form.settings.backlinks.external.length) === 0 ? (
+                  <p className="text-[11px] text-gray-400 italic">Belum ada backlink.</p>
+                ) : (
+                  <div className="space-y-1.5">
+                    {form.settings.backlinks.internal.map((u, i) => (
+                      <BacklinkRow key={`i-${i}`} url={u} internal onRemove={() => updateSettings('backlinks.internal', form.settings.backlinks.internal.filter((_, j) => j !== i))} />
+                    ))}
+                    {form.settings.backlinks.external.map((u, i) => (
+                      <BacklinkRow key={`e-${i}`} url={u} internal={false} onRemove={() => updateSettings('backlinks.external', form.settings.backlinks.external.filter((_, j) => j !== i))} />
+                    ))}
+                  </div>
+                )}
+              </Card>
+
+              <Card>
                 <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-3">Preview Hasil Google</p>
                 <div className="space-y-0.5 p-3 bg-white rounded-lg border border-gray-100">
                   <p className="text-lg text-blue-700 font-medium truncate">{form.metaTitle || form.title || 'Judul Artikel'}</p>
-                  <p className="text-sm text-emerald-700">iaundang.vercel.app/blog/{form.slug || 'slug'}</p>
+                  <p className="text-sm text-emerald-700">{SITE_DOMAIN}/blog/{form.slug || 'slug'}</p>
                   <p className="text-sm text-gray-500 line-clamp-2">{form.metaDesc || form.excerpt || 'Deskripsi artikel akan muncul di sini...'}</p>
                 </div>
               </Card>
@@ -1297,6 +1332,18 @@ function SettingsPanel({ form, set, updateSettings, seo, isNew, settingsSection,
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="block text-xs font-semibold text-gray-600 mb-1.5">{children}</label>
+}
+
+function BacklinkRow({ url, internal, onRemove }: { url: string; internal: boolean; onRemove: () => void }) {
+  return (
+    <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-2.5 py-1.5">
+      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${internal ? 'bg-blue-100 text-blue-600' : 'bg-violet-100 text-violet-600'}`}>
+        {internal ? 'Internal' : 'Eksternal'}
+      </span>
+      <span className="flex-1 min-w-0 truncate text-[11px] font-mono text-gray-600">{url}</span>
+      <button onClick={onRemove} className="p-1 text-gray-400 hover:text-red-500 shrink-0"><Trash2 className="w-3 h-3" /></button>
+    </div>
+  )
 }
 
 function Card({ children }: { children: React.ReactNode }) {

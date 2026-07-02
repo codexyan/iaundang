@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { articles } from '@/lib/db'
 import { ArrowLeft, Calendar, Clock, Eye, Heart, User } from 'lucide-react'
 import MarkdownContent from '@/components/blog/MarkdownContent'
+import BlogTypographyStyle from '@/components/blog/BlogTypographyStyle'
 import ViewTracker from '@/components/blog/ViewTracker'
 import type { Metadata } from 'next'
 
@@ -36,6 +37,7 @@ export default async function BlogArticlePage({ params }: { params: { slug: stri
 
   return (
     <>
+      <BlogTypographyStyle />
       <ViewTracker slug={params.slug} />
 
       <article className="min-h-screen">

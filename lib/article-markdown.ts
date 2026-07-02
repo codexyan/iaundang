@@ -1,8 +1,34 @@
 // Shared markdown helpers for the article editors (admin ArticlesTab & writer dashboard).
 // Single source of truth so both editors render previews identically.
 
+import { SITE_DOMAIN } from './config'
+
 export function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+
+// A link is "internal" if it's relative ('/', '#') or points at our own domain.
+export function isInternalHref(href: string): boolean {
+  const h = href.trim().toLowerCase()
+  return h.startsWith('/') || h.startsWith('#') || h.includes(SITE_DOMAIN.toLowerCase())
+}
+
+// Split a markdown link target `url "rel"` into an <a>'s href/target/rel bits.
+// rel intent (nofollow/sponsored) is carried in the markdown title token.
+export function parseLinkParts(hrefRaw: string): { href: string; target: string; rel: string } {
+  const m = hrefRaw.trim().match(/^(\S+)(?:\s+"([^"]*)")?$/)
+  const href = m ? m[1] : hrefRaw.trim()
+  const title = m && m[2] ? m[2].toLowerCase() : ''
+  const internal = isInternalHref(href)
+  const relParts: string[] = []
+  if (!internal) relParts.push('noopener', 'noreferrer')
+  if (title === 'nofollow') relParts.push('nofollow')
+  else if (title === 'sponsored') relParts.push('sponsored')
+  return {
+    href,
+    target: internal ? '' : ' target="_blank"',
+    rel: relParts.length ? ` rel="${relParts.join(' ')}"` : '',
+  }
 }
 
 export function wordCount(text: string): number {
@@ -24,7 +50,10 @@ export function inl(s: string): string {
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code style="background:#f5f5f4;padding:1px 4px;border-radius:3px;font-size:0.875em">$1</code>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2c4a34;text-decoration:underline">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t: string, h: string) => {
+      const { href, target, rel } = parseLinkParts(h)
+      return `<a href="${href}"${target}${rel} style="color:#2c4a34;text-decoration:underline">${t}</a>`
+    })
 }
 
 export function parseMarkdownPreview(md: string): string {

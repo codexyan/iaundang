@@ -3,6 +3,7 @@ import path from 'path'
 import { getSession } from '@/lib/session-server'
 import { isAdmin } from '@/lib/auth'
 import { uploadToStorage } from '@/lib/supabase'
+import { processArticleImage } from '@/lib/image-process'
 
 export const dynamic = 'force-dynamic'
 
@@ -103,14 +104,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Konten file tidak sesuai dengan format yang dideklarasikan' }, { status: 400 })
     }
 
+    // Article images get auto-resized/compressed (scoped via the `process`
+    // field so other uploaders — studio, decorations — are untouched).
+    let outBuffer: Buffer | Uint8Array = buffer
+    let outExt = ext
+    let outType = file.type || 'application/octet-stream'
+    let width: number | undefined
+    let height: number | undefined
+    let lowRes = false
+    const processVariant = formData.get('process') as string | null
+    if (kind === 'image' && (processVariant === 'cover' || processVariant === 'inline')) {
+      const p = await processArticleImage(buffer, processVariant)
+      if (p.ext) { outBuffer = p.buffer; outExt = p.ext; outType = p.contentType; width = p.width; height = p.height; lowRes = p.lowRes }
+    }
+
     const timestamp = Date.now()
     const random = Math.random().toString(36).substring(2, 9)
-    const filename = `${kind}-${timestamp}-${random}${ext}`
+    const filename = `${kind}-${timestamp}-${random}${outExt}`
     const storagePath = `${folder}/${filename}`
 
-    const publicUrl = await uploadToStorage(buffer, storagePath, file.type || 'application/octet-stream')
+    const publicUrl = await uploadToStorage(outBuffer, storagePath, outType)
 
-    return NextResponse.json({ url: publicUrl }, { status: 201 })
+    return NextResponse.json({ url: publicUrl, width, height, bytes: outBuffer.length, lowRes }, { status: 201 })
   } catch (error) {
     console.error('Admin upload error:', error)
     return NextResponse.json(

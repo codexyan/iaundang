@@ -1,5 +1,7 @@
 'use client'
 
+import { parseLinkParts } from '@/lib/article-markdown'
+
 function parseMarkdown(md: string): string {
   const lines = md.split('\n')
   const output: string[] = []
@@ -110,7 +112,10 @@ function inlineFormat(s: string): string {
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t: string, h: string) => {
+      const { href, target, rel } = parseLinkParts(h)
+      return `<a href="${href}"${target}${rel}>${t}</a>`
+    })
 }
 
 export default function MarkdownContent({ content }: { content: string }) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import { getSession } from '@/lib/session-server'
 import { uploadToStorage } from '@/lib/supabase'
+import { processArticleImage } from '@/lib/image-process'
 
 export const dynamic = 'force-dynamic'
 
@@ -70,12 +71,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Konten file tidak sesuai dengan format yang dideklarasikan' }, { status: 400 })
     }
 
-    const safeName = `${session.userId.slice(0, 8)}-${Date.now()}${ext || (isVideo ? '.mp4' : isAudio ? '.mp3' : '.jpg')}`
+    // Article images (writer editor) get auto-resized/compressed via `process`.
+    let outBuffer: Buffer | Uint8Array = buffer
+    let outExt = ext || (isVideo ? '.mp4' : isAudio ? '.mp3' : '.jpg')
+    let outType = file.type || 'application/octet-stream'
+    let width: number | undefined
+    let height: number | undefined
+    let lowRes = false
+    const processVariant = formData.get('process') as string | null
+    if (kind === 'image' && (processVariant === 'cover' || processVariant === 'inline')) {
+      const p = await processArticleImage(buffer, processVariant)
+      if (p.ext) { outBuffer = p.buffer; outExt = p.ext; outType = p.contentType; width = p.width; height = p.height; lowRes = p.lowRes }
+    }
+
+    const safeName = `${session.userId.slice(0, 8)}-${Date.now()}${outExt}`
     const storagePath = `${folder}/${safeName}`
 
-    const publicUrl = await uploadToStorage(buffer, storagePath, file.type || 'application/octet-stream')
+    const publicUrl = await uploadToStorage(outBuffer, storagePath, outType)
 
-    return NextResponse.json({ url: publicUrl, type: kind }, { status: 201 })
+    return NextResponse.json({ url: publicUrl, type: kind, width, height, bytes: outBuffer.length, lowRes }, { status: 201 })
   } catch (error) {
     console.error('User upload error:', error)
     return NextResponse.json({ error: 'Gagal mengupload file' }, { status: 500 })
