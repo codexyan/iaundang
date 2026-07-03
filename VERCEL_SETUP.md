@@ -11,8 +11,8 @@ Add these environment variables in Vercel Project Settings → Environment Varia
 DATABASE_URL="postgresql://user:password@host:5432/dbname"
 # Or for SQLite: "file:./data/prod.db"
 
-# JWT Secret (generate with: openssl rand -base64 32)
-JWT_SECRET="your-super-secret-jwt-key-min-32-characters"
+# Session Secret (generate with: openssl rand -base64 32) — WAJIB diset di production
+SESSION_SECRET="your-super-secret-session-key-min-32-characters"
 
 # Admin Email
 NEXT_PUBLIC_ADMIN_EMAIL="admin@yourdomain.com"
@@ -101,7 +101,7 @@ DATABASE_URL="file:./data/preview.db"
 - [ ] Configure database (PostgreSQL/MySQL recommended)
 - [ ] Run Prisma migrations
 - [ ] Update `NEXT_PUBLIC_APP_URL` to your domain
-- [ ] Generate new `JWT_SECRET` for production
+- [ ] Generate new `SESSION_SECRET` for production
 - [ ] Configure custom domain (if needed)
 - [ ] Test deployment in preview environment
 - [ ] Promote to production

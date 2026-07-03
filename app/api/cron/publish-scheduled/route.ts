@@ -8,8 +8,13 @@ export const dynamic = 'force-dynamic'
 // project env var. See vercel.json for the schedule. Publishes any article
 // with status='scheduled' whose scheduledAt has passed.
 export async function GET(req: NextRequest) {
+  const cronSecret = process.env.CRON_SECRET
+  if (!cronSecret) {
+    console.error('CRON_SECRET is not set — rejecting cron request')
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+  }
   const authHeader = req.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

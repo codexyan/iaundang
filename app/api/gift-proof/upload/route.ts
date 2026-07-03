@@ -32,7 +32,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'invitationId wajib diisi' }, { status: 400 })
     }
 
-    if (invitationId !== 'preview') {
+    // The `preview` bypass is for local development only. In production every
+    // upload must bind to a real, published invitation — otherwise this is an
+    // unauthenticated arbitrary-upload path into storage.
+    const isPreview = invitationId === 'preview'
+    if (isPreview && process.env.NODE_ENV === 'production') {
+      return NextResponse.json({ error: 'Undangan tidak valid' }, { status: 400 })
+    }
+    if (!isPreview) {
       const inv = await invitations.findById(invitationId)
       if (!inv || !inv.is_published) {
         return NextResponse.json({ error: 'Undangan tidak ditemukan' }, { status: 404 })

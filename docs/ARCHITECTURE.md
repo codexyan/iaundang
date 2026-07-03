@@ -437,7 +437,7 @@ Order → Invitation → Subscription traceability chain fully linked.
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key |
-| `JWT_SECRET` | Yes | JWT signing secret |
+| `SESSION_SECRET` | Yes | Session JWT signing secret (no prod fallback) |
 | `ADMIN_EMAIL` | Yes | Admin email address |
 | `NEXT_PUBLIC_APP_URL` | Yes | App base URL |
 | `NEXT_PUBLIC_APP_DOMAIN` | Yes | App domain for cookies |

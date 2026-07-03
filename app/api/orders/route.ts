@@ -27,12 +27,18 @@ export async function POST(req: NextRequest) {
       groom_nickname, bride_nickname,
       groom_father, groom_mother, bride_father, bride_mother,
       groom_profession, bride_profession,
-      subdomain, template_id, package_tier, amount,
+      subdomain, template_id, package_tier,
       referred_by,
     } = body
 
-    if (!email || !groom_name || !bride_name || !subdomain || !template_id || !package_tier || !amount) {
+    if (!email || !groom_name || !bride_name || !subdomain || !template_id || !package_tier) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 })
+    }
+
+    // Pricing is derived from the tier on the server — never trust a client-sent amount.
+    const pkg = PACKAGES[package_tier as PackageTier]
+    if (!pkg) {
+      return NextResponse.json({ error: 'Paket tidak valid' }, { status: 400 })
     }
 
     const slug = subdomain.toLowerCase().replace(/[^a-z0-9-]/g, '')
@@ -47,7 +53,7 @@ export async function POST(req: NextRequest) {
     }
 
     const uniqueCode = generateUniqueCode()
-    const totalAmount = Number(amount) + uniqueCode
+    const totalAmount = pkg.price + uniqueCode
 
     const order = await orders.create({
       order_number: generateOrderNumber(),
@@ -66,7 +72,7 @@ export async function POST(req: NextRequest) {
       subdomain: slug,
       template_id,
       package_tier,
-      amount: Number(amount),
+      amount: pkg.price,
       unique_code: uniqueCode,
       total_amount: totalAmount,
       proof_url: '',
@@ -87,29 +93,26 @@ export async function POST(req: NextRequest) {
     // Call Mayar payment gateway
     let paymentUrl: string | null = null
     try {
-      const pkg = PACKAGES[package_tier as PackageTier]
-      if (pkg) {
-        const expiredAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+      const expiredAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
-        const mayarPayment = await createMayarPayment({
-          name: `${groom_name} & ${bride_name}`,
-          email: email.toLowerCase(),
-          amount: totalAmount,
-          mobile: phone || '08000000000',
-          redirectUrl: `${appUrl}/dashboard?payment=success&order=${order.id}`,
-          description: `Paket ${pkg.name} - iaundang - ${order.order_number}`,
-          expiredAt,
-        })
+      const mayarPayment = await createMayarPayment({
+        name: `${groom_name} & ${bride_name}`,
+        email: email.toLowerCase(),
+        amount: totalAmount,
+        mobile: phone || '08000000000',
+        redirectUrl: `${appUrl}/dashboard?payment=success&order=${order.id}`,
+        description: `Paket ${pkg.name} - iaundang - ${order.order_number}`,
+        expiredAt,
+      })
 
-        await orders.update(order.id, {
-          mayar_transaction_id: mayarPayment.transactionId,
-          mayar_payment_link: mayarPayment.link,
-          payment_method: 'mayar',
-        })
+      await orders.update(order.id, {
+        mayar_transaction_id: mayarPayment.transactionId,
+        mayar_payment_link: mayarPayment.link,
+        payment_method: 'mayar',
+      })
 
-        paymentUrl = mayarPayment.link
-      }
+      paymentUrl = mayarPayment.link
     } catch (err) {
       console.error('Mayar payment creation failed, falling back to manual:', err)
     }

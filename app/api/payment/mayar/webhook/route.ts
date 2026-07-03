@@ -21,9 +21,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const eventType = body?.event?.received
+    // Mayar sends the event name as a plain string (e.g. { event: "payment.received" }).
+    // The previous code read body.event.received (an object shape) and silently dropped
+    // every real event. Support both shapes; log the raw shape (no card/bank/PII —
+    // body.data is never logged) so any future format change surfaces in logs.
+    const rawEvent = body?.event
+    const eventType =
+      typeof rawEvent === 'string'
+        ? rawEvent
+        : (rawEvent?.received ?? rawEvent?.type ?? body?.type ?? null)
+
     if (eventType !== 'payment.received') {
-      return NextResponse.json({ ok: true, skipped: true })
+      console.warn('Mayar webhook: unrecognized event, skipping', {
+        eventType,
+        rawEvent,
+        bodyKeys: body && typeof body === 'object' ? Object.keys(body) : null,
+      })
+      return NextResponse.json({ ok: true, skipped: true, eventType })
     }
 
     const { customerEmail, customerName, amount } = body.data
@@ -50,6 +64,19 @@ export async function POST(req: NextRequest) {
 
     if (order.status === 'approved') {
       return NextResponse.json({ ok: true, message: 'Already processed' })
+    }
+
+    // Only auto-activate when the paid amount covers the server-computed price
+    // (order.totalAmount is derived from the package tier, never the client/webhook).
+    // Underpayment defers to manual admin verification instead of activating.
+    const paidAmount = Number(amount) || 0
+    if (paidAmount < order.totalAmount) {
+      console.warn('Mayar webhook: underpayment, deferring to manual review', {
+        order: order.orderNumber,
+        paid: paidAmount,
+        expected: order.totalAmount,
+      })
+      return NextResponse.json({ ok: true, message: 'Amount mismatch — pending manual review' })
     }
 
     await prisma.order.update({

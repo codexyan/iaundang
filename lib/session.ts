@@ -8,9 +8,19 @@ import type { NextRequest, NextResponse } from 'next/server'
 export const SESSION_COOKIE_NAME = '__ku_session'
 const EXPIRES_DAYS = 30
 
+const DEV_FALLBACK_SECRET = 'iaundang-dev-secret-must-be-32chars!!'
+
 function getSecret() {
-  const secret = process.env.SESSION_SECRET || 'iaundang-dev-secret-must-be-32chars!!'
-  return new TextEncoder().encode(secret)
+  const secret = process.env.SESSION_SECRET
+  if (secret) return new TextEncoder().encode(secret)
+
+  // No secret configured. In production we must NEVER fall back to a hardcoded
+  // value — it would let anyone forge session tokens — so fail loudly instead.
+  // The fallback is tolerated only in local development.
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('SESSION_SECRET is not set — refusing to sign/verify sessions in production.')
+  }
+  return new TextEncoder().encode(DEV_FALLBACK_SECRET)
 }
 
 export type SessionRole = 'admin' | 'content_writer' | 'affiliate' | 'user'
