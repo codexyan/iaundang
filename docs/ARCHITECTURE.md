@@ -437,13 +437,15 @@ Order → Invitation → Subscription traceability chain fully linked.
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key |
-| `JWT_SECRET` | Yes | JWT signing secret |
+| `SESSION_SECRET` | Yes | Session JWT signing secret (dibaca di `lib/session.ts`) |
 | `ADMIN_EMAIL` | Yes | Admin email address |
 | `NEXT_PUBLIC_APP_URL` | Yes | App base URL |
 | `NEXT_PUBLIC_APP_DOMAIN` | Yes | App domain for cookies |
 | `RESEND_API_KEY` | No | Resend email API key (falls back to console) |
 | `EMAIL_FROM` | No | Email sender address |
 | `CRON_SECRET` | No | Bearer token for cron endpoints |
+| `MAYAR_API_KEY` | Yes | Mayar payment gateway API key |
+| `MAYAR_WEBHOOK_TOKEN` | Yes | Mayar webhook verification token |
 
 ---
 
@@ -453,6 +455,7 @@ Order → Invitation → Subscription traceability chain fully linked.
 - **Hosting:** Vercel (recommended) or any Node.js host
 - **Storage:** Supabase Storage for images, music files
 - **Email:** Resend (configure `RESEND_API_KEY`)
+- **Payment:** Mayar (configure `MAYAR_API_KEY`, `MAYAR_WEBHOOK_TOKEN`)
 - **Cron:** Vercel Cron or external scheduler for `/api/cron/sync-subscriptions`
 - **Domain:** iaundang.online
 

@@ -1,132 +1,113 @@
 # Vercel Deployment Setup
 
+Stack: **Next.js + Prisma + Supabase PostgreSQL**. Hanya Supabase yang dipakai — tidak ada opsi SQLite/MySQL.
+
 ## Environment Variables
 
-Add these environment variables in Vercel Project Settings → Environment Variables:
+Tambahkan variabel berikut di Vercel → Project Settings → Environment Variables. Set per environment (Production / Preview / Development) sesuai kebutuhan.
 
 ### Required
 
 ```bash
-# Database URL (PostgreSQL/MySQL for production, SQLite for preview)
-DATABASE_URL="postgresql://user:password@host:5432/dbname"
-# Or for SQLite: "file:./data/prod.db"
+# Database (Prisma → Supabase PostgreSQL, pakai connection pooler)
+DATABASE_URL="postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
 
-# JWT Secret (generate with: openssl rand -base64 32)
-JWT_SECRET="your-super-secret-jwt-key-min-32-characters"
+# Supabase (Storage & Auth)
+NEXT_PUBLIC_SUPABASE_URL="https://[project-ref].supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"   # RAHASIA
 
-# Admin Email
-NEXT_PUBLIC_ADMIN_EMAIL="admin@yourdomain.com"
+# Session secret (JWT via jose) — WAJIB di production (tidak ada fallback)
+SESSION_SECRET="generate: openssl rand -base64 32"
 
-# App URL
-NEXT_PUBLIC_APP_URL="https://yourdomain.com"
+# Admin
+ADMIN_EMAIL="admin@iaundang.online"
+NEXT_PUBLIC_ADMIN_EMAIL="admin@iaundang.online"
+
+# App URL & Domain (domain berbeda per environment — lihat bagian di bawah)
+NEXT_PUBLIC_APP_URL="https://iaundang.online"
+NEXT_PUBLIC_APP_DOMAIN="iaundang.online"
+
+# Payment - Mayar
+MAYAR_API_KEY="your-mayar-api-key"
+MAYAR_WEBHOOK_TOKEN="your-mayar-webhook-token"
 ```
 
 ### Optional
 
 ```bash
-# File upload limits
-MAX_FILE_SIZE=10485760  # 10MB
+# Email (Resend) — jika kosong, email jatuh ke console log
+RESEND_API_KEY=""
+EMAIL_FROM="iaundang <halo@iaundang.online>"
+
+# Cron (Bearer token untuk endpoint /api/cron/*)
+CRON_SECRET=""
 ```
 
 ## Build Configuration
 
-### Build Command
-```bash
-npm run build
-```
+| Setting | Value |
+|---------|-------|
+| Build Command | `npm run build` |
+| Install Command | `npm install` |
+| Output Directory | `.next` |
+| Node.js Version | `20.x` |
 
-### Install Command
-```bash
-npm install
-```
+Prisma Client digenerate otomatis lewat script `postinstall`.
 
-### Output Directory
-```
-.next
-```
+## Database Setup (Supabase PostgreSQL)
 
-### Node.js Version
-```
-20.x
-```
-
-## Database Setup
-
-### Option 1: PostgreSQL (Recommended for Production)
-
-1. Create a PostgreSQL database (e.g., on Vercel Postgres, Supabase, Railway)
-2. Set `DATABASE_URL` environment variable
-3. Update `prisma/schema.prisma`:
-   ```prisma
-   datasource db {
-     provider = "postgresql"
-     url      = env("DATABASE_URL")
-   }
-   ```
-4. Run migrations:
+1. Buat project di [Supabase](https://supabase.com) — sudah termasuk PostgreSQL + Storage.
+2. Ambil connection string **pooler** (port `6543`, `pgbouncer=true`) untuk `DATABASE_URL`.
+3. `prisma/schema.prisma` sudah memakai provider `postgresql`.
+4. Jalankan migrasi:
    ```bash
    npx prisma migrate deploy
    ```
 
-### Option 2: MySQL
+> Catatan: Fase 1 masih memakai **satu database (production)** untuk semua environment. Pemisahan database staging/production dilakukan di fase berikutnya.
 
-1. Create a MySQL database
-2. Set `DATABASE_URL` environment variable
-3. Update `prisma/schema.prisma`:
-   ```prisma
-   datasource db {
-     provider = "mysql"
-     url      = env("DATABASE_URL")
-   }
-   ```
-4. Run migrations:
-   ```bash
-   npx prisma migrate deploy
-   ```
+## Environment per Branch
 
-### Option 3: SQLite (Development/Preview Only)
+Mapping branch → Vercel environment → domain:
 
-**Note:** SQLite is NOT recommended for production on Vercel because:
-- Vercel filesystem is read-only in production
-- Database won't persist between deployments
+| Branch | Vercel Environment | Domain | `NEXT_PUBLIC_APP_DOMAIN` |
+|--------|--------------------|--------|--------------------------|
+| `main` | Production | `iaundang.online` | `iaundang.online` |
+| `develop` / `staging` | Preview | `staging.iaundang.online` | `staging.iaundang.online` |
+| `feature/*` | Preview (per-deploy URL) | `*.vercel.app` | (opsional) |
+| lokal | Development | `localhost` | `localhost` |
 
-For preview environments:
-```bash
-DATABASE_URL="file:./data/preview.db"
-```
+- **Production** hanya di-deploy dari `main`.
+- **Preview** otomatis dibuat untuk setiap push ke branch selain `main` (`develop`, `staging`, `feature/*`).
+- Set `NEXT_PUBLIC_APP_DOMAIN` yang berbeda untuk scope **Production** vs **Preview** di Vercel agar rewrite subdomain & cookie bekerja per environment.
+- Domain kustom `staging.iaundang.online` dipetakan ke branch `develop`/`staging` lewat Vercel → Domains.
 
 ## Deployment Checklist
 
-- [ ] Set all required environment variables
-- [ ] Configure database (PostgreSQL/MySQL recommended)
-- [ ] Run Prisma migrations
-- [ ] Update `NEXT_PUBLIC_APP_URL` to your domain
-- [ ] Generate new `JWT_SECRET` for production
-- [ ] Configure custom domain (if needed)
-- [ ] Test deployment in preview environment
-- [ ] Promote to production
+- [ ] Set semua required env var (per environment yang sesuai)
+- [ ] Set `DATABASE_URL` ke Supabase pooler
+- [ ] Jalankan `npx prisma migrate deploy`
+- [ ] `NEXT_PUBLIC_APP_URL` & `NEXT_PUBLIC_APP_DOMAIN` sesuai environment
+- [ ] Generate `SESSION_SECRET` khusus production
+- [ ] Konfigurasi custom domain (`iaundang.online` + `staging.iaundang.online`)
+- [ ] Test di Preview dulu sebelum promote ke Production
 
 ## Common Issues
 
 ### Build Error: "DATABASE_URL not found"
-
-**Solution:** Add `DATABASE_URL` to Vercel environment variables.
+Tambahkan `DATABASE_URL` di Vercel environment variables (untuk environment yang di-build).
 
 ### Build Error: "Prisma Client not generated"
-
-**Solution:** Already handled by `postinstall` script. If error persists, check build logs.
+Sudah dihandle `postinstall`. Jika masih error, cek build log.
 
 ### Runtime Error: "Can't reach database server"
-
-**Solutions:**
-1. Verify `DATABASE_URL` is correct
-2. Check database server is accessible from Vercel
-3. Verify database credentials
-4. Check firewall/IP allowlist settings
+1. Verifikasi `DATABASE_URL` benar (pakai pooler `6543`)
+2. Pastikan Supabase project aktif
+3. Cek kredensial & IP allowlist
 
 ## Support
 
-For issues, check:
 - Vercel Build Logs
-- Prisma Documentation: https://pris.ly/d/vercel-build
-- Next.js Documentation: https://nextjs.org/docs/deployment
+- Prisma: https://pris.ly/d/vercel-build
+- Next.js: https://nextjs.org/docs/deployment
