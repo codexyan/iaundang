@@ -100,7 +100,7 @@ export default function HowItWorks({ steps: propSteps }: { steps?: { title: stri
         transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
         className="mt-8 md:mt-16 flex flex-col items-center gap-3"
       >
-        <Button href="/templates" size="lg">
+        <Button href="/templates" size="lg" className="w-full sm:w-auto">
           Mulai buat undangan
           <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
         </Button>

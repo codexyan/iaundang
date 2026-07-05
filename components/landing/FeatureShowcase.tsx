@@ -496,7 +496,7 @@ export default function FeatureShowcase({ personalisasi }: { personalisasi?: Per
         <p className="text-body-sm text-concrete mb-5">
           Semua fitur tersedia mulai paket Starter.
         </p>
-        <Button href="/templates" size="lg">
+        <Button href="/templates" size="lg" className="w-full sm:w-auto">
           Lihat semua template
           <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
         </Button>

@@ -106,7 +106,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="lg:col-span-6 grid grid-cols-3 gap-6 sm:gap-8">
+          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <FooterLinkGroup title="Produk" links={productLinks} />
             <FooterLinkGroup title="Perusahaan" links={companyLinks} />
             <FooterLinkGroup title="Akun" links={accountLinks} />

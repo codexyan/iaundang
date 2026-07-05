@@ -61,7 +61,7 @@ export default function ClosingCTA({ whatsapp }: { whatsapp?: string }) {
           transition={{ duration: 0.6, delay: 0.28, ease: EASE }}
           className="mt-10 flex flex-col sm:flex-row gap-5 justify-center items-center"
         >
-          <Button href="/templates" variant="gold" size="lg">
+          <Button href="/templates" variant="gold" size="lg" className="w-full sm:w-auto">
             Mulai Buat Undangan
             <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
           </Button>
@@ -84,7 +84,7 @@ export default function ClosingCTA({ whatsapp }: { whatsapp?: string }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="mt-8 flex items-center justify-center gap-5 text-body-xs text-chalk/60"
+          className="mt-8 flex flex-wrap items-center justify-center gap-y-2 gap-x-5 text-body-xs text-chalk/60"
         >
           {['Tanpa kartu kredit', 'Coba gratis', 'Bayar saat siap'].map((t, i) => (
             <span key={t} className="flex items-center gap-5">

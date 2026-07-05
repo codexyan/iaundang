@@ -82,7 +82,7 @@ export default function HeroSection({
             transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
             className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-5"
           >
-            <Button href="/templates" size="lg">
+            <Button href="/templates" size="lg" className="w-full sm:w-auto">
               {hero.ctaPrimary}
               <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
             </Button>
@@ -99,7 +99,7 @@ export default function HeroSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.55 }}
-            className="mt-7 flex items-center justify-center gap-5 text-body-xs text-concrete"
+            className="mt-7 flex flex-wrap items-center justify-center gap-y-2 gap-x-5 text-body-xs text-concrete"
           >
             {['Gratis preview', 'Sekali bayar', 'Tanpa langganan'].map((t, i) => (
               <span key={t} className="flex items-center gap-5">
@@ -115,7 +115,7 @@ export default function HeroSection({
           initial={{ opacity: 0, y: 40, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 1.0, delay: 0.45, ease: EASE }}
-          className="relative mt-12 sm:mt-16 rounded-card overflow-hidden shadow-float aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
+          className="relative mt-12 sm:mt-16 rounded-card overflow-hidden shadow-float aspect-[3/4] sm:aspect-[16/9] lg:aspect-[21/9]"
         >
           <Image
             src="/images/templates/wedding-bg.jpg"
@@ -138,8 +138,8 @@ export default function HeroSection({
             style={{ background: 'radial-gradient(ellipse at center 40%, transparent 30%, rgba(15,26,18,0.35) 100%)' }}
           />
 
-          {/* Isi undangan */}
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
+          {/* Isi undangan — pb menjauhkan dari pita tag fitur di bawah */}
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pb-14 sm:pb-0">
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -154,7 +154,8 @@ export default function HeroSection({
               <div aria-hidden className="w-10 h-px bg-gold/70 mx-auto my-4 sm:my-5" />
               <p className="text-body-sm text-chalk/80">
                 {date}
-                <span className="hidden sm:inline"> &middot; {venue}</span>
+                <span className="hidden sm:inline"> &middot; </span>
+                <span className="block sm:inline mt-1 sm:mt-0">{venue}</span>
               </p>
             </motion.div>
           </div>
