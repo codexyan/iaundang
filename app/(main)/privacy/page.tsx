@@ -8,13 +8,13 @@ export const metadata = {
 }
 
 function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-h2 text-graphite mt-10 mb-3 scroll-mt-24">{children}</h2>
+  return <h2 className="font-display text-h2 text-forest-deep mt-10 mb-3 scroll-mt-24">{children}</h2>
 }
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-[15px] text-concrete leading-[1.75] mb-3">{children}</p>
+  return <p className="text-body-lg text-concrete leading-[1.75] mb-3">{children}</p>
 }
 function UL({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-5 space-y-1.5 text-[15px] text-concrete leading-[1.7] mb-3">{children}</ul>
+  return <ul className="list-disc pl-5 space-y-1.5 text-body-lg text-concrete leading-[1.7] mb-3">{children}</ul>
 }
 
 export default async function PrivacyPage() {
@@ -22,13 +22,13 @@ export default async function PrivacyPage() {
   const wa = appSettings.confirmationWhatsapp || '628123456789'
 
   return (
-    <div className="min-h-screen bg-chalk pt-28 pb-24">
+    <div className="min-h-screen bg-ivory pt-28 pb-24">
       <div className="max-w-3xl mx-auto px-5 sm:px-8">
 
         {/* Header */}
         <p className="text-eyebrow text-concrete mb-3">Kebijakan Privasi</p>
-        <h1 className="text-display-md text-graphite text-balance">Privasi Anda, prioritas kami</h1>
-        <p className="text-[13px] text-ash mt-4">Terakhir diperbarui: 30 Juni 2026</p>
+        <h1 className="font-display text-display-md text-forest-deep text-balance">Privasi Anda, prioritas kami</h1>
+        <p className="text-body-xs text-concrete mt-4">Terakhir diperbarui: 30 Juni 2026</p>
 
         <div className="mt-8 border-t border-hairline pt-8">
 

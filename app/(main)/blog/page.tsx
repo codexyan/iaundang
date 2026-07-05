@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { articles } from '@/lib/db'
-import { FileText, ArrowRight, Clock, Eye, Search, Tag } from 'lucide-react'
+import { FileText, Clock, Eye, Tag, PenLine, ArrowRight } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,18 +20,18 @@ export default async function BlogPage() {
   const rest = list.filter(a => a.id !== featured?.id)
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Header */}
-      <section className="bg-gradient-to-b from-emerald-50/80 to-white pt-12 pb-6 sm:pt-20 sm:pb-10">
+    <div className="min-h-screen bg-ivory">
+      {/* Header */}
+      <section className="bg-chalk border-b border-hairline pt-24 pb-10 sm:pb-12">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="text-center max-w-2xl mx-auto">
-            <p className="text-xs font-semibold tracking-[.18em] uppercase text-emerald-600 mb-3">Blog</p>
-            <h1 className="font-sans text-3xl sm:text-5xl font-bold text-stone-900 leading-tight">
-              Tips & Inspirasi Pernikahan
+            <p className="text-eyebrow text-concrete mb-4">Blog</p>
+            <h1 className="font-display text-display-lg text-forest-deep text-balance">
+              Tips &amp; Inspirasi Pernikahan
             </h1>
-            <p className="mt-4 text-stone-500 text-base sm:text-lg leading-relaxed">
-              Panduan lengkap persiapan pernikahan, inspirasi undangan digital,
-              dan cerita dari pasangan yang sudah menggunakan iaundang.
+            <p className="mt-4 text-body-lg text-concrete leading-relaxed">
+              Panduan persiapan pernikahan, inspirasi undangan digital,
+              dan cerita dari pasangan yang menggunakan iaundang.
             </p>
           </div>
 
@@ -41,7 +41,7 @@ export default async function BlogPage() {
               {allTags.map(tag => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-full bg-white border border-stone-200 text-stone-500 hover:border-emerald-300 hover:text-emerald-600 transition-colors cursor-default"
+                  className="inline-flex items-center gap-1 text-label-sm px-3 py-1.5 rounded-pill bg-ivory border border-hairline text-concrete"
                 >
                   <Tag className="w-3 h-3" />
                   {tag}
@@ -52,23 +52,39 @@ export default async function BlogPage() {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 pb-16 sm:pb-24">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
         {list.length === 0 ? (
-          <div className="text-center py-20">
-            <FileText className="w-12 h-12 text-stone-200 mx-auto mb-4" />
-            <p className="text-stone-500 font-medium">Belum ada artikel</p>
-            <p className="text-sm text-stone-400 mt-1">Segera hadir artikel menarik untuk kalian.</p>
+          /* Empty state yang disengaja — bukan sekadar teks kosong */
+          <div className="max-w-xl mx-auto text-center bg-chalk rounded-card border border-hairline shadow-card px-6 sm:px-10 py-14">
+            <div className="w-14 h-14 mx-auto rounded-full bg-forest-50 border border-forest-100 flex items-center justify-center mb-6">
+              <PenLine className="w-6 h-6 text-forest" />
+            </div>
+            <h2 className="font-display text-h1 text-forest-deep text-balance">
+              Cerita pertama sedang ditulis
+            </h2>
+            <div aria-hidden className="w-10 h-px bg-gold/70 mx-auto my-5" />
+            <p className="text-body-base text-concrete leading-relaxed max-w-md mx-auto">
+              Kami sedang menyiapkan panduan persiapan pernikahan dan inspirasi
+              undangan digital. Sambil menunggu, lihat dulu koleksi template kami.
+            </p>
+            <Link
+              href="/templates"
+              className="group inline-flex items-center justify-center gap-2 mt-8 min-h-[44px] px-6 py-3 rounded-button bg-forest text-chalk text-button-base font-semibold hover:bg-forest-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 focus-visible:ring-offset-2"
+            >
+              Lihat Template
+              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
           </div>
         ) : (
           <>
-            {/* Featured Article */}
+            {/* Artikel Pilihan */}
             {featured && (
               <Link
                 href={`/blog/${featured.slug}`}
-                className="group block bg-white rounded-2xl sm:rounded-3xl border border-stone-100 overflow-hidden hover:shadow-xl hover:shadow-stone-100/50 transition-all duration-500 mb-10 sm:mb-14"
+                className="group block bg-chalk rounded-card border border-hairline shadow-card overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 mb-10 sm:mb-14"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2">
-                  <div className="aspect-[16/10] lg:aspect-auto overflow-hidden bg-stone-100">
+                  <div className="aspect-[16/10] lg:aspect-auto overflow-hidden bg-mist">
                     {featured.coverUrl ? (
                       <img
                         src={featured.coverUrl}
@@ -76,34 +92,34 @@ export default async function BlogPage() {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     ) : (
-                      <div className="w-full h-full min-h-[240px] bg-gradient-to-br from-emerald-50 to-stone-50 flex items-center justify-center">
-                        <FileText className="w-16 h-16 text-emerald-200" />
+                      <div className="w-full h-full min-h-[240px] bg-forest-50 flex items-center justify-center">
+                        <FileText className="w-16 h-16 text-forest-200" />
                       </div>
                     )}
                   </div>
                   <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
+                      <span className="text-label-sm px-2.5 py-1 rounded-pill bg-gold-50 text-gold-700 border border-gold-200">
                         Artikel Pilihan
                       </span>
                       {featured.tags && (
-                        <span className="text-xs text-stone-400">
+                        <span className="text-body-xs text-concrete">
                           {featured.tags.split(',')[0].trim()}
                         </span>
                       )}
                     </div>
-                    <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-bold text-stone-900 group-hover:text-emerald-800 transition-colors leading-snug mb-3">
+                    <h2 className="font-display text-h1 text-graphite group-hover:text-forest-deep transition-colors leading-snug mb-3">
                       {featured.title}
                     </h2>
                     {featured.excerpt && (
-                      <p className="text-stone-500 leading-relaxed line-clamp-3 mb-5">{featured.excerpt}</p>
+                      <p className="text-body-base text-concrete leading-relaxed line-clamp-3 mb-5">{featured.excerpt}</p>
                     )}
-                    <div className="flex items-center gap-4 text-xs text-stone-400">
+                    <div className="flex items-center gap-4 text-body-xs text-concrete">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-bold">
+                        <div className="w-6 h-6 rounded-full bg-forest-100 flex items-center justify-center text-forest-deep text-body-xs font-bold">
                           {featured.authorName.charAt(0).toUpperCase()}
                         </div>
-                        <span className="font-medium text-stone-600">{featured.authorName}</span>
+                        <span className="font-medium text-carbon">{featured.authorName}</span>
                       </div>
                       {featured.publishedAt && (
                         <span>{new Date(featured.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -118,16 +134,16 @@ export default async function BlogPage() {
               </Link>
             )}
 
-            {/* Article Grid */}
+            {/* Grid artikel */}
             {rest.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                 {rest.map(article => (
                   <Link
                     key={article.id}
                     href={`/blog/${article.slug}`}
-                    className="group bg-white rounded-2xl border border-stone-100 overflow-hidden hover:border-stone-200 hover:shadow-lg hover:shadow-stone-100/50 transition-all duration-300 flex flex-col"
+                    className="group bg-chalk rounded-card border border-hairline shadow-card overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
                   >
-                    <div className="aspect-[16/10] overflow-hidden bg-stone-100">
+                    <div className="aspect-[16/10] overflow-hidden bg-mist">
                       {article.coverUrl ? (
                         <img
                           src={article.coverUrl}
@@ -135,31 +151,31 @@ export default async function BlogPage() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-emerald-50 to-stone-50 flex items-center justify-center">
-                          <FileText className="w-10 h-10 text-emerald-200" />
+                        <div className="w-full h-full bg-forest-50 flex items-center justify-center">
+                          <FileText className="w-10 h-10 text-forest-200" />
                         </div>
                       )}
                     </div>
                     <div className="p-5 sm:p-6 flex flex-col flex-1">
                       {article.tags && (
-                        <span className="text-xs text-emerald-600 font-medium mb-2">
+                        <span className="text-label-sm text-forest mb-2">
                           {article.tags.split(',')[0].trim()}
                         </span>
                       )}
-                      <h2 className="text-lg font-semibold text-stone-900 group-hover:text-emerald-800 transition-colors leading-snug mb-2 line-clamp-2">
+                      <h2 className="font-display text-h3 text-graphite group-hover:text-forest-deep transition-colors leading-snug mb-2 line-clamp-2">
                         {article.title}
                       </h2>
                       {article.excerpt && (
-                        <p className="text-sm text-stone-400 line-clamp-2 mb-4 flex-1">{article.excerpt}</p>
+                        <p className="text-body-sm text-concrete line-clamp-2 mb-4 flex-1">{article.excerpt}</p>
                       )}
-                      <div className="flex items-center justify-between pt-3 border-t border-stone-50">
+                      <div className="flex items-center justify-between pt-3 border-t border-hairline">
                         <div className="flex items-center gap-2">
-                          <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-[10px] font-bold">
+                          <div className="w-5 h-5 rounded-md bg-forest-50 flex items-center justify-center text-forest text-[10px] font-bold">
                             {article.authorName.charAt(0).toUpperCase()}
                           </div>
-                          <span className="text-xs text-stone-500">{article.authorName}</span>
+                          <span className="text-body-xs text-concrete">{article.authorName}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-stone-400">
+                        <div className="flex items-center gap-3 text-body-xs text-concrete">
                           {article.publishedAt && (
                             <span>{new Date(article.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
                           )}
