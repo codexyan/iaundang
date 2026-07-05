@@ -7,12 +7,13 @@ import { fadeUp } from '@/lib/motion'
 // Wrapper section landing: menstandarkan ritme vertikal, container,
 // dan pola header (eyebrow → judul serif → lead) untuk semua section publik.
 
-type Tone = 'ivory' | 'chalk' | 'mist' | 'dark'
+type Tone = 'ivory' | 'chalk' | 'mist' | 'tint' | 'dark'
 
 const TONES: Record<Tone, string> = {
   ivory: 'bg-ivory',
   chalk: 'bg-chalk',
   mist: 'bg-mist/50',
+  tint: 'bg-forest-50',
   dark: 'bg-forest-deep',
 }
 
