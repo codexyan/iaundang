@@ -57,12 +57,12 @@ function RegisterContent() {
 
   return (
     <AuthCard>
-      <div className="text-center mb-5">
-        <h1 className="font-display text-h1 text-forest-deep">Daftar Gratis</h1>
-        <p className="text-body-xs text-concrete mt-1">
+      <div className="mb-6">
+        <h1 className="font-display text-display-md text-forest-deep">Daftar Gratis</h1>
+        <p className="text-body-sm text-concrete mt-2">
           {selectedTemplate
-            ? `Template ${selectedTemplate.name} siap`
-            : 'Bayar saat siap publish'}
+            ? `Template ${selectedTemplate.name} siap dipakai setelah daftar.`
+            : 'Coba dulu sepuasnya, bayar saat siap publish.'}
         </p>
       </div>
 
@@ -127,17 +127,15 @@ function RegisterContent() {
         </div>
       </div>
 
-      <div className="text-center">
-        <p className="text-body-sm text-concrete">
-          Sudah punya akun?{' '}
-          <Link
-            href={templateId ? `/login?template=${templateId}` : '/login'}
-            className="font-semibold text-forest hover:text-forest-deep transition-colors"
-          >
-            Masuk
-          </Link>
-        </p>
-      </div>
+      <p className="text-body-sm text-concrete">
+        Sudah punya akun?{' '}
+        <Link
+          href={templateId ? `/login?template=${templateId}` : '/login'}
+          className="font-semibold text-forest hover:text-forest-deep transition-colors"
+        >
+          Masuk
+        </Link>
+      </p>
     </AuthCard>
   )
 }

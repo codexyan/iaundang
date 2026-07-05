@@ -74,14 +74,14 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthCard backHref="/login">
-      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-forest-50 border border-forest-100 flex items-center justify-center">
-        <Mail className="w-6 h-6 text-forest" />
+      <div className="w-12 h-12 mb-5 rounded-xl bg-forest-50 border border-forest-100 flex items-center justify-center">
+        <Mail className="w-5 h-5 text-forest" />
       </div>
 
-      <div className="text-center mb-6">
-        <h1 className="font-display text-h1 text-forest-deep">Lupa Password?</h1>
-        <p className="text-body-xs text-concrete mt-1">
-          Masukkan email Anda untuk reset password
+      <div className="mb-8">
+        <h1 className="font-display text-display-md text-forest-deep">Lupa Password?</h1>
+        <p className="text-body-sm text-concrete mt-2">
+          Masukkan email akunmu — kami kirimkan link untuk membuat password baru.
         </p>
       </div>
 
@@ -119,14 +119,12 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
 
-      <div className="text-center">
-        <p className="text-body-sm text-concrete">
-          Sudah ingat password?{' '}
-          <Link href="/login" className="font-semibold text-forest hover:text-forest-deep transition-colors">
-            Masuk
-          </Link>
-        </p>
-      </div>
+      <p className="text-body-sm text-concrete">
+        Sudah ingat password?{' '}
+        <Link href="/login" className="font-semibold text-forest hover:text-forest-deep transition-colors">
+          Masuk
+        </Link>
+      </p>
     </AuthCard>
   )
 }

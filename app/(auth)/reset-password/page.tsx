@@ -141,9 +141,9 @@ function ResetPasswordContent() {
 
   return (
     <AuthCard backHref="/login">
-      <div className="text-center mb-6">
-        <h1 className="font-display text-h1 text-forest-deep">Buat Password Baru</h1>
-        <p className="text-body-xs text-concrete mt-1">
+      <div className="mb-8">
+        <h1 className="font-display text-display-md text-forest-deep">Buat Password Baru</h1>
+        <p className="text-body-sm text-concrete mt-2">
           {email ? <>untuk akun <strong className="text-graphite">{email}</strong></> : 'Masukkan password baru untuk akunmu'}
         </p>
       </div>

@@ -53,9 +53,9 @@ function LoginContent() {
 
   return (
     <AuthCard>
-      <div className="text-center mb-6">
-        <h1 className="font-display text-h1 text-forest-deep">Masuk ke Akun</h1>
-        <p className="text-body-xs text-concrete mt-1">Kelola undanganmu</p>
+      <div className="mb-8">
+        <h1 className="font-display text-display-md text-forest-deep">Masuk ke Akun</h1>
+        <p className="text-body-sm text-concrete mt-2">Kelola undangan dan tamu kalian dari satu tempat.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -105,17 +105,15 @@ function LoginContent() {
         </div>
       </div>
 
-      <div className="text-center">
-        <p className="text-body-sm text-concrete">
-          Belum punya akun?{' '}
-          <Link
-            href={templateId ? `/order?template=${templateId}` : '/templates'}
-            className="font-semibold text-forest hover:text-forest-deep transition-colors"
-          >
-            Buat undangan
-          </Link>
-        </p>
-      </div>
+      <p className="text-body-sm text-concrete">
+        Belum punya akun?{' '}
+        <Link
+          href={templateId ? `/order?template=${templateId}` : '/templates'}
+          className="font-semibold text-forest hover:text-forest-deep transition-colors"
+        >
+          Buat undangan
+        </Link>
+      </p>
     </AuthCard>
   )
 }
