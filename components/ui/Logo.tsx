@@ -1,8 +1,9 @@
-'use client'
-
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+
+// Tanpa framer-motion: animasi masuk cukup CSS (keyframes slide-up di
+// tailwind.config) — menghindari seluruh bundle framer ikut ke halaman
+// ringan seperti auth hanya demi satu fade.
 
 interface LogoProps {
   variant?: 'horizontal' | 'vertical' | 'icon-only'
@@ -44,12 +45,9 @@ export default function Logo({
 }: LogoProps) {
   const dimensions = sizeConfig[size][variant === 'icon-only' ? 'icon' : variant]
 
-  const LogoImage = () => (
-    <motion.div
-      initial={animated ? { opacity: 0, y: -10 } : {}}
-      animate={animated ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative ${className}`}
+  const logoImage = (
+    <div
+      className={`relative ${animated ? 'animate-slide-up' : ''} ${className}`}
       style={{
         width: dimensions.width,
         height: dimensions.height,
@@ -63,16 +61,16 @@ export default function Logo({
         priority
         quality={100}
       />
-    </motion.div>
+    </div>
   )
 
   if (href) {
     return (
       <Link href={href} className="inline-block">
-        <LogoImage />
+        {logoImage}
       </Link>
     )
   }
 
-  return <LogoImage />
+  return logoImage
 }
