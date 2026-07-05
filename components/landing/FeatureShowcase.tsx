@@ -2,10 +2,13 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Users, ClipboardCheck, Music2, Globe, ImageIcon, ArrowRight, Check, Gift, BookOpen, MessageSquare } from 'lucide-react'
+import { SectionContainer } from '@/components/marketing/SectionContainer'
+import { Button } from '@/components/marketing/Button'
+import { EASE, VIEWPORT_ONCE } from '@/lib/motion'
 
-const EASE = [0.22, 1, 0.36, 1] as const
+// Catatan ukuran teks: mini-mockup di bawah adalah ilustrasi UI dekoratif —
+// arbitrary font-size < 12px diizinkan KHUSUS di dalam ilustrasi ini.
 
 interface PersonalisasiData {
   guestName: string
@@ -16,10 +19,10 @@ interface PersonalisasiData {
 function CheckItem({ children }: { children: string }) {
   return (
     <li className="flex items-center gap-2.5">
-      <div className="w-[18px] h-[18px] rounded-md bg-graphite/[0.06] flex items-center justify-center shrink-0">
-        <Check size={10} strokeWidth={2.5} className="text-graphite" />
+      <div className="w-[18px] h-[18px] rounded-md bg-forest-50 flex items-center justify-center shrink-0">
+        <Check size={10} strokeWidth={2.5} className="text-forest" />
       </div>
-      <span className="text-[13px] text-concrete leading-snug">{children}</span>
+      <span className="text-body-sm text-concrete leading-snug">{children}</span>
     </li>
   )
 }
@@ -33,25 +36,25 @@ function CardPersonalisasi({ personalisasi }: { personalisasi?: PersonalisasiDat
     <motion.div
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
+      viewport={VIEWPORT_ONCE}
       transition={{ duration: 0.7, ease: EASE }}
-      className="lg:col-span-2 rounded-2xl bg-graphite overflow-hidden group"
+      className="lg:col-span-2 rounded-card bg-forest-deep overflow-hidden group"
     >
       <div className="flex flex-col lg:flex-row h-full">
         <div className="flex-1 p-7 sm:p-9 flex flex-col justify-center">
           <div className="flex items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-chalk/[0.08] flex items-center justify-center">
-              <Users size={15} className="text-chalk/70" />
+            <div className="w-8 h-8 rounded-lg bg-gold/[0.12] flex items-center justify-center">
+              <Users size={15} className="text-gold/80" />
             </div>
-            <span className="text-[11px] font-semibold tracking-[0.1em] uppercase text-chalk/40">
+            <span className="text-eyebrow text-gold/70">
               Personalisasi
             </span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-bold text-chalk leading-snug mb-3">
+          <h3 className="font-display text-h1 text-chalk leading-snug mb-3">
             Satu link, setiap tamu disambut namanya
           </h3>
-          <p className="text-[14px] text-chalk/40 leading-relaxed mb-6">
+          <p className="text-body-base text-chalk/60 leading-relaxed mb-6">
             Setiap tamu melihat namanya di halaman pembuka. Terasa personal, bukan sekadar pesan yang dikirim massal.
           </p>
 
@@ -62,10 +65,10 @@ function CardPersonalisasi({ personalisasi }: { personalisasi?: PersonalisasiDat
               'Link unik per tamu, tidak bisa di-forward',
             ].map(b => (
               <li key={b} className="flex items-center gap-2.5">
-                <div className="w-[18px] h-[18px] rounded-md bg-chalk/[0.08] flex items-center justify-center shrink-0">
-                  <Check size={10} strokeWidth={2.5} className="text-chalk/50" />
+                <div className="w-[18px] h-[18px] rounded-md bg-gold/[0.14] flex items-center justify-center shrink-0">
+                  <Check size={10} strokeWidth={2.5} className="text-gold/80" />
                 </div>
-                <span className="text-[13px] text-chalk/45 leading-snug">{b}</span>
+                <span className="text-body-sm text-chalk/70 leading-snug">{b}</span>
               </li>
             ))}
           </ul>
@@ -84,14 +87,14 @@ function CardPersonalisasi({ personalisasi }: { personalisasi?: PersonalisasiDat
               <div className="absolute left-1/2 -translate-x-1/2 z-30 rounded-full" style={{ top: 6, width: 48, height: 14, background: '#000' }} />
               <div className="rounded-[22px] overflow-hidden relative" style={{ aspectRatio: '9/19.5', background: '#111' }}>
                 <Image src="/images/templates/wedding-bg.jpg" alt="Preview" fill className="object-cover" sizes="200px" style={{ opacity: 0.35 }} />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 15%, rgba(10,10,10,0.85) 100%)' }} />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 15%, rgba(10,20,10,0.88) 100%)' }} />
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
-                  <p className="text-[7px] tracking-[0.35em] uppercase mb-3 text-chalk/40">The Wedding of</p>
-                  <h4 className="text-[24px] font-bold leading-[0.85] text-chalk">{groomName}</h4>
-                  <p className="text-sm my-1 text-chalk/30 italic">&amp;</p>
-                  <h4 className="text-[24px] font-bold leading-[0.85] text-chalk">{brideName}</h4>
-                  <div className="mt-4 px-4 py-2 rounded-xl border border-chalk/[0.08] bg-chalk/[0.04]">
-                    <p className="text-[7px] tracking-[0.15em] uppercase text-chalk/30">Kepada Yth.</p>
+                  <p className="text-[7px] tracking-[0.35em] uppercase mb-3 text-gold/60">The Wedding of</p>
+                  <h4 className="font-display text-[25px] leading-[0.95] text-chalk">{groomName}</h4>
+                  <p className="font-display text-sm my-1 text-gold/60">&amp;</p>
+                  <h4 className="font-display text-[25px] leading-[0.95] text-chalk">{brideName}</h4>
+                  <div className="mt-4 px-4 py-2 rounded-xl border border-gold/[0.18] bg-gold/[0.06]">
+                    <p className="text-[7px] tracking-[0.15em] uppercase text-gold/60">Kepada Yth.</p>
                     <p className="text-[11px] font-semibold text-chalk mt-0.5">{guestName}</p>
                   </div>
                 </div>
@@ -125,21 +128,21 @@ function FeatureCard({
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
+      viewport={VIEWPORT_ONCE}
       transition={{ duration: 0.6, delay, ease: EASE }}
-      className={`rounded-2xl bg-chalk border border-hairline overflow-hidden hover:border-ash/40 transition-colors ${className}`}
+      className={`rounded-card bg-chalk border border-hairline shadow-card overflow-hidden hover:border-ash/40 transition-colors ${className}`}
     >
       <div className="p-6">
         <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-mist flex items-center justify-center">
-            <Icon size={15} className="text-graphite" />
+          <div className="w-8 h-8 rounded-lg bg-forest-50 flex items-center justify-center">
+            <Icon size={15} className="text-forest" />
           </div>
-          <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-concrete">
+          <span className="text-eyebrow text-concrete">
             {tag}
           </span>
         </div>
 
-        <h3 className="text-base font-bold text-graphite mb-3 leading-snug">
+        <h3 className="text-body-lg font-semibold text-graphite mb-3 leading-snug">
           {title}
         </h3>
 
@@ -157,14 +160,14 @@ function FeatureCard({
 
 function MiniRSVP() {
   return (
-    <div className="bg-mist rounded-xl p-3.5 border border-hairline">
+    <div className="bg-ivory rounded-xl p-3.5 border border-hairline">
       <div className="space-y-2 mb-3">
         <div className="bg-chalk rounded-lg px-3 py-2 border border-hairline">
           <p className="text-[8px] text-ash">Nama</p>
           <p className="text-[10px] text-graphite font-medium">Bapak Andi Sanjaya</p>
         </div>
         <div className="flex gap-2">
-          <div className="flex-1 py-2 rounded-lg bg-graphite text-chalk text-[9px] font-semibold text-center">Hadir</div>
+          <div className="flex-1 py-2 rounded-lg bg-forest text-chalk text-[9px] font-semibold text-center">Hadir</div>
           <div className="flex-1 py-2 rounded-lg bg-chalk border border-hairline text-concrete text-[9px] font-medium text-center">Tidak</div>
         </div>
       </div>
@@ -176,7 +179,7 @@ function MiniRSVP() {
         ].map(g => (
           <div key={g.name} className="flex items-center justify-between bg-chalk rounded-lg px-2.5 py-1.5 border border-hairline">
             <p className="text-[9px] text-concrete">{g.name}</p>
-            <span className={`text-[8px] font-semibold ${g.ok ? 'text-graphite' : 'text-ash'}`}>{g.status}</span>
+            <span className={`text-[8px] font-semibold ${g.ok ? 'text-forest' : 'text-ash'}`}>{g.status}</span>
           </div>
         ))}
       </div>
@@ -186,33 +189,29 @@ function MiniRSVP() {
 
 function MiniMusic() {
   return (
-    <div className="bg-carbon rounded-xl p-3.5">
+    <div className="bg-forest-deep rounded-xl p-3.5">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-9 h-9 rounded-lg bg-chalk/[0.06] flex items-center justify-center shrink-0">
-          <Music2 size={14} className="text-chalk/50" />
+        <div className="w-9 h-9 rounded-lg bg-gold/[0.12] flex items-center justify-center shrink-0">
+          <Music2 size={14} className="text-gold/70" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[11px] text-chalk font-semibold truncate">A Thousand Years</p>
-          <p className="text-[9px] text-chalk/35">Christina Perri</p>
+          <p className="text-[9px] text-chalk/40">Christina Perri</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-[8px] text-chalk/25">1:24</span>
-        <div className="flex-1 h-1 bg-chalk/[0.06] rounded-full overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-chalk/25"
-            animate={{ width: ['35%', '55%', '35%'] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          />
+        <span className="text-[8px] text-chalk/30">1:24</span>
+        <div className="flex-1 h-1 bg-chalk/[0.08] rounded-full overflow-hidden">
+          <div className="h-full rounded-full bg-gold/50" style={{ width: '42%' }} />
         </div>
-        <span className="text-[8px] text-chalk/25">4:45</span>
+        <span className="text-[8px] text-chalk/30">4:45</span>
       </div>
       <div className="mt-3 flex gap-1.5">
         {['Perfect', 'All of Me', '+Upload'].map((s, i) => (
           <span key={s} className={`text-[8px] px-2 py-1 rounded-md ${
             i === 2
-              ? 'border border-dashed border-chalk/10 text-chalk/25'
-              : 'bg-chalk/[0.06] text-chalk/35'
+              ? 'border border-dashed border-chalk/15 text-chalk/30'
+              : 'bg-chalk/[0.08] text-chalk/45'
           }`}>
             {s}
           </span>
@@ -224,10 +223,10 @@ function MiniMusic() {
 
 function MiniDomain() {
   return (
-    <div className="bg-mist rounded-xl overflow-hidden border border-hairline">
-      <div className="bg-hairline/60 px-3 py-2 flex items-center gap-2">
+    <div className="bg-ivory rounded-xl overflow-hidden border border-hairline">
+      <div className="bg-mist px-3 py-2 flex items-center gap-2">
         <div className="flex gap-1">
-          {['#d4d4d4','#b0b0b0','#909090'].map(c => (
+          {['#d9d4c9', '#c5bfae', '#a8a294'].map(c => (
             <div key={c} className="w-2 h-2 rounded-full" style={{ backgroundColor: c }} />
           ))}
         </div>
@@ -242,14 +241,14 @@ function MiniDomain() {
       </div>
       <div className="bg-chalk p-3">
         <div className="flex items-start gap-2">
-          <div className="w-8 h-10 rounded bg-mist shrink-0" />
+          <div className="w-8 h-10 rounded bg-ivory border border-hairline shrink-0" />
           <div className="flex-1 space-y-1 pt-0.5">
             <div className="h-1.5 bg-mist rounded-full w-3/4" />
             <div className="h-1.5 bg-mist rounded-full w-1/2" />
           </div>
         </div>
         <div className="mt-2 flex gap-1.5">
-          <div className="flex-1 h-5 bg-graphite rounded flex items-center justify-center">
+          <div className="flex-1 h-5 bg-forest rounded flex items-center justify-center">
             <div className="h-1 bg-white/30 rounded-full w-8" />
           </div>
           <div className="flex-1 h-5 bg-mist rounded" />
@@ -260,9 +259,9 @@ function MiniDomain() {
 }
 
 function MiniGallery() {
-  const shades = ['#e5e5e5','#d4d4d4','#c7c7c7','#dcdcdc','#d0d0d0','#c3c3c3']
+  const shades = ['#e8e3d7', '#dbd4c4', '#cec6b3', '#e2dccd', '#d5cdbb', '#c8bfaa']
   return (
-    <div className="bg-mist rounded-xl p-3 border border-hairline">
+    <div className="bg-ivory rounded-xl p-3 border border-hairline">
       <div className="grid grid-cols-3 gap-1.5">
         {shades.map((c, i) => (
           <motion.div
@@ -276,8 +275,8 @@ function MiniGallery() {
           >
             {i === 2 && (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full border border-graphite/20 flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 rounded-full bg-graphite/20" />
+                <div className="w-3 h-3 rounded-full border border-forest/25 flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-forest/25" />
                 </div>
               </div>
             )}
@@ -294,11 +293,11 @@ function MiniGallery() {
 
 function MiniGift() {
   return (
-    <div className="bg-mist rounded-xl p-3.5 border border-hairline">
+    <div className="bg-ivory rounded-xl p-3.5 border border-hairline">
       <div className="space-y-2">
         <div className="bg-chalk rounded-lg px-3 py-2.5 border border-hairline flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-mist flex items-center justify-center shrink-0">
-            <span className="text-[8px] font-bold text-concrete">BCA</span>
+          <div className="w-7 h-7 rounded-md bg-forest-50 flex items-center justify-center shrink-0">
+            <span className="text-[8px] font-bold text-forest">BCA</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-semibold text-graphite">8230 4567 890</p>
@@ -311,8 +310,8 @@ function MiniGift() {
           </div>
         </div>
         <div className="bg-chalk rounded-lg px-3 py-2.5 border border-hairline flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-mist flex items-center justify-center shrink-0">
-            <span className="text-[8px] font-bold text-concrete">QRIS</span>
+          <div className="w-7 h-7 rounded-md bg-forest-50 flex items-center justify-center shrink-0">
+            <span className="text-[8px] font-bold text-forest">QRIS</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-semibold text-graphite">Scan QR Code</p>
@@ -326,19 +325,19 @@ function MiniGift() {
 
 function MiniStory() {
   return (
-    <div className="bg-mist rounded-xl p-3.5 border border-hairline">
+    <div className="bg-ivory rounded-xl p-3.5 border border-hairline">
       <div className="flex gap-3">
         <div className="flex flex-col items-center">
-          <div className="w-2 h-2 rounded-full bg-graphite" />
+          <div className="w-2 h-2 rounded-full bg-forest" />
           <div className="w-px flex-1 bg-hairline" />
-          <div className="w-2 h-2 rounded-full bg-ash" />
+          <div className="w-2 h-2 rounded-full bg-gold" />
           <div className="w-px flex-1 bg-hairline" />
           <div className="w-2 h-2 rounded-full bg-smoke" />
         </div>
         <div className="flex-1 space-y-3">
           {[
-            { year: '2020', title: 'Pertama Bertemu', color: 'text-graphite' },
-            { year: '2023', title: 'Lamaran', color: 'text-concrete' },
+            { year: '2020', title: 'Pertama Bertemu', color: 'text-forest' },
+            { year: '2023', title: 'Lamaran', color: 'text-gold-700' },
             { year: '2026', title: 'Hari Bahagia', color: 'text-ash' },
           ].map(s => (
             <div key={s.year}>
@@ -354,7 +353,7 @@ function MiniStory() {
 
 function MiniWishes() {
   return (
-    <div className="bg-mist rounded-xl p-3.5 border border-hairline space-y-2">
+    <div className="bg-ivory rounded-xl p-3.5 border border-hairline space-y-2">
       {[
         { name: 'Sinta Rahayu', msg: 'Semoga bahagia selalu ya! 🤍', time: '2 menit lalu' },
         { name: 'Hendra Wijaya', msg: 'Selamat menempuh hidup baru, semoga sakinah mawaddah warahmah.', time: '5 menit lalu' },
@@ -374,159 +373,134 @@ function MiniWishes() {
 
 export default function FeatureShowcase({ personalisasi }: { personalisasi?: PersonalisasiData }) {
   return (
-    <section id="fitur" className="py-24 sm:py-32 lg:py-36 bg-mist/50 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+    <SectionContainer
+      id="fitur"
+      tone="ivory"
+      eyebrow="Fitur Unggulan"
+      title={<>Semua yang kalian butuhkan,<br className="hidden sm:block" /> dalam satu undangan.</>}
+      lead="Personalisasi nama tamu, RSVP otomatis, musik pengiring, dan galeri foto — langsung dari browser."
+    >
+      {/* Bento Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="text-center mb-14 sm:mb-20"
-        >
-          <p className="text-[12px] font-semibold tracking-[0.15em] uppercase text-concrete mb-4">
-            Fitur Unggulan
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-graphite tracking-tight leading-[1.1]">
-            Semua yang kalian butuhkan,
-            <br className="hidden sm:block" />
-            dalam satu undangan.
-          </h2>
-          <p className="mt-4 text-concrete text-[15px] max-w-lg mx-auto leading-relaxed">
-            Personalisasi nama tamu, RSVP otomatis, musik pengiring, dan galeri foto — langsung dari browser.
-          </p>
-        </motion.div>
+        {/* Card 1: Personalisasi — large featured card */}
+        <CardPersonalisasi personalisasi={personalisasi} />
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Card 2: RSVP */}
+        <FeatureCard
+          icon={ClipboardCheck}
+          tag="RSVP Digital"
+          title="Konfirmasi kehadiran dalam 10 detik"
+          points={[
+            'Hingga 500 tamu per undangan',
+            'Rekap otomatis di dashboard',
+            'Export ke spreadsheet',
+          ]}
+          visual={<MiniRSVP />}
+          delay={0.08}
+        />
 
-          {/* Card 1: Personalisasi — large featured card */}
-          <CardPersonalisasi personalisasi={personalisasi} />
+        {/* Card 3: Musik */}
+        <FeatureCard
+          icon={Music2}
+          tag="Musik Pengiring"
+          title="Lagu favorit menyambut setiap tamu"
+          points={[
+            'Upload MP3 atau pilih koleksi',
+            'Play otomatis saat dibuka',
+            'Volume diatur oleh tamu',
+          ]}
+          visual={<MiniMusic />}
+          delay={0.16}
+        />
 
-          {/* Card 2: RSVP */}
-          <FeatureCard
-            icon={ClipboardCheck}
-            tag="RSVP Digital"
-            title="Konfirmasi kehadiran dalam 10 detik"
-            points={[
-              'Hingga 500 tamu per undangan',
-              'Rekap otomatis di dashboard',
-              'Export ke spreadsheet',
-            ]}
-            visual={<MiniRSVP />}
-            delay={0.08}
-          />
+        {/* Card 4: Link */}
+        <FeatureCard
+          icon={Globe}
+          tag="Link Undangan"
+          title="Alamat undangan atas nama kalian"
+          points={[
+            'Format: nama.iaundang.online',
+            'Bagikan langsung via WhatsApp',
+            'Aktif hingga 6 bulan',
+          ]}
+          visual={<MiniDomain />}
+          delay={0.1}
+        />
 
-          {/* Card 3: Musik */}
-          <FeatureCard
-            icon={Music2}
-            tag="Musik Pengiring"
-            title="Lagu favorit menyambut setiap tamu"
-            points={[
-              'Upload MP3 atau pilih koleksi',
-              'Play otomatis saat dibuka',
-              'Volume diatur oleh tamu',
-            ]}
-            visual={<MiniMusic />}
-            delay={0.16}
-          />
+        {/* Card 5: Galeri */}
+        <FeatureCard
+          icon={ImageIcon}
+          tag="Galeri Foto"
+          title="Ceritakan kisah lewat galeri foto"
+          points={[
+            'Grid rapi & lightbox fullscreen',
+            'Upload hingga 20 foto',
+            'Optimasi otomatis',
+          ]}
+          visual={<MiniGallery />}
+          delay={0.14}
+        />
 
-          {/* Card 4: Link */}
-          <FeatureCard
-            icon={Globe}
-            tag="Link Undangan"
-            title="Alamat undangan atas nama kalian"
-            points={[
-              'Format: nama.iaundang.online',
-              'Bagikan langsung via WhatsApp',
-              'Aktif hingga 6 bulan',
-            ]}
-            visual={<MiniDomain />}
-            delay={0.1}
-          />
+        {/* Card 6: Amplop Digital */}
+        <FeatureCard
+          icon={Gift}
+          tag="Amplop Digital"
+          title="Terima hadiah & angpao secara digital"
+          points={[
+            'Rekening bank & e-wallet',
+            'QR Code QRIS langsung',
+            'Konfirmasi bukti transfer',
+          ]}
+          visual={<MiniGift />}
+          delay={0.18}
+        />
 
-          {/* Card 5: Galeri */}
-          <FeatureCard
-            icon={ImageIcon}
-            tag="Galeri Foto"
-            title="Ceritakan kisah lewat galeri foto"
-            points={[
-              'Grid rapi & lightbox fullscreen',
-              'Upload hingga 20 foto',
-              'Optimasi otomatis',
-            ]}
-            visual={<MiniGallery />}
-            delay={0.14}
-          />
+        {/* Card 7: Kisah Cinta */}
+        <FeatureCard
+          icon={BookOpen}
+          tag="Kisah Cinta"
+          title="Timeline perjalanan cinta kalian"
+          points={[
+            'Ceritakan momen penting',
+            'Timeline interaktif',
+            'Foto per chapter',
+          ]}
+          visual={<MiniStory />}
+          delay={0.22}
+        />
 
-          {/* Card 6: Amplop Digital */}
-          <FeatureCard
-            icon={Gift}
-            tag="Amplop Digital"
-            title="Terima hadiah & angpao secara digital"
-            points={[
-              'Rekening bank & e-wallet',
-              'QR Code QRIS langsung',
-              'Konfirmasi bukti transfer',
-            ]}
-            visual={<MiniGift />}
-            delay={0.18}
-          />
-
-          {/* Card 7: Kisah Cinta */}
-          <FeatureCard
-            icon={BookOpen}
-            tag="Kisah Cinta"
-            title="Timeline perjalanan cinta kalian"
-            points={[
-              'Ceritakan momen penting',
-              'Timeline interaktif',
-              'Foto per chapter',
-            ]}
-            visual={<MiniStory />}
-            delay={0.22}
-          />
-
-          {/* Card 8: Ucapan & Doa */}
-          <FeatureCard
-            icon={MessageSquare}
-            tag="Ucapan & Doa"
-            title="Terima ucapan langsung dari tamu"
-            points={[
-              'Form ucapan tanpa login',
-              'Tampil real-time di undangan',
-              'Moderasi dari dashboard',
-            ]}
-            visual={<MiniWishes />}
-            delay={0.26}
-          />
-        </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-12 sm:mt-16 text-center"
-        >
-          <p className="text-sm text-ash mb-5">
-            Semua fitur tersedia mulai paket Starter.
-          </p>
-          <Link href="/templates">
-            <motion.span
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="group inline-flex items-center gap-2 bg-graphite hover:bg-carbon text-chalk font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors"
-            >
-              Lihat semua template
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-            </motion.span>
-          </Link>
-        </motion.div>
-
+        {/* Card 8: Ucapan & Doa */}
+        <FeatureCard
+          icon={MessageSquare}
+          tag="Ucapan & Doa"
+          title="Terima ucapan langsung dari tamu"
+          points={[
+            'Form ucapan tanpa login',
+            'Tampil real-time di undangan',
+            'Moderasi dari dashboard',
+          ]}
+          visual={<MiniWishes />}
+          delay={0.26}
+        />
       </div>
-    </section>
+
+      {/* Bottom CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.15 }}
+        className="mt-12 sm:mt-16 text-center"
+      >
+        <p className="text-body-sm text-concrete mb-5">
+          Semua fitur tersedia mulai paket Starter.
+        </p>
+        <Button href="/templates" size="lg">
+          Lihat semua template
+          <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+        </Button>
+      </motion.div>
+    </SectionContainer>
   )
 }

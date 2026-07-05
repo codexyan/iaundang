@@ -1,14 +1,17 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Play, ArrowRight, Sparkles, Crown, Gem } from 'lucide-react'
 import type { TemplateRecord } from '@/lib/types'
+import { SectionContainer } from '@/components/marketing/SectionContainer'
+import { Button } from '@/components/marketing/Button'
+import { Badge } from '@/components/marketing/Badge'
+import { EASE, VIEWPORT_ONCE } from '@/lib/motion'
 
-const EASE = [0.22, 1, 0.36, 1] as const
-
+// Teks miniatur di dalam mockup HP = ilustrasi dekoratif; arbitrary < 12px
+// diizinkan khusus di dalam mockup.
 function PhoneMockup({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <div
@@ -39,11 +42,12 @@ interface TemplateCard {
   requiredPackage: string
 }
 
-const TIER_BADGE: Record<string, { label: string; icon: typeof Sparkles }> = {
-  all: { label: 'Starter', icon: Sparkles },
-  starter: { label: 'Starter', icon: Sparkles },
-  popular: { label: 'Popular', icon: Crown },
-  eksklusif: { label: 'Eksklusif', icon: Gem },
+type BadgeVariant = 'neutral' | 'forest' | 'gold'
+const TIER_BADGE: Record<string, { label: string; icon: typeof Sparkles; variant: BadgeVariant }> = {
+  all: { label: 'Starter', icon: Sparkles, variant: 'neutral' },
+  starter: { label: 'Starter', icon: Sparkles, variant: 'neutral' },
+  popular: { label: 'Popular', icon: Crown, variant: 'forest' },
+  eksklusif: { label: 'Eksklusif', icon: Gem, variant: 'gold' },
 }
 
 // Solid-color blur placeholder so foto external (Unsplash) tidak flash kosong saat load
@@ -98,133 +102,104 @@ export default function TemplatePreview({ templates }: { showcase?: ShowcaseData
   const activeTemplates = templates?.filter(t => t.status === 'active') ?? []
   const cards = activeTemplates.length > 0 ? activeTemplates.map(templateToCard) : FALLBACK_CARDS
 
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
-
   return (
-    <section id="templates" className="py-24 sm:py-32 lg:py-36 overflow-hidden relative bg-chalk">
-      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8">
+    <SectionContainer
+      id="templates"
+      tone="ivory"
+      eyebrow="Koleksi Template"
+      title="Pilih desain, preview langsung"
+      lead="Setiap template sudah termasuk opening animasi, musik, dan semua section undangan."
+    >
+      {/* Template Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {cards.map((card, i) => {
+          const badge = TIER_BADGE[card.requiredPackage] ?? TIER_BADGE.all
+          const BadgeIcon = badge.icon
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="text-center mb-14 sm:mb-20"
-        >
-          <p className="text-[12px] font-semibold tracking-[0.15em] uppercase text-concrete mb-4">
-            Koleksi Template
-          </p>
-          <h2 className="text-display-lg text-graphite text-balance">
-            Pilih desain, preview langsung
-          </h2>
-          <p className="mt-4 text-concrete text-[15px] leading-relaxed max-w-lg mx-auto">
-            Setiap template sudah termasuk opening animasi, musik, dan semua section undangan.
-          </p>
-        </motion.div>
+          return (
+            <motion.div
+              key={card.id}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VIEWPORT_ONCE}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: EASE }}
+              className="group"
+            >
+              <div className="rounded-card border border-hairline bg-chalk shadow-card p-4 sm:p-5 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-card-hover group-hover:border-ash/40">
 
-        {/* Template Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {cards.map((card, i) => {
-            const badge = TIER_BADGE[card.requiredPackage] ?? TIER_BADGE.all
-            const BadgeIcon = badge.icon
-            const isHovered = hoveredIdx === i
-
-            return (
-              <motion.div
-                key={card.id}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.6, delay: i * 0.1, ease: EASE }}
-                onMouseEnter={() => setHoveredIdx(i)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                className="group"
-              >
-                <div className="rounded-2xl border border-hairline bg-mist/50 p-4 sm:p-5 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.02] group-hover:border-ash/40 group-hover:shadow-[0_18px_40px_-16px_rgba(10,10,10,0.18),0_8px_18px_-10px_rgba(10,10,10,0.12)]">
-
-                  {/* Phone Mockup */}
-                  <div className="flex justify-center mb-5">
-                    <motion.div
-                      animate={{ y: isHovered ? -6 : 0 }}
-                      transition={{ duration: 0.35, ease: EASE }}
-                      className="relative w-[160px] sm:w-[180px]"
-                    >
-                      <PhoneMockup>
-                        <div className="absolute inset-0" style={{ backgroundColor: card.primary }}>
-                          {card.coverPhoto && (
-                            <Image src={card.coverPhoto} alt={card.name} fill className="object-cover" sizes="200px"
-                              placeholder="blur" blurDataURL={blurFor(card.primary)} style={{ opacity: 0.6 }} />
-                          )}
-                          <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 18%, ${card.primary}99 56%, ${card.primary} 100%)` }} />
-                          <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-10 px-4">
-                            <p className="text-[7px] tracking-[0.35em] uppercase mb-2" style={{ color: `${card.accent}bb` }}>
-                              The Wedding of
-                            </p>
-                            <p className="text-[22px] font-bold leading-[0.85]" style={{ color: card.textColor }}>
-                              Ikhwal
-                            </p>
-                            <p className="text-sm my-0.5" style={{ color: card.accent, fontStyle: 'italic' }}>&amp;</p>
-                            <p className="text-[22px] font-bold leading-[0.85]" style={{ color: card.textColor }}>
-                              Fani
-                            </p>
-                            <div className="mt-3 px-4 py-1.5 rounded-full" style={{ border: `1px solid ${card.accent}30`, fontSize: 7, color: `${card.accent}aa`, letterSpacing: '0.15em' }}>
-                              BUKA UNDANGAN
-                            </div>
+                {/* Phone Mockup */}
+                <div className="flex justify-center mb-5">
+                  <div className="relative w-[170px] sm:w-[190px] transition-transform duration-300 ease-out group-hover:-translate-y-1.5">
+                    <PhoneMockup>
+                      <div className="absolute inset-0" style={{ backgroundColor: card.primary }}>
+                        {card.coverPhoto && (
+                          <Image src={card.coverPhoto} alt={card.name} fill className="object-cover" sizes="200px"
+                            placeholder="blur" blurDataURL={blurFor(card.primary)} style={{ opacity: 0.6 }} />
+                        )}
+                        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 18%, ${card.primary}99 56%, ${card.primary} 100%)` }} />
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-10 px-4">
+                          <p className="text-[7px] tracking-[0.35em] uppercase mb-2" style={{ color: `${card.accent}bb` }}>
+                            The Wedding of
+                          </p>
+                          <p className="font-display text-[24px] leading-[0.95]" style={{ color: card.textColor }}>
+                            Ikhwal
+                          </p>
+                          <p className="font-display text-sm my-0.5" style={{ color: card.accent }}>&amp;</p>
+                          <p className="font-display text-[24px] leading-[0.95]" style={{ color: card.textColor }}>
+                            Fani
+                          </p>
+                          <div className="mt-3 px-4 py-1.5 rounded-full" style={{ border: `1px solid ${card.accent}30`, fontSize: 7, color: `${card.accent}aa`, letterSpacing: '0.15em' }}>
+                            BUKA UNDANGAN
                           </div>
                         </div>
-                      </PhoneMockup>
-                    </motion.div>
-                  </div>
-
-                  {/* Info */}
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide text-graphite bg-chalk border border-hairline">
-                        <BadgeIcon className="w-3 h-3" />
-                        {badge.label}
-                      </span>
-                      <span className="text-[10px] text-ash capitalize">{card.category}</span>
-                    </div>
-                    <h3 className="text-base font-bold text-graphite mb-3">{card.name}</h3>
-
-                    <Link href={card.href}>
-                      <motion.span whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-graphite text-chalk text-[13px] font-semibold transition-colors hover:bg-carbon">
-                        <span className="w-5 h-5 rounded-full bg-chalk/15 flex items-center justify-center">
-                          <Play size={9} className="fill-chalk text-chalk ml-0.5" />
-                        </span>
-                        Preview
-                      </motion.span>
-                    </Link>
+                      </div>
+                    </PhoneMockup>
                   </div>
                 </div>
-              </motion.div>
-            )
-          })}
-        </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-12 sm:mt-14"
-        >
-          <Link href="/templates">
-            <motion.span whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[14px] font-medium border border-hairline text-concrete hover:text-graphite hover:border-ash/50 bg-chalk transition-all">
-              Lihat semua template
-              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-            </motion.span>
-          </Link>
-          <p className="text-[12px] text-ash mt-4">
-            {cards.length} template tersedia &middot; Koleksi terus bertambah
-          </p>
-        </motion.div>
+                {/* Info */}
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-2.5">
+                    <Badge variant={badge.variant}>
+                      <BadgeIcon className="w-3 h-3" />
+                      {badge.label}
+                    </Badge>
+                    <span className="text-body-xs text-concrete capitalize">{card.category}</span>
+                  </div>
+                  <h3 className="font-display text-h3 text-graphite mb-4">{card.name}</h3>
 
+                  <Button href={card.href} variant="secondary" className="w-full">
+                    <span className="w-5 h-5 rounded-full bg-forest-50 flex items-center justify-center">
+                      <Play size={9} className="fill-forest text-forest ml-0.5" />
+                    </span>
+                    Preview
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )
+        })}
       </div>
-    </section>
+
+      {/* Bottom CTA */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="text-center mt-12 sm:mt-14"
+      >
+        <Link
+          href="/templates"
+          className="group inline-flex items-center gap-2 text-button-base text-concrete hover:text-forest-deep pb-0.5 border-b border-hairline hover:border-gold-dark transition-colors"
+        >
+          Lihat semua template
+          <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+        <p className="text-body-xs text-concrete mt-4">
+          {cards.length} template tersedia &middot; Koleksi terus bertambah
+        </p>
+      </motion.div>
+    </SectionContainer>
   )
 }
