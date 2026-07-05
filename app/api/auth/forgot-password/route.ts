@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/prisma'
+import { sendNotification } from '@/lib/notifications'
+import { SITE_URL } from '@/lib/config'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,9 +37,12 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // TODO: Send email with reset link to user
-    // const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`
-    // await sendEmail(user.email, 'Reset Password', resetLink)
+    const resetLink = `${SITE_URL}/reset-password?token=${token}`
+    await sendNotification({
+      type: 'password_reset',
+      recipientEmail: user.email,
+      data: { resetLink },
+    })
 
     return NextResponse.json({
       message: 'Jika email terdaftar, link reset akan dikirim',
