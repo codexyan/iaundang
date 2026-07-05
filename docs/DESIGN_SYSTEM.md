@@ -1,6 +1,9 @@
 # iaundang — Design System (Proposal PART 2)
 
-**Status:** PROPOSAL — menunggu approval arah visual sebelum eksekusi PART 3
+**Status:** DISETUJUI — **Arah A (Elegant Editorial)**, 5 Juli 2026. Gate font Stage A lolos:
+Fraunces (latin, weight 500/600) menambah 0 kB JS; preload woff2 35,7 kB + 2 file lanjutan
+(32,9 + 11,3 kB) dimuat saat weight terpakai. Arah masih bisa diganti ke B/C selama theming
+belum diterapkan penuh ke section (lihat catatan brief v2).
 **Tanggal:** 5 Juli 2026
 **Dasar:** `docs/UI_AUDIT_REPORT_2026-07-05.md` (baseline & inventaris gaya saat ini)
 **Cakupan:** landing page + halaman turunan publik (`/templates`, `/order`, auth, `/blog`, legal).

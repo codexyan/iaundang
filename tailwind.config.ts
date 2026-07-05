@@ -13,18 +13,8 @@ const config: Config = {
         mono: ['var(--font-geist-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       colors: {
-        warm: {
-          50: '#FAF9F6',
-          100: '#F5F2ED',
-          200: '#EDE8E2',
-          300: '#DDD8D0',
-          400: '#C9C2B8',
-          500: '#A8A29E',
-          600: '#78716C',
-          700: '#44403C',
-          800: '#292524',
-          900: '#1C1917',
-        },
+        // Canvas Arah A (Elegant Editorial) — latar ivory hangat, kartu chalk
+        ivory: '#faf9f6',
         graphite: '#0a0a0a',
         'pure-black': '#000000',
         carbon: '#171717',
@@ -78,29 +68,21 @@ const config: Config = {
         'gold-gradient': 'linear-gradient(135deg, #d4af37 0%, #b8973a 100%)',
       },
       borderRadius: {
-        'nav': '10px',
-        'card': '14px',
+        'card': '16px',
         'pill': '9999px',
-        'badge': '26px',
         'input': '10px',
         'button': '10px',
       },
       spacing: {
         '18': '4.5rem',
-        '83': '83px',
-      },
-      maxWidth: {
-        'page': '1200px',
-      },
-      fontSize: {
-        'caption': ['12px', { lineHeight: '1.5' }],
-        'body': ['14px', { lineHeight: '1.43' }],
-        'subheading': ['18px', { lineHeight: '1.5', letterSpacing: '-0.45px' }],
-        'display': ['48px', { lineHeight: '1.1', letterSpacing: '-2.4px' }],
       },
       boxShadow: {
         'subtle': '0px 0px 0px 2px #ffffff',
         'subtle-2': '0px 0px 0px 1px rgba(10, 10, 10, 0.1)',
+        // Skala shadow permukaan publik (docs/DESIGN_SYSTEM.md §3)
+        'card': '0 1px 3px rgba(10,10,10,0.04), 0 12px 32px -16px rgba(10,10,10,0.10)',
+        'card-hover': '0 18px 40px -16px rgba(10,10,10,0.18), 0 8px 18px -10px rgba(10,10,10,0.12)',
+        'float': '0 25px 60px -12px rgba(0,0,0,0.15)',
       },
       animation: {
         'fade-in': 'fadeIn 0.8s ease-in-out',

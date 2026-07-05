@@ -6,8 +6,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion'
 import { Menu, X, LayoutDashboard, PenLine, Megaphone, Shield, ArrowRight } from 'lucide-react'
 import Logo from './Logo'
-
-const EASE = [0.22, 1, 0.36, 1] as const
+import { Button } from '@/components/marketing/Button'
+import { EASE } from '@/lib/motion'
 
 const NAV_LINKS = [
   { href: '/#fitur', label: 'Fitur' },
@@ -48,20 +48,20 @@ function NavLink({ href, label, delay = 0 }: { href: string; label: string; dela
     >
       <Link
         href={href}
-        className="group relative text-[13px] font-medium px-1 py-1.5 transition-colors duration-200"
+        className="group relative text-label-lg px-1 py-1.5 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 focus-visible:ring-offset-2 rounded-sm"
       >
         <span className={isActive ? 'text-forest-deep' : 'text-concrete group-hover:text-forest-deep'}>
           {label}
         </span>
         <motion.span
-          className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-forest origin-left rounded-full"
+          className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-gold-dark origin-left rounded-full"
           initial={false}
           animate={{ scaleX: isActive ? 1 : 0 }}
           transition={{ duration: 0.3, ease: EASE }}
           style={{ transformOrigin: 'left' }}
         />
         {!isActive && (
-          <span className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-forest/30 rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+          <span className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-gold-dark/40 rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]" />
         )}
       </Link>
     </motion.div>
@@ -121,10 +121,10 @@ export default function Navbar() {
         <div
           className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             scrolled
-              ? 'bg-chalk/80 backdrop-blur-xl border-b border-forest-100/60'
+              ? 'bg-ivory/85 backdrop-blur-xl border-b border-hairline'
               : isLanding
                 ? 'bg-transparent'
-                : 'bg-chalk border-b border-forest-100/40'
+                : 'bg-ivory border-b border-hairline/70'
           }`}
         >
           <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
@@ -159,7 +159,7 @@ export default function Navbar() {
                   transition={{ duration: 0.5, delay: 0.3, ease: EASE }}
                   className="flex items-center gap-2"
                 >
-                  <span className="hidden lg:block text-[12px] text-ash truncate max-w-[120px]">
+                  <span className="hidden lg:block text-body-xs text-concrete truncate max-w-[120px]">
                     {user.email}
                   </span>
                   <div className="hidden md:flex items-center gap-1">
@@ -167,7 +167,7 @@ export default function Navbar() {
                       <Link
                         key={rl.href}
                         href={rl.href}
-                        className={`text-[13px] font-medium px-2.5 py-1.5 rounded-lg transition-colors duration-200 flex items-center gap-1.5 ${
+                        className={`text-label-lg px-2.5 py-1.5 rounded-lg transition-colors duration-200 flex items-center gap-1.5 ${
                           pathname === rl.href
                             ? 'text-forest-deep bg-forest-50'
                             : 'text-concrete hover:text-forest-deep hover:bg-forest-50'
@@ -180,7 +180,7 @@ export default function Navbar() {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="hidden md:inline-flex text-[13px] text-ash hover:text-forest-deep px-2.5 py-1.5 rounded-lg hover:bg-forest-50 transition-colors duration-200"
+                    className="hidden md:inline-flex text-label-lg text-concrete hover:text-forest-deep px-2.5 py-1.5 rounded-lg hover:bg-forest-50 transition-colors duration-200"
                   >
                     Keluar
                   </button>
@@ -194,20 +194,14 @@ export default function Navbar() {
                 >
                   <Link
                     href="/login"
-                    className="hidden sm:inline-flex text-[13px] font-medium text-concrete hover:text-forest-deep px-3 py-1.5 rounded-lg transition-colors duration-200"
+                    className="hidden sm:inline-flex text-label-lg text-concrete hover:text-forest-deep px-3 py-1.5 rounded-lg transition-colors duration-200"
                   >
                     Masuk
                   </Link>
-                  <Link href="/templates">
-                    <motion.span
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="group flex items-center gap-1.5 text-[13px] font-semibold text-chalk bg-forest px-4 py-2 rounded-button transition-colors hover:bg-forest-deep"
-                    >
-                      Buat Undangan
-                      <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" />
-                    </motion.span>
-                  </Link>
+                  <Button href="/templates" size="sm">
+                    Buat Undangan
+                    <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                  </Button>
                 </motion.div>
               )}
 
@@ -256,7 +250,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25, ease: EASE }}
-              className="fixed inset-0 z-40 bg-forest-deep/20 backdrop-blur-[2px] md:hidden"
+              className="fixed inset-0 z-40 bg-forest-deep/25 backdrop-blur-[2px] md:hidden"
               onClick={() => setMobileOpen(false)}
             />
 
@@ -268,7 +262,7 @@ export default function Navbar() {
               transition={{ duration: 0.3, ease: EASE }}
               className="fixed inset-x-4 top-[76px] z-50 md:hidden"
             >
-              <div className="bg-chalk/95 backdrop-blur-xl rounded-2xl border border-forest-100/60 overflow-hidden">
+              <div className="bg-ivory/95 backdrop-blur-xl rounded-card border border-hairline overflow-hidden shadow-card">
                 <div className="p-3 space-y-0.5">
                   {NAV_LINKS.map((link, i) => {
                     const isAnchor = link.href.startsWith('/#')
@@ -283,7 +277,7 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center text-[14px] font-medium px-4 py-3 rounded-xl transition-colors duration-200 ${
+                          className={`flex items-center text-label-lg px-4 py-3 rounded-xl transition-colors duration-200 ${
                             isActive
                               ? 'text-forest-deep bg-forest-50'
                               : 'text-concrete hover:text-forest-deep hover:bg-forest-50'
@@ -304,13 +298,13 @@ export default function Navbar() {
                 >
                   {user ? (
                     <>
-                      <p className="px-4 py-1.5 text-[11px] text-ash truncate">{user.email}</p>
+                      <p className="px-4 py-1.5 text-body-xs text-concrete truncate">{user.email}</p>
                       {roleLinks.map((rl) => (
                         <Link
                           key={rl.href}
                           href={rl.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-2.5 text-[14px] font-medium px-4 py-3 rounded-xl transition-colors duration-200 ${
+                          className={`flex items-center gap-2.5 text-label-lg px-4 py-3 rounded-xl transition-colors duration-200 ${
                             pathname === rl.href
                               ? 'text-forest-deep bg-forest-50'
                               : 'text-concrete hover:text-forest-deep hover:bg-forest-50'
@@ -322,7 +316,7 @@ export default function Navbar() {
                       ))}
                       <button
                         onClick={() => { setMobileOpen(false); handleLogout() }}
-                        className="w-full flex items-center gap-2.5 text-[14px] font-medium text-concrete hover:text-forest-deep hover:bg-forest-50 px-4 py-3 rounded-xl transition-colors duration-200"
+                        className="w-full flex items-center gap-2.5 text-label-lg text-concrete hover:text-forest-deep hover:bg-forest-50 px-4 py-3 rounded-xl transition-colors duration-200"
                       >
                         Keluar
                       </button>
@@ -332,18 +326,14 @@ export default function Navbar() {
                       <Link
                         href="/login"
                         onClick={() => setMobileOpen(false)}
-                        className="text-[14px] font-medium text-concrete text-center px-4 py-2.5 rounded-xl hover:bg-forest-50 transition-colors duration-200"
+                        className="text-label-lg text-concrete text-center px-4 py-2.5 rounded-xl hover:bg-forest-50 transition-colors duration-200"
                       >
                         Masuk
                       </Link>
-                      <Link
-                        href="/templates"
-                        onClick={() => setMobileOpen(false)}
-                        className="flex items-center justify-center gap-1.5 text-[14px] font-semibold text-chalk bg-forest px-4 py-2.5 rounded-button transition-colors hover:bg-forest-deep"
-                      >
+                      <Button href="/templates" onClick={() => setMobileOpen(false)} className="w-full">
                         Buat Undangan
                         <ArrowRight size={14} />
-                      </Link>
+                      </Button>
                     </div>
                   )}
                 </motion.div>

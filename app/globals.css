@@ -29,7 +29,6 @@
     --surface-muted: #f2f2f2;
     --surface-inverted: #171717;
 
-    --page-max-width: 1200px;
     --section-gap: 48px;
     --card-padding: 16px;
     --element-gap: 8px;
@@ -69,15 +68,15 @@
   }
 
   .text-display-2xl {
-    font-size: clamp(2.5rem, 7vw, 48px);
-    line-height: 1.1;
+    font-size: clamp(2.5rem, 5.5vw, 56px);
+    line-height: 1.08;
     letter-spacing: -0.05em;
     font-weight: 600;
   }
 
   .text-display-xl {
-    font-size: clamp(2rem, 6vw, 48px);
-    line-height: 1.1;
+    font-size: clamp(2rem, 5vw, 56px);
+    line-height: 1.08;
     letter-spacing: -0.05em;
     font-weight: 600;
   }
@@ -249,6 +248,15 @@
   .text-center-optical {
     text-align: center;
     text-wrap: balance;
+  }
+
+  /* Display serif Arah A — dideklarasikan SETELAH skala text-* agar
+     letter-spacing serif menang atas tracking sans yang lebih rapat.
+     Weight 500/600 saja yang dimuat (app/layout.tsx). */
+  .font-display {
+    font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+    letter-spacing: -0.015em;
+    font-weight: 500;
   }
 
   @media (max-width: 640px) {

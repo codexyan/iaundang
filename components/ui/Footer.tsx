@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Instagram, Mail, MessageCircle } from 'lucide-react'
+import { Button } from '@/components/marketing/Button'
 
 const productLinks = [
   { href: '/templates', label: 'Template' },
@@ -26,13 +27,13 @@ const socials = [
 function FooterLinkGroup({ title, links }: { title: string; links: { href: string; label: string }[] }) {
   return (
     <div>
-      <h4 className="text-forest-deep font-semibold text-[13px] mb-4">{title}</h4>
+      <h4 className="text-eyebrow text-graphite mb-4">{title}</h4>
       <ul className="space-y-2.5">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-[13px] text-ash hover:text-graphite transition-colors duration-200"
+              className="text-body-sm text-concrete hover:text-forest-deep transition-colors duration-200"
             >
               {link.label}
             </Link>
@@ -71,7 +72,7 @@ export default function Footer() {
       ]
 
   return (
-    <footer className="relative bg-forest-50 border-t border-forest-100">
+    <footer className="relative bg-ivory border-t border-hairline">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8">
@@ -86,7 +87,7 @@ export default function Footer() {
                 priority
               />
             </Link>
-            <p className="text-ash text-[13px] leading-relaxed mb-5 max-w-[280px]">
+            <p className="text-body-sm text-concrete leading-relaxed mb-5 max-w-[280px]">
               Platform undangan digital premium. Personal untuk setiap tamu, elegan di setiap layar.
             </p>
             <div className="flex items-center gap-2">
@@ -97,7 +98,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-chalk border border-forest-100 flex items-center justify-center text-ash hover:text-forest hover:border-forest-light/40 transition-all duration-200"
+                  className="w-9 h-9 rounded-xl bg-chalk border border-hairline flex items-center justify-center text-concrete hover:text-forest hover:border-forest-light/40 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 focus-visible:ring-offset-2"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -112,12 +113,12 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="text-forest-deep font-semibold text-[13px] mb-4">Kontak</h4>
+            <h4 className="text-eyebrow text-graphite mb-4">Kontak</h4>
             <ul className="space-y-2.5 mb-5">
               <li>
                 <a
                   href="mailto:halo@iaundang.online"
-                  className="text-[13px] text-ash hover:text-graphite transition-colors duration-200 flex items-center gap-2"
+                  className="text-body-sm text-concrete hover:text-forest-deep transition-colors duration-200 flex items-center gap-2"
                 >
                   <Mail className="w-3.5 h-3.5 shrink-0" />
                   halo@iaundang.online
@@ -126,32 +127,29 @@ export default function Footer() {
               <li>
                 <a
                   href="https://wa.me/628123456789"
-                  className="text-[13px] text-ash hover:text-graphite transition-colors duration-200 flex items-center gap-2"
+                  className="text-body-sm text-concrete hover:text-forest-deep transition-colors duration-200 flex items-center gap-2"
                 >
                   <MessageCircle className="w-3.5 h-3.5 shrink-0" />
                   WhatsApp
                 </a>
               </li>
             </ul>
-            <Link
-              href="/templates"
-              className="inline-flex items-center justify-center px-4 py-2 bg-forest text-chalk text-[13px] font-semibold rounded-button hover:bg-forest-deep transition-colors"
-            >
+            <Button href="/templates" size="sm">
               Buat Undangan
-            </Link>
+            </Button>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-forest-100">
+        <div className="mt-12 pt-6 border-t border-hairline">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-ash text-[12px]">
-              &copy; {currentYear} <span className="text-concrete font-medium">iaundang</span>. Semua hak dilindungi.
+            <p className="text-body-xs text-concrete">
+              &copy; {currentYear} <span className="text-graphite font-medium">iaundang</span>. Semua hak dilindungi.
             </p>
-            <div className="flex items-center gap-5 text-[12px]">
-              <Link href="/privacy" className="text-ash hover:text-graphite transition-colors">
+            <div className="flex items-center gap-5">
+              <Link href="/privacy" className="text-body-xs text-concrete hover:text-graphite transition-colors">
                 Privasi
               </Link>
-              <Link href="/terms" className="text-ash hover:text-graphite transition-colors">
+              <Link href="/terms" className="text-body-xs text-concrete hover:text-graphite transition-colors">
                 Syarat &amp; Ketentuan
               </Link>
             </div>

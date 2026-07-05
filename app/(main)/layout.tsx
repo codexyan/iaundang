@@ -9,7 +9,7 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-ivory">
       <Suspense fallback={null}><ReferralCapture /></Suspense>
       <Navbar />
       <main className="flex-1">{children}</main>
