@@ -205,7 +205,7 @@ function LoginContent() {
             </div>
 
             {/* Register CTA - Compact */}
-            <div className="text-center space-y-3">
+            <div className="text-center">
               <p className="text-sm text-stone-600">
                 Belum punya akun?{' '}
                 <Link
@@ -215,18 +215,6 @@ function LoginContent() {
                   Buat undangan
                 </Link>
               </p>
-
-              {/* Social proof - Mini */}
-              <div className="flex items-center justify-center gap-2 text-xs text-stone-500">
-                <div className="flex -space-x-1.5">
-                  {['🤵🏻', '👰🏻', '🤵🏽'].map((e, i) => (
-                    <div key={i} className="w-5 h-5 rounded-full bg-stone-100 border border-white flex items-center justify-center text-[10px]">
-                      {e}
-                    </div>
-                  ))}
-                </div>
-                <span>500+ pasangan</span>
-              </div>
             </div>
 
           </div>
