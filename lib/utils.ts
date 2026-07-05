@@ -1,5 +1,25 @@
 import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
+
+// tailwind-merge tidak mengenal skala tipografi kustom di globals.css dan
+// mengklasifikasikan `text-<apapun>` yang tak dikenal sebagai text-COLOR —
+// akibatnya cn('text-chalk', 'text-button-sm') membuang text-chalk.
+// Daftarkan skala kustom sebagai grup font-size agar tidak bentrok dengan warna.
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [
+        'text-display-2xl', 'text-display-xl', 'text-display-lg', 'text-display-md',
+        'text-h1', 'text-h2', 'text-h3', 'text-h4', 'text-h5',
+        'text-body-xl', 'text-body-lg', 'text-body-base', 'text-body-sm', 'text-body-xs',
+        'text-label-lg', 'text-label-base', 'text-label-sm',
+        'text-eyebrow', 'text-eyebrow-lg',
+        'text-button-lg', 'text-button-base', 'text-button-sm',
+        'text-caption', 'text-caption-sm',
+      ],
+    },
+  },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
