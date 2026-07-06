@@ -16,6 +16,7 @@ const twMerge = extendTailwindMerge({
         'text-eyebrow', 'text-eyebrow-lg',
         'text-button-lg', 'text-button-base', 'text-button-sm',
         'text-caption', 'text-caption-sm',
+        'text-ui-base', 'text-ui-sm', 'text-ui-xs', 'text-ui-2xs', 'text-ui-eyebrow',
       ],
     },
   },

@@ -22,44 +22,26 @@ export default function FormField({
 }: FormFieldProps) {
   return (
     <div className="space-y-1.5">
-      <label
-        htmlFor={htmlFor}
-        style={{ display: 'flex', alignItems: 'center', gap: 6 }}
-      >
-        <span style={{
-          fontSize: 10,
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          color: '#78716C',
-        }}>
-          {label}
-        </span>
+      <label htmlFor={htmlFor} className="flex items-center gap-1.5">
+        <span className="text-ui-eyebrow text-concrete">{label}</span>
         {required && (
-          <span
-            style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#C9A961', flexShrink: 0 }}
-            title="Wajib diisi"
-          />
+          <span className="w-[5px] h-[5px] rounded-full bg-gold-dark shrink-0" title="Wajib diisi" />
         )}
       </label>
 
       {children}
 
       {hint && !error && (
-        <p style={{ fontSize: 11, color: '#A8A29E', lineHeight: 1.5 }}>
-          {hint}
-        </p>
+        <p className="text-ui-xs text-concrete">{hint}</p>
       )}
 
       {error && (
-        <p style={{ fontSize: 11, color: '#DC2626', fontWeight: 500 }}>
-          {error}
-        </p>
+        <p className="text-ui-xs font-medium text-red-600">{error}</p>
       )}
     </div>
   )
 }
 
-// Base class - rounded-xl, warm bg (colors applied inline via StudioInput)
-export const inputClass = 'w-full px-3.5 py-2.5 rounded-xl text-sm transition-all duration-200 outline-none'
+// Base layout untuk field editor — warna/border diterapkan via StudioInput (fieldClass)
+export const inputClass = 'w-full px-3.5 py-2.5 rounded-input text-ui-base transition-colors duration-200'
 export const textareaClass = inputClass + ' resize-none'
