@@ -86,13 +86,13 @@ export default function OpeningForm({
     >
       {/* Opening Style Selector */}
       <div className="space-y-1">
-        <p className="text-sm font-semibold text-stone-700">Gaya Pembuka</p>
-        <p className="text-xs text-stone-400">Pilih animasi pembuka yang tampil pertama kali saat tamu membuka undangan</p>
+        <p className="text-sm font-semibold text-graphite">Gaya Pembuka</p>
+        <p className="text-xs text-concrete">Pilih animasi pembuka yang tampil pertama kali saat tamu membuka undangan</p>
         {CATEGORIES.map((cat) => {
           const styles = OPENING_STYLES.filter((s) => s.category === cat.id)
           return (
             <div key={cat.id}>
-              <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-stone-400 mb-2 mt-4">
+              <p className="text-ui-2xs font-bold tracking-[0.1em] uppercase text-concrete mb-2 mt-4">
                 {cat.label}
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -106,7 +106,7 @@ export default function OpeningForm({
                       className={`relative p-3 rounded-xl text-left transition-all ${
                         isSelected
                           ? 'ring-2 ring-forest-500 ring-offset-1 bg-forest-50/40'
-                          : 'border border-stone-200 hover:border-stone-300 hover:bg-stone-50'
+                          : 'border border-hairline hover:border-ash/50 hover:bg-mist'
                       }`}
                     >
                       {/* Mini CSS preview */}
@@ -115,10 +115,10 @@ export default function OpeningForm({
                           <div className="w-8 h-px" style={{ background: 'rgba(255,255,255,0.3)' }} />
                         </div>
                       </div>
-                      <p className={`text-[11px] font-semibold leading-tight ${isSelected ? 'text-forest-700' : 'text-stone-700'}`}>
+                      <p className={`text-ui-xs font-semibold leading-tight ${isSelected ? 'text-forest-700' : 'text-graphite'}`}>
                         {style.name}
                       </p>
-                      <p className="text-[9px] text-stone-400 mt-0.5 leading-tight">{style.desc}</p>
+                      <p className="text-ui-2xs text-concrete mt-0.5 leading-tight">{style.desc}</p>
                       {isSelected && (
                         <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-forest-500 flex items-center justify-center">
                           <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
@@ -161,7 +161,7 @@ export default function OpeningForm({
 
       {/* Quick Select */}
       <div className="space-y-2">
-        <p className="text-sm font-semibold text-stone-700">Pilih Cepat:</p>
+        <p className="text-sm font-semibold text-graphite">Pilih Cepat:</p>
         <div className="grid grid-cols-1 gap-2">
           <button
             type="button"
@@ -169,10 +169,10 @@ export default function OpeningForm({
               onOpeningGreetingChange('Assalamualaikum Warahmatullahi Wabarakatuh')
               onOpeningSubtitleChange('Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.')
             }}
-            className="p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
+            className="p-3 border border-hairline rounded-lg hover:border-gold-dark/50 hover:bg-forest-50 transition-all text-left"
           >
-            <p className="text-xs font-semibold text-stone-700">☪️ Muslim (Formal)</p>
-            <p className="text-xs text-stone-600 mt-1">Assalamualaikum Warahmatullahi Wabarakatuh</p>
+            <p className="text-xs font-semibold text-graphite">☪️ Muslim (Formal)</p>
+            <p className="text-xs text-concrete mt-1">Assalamualaikum Warahmatullahi Wabarakatuh</p>
           </button>
           <button
             type="button"
@@ -180,10 +180,10 @@ export default function OpeningForm({
               onOpeningGreetingChange('Dengan Memohon Rahmat dan Ridho Tuhan Yang Maha Esa')
               onOpeningSubtitleChange('Kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada acara pernikahan kami.')
             }}
-            className="p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
+            className="p-3 border border-hairline rounded-lg hover:border-gold-dark/50 hover:bg-forest-50 transition-all text-left"
           >
-            <p className="text-xs font-semibold text-stone-700">🙏 Umum (Formal)</p>
-            <p className="text-xs text-stone-600 mt-1">Dengan Memohon Rahmat dan Ridho Tuhan Yang Maha Esa</p>
+            <p className="text-xs font-semibold text-graphite">🙏 Umum (Formal)</p>
+            <p className="text-xs text-concrete mt-1">Dengan Memohon Rahmat dan Ridho Tuhan Yang Maha Esa</p>
           </button>
           <button
             type="button"
@@ -191,18 +191,18 @@ export default function OpeningForm({
               onOpeningGreetingChange('We Are Getting Married!')
               onOpeningSubtitleChange('You are invited to celebrate our special day. Join us as we begin our journey together.')
             }}
-            className="p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
+            className="p-3 border border-hairline rounded-lg hover:border-gold-dark/50 hover:bg-forest-50 transition-all text-left"
           >
-            <p className="text-xs font-semibold text-stone-700">💑 Modern (Casual)</p>
-            <p className="text-xs text-stone-600 mt-1">We Are Getting Married!</p>
+            <p className="text-xs font-semibold text-graphite">💑 Modern (Casual)</p>
+            <p className="text-xs text-concrete mt-1">We Are Getting Married!</p>
           </button>
         </div>
       </div>
 
       {/* Nama Mempelai di Opening */}
       <div className="space-y-3">
-        <p className="text-sm font-semibold text-stone-700">Nama di Pembuka</p>
-        <p className="text-xs text-stone-400">
+        <p className="text-sm font-semibold text-graphite">Nama di Pembuka</p>
+        <p className="text-xs text-concrete">
           Bisa berbeda dari nama di section lain (misal: panggilan, singkatan)
         </p>
         <FormField
@@ -243,36 +243,36 @@ export default function OpeningForm({
           onChange={(e) => onNameGapChange(Number(e.target.value))}
           className="w-full accent-forest-500"
         />
-        <div className="flex justify-between text-[10px] text-stone-400 mt-1">
+        <div className="flex justify-between text-ui-2xs text-concrete mt-1">
           <span>Rapat</span>
           <span>Renggang</span>
         </div>
       </FormField>
 
       {/* Preview */}
-      <div className="p-6 rounded-xl bg-gradient-to-br from-stone-50 to-stone-100 border border-stone-200">
+      <div className="p-6 rounded-xl bg-ivory border border-hairline">
         <div className="text-center space-y-3">
-          <p className="text-xs font-semibold text-gold-600 uppercase tracking-wider">
+          <p className="text-xs font-semibold text-forest uppercase tracking-wider">
             Preview Pembuka
           </p>
-          <p className="text-xs text-stone-400">
+          <p className="text-xs text-concrete">
             Gaya: {OPENING_STYLES.find(s => s.id === openingType)?.name}
           </p>
-          <p className="text-sm font-sans text-stone-700 leading-relaxed">
+          <p className="text-sm font-sans text-graphite leading-relaxed">
             {openingGreeting || 'Salam pembuka...'}
           </p>
-          <div className="w-12 h-px bg-gold-400 mx-auto" />
-          <p className="text-xs text-stone-600 leading-relaxed max-w-xs mx-auto">
+          <div className="w-12 h-px bg-gold-dark mx-auto" />
+          <p className="text-xs text-concrete leading-relaxed max-w-xs mx-auto">
             {openingSubtitle || 'Kalimat pembuka...'}
           </p>
           <div className="mt-3 space-y-0" style={{ lineHeight: 1.2 }}>
-            <p className="text-lg font-bold text-stone-800 uppercase tracking-wider" style={{ marginBottom: nameGap }}>
+            <p className="text-lg font-bold text-graphite uppercase tracking-wider" style={{ marginBottom: nameGap }}>
               {openingGroomName || groomName || 'Nama Pria'}
             </p>
-            <p className="text-sm text-gold-500" style={{ marginBottom: nameGap }}>
+            <p className="text-sm text-gold-dark" style={{ marginBottom: nameGap }}>
               &amp;
             </p>
-            <p className="text-lg font-bold text-stone-800 uppercase tracking-wider">
+            <p className="text-lg font-bold text-graphite uppercase tracking-wider">
               {openingBrideName || brideName || 'Nama Wanita'}
             </p>
           </div>

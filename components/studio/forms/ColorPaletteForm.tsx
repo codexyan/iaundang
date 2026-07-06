@@ -105,28 +105,28 @@ export default function ColorPaletteForm({
     >
       {/* Preset Palettes */}
       <div>
-        <p className="text-xs font-medium text-stone-500 mb-2">Palet Siap Pakai</p>
+        <p className="text-ui-sm font-medium text-concrete mb-2">Palet Siap Pakai</p>
         <div className="grid grid-cols-3 gap-2">
           {PRESETS.map((preset) => (
             <button
               key={preset.id}
               type="button"
               onClick={() => applyPreset(preset)}
-              className={`group relative p-2 border rounded-lg transition-all ${
+              className={`group relative p-2 border rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 ${
                 primaryColor === preset.primary
-                  ? 'border-gold-400 ring-1 ring-gold-200 bg-gold-50/30'
-                  : 'border-stone-200 hover:border-stone-300'
+                  ? 'border-gold-dark ring-1 ring-gold/30 bg-forest-50/40'
+                  : 'border-hairline hover:border-ash/50'
               }`}
             >
               <div className="flex gap-0.5 mb-1.5">
                 <div className="w-full h-5 rounded-sm" style={{ backgroundColor: preset.primary }} />
                 <div className="w-full h-5 rounded-sm" style={{ backgroundColor: preset.accent }} />
               </div>
-              <p className="text-[10px] font-medium text-stone-500 text-center truncate">
+              <p className="text-ui-2xs font-medium text-concrete text-center truncate">
                 {preset.name}
               </p>
               {primaryColor === preset.primary && (
-                <div className="absolute top-1 right-1 w-4 h-4 bg-gold-500 text-white rounded-full flex items-center justify-center">
+                <div className="absolute top-1 right-1 w-4 h-4 bg-forest text-chalk rounded-full flex items-center justify-center">
                   <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
@@ -138,8 +138,8 @@ export default function ColorPaletteForm({
       </div>
 
       {/* Custom Colors */}
-      <div className="pt-3 border-t border-stone-100 space-y-3">
-        <p className="text-xs font-medium text-stone-500">Kustomisasi Warna</p>
+      <div className="pt-3 border-t border-hairline space-y-3">
+        <p className="text-ui-sm font-medium text-concrete">Kustomisasi Warna</p>
 
         <div className="grid grid-cols-2 gap-3">
           <FormField label="Warna Utama" hint="Warna tema utama undangan">
@@ -148,7 +148,7 @@ export default function ColorPaletteForm({
                 type="color"
                 value={primaryColor}
                 onChange={(e) => onPrimaryColorChange(e.target.value)}
-                className="w-10 h-9 rounded-lg border border-stone-200 cursor-pointer shrink-0"
+                className="w-10 h-9 rounded-lg border border-hairline cursor-pointer shrink-0"
               />
               <StudioInput
                 type="text"
@@ -165,7 +165,7 @@ export default function ColorPaletteForm({
                 type="color"
                 value={accentColor}
                 onChange={(e) => onAccentColorChange(e.target.value)}
-                className="w-10 h-9 rounded-lg border border-stone-200 cursor-pointer shrink-0"
+                className="w-10 h-9 rounded-lg border border-hairline cursor-pointer shrink-0"
               />
               <StudioInput
                 type="text"
@@ -182,7 +182,7 @@ export default function ColorPaletteForm({
                 type="color"
                 value={textColor}
                 onChange={(e) => onTextColorChange(e.target.value)}
-                className="w-10 h-9 rounded-lg border border-stone-200 cursor-pointer shrink-0"
+                className="w-10 h-9 rounded-lg border border-hairline cursor-pointer shrink-0"
               />
               <StudioInput
                 type="text"
@@ -199,7 +199,7 @@ export default function ColorPaletteForm({
                 type="color"
                 value={backgroundColor}
                 onChange={(e) => onBackgroundColorChange(e.target.value)}
-                className="w-10 h-9 rounded-lg border border-stone-200 cursor-pointer shrink-0"
+                className="w-10 h-9 rounded-lg border border-hairline cursor-pointer shrink-0"
               />
               <StudioInput
                 type="text"
@@ -217,7 +217,7 @@ export default function ColorPaletteForm({
             className="p-3 rounded-md"
             style={{ background: `linear-gradient(135deg, ${primaryColor}, ${accentColor})` }}
           >
-            <p className="text-xs font-medium text-center" style={{ color: textColor }}>
+            <p className="text-ui-xs font-medium text-center" style={{ color: textColor }}>
               Preview Warna
             </p>
           </div>

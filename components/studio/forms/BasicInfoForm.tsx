@@ -84,28 +84,28 @@ export default function BasicInfoForm({
       <div>
         <input ref={photoRef} type="file" accept="image/*" className="hidden"
           onChange={(e) => { const file = e.target.files?.[0]; if (file) handleUpload(file) }} />
-        <label className="block text-xs font-medium text-stone-600 mb-1">Foto Pembuka <span className="text-rose-500">*</span></label>
+        <label className="block text-ui-eyebrow text-concrete mb-1.5">Foto Pembuka <span className="text-gold-dark">*</span></label>
         {couplePhotoUrl ? (
-          <div className="relative rounded-lg overflow-hidden group" style={{ aspectRatio: '16/9' }}>
+          <div className="relative rounded-card overflow-hidden group" style={{ aspectRatio: '16/9' }}>
             <img src={couplePhotoUrl} alt="Foto pasangan" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <div className="absolute inset-0 bg-forest-deep/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button type="button" onClick={() => photoRef.current?.click()}
-                className="flex items-center gap-1.5 bg-white text-stone-800 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-stone-100 transition-colors">
+                className="flex items-center gap-1.5 bg-chalk text-graphite px-3 py-1.5 rounded-button text-ui-xs font-medium hover:bg-mist transition-colors">
                 <Upload size={13} /> Ganti
               </button>
               <button type="button" onClick={() => onCouplePhotoChange('')}
-                className="flex items-center gap-1.5 bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-red-600 transition-colors">
+                className="flex items-center gap-1.5 bg-red-600 text-white px-3 py-1.5 rounded-button text-ui-xs font-medium hover:bg-red-700 transition-colors">
                 <Trash2 size={13} /> Hapus
               </button>
             </div>
           </div>
         ) : (
           <button type="button" onClick={() => photoRef.current?.click()} disabled={uploading}
-            className="w-full py-8 border-2 border-dashed border-stone-200 rounded-lg flex flex-col items-center gap-2 text-stone-400 hover:border-gold-400 hover:text-gold-600 hover:bg-gold-50/30 transition-all disabled:opacity-50">
+            className="w-full py-8 border-2 border-dashed border-hairline rounded-card flex flex-col items-center gap-2 text-ash hover:border-gold-dark/50 hover:text-forest hover:bg-forest-50/40 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40">
             {uploading ? (
-              <><Loader2 size={24} className="animate-spin text-gold-500" /><span className="text-xs">Mengupload...</span></>
+              <><Loader2 size={24} className="animate-spin text-forest" /><span className="text-ui-xs">Mengupload...</span></>
             ) : (
-              <><ImageIcon size={24} /><span className="text-xs font-medium">Upload foto pasangan</span></>
+              <><ImageIcon size={24} /><span className="text-ui-xs font-medium">Upload foto pasangan</span></>
             )}
           </button>
         )}
@@ -113,8 +113,8 @@ export default function BasicInfoForm({
 
       {/* Mempelai Pria */}
       <div className="space-y-2.5 pt-2">
-        <p className="text-xs font-semibold text-blue-700 flex items-center gap-1.5">
-          <span className="w-5 h-5 rounded bg-blue-500 text-white flex items-center justify-center text-[10px] font-bold">P</span>
+        <p className="text-ui-sm font-semibold text-forest flex items-center gap-1.5">
+          <span className="w-5 h-5 rounded bg-forest text-chalk flex items-center justify-center text-ui-2xs font-bold">P</span>
           Mempelai Pria
         </p>
         <div className="grid grid-cols-2 gap-2.5">
@@ -149,9 +149,9 @@ export default function BasicInfoForm({
       </div>
 
       {/* Mempelai Wanita */}
-      <div className="space-y-2.5 pt-1 border-t border-stone-100">
-        <p className="text-xs font-semibold text-rose-700 flex items-center gap-1.5 pt-2">
-          <span className="w-5 h-5 rounded bg-rose-500 text-white flex items-center justify-center text-[10px] font-bold">W</span>
+      <div className="space-y-2.5 pt-1 border-t border-hairline">
+        <p className="text-ui-sm font-semibold text-gold-700 flex items-center gap-1.5 pt-2">
+          <span className="w-5 h-5 rounded bg-gold-dark text-chalk flex items-center justify-center text-ui-2xs font-bold">W</span>
           Mempelai Wanita
         </p>
         <div className="grid grid-cols-2 gap-2.5">

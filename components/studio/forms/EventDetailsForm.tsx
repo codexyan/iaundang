@@ -34,11 +34,11 @@ function EventBlock({
   return (
     <div className="space-y-2.5">
       <div className="flex items-center gap-2">
-        <span className={`w-5 h-5 rounded text-[10px] font-bold text-white flex items-center justify-center ${badgeColor}`}>{badge}</span>
-        <p className="text-xs font-semibold text-stone-700">{label}</p>
+        <span className={`w-5 h-5 rounded text-ui-2xs font-bold text-chalk flex items-center justify-center ${badgeColor}`}>{badge}</span>
+        <p className="text-ui-sm font-semibold text-graphite">{label}</p>
         {showSameDate && onSameDate && (
-          <label className="ml-auto flex items-center gap-1.5 text-[10px] text-stone-500 cursor-pointer hover:text-stone-700">
-            <input type="checkbox" className="w-3.5 h-3.5 accent-gold-500 cursor-pointer"
+          <label className="ml-auto flex items-center gap-1.5 text-ui-2xs text-concrete cursor-pointer hover:text-graphite">
+            <input type="checkbox" className="w-3.5 h-3.5 accent-forest cursor-pointer"
               onChange={onSameDate} />
             <span>Sama dengan Akad</span>
           </label>
@@ -92,11 +92,11 @@ export default function EventDetailsForm({
 
   return (
     <SectionCard title="Detail Acara" icon={MapPin} required description="Waktu dan lokasi pernikahan">
-      <EventBlock label="Akad Nikah" badge="1" badgeColor="bg-amber-500"
+      <EventBlock label="Akad Nikah" badge="1" badgeColor="bg-forest"
         event={akad} onChange={onAkadChange} />
 
-      <div className="border-t border-stone-200 pt-3 mt-1">
-        <EventBlock label="Resepsi" badge="2" badgeColor="bg-emerald-500"
+      <div className="border-t border-hairline pt-3 mt-1">
+        <EventBlock label="Resepsi" badge="2" badgeColor="bg-gold-dark"
           event={resepsi} onChange={onResepsiChange}
           showSameDate onSameDate={() => { if (akad.date) onResepsiChange({ date: akad.date }) }} />
       </div>

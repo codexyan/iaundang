@@ -108,29 +108,29 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
                 className={`
                   relative flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 transition-all group
                   ${active
-                    ? 'border-gold-500 bg-gold-50/80 shadow-sm'
-                    : 'border-stone-100 bg-white hover:border-stone-200 hover:bg-stone-50'
+                    ? 'border-forest bg-forest-50 shadow-card'
+                    : 'border-hairline bg-chalk hover:border-ash/50 hover:bg-mist'
                   }
                 `}
               >
                 {v.tier === 'pro' && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-gold-500 to-warmGold-600 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gold flex items-center justify-center">
                     <Sparkles size={8} className="text-white" />
                   </span>
                 )}
                 <Icon
                   size={20}
                   strokeWidth={1.5}
-                  className={active ? 'text-gold-600' : 'text-stone-400 group-hover:text-stone-600'}
+                  className={active ? 'text-forest' : 'text-ash group-hover:text-concrete'}
                 />
-                <span className={`text-[10px] font-medium leading-tight text-center ${active ? 'text-gold-800' : 'text-stone-500'}`}>
+                <span className={`text-ui-2xs font-medium leading-tight text-center ${active ? 'text-forest-deep' : 'text-concrete'}`}>
                   {v.name}
                 </span>
               </button>
             )
           })}
         </div>
-        <p className="text-[10px] text-stone-400 mt-1">
+        <p className="text-ui-2xs text-concrete mt-1">
           {VARIANTS.find(v => v.id === selectedVariant)?.description}
         </p>
       </FormField>
@@ -163,8 +163,8 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
                       className={`
                         flex-1 py-2 rounded-lg border text-xs font-bold transition-all
                         ${(config.text_size ?? 'sm') === t.value
-                          ? 'border-gold-500 bg-gold-50 text-gold-800'
-                          : 'border-stone-200 text-stone-500'
+                          ? 'border-forest bg-forest-50 text-forest-deep'
+                          : 'border-hairline text-concrete'
                         }
                       `}
                     >
@@ -194,12 +194,12 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
               className={`
                 flex-1 py-2 rounded-lg border text-center transition-all
                 ${bgType === bg.id
-                  ? 'border-gold-500 bg-gold-50 text-gold-800'
-                  : 'border-stone-200 text-stone-500 hover:border-stone-300'
+                  ? 'border-forest bg-forest-50 text-forest-deep'
+                  : 'border-hairline text-concrete hover:border-ash/50'
                 }
               `}
             >
-              <span className="text-[10px] font-semibold block">{bg.name}</span>
+              <span className="text-ui-2xs font-semibold block">{bg.name}</span>
             </button>
           ))}
         </div>
@@ -230,7 +230,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
             </div>
             {bgType === 'gradient' && (
               <div>
-                <label className="text-[10px] font-semibold text-stone-500 block mb-1">Arah ({config.bg_gradient_angle ?? 135}&deg;)</label>
+                <label className="text-ui-2xs font-semibold text-concrete block mb-1">Arah ({config.bg_gradient_angle ?? 135}&deg;)</label>
                 <input
                   type="range" min={0} max={360} step={15}
                   value={config.bg_gradient_angle ?? 135}
@@ -240,7 +240,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
               </div>
             )}
             <div
-              className="w-full h-10 rounded-lg border border-stone-200"
+              className="w-full h-10 rounded-lg border border-hairline"
               style={{
                 background: bgType === 'gradient'
                   ? `linear-gradient(${config.bg_gradient_angle ?? 135}deg, ${config.bg_gradient_from ?? config.background_color}, ${config.bg_gradient_to ?? '#000'})`
@@ -264,7 +264,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
               onChange={(v) => update({ background_color: v })}
             />
             <div>
-              <label className="text-[10px] font-semibold text-stone-500 block mb-1">
+              <label className="text-ui-2xs font-semibold text-concrete block mb-1">
                 Opacity overlay ({Math.round((config.overlay_opacity ?? 0.85) * 100)}%)
               </label>
               <input
@@ -292,10 +292,10 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
                   type="button"
                   onClick={() => update({ bg_pattern: p.id })}
                   className={`
-                    flex-1 py-1.5 rounded-lg border text-[10px] font-medium transition-all
+                    flex-1 py-1.5 rounded-lg border text-ui-2xs font-medium transition-all
                     ${(config.bg_pattern ?? 'none') === p.id
-                      ? 'border-gold-500 bg-gold-50 text-gold-800'
-                      : 'border-stone-200 text-stone-500 hover:border-stone-300'
+                      ? 'border-forest bg-forest-50 text-forest-deep'
+                      : 'border-hairline text-concrete hover:border-ash/50'
                     }
                   `}
                 >
@@ -325,8 +325,8 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
               className={`
                 flex-1 py-2 rounded-xl border-2 text-xs font-semibold transition-all
                 ${(config.animation_speed ?? 'normal') === s.value
-                  ? 'border-gold-500 bg-gold-50 text-gold-800'
-                  : 'border-stone-200 text-stone-600 hover:border-stone-300'
+                  ? 'border-forest bg-forest-50 text-forest-deep'
+                  : 'border-hairline text-concrete hover:border-ash/50'
                 }
               `}
             >
@@ -340,7 +340,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
       <button
         type="button"
         onClick={() => setShowAdvanced(!showAdvanced)}
-        className="flex items-center gap-2 text-xs font-semibold text-stone-500 hover:text-gold-600 transition-colors w-full py-2"
+        className="flex items-center gap-2 text-xs font-semibold text-concrete hover:text-forest transition-colors w-full py-2"
       >
         <Settings2 size={14} />
         Pengaturan Lanjutan
@@ -348,7 +348,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
       </button>
 
       {showAdvanced && (
-        <div className="space-y-4 pt-3 border-t border-stone-100">
+        <div className="space-y-4 pt-3 border-t border-hairline">
           {/* Duration */}
           <FormField label="Durasi">
             <div className="flex gap-1.5 mb-2">
@@ -358,10 +358,10 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
                   type="button"
                   onClick={() => update({ duration_ms: d.value })}
                   className={`
-                    flex-1 py-1.5 rounded-lg border text-[10px] font-semibold transition-all
+                    flex-1 py-1.5 rounded-lg border text-ui-2xs font-semibold transition-all
                     ${(config.duration_ms ?? 1600) === d.value
-                      ? 'border-gold-500 bg-gold-50 text-gold-800'
-                      : 'border-stone-200 text-stone-500 hover:border-stone-300'
+                      ? 'border-forest bg-forest-50 text-forest-deep'
+                      : 'border-hairline text-concrete hover:border-ash/50'
                     }
                   `}
                 >
@@ -375,7 +375,7 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
               onChange={(e) => update({ duration_ms: Number(e.target.value) })}
               className="w-full accent-gold-500"
             />
-            <span className="text-[10px] text-stone-400">{((config.duration_ms ?? 1600) / 1000).toFixed(1)} detik</span>
+            <span className="text-ui-2xs text-concrete">{((config.duration_ms ?? 1600) / 1000).toFixed(1)} detik</span>
           </FormField>
 
 
@@ -433,15 +433,15 @@ export default function LoadingForm({ config, onChange }: LoadingFormProps) {
 function ColorRow({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div>
-      <label className="text-[10px] font-semibold text-stone-500 block mb-1">{label}</label>
+      <label className="text-ui-2xs font-semibold text-concrete block mb-1">{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="color" value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-8 h-8 rounded-lg border border-stone-200 cursor-pointer shrink-0"
+          className="w-8 h-8 rounded-lg border border-hairline cursor-pointer shrink-0"
         />
         <input
           type="text" value={value} onChange={(e) => onChange(e.target.value)}
-          className="flex-1 px-2 py-1.5 border border-stone-200 rounded-lg text-xs text-stone-600 focus:outline-none focus:ring-1 focus:ring-gold-500"
+          className="flex-1 px-2 py-1.5 border border-hairline rounded-lg text-ui-sm text-graphite focus:outline-none focus:ring-2 focus:ring-forest/15 focus:border-forest-light"
         />
       </div>
     </div>
