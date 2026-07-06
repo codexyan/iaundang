@@ -760,14 +760,14 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
         </div>
 
         {/* Right: phone preview panel (desktop xl+) */}
-        <div className="hidden xl:flex flex-col shrink-0 border-l border-stone-200/60 bg-gradient-to-b from-stone-100/80 to-stone-50/80" style={{ width: 360 }}>
+        <div className="hidden xl:flex flex-col shrink-0 border-l border-hairline bg-ivory" style={{ width: 360 }}>
           <div className="flex items-center justify-between px-3 pt-2.5 pb-2 shrink-0">
-            <p className="text-[10px] font-semibold text-stone-400">Live Preview</p>
+            <p className="text-ui-eyebrow text-concrete">Live Preview</p>
             <div className="flex items-center gap-1">
-              <button onClick={() => setPreviewKey(k => k + 1)} className="w-7 h-7 flex items-center justify-center rounded-lg text-stone-300 hover:text-stone-500 hover:bg-stone-100 transition-all" title="Refresh">
+              <button onClick={() => setPreviewKey(k => k + 1)} aria-label="Muat ulang preview" className="w-7 h-7 flex items-center justify-center rounded-lg text-concrete hover:text-forest-deep hover:bg-mist transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40" title="Refresh">
                 <RefreshCw size={12} />
               </button>
-              <button onClick={() => setShowFullscreen(true)} className="w-7 h-7 flex items-center justify-center rounded-lg text-stone-300 hover:text-stone-500 hover:bg-stone-100 transition-all" title="Fullscreen">
+              <button onClick={() => setShowFullscreen(true)} aria-label="Preview layar penuh" className="w-7 h-7 flex items-center justify-center rounded-lg text-concrete hover:text-forest-deep hover:bg-mist transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40" title="Fullscreen">
                 <Maximize2 size={12} />
               </button>
             </div>
@@ -780,16 +780,17 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
 
         {/* Mobile preview overlay */}
         {showPreview && !showFullscreen && (
-          <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex flex-col">
+          <div className="fixed inset-0 z-50 bg-forest-deep/90 backdrop-blur-sm flex flex-col">
             <div className="flex items-center justify-end px-4 py-3 shrink-0 gap-2">
-              <button onClick={() => setPreviewKey(k => k + 1)} className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-colors" title="Refresh">
+              <button onClick={() => setPreviewKey(k => k + 1)} aria-label="Muat ulang preview" className="w-8 h-8 flex items-center justify-center text-chalk/50 hover:text-chalk hover:bg-chalk/10 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chalk/40" title="Refresh">
                 <RefreshCw size={14} />
               </button>
               <a href={`/invitation/${invitation.slug}`} target="_blank" rel="noopener noreferrer"
-                className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-colors" title="Buka di tab baru">
+                aria-label="Buka undangan di tab baru"
+                className="w-8 h-8 flex items-center justify-center text-chalk/50 hover:text-chalk hover:bg-chalk/10 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chalk/40" title="Buka di tab baru">
                 <ExternalLink size={14} />
               </a>
-              <button onClick={() => setShowPreview(false)} className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-colors">
+              <button onClick={() => setShowPreview(false)} aria-label="Tutup preview" className="w-8 h-8 flex items-center justify-center text-chalk/50 hover:text-chalk hover:bg-chalk/10 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chalk/40">
                 <X size={18} />
               </button>
             </div>
@@ -801,10 +802,11 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
 
         {/* Fullscreen preview */}
         {showFullscreen && (
-          <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+          <div className="fixed inset-0 z-[100] bg-forest-deep flex items-center justify-center">
             <button
               onClick={() => setShowFullscreen(false)}
-              className="absolute top-4 right-4 z-[110] bg-black/60 hover:bg-black/80 text-white rounded-full p-2.5 transition-colors backdrop-blur-sm"
+              aria-label="Tutup preview layar penuh"
+              className="absolute top-4 right-4 z-[110] bg-chalk/15 hover:bg-chalk/25 text-chalk rounded-full p-2.5 transition-colors backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chalk/40"
             >
               <X className="w-5 h-5" />
             </button>
