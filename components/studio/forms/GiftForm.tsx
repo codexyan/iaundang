@@ -54,7 +54,7 @@ export default function GiftForm({ accounts, onAccountsChange }: GiftFormProps) 
         {accounts.map((account, index) => (
           <div
             key={index}
-            className="p-4 border border-stone-200 rounded-xl space-y-3 relative group hover:border-gold-300 transition-colors"
+            className="p-4 border border-hairline rounded-xl space-y-3 relative group hover:border-gold-dark/50 transition-colors"
           >
             <button
               type="button"
@@ -66,10 +66,10 @@ export default function GiftForm({ accounts, onAccountsChange }: GiftFormProps) 
             </button>
 
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-7 h-7 rounded-lg bg-gold-100 text-gold-700 flex items-center justify-center text-xs font-bold">
+              <div className="w-7 h-7 rounded-lg bg-forest-50 text-gold-dark flex items-center justify-center text-xs font-bold">
                 {index + 1}
               </div>
-              <span className="text-sm font-semibold text-stone-700">
+              <span className="text-sm font-semibold text-graphite">
                 Rekening {index + 1}
               </span>
             </div>
@@ -107,7 +107,7 @@ export default function GiftForm({ accounts, onAccountsChange }: GiftFormProps) 
           <button
             type="button"
             onClick={addAccount}
-            className="w-full py-3 border-2 border-dashed border-stone-300 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold text-stone-600 hover:border-gold-400 hover:text-gold-600 hover:bg-gold-50/50 transition-all"
+            className="w-full py-3 border-2 border-dashed border-hairline rounded-xl flex items-center justify-center gap-2 text-sm font-semibold text-concrete hover:border-gold-dark/50 hover:text-forest hover:bg-forest-50/50 transition-all"
           >
             <Plus size={18} />
             Tambah Rekening ({accounts.length}/3)
@@ -115,7 +115,7 @@ export default function GiftForm({ accounts, onAccountsChange }: GiftFormProps) 
         )}
 
         {accounts.length === 0 && (
-          <div className="text-center py-8 text-stone-400">
+          <div className="text-center py-8 text-ash">
             <Gift size={32} className="mx-auto mb-2 opacity-50" />
             <p className="text-sm">
               Belum ada rekening. Klik tombol di atas untuk menambah.

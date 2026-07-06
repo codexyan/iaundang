@@ -36,7 +36,7 @@ export default function GiftRegistryForm({ items, onItemsChange }: GiftRegistryF
   return (
     <SectionCard title="Gift Registry" icon={ShoppingBag} description="Daftar kado yang diinginkan dari marketplace">
       {items.map((item, idx) => (
-        <div key={idx} className="relative p-3 border border-stone-200 rounded-xl space-y-2.5 group hover:border-gold-300 transition-colors">
+        <div key={idx} className="relative p-3 border border-hairline rounded-xl space-y-2.5 group hover:border-gold-dark/50 transition-colors">
           <button type="button" onClick={() => removeItem(idx)}
             className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100">
             <Trash2 size={12} />
@@ -80,7 +80,7 @@ export default function GiftRegistryForm({ items, onItemsChange }: GiftRegistryF
       ))}
 
       <button type="button" onClick={addItem}
-        className="w-full py-3 border-2 border-dashed border-stone-300 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold text-stone-600 hover:border-gold-400 hover:text-gold-600 hover:bg-gold-50/50 transition-all">
+        className="w-full py-3 border-2 border-dashed border-hairline rounded-xl flex items-center justify-center gap-2 text-sm font-semibold text-concrete hover:border-gold-dark/50 hover:text-forest hover:bg-forest-50/50 transition-all">
         <Plus size={18} />
         Tambah Barang
       </button>
