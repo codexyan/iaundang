@@ -100,7 +100,6 @@ export default function TemplateModule({ invitation, allTemplates, onInvitationU
       invitation={invitation}
       template={templateRecord}
       onSaved={onInvitationUpdate}
-      embedded
       isAdmin={isAdmin}
     />
   )

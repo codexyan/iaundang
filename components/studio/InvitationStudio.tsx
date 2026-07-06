@@ -14,13 +14,11 @@ import type { Invitation, NewInvitationData, TemplateRecord, OpeningType, TierFe
 import type { PackageTier } from '@/lib/packages'
 import { calculateCompleteness } from '@/lib/studio-progress'
 import { usePackageGating } from '@/hooks/usePackageGating'
-import InvitationPreview from '@/components/renderer/InvitationPreview'
 import GalleryManager from '@/components/dashboard/GalleryManager'
 import LockedOverlay from './ui/LockedOverlay'
 
 const InvitationRenderer = dynamic(() => import('@/components/renderer/InvitationRenderer'), { ssr: false })
 
-import StudioHeader from './StudioHeader'
 import OpeningForm from './forms/OpeningForm'
 import LoadingForm from './forms/LoadingForm'
 import MusicForm from './forms/MusicForm'
@@ -45,7 +43,6 @@ interface Props {
   invitation: Invitation
   template: TemplateRecord
   onSaved: (inv: Invitation) => void
-  embedded?: boolean
   isAdmin?: boolean
 }
 
@@ -101,25 +98,6 @@ function initData(inv: Invitation): NewInvitationData {
     section_background_overrides: d.section_background_overrides ?? {},
     section_transition_overrides: d.section_transition_overrides ?? {},
   }
-}
-
-function calculateProgress(data: NewInvitationData) {
-  const required = [
-    data.groom_name, data.bride_name, data.couple_photo_url,
-    data.akad?.date, data.akad?.time, data.akad?.venue_name, data.akad?.venue_address,
-    data.resepsi?.date, data.resepsi?.time, data.resepsi?.venue_name, data.resepsi?.venue_address,
-  ]
-  const filled = required.filter(Boolean).length
-  const total = required.length
-  const missing: string[] = []
-  if (!data.groom_name) missing.push('Nama Mempelai Pria')
-  if (!data.bride_name) missing.push('Nama Mempelai Wanita')
-  if (!data.couple_photo_url) missing.push('Foto Pembuka')
-  if (!data.akad?.date) missing.push('Tanggal Akad')
-  if (!data.akad?.venue_name) missing.push('Tempat Akad')
-  if (!data.resepsi?.date) missing.push('Tanggal Resepsi')
-  if (!data.resepsi?.venue_name) missing.push('Tempat Resepsi')
-  return { percentage: Math.round((filled / total) * 100), requiredFieldsCount: filled, totalRequiredFields: total, missingFields: missing }
 }
 
 interface NavItem { id: string; label: string; icon: React.ElementType; locked?: boolean; requiredTier?: string; group: string; required?: boolean }
@@ -298,7 +276,7 @@ const SECTION_TYPE_FEATURE: Record<string, keyof TierFeatures> = {
   livestream: 'livestream', 'ig-story': 'ig_story', qrcode: 'qrcode', closing: 'closing',
 }
 
-export default function InvitationStudio({ invitation, template, onSaved, embedded, isAdmin }: Props) {
+export default function InvitationStudio({ invitation, template, onSaved, isAdmin }: Props) {
   const [data, setData] = useState<NewInvitationData>(() => initData(invitation))
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const [showPreview, setShowPreview] = useState(false)
@@ -317,7 +295,6 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
 
   const timer = useRef<ReturnType<typeof setTimeout>>()
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const progress = calculateProgress(data)
   const completeness = calculateCompleteness(data)
   const gating = usePackageGating(isAdmin ? 'eksklusif' : (invitation as unknown as Record<string, unknown>).package_tier as PackageTier | undefined)
 
@@ -541,102 +518,6 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
     }
   }
 
-  const forms = (
-    <div className="space-y-3.5">
-      <BasicInfoForm
-        groomName={data.groom_name} brideName={data.bride_name}
-        groomNickname={data.groom_nickname} brideNickname={data.bride_nickname}
-        groomFather={data.groom_father} groomMother={data.groom_mother}
-        brideFather={data.bride_father} brideMother={data.bride_mother}
-        couplePhotoUrl={data.couple_photo_url} tagline={data.tagline}
-        groomPhotoUrl={data.groom_photo_url} bridePhotoUrl={data.bride_photo_url}
-        groomBio={data.groom_bio} brideBio={data.bride_bio}
-        onGroomNameChange={(val) => updateData({ groom_name: val })}
-        onBrideNameChange={(val) => updateData({ bride_name: val })}
-        onGroomNicknameChange={(val) => updateData({ groom_nickname: val })}
-        onBrideNicknameChange={(val) => updateData({ bride_nickname: val })}
-        onGroomFatherChange={(val) => updateData({ groom_father: val })}
-        onGroomMotherChange={(val) => updateData({ groom_mother: val })}
-        onBrideFatherChange={(val) => updateData({ bride_father: val })}
-        onBrideMotherChange={(val) => updateData({ bride_mother: val })}
-        onCouplePhotoChange={(url) => updateData({ couple_photo_url: url })}
-        onTaglineChange={(val) => updateData({ tagline: val })}
-        onGroomPhotoChange={(url) => updateData({ groom_photo_url: url })}
-        onBridePhotoChange={(url) => updateData({ bride_photo_url: url })}
-        onGroomBioChange={(val) => updateData({ groom_bio: val })}
-        onBrideBioChange={(val) => updateData({ bride_bio: val })} />
-      <EventDetailsForm akad={data.akad} resepsi={data.resepsi}
-        onAkadChange={(patch) => updateData({ akad: { ...(data.akad ?? { date: '', time: '', venue_name: '', venue_address: '' }), ...patch } as NewInvitationData['akad'] })}
-        onResepsiChange={(patch) => updateData({ resepsi: { ...(data.resepsi ?? { date: '', time: '', venue_name: '', venue_address: '' }), ...patch } as NewInvitationData['resepsi'] })} />
-      <OpeningForm
-        openingType={(data.opening_type as OpeningType) || 'fade-reveal'}
-        openingGreeting={data.opening_greeting || ''} openingSubtitle={data.opening_subtitle || ''}
-        openingGroomName={data.opening_groom_name || ''} openingBrideName={data.opening_bride_name || ''}
-        groomName={data.groom_name} brideName={data.bride_name}
-        nameGap={data.opening_name_gap ?? template.config.opening.couple_name_gap ?? 3}
-        onOpeningTypeChange={(val) => updateData({ opening_type: val })}
-        onOpeningGreetingChange={(val) => updateData({ opening_greeting: val })}
-        onOpeningSubtitleChange={(val) => updateData({ opening_subtitle: val })}
-        onOpeningGroomNameChange={(val) => updateData({ opening_groom_name: val })}
-        onOpeningBrideNameChange={(val) => updateData({ opening_bride_name: val })}
-        onNameGapChange={(val) => updateData({ opening_name_gap: val })} />
-      <ColorPaletteForm
-        primaryColor={data.primary_color ?? '#2c4a34'}
-        accentColor={data.accent_color ?? '#c9a961'}
-        textColor={data.text_color ?? '#1a1a1a'}
-        backgroundColor={data.background_color ?? '#fefdf8'}
-        onPrimaryColorChange={(color) => updateData({ primary_color: color })}
-        onAccentColorChange={(color) => updateData({ accent_color: color })}
-        onTextColorChange={(color) => updateData({ text_color: color })}
-        onBackgroundColorChange={(color) => updateData({ background_color: color })}
-        onPresetApply={(colors) => updateData({
-          primary_color: colors.primary,
-          accent_color: colors.accent,
-          text_color: colors.text,
-          background_color: colors.background,
-        })} />
-      <MusicForm musicUrl={data.music_url || ''} musicTitle={data.music_title || ''}
-        onMusicUrlChange={(val) => updateData({ music_url: val })}
-        onMusicTitleChange={(val) => updateData({ music_title: val })} />
-      <QuoteForm quoteArabic={data.quote_arabic || ''} quoteTranslation={data.quote_translation || ''}
-        quoteSource={data.quote_source || ''}
-        onQuoteArabicChange={(val) => updateData({ quote_arabic: val })}
-        onQuoteTranslationChange={(val) => updateData({ quote_translation: val })}
-        onQuoteSourceChange={(val) => updateData({ quote_source: val })} />
-      <div className="relative">
-        <StoryForm storyTitle={data.story_title ?? ''} storyText={data.story_text ?? ''} chapters={data.story_chapters ?? []}
-          onStoryTitleChange={(val) => updateData({ story_title: val })}
-          onStoryTextChange={(val) => updateData({ story_text: val })}
-          onChaptersChange={(chapters) => updateData({ story_chapters: chapters })} />
-        {!gating.isSectionAllowed('cerita') && <LockedOverlay requiredTier={gating.getRequiredTier('cerita') ?? 'Popular'} />}
-      </div>
-      <GalleryManager invitation={invitation} />
-      <div className="relative">
-        <GiftForm accounts={data.gift_accounts ?? []} onAccountsChange={(accounts) => updateData({ gift_accounts: accounts })} />
-        {!gating.isSectionAllowed('hadiah') && <LockedOverlay requiredTier={gating.getRequiredTier('hadiah') ?? 'Popular'} />}
-      </div>
-      <InfoCard title="Konfirmasi Kehadiran" icon={CheckSquare}
-        message="Form RSVP otomatis tampil di undangan. Lihat daftar tamu yang sudah konfirmasi di tab RSVP."
-        actionText="Lihat Daftar RSVP" actionHref="#" />
-      <InfoCard title="Buku Ucapan" icon={MessageSquare}
-        message="Buku ucapan otomatis tersedia di undangan. Tamu bisa menulis ucapan dan doa untuk Anda berdua." />
-      <SectionCard title="Penutup" icon={BookOpen} description="Pesan penutup dan ucapan terima kasih (opsional)">
-        <FormField label="Kalimat Penutup" hint="Ucapan terima kasih atau kalimat penutup undangan">
-          <StudioTextarea rows={3} value={data.closing_text}
-            onChange={(e) => updateData({ closing_text: e.target.value })}
-            placeholder="Merupakan suatu kehormatan dan kebahagiaan bagi kami..." />
-        </FormField>
-        <FormField label="Pesan Terima Kasih" hint="Pesan singkat terima kasih untuk para tamu">
-          <StudioInput type="text" value={data.thank_you_message}
-            onChange={(e) => updateData({ thank_you_message: e.target.value })}
-            placeholder="Terima kasih atas doa dan kehadiran Anda" />
-        </FormField>
-      </SectionCard>
-    </div>
-  )
-
-  //  Embedded mode (inside dashboard)
-  if (embedded) {
     const activeItem = SECTIONS.find(s => s.id === activeSection)
     const ActiveIcon = activeItem?.icon ?? Sparkles
 
@@ -976,45 +857,4 @@ export default function InvitationStudio({ invitation, template, onSaved, embedd
         )}
       </div>
     )
-  }
-
-  //  Standalone mode (full page)
-  return (
-    <div className="min-h-screen bg-stone-50">
-      <StudioHeader
-        invitationSlug={invitation.slug}
-        groomName={data.groom_name}
-        brideName={data.bride_name}
-        completionPercentage={progress.percentage}
-        requiredFieldsCount={progress.requiredFieldsCount}
-        totalRequiredFields={progress.totalRequiredFields}
-        missingFields={progress.missingFields}
-        saveStatus={saveStatus}
-      />
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex gap-8">
-          <div className="flex-1 min-w-0">
-            {forms}
-          </div>
-
-          <div className="hidden lg:block shrink-0">
-            <div className="sticky top-24">
-              <div className="bg-stone-100 rounded-[2.5rem] p-3 shadow-2xl w-[320px]">
-                <div className="bg-white rounded-[2rem] overflow-hidden" style={{ aspectRatio: '9/19.5' }}>
-                  <div className="h-full overflow-y-auto">
-                    <InvitationPreview
-                      template={previewTemplate}
-                      data={data}
-                      invitationId={invitation.id}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
 }
