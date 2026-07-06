@@ -75,7 +75,7 @@ export function StudioDivider({ label }: { label?: string }) {
     <div className="flex items-center gap-2">
       <div className="flex-1 h-px bg-hairline" />
       <span className="text-ui-eyebrow text-ash">{label}</span>
-      <span className="text-gold-dark text-[9px] leading-none" aria-hidden>◇</span>
+      <span className="text-gold-dark text-ui-2xs leading-none" aria-hidden>◇</span>
       <div className="flex-1 h-px bg-hairline" />
     </div>
   )

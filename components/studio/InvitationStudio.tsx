@@ -540,7 +540,7 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
               </div>
             </div>
           </div>
-          <div className="mx-auto mt-1 rounded-full bg-stone-600" style={{ width: pw * 0.3, height: 3 }} />
+          <div className="mx-auto mt-1 rounded-full bg-concrete" style={{ width: pw * 0.3, height: 3 }} />
         </div>
       )
     }
