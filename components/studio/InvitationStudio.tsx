@@ -13,6 +13,7 @@ import {
 import type { Invitation, NewInvitationData, TemplateRecord, OpeningType, TierFeatures } from '@/lib/types'
 import type { PackageTier } from '@/lib/packages'
 import { calculateCompleteness } from '@/lib/studio-progress'
+import { EASE } from '@/lib/motion'
 import { usePackageGating } from '@/hooks/usePackageGating'
 import GalleryManager from '@/components/dashboard/GalleryManager'
 import LockedOverlay from './ui/LockedOverlay'
@@ -187,35 +188,26 @@ function DraggableSectionItem({ section, active, onClick }: { section: NavItem; 
       value={section.id}
       dragListener={false}
       dragControls={controls}
-      className="flex items-center gap-2.5 rounded-xl cursor-pointer transition-all group relative overflow-hidden"
-      style={
-        active
-          ? { background: 'linear-gradient(135deg, #2C4A34 0%, #1A3020 100%)', color: '#FFFFFF', padding: '8px 10px' }
-          : { backgroundColor: 'transparent', color: section.locked ? '#C9C2B8' : '#78716C', padding: '8px 10px' }
-      }
-      onMouseEnter={(e: React.MouseEvent<HTMLElement>) => { if (!active) e.currentTarget.style.backgroundColor = '#F0EDE8' }}
-      onMouseLeave={(e: React.MouseEvent<HTMLElement>) => { if (!active) e.currentTarget.style.backgroundColor = 'transparent' }}
+      className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 cursor-pointer transition-colors group relative overflow-hidden ${
+        active ? 'bg-forest text-chalk' : `${section.locked ? 'text-smoke' : 'text-concrete'} hover:bg-mist`
+      }`}
     >
       <div
-        className="shrink-0 cursor-grab active:cursor-grabbing p-0.5 rounded"
-        style={{ color: active ? 'rgba(201,169,97,0.6)' : '#C9C2B8' }}
+        className={`shrink-0 cursor-grab active:cursor-grabbing p-0.5 rounded ${active ? 'text-gold/60' : 'text-smoke'}`}
         onPointerDown={(e) => controls.start(e)}
       >
         <GripVertical size={14} />
       </div>
-      <button onClick={onClick} className="flex items-center gap-2.5 flex-1 min-w-0 text-left">
-        <div
-          className="w-7 h-7 flex items-center justify-center shrink-0 transition-colors"
-          style={{ backgroundColor: active ? 'rgba(201,169,97,0.15)' : '#EDE8E2', borderRadius: 7 }}
-        >
-          <SIcon size={14} strokeWidth={active ? 2.2 : 1.8} color={active ? 'rgba(201,169,97,0.9)' : section.locked ? '#C9C2B8' : '#A8A29E'} />
+      <button onClick={onClick} className="flex items-center gap-2.5 flex-1 min-w-0 text-left rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40">
+        <div className={`relative w-7 h-7 flex items-center justify-center shrink-0 rounded-[7px] ${active ? 'bg-gold/15' : 'bg-mist'}`}>
+          <SIcon size={14} strokeWidth={active ? 2.2 : 1.8} className={active ? 'text-gold' : section.locked ? 'text-smoke' : 'text-ash'} />
           {section.locked && !active && (
             <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-400 flex items-center justify-center">
               <Lock size={7} className="text-white" />
             </div>
           )}
         </div>
-        <span className="text-[12px] truncate" style={{ fontWeight: active ? 600 : 500 }}>
+        <span className={`text-ui-sm truncate ${active ? 'font-semibold' : 'font-medium'}`}>
           {section.label}
         </span>
       </button>
@@ -227,41 +219,30 @@ function DraggableSectionItem({ section, active, onClick }: { section: NavItem; 
 
 function StaticSectionItem({ section, active, onClick }: { section: NavItem; active: boolean; onClick: () => void }) {
   const SIcon = section.icon
-  const iconColor = active ? 'rgba(201,169,97,0.9)' : section.locked ? '#C9C2B8' : '#A8A29E'
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-2.5 rounded-xl transition-all text-left group relative overflow-hidden"
-      style={
-        active
-          ? { background: 'linear-gradient(135deg, #2C4A34 0%, #1A3020 100%)', color: '#FFFFFF', padding: '8px 10px' }
-          : { backgroundColor: 'transparent', color: section.locked ? '#C9C2B8' : '#78716C', padding: '8px 10px' }
-      }
-      onMouseEnter={(e) => { if (!active) e.currentTarget.style.backgroundColor = '#F0EDE8' }}
-      onMouseLeave={(e) => { if (!active) e.currentTarget.style.backgroundColor = 'transparent' }}
+      aria-current={active ? 'page' : undefined}
+      className={`w-full flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-colors text-left group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 ${
+        active ? 'bg-forest text-chalk' : `${section.locked ? 'text-smoke' : 'text-concrete'} hover:bg-mist`
+      }`}
     >
-      {active && (
-        <div style={{ position: 'absolute', top: 0, left: 12, right: 12, height: 1, background: 'linear-gradient(to right, transparent, rgba(201,169,97,0.4), transparent)' }} />
-      )}
-      <div
-        className="relative w-7 h-7 flex items-center justify-center shrink-0 transition-colors"
-        style={{ backgroundColor: active ? 'rgba(201,169,97,0.15)' : '#EDE8E2', borderRadius: 7 }}
-      >
-        <SIcon size={14} strokeWidth={active ? 2.2 : 1.8} color={iconColor} />
+      <div className={`relative w-7 h-7 flex items-center justify-center shrink-0 rounded-[7px] ${active ? 'bg-gold/15' : 'bg-mist'}`}>
+        <SIcon size={14} strokeWidth={active ? 2.2 : 1.8} className={active ? 'text-gold' : section.locked ? 'text-smoke' : 'text-ash'} />
         {section.locked && !active && (
           <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-400 flex items-center justify-center">
             <Lock size={7} className="text-white" />
           </div>
         )}
       </div>
-      <span className="text-[12px] truncate flex-1" style={{ fontWeight: active ? 600 : 500 }}>
+      <span className={`text-ui-sm truncate flex-1 ${active ? 'font-semibold' : 'font-medium'}`}>
         {section.label}
       </span>
       {section.required && !section.locked && (
-        <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: active ? 'rgba(201,169,97,0.9)' : '#C9A961', flexShrink: 0, marginLeft: 'auto' }} title="Wajib diisi" />
+        <span className={`w-[5px] h-[5px] rounded-full shrink-0 ml-auto ${active ? 'bg-gold' : 'bg-gold-dark'}`} title="Wajib diisi" />
       )}
       {section.locked && section.requiredTier && (
-        <span className="text-[9px] font-semibold text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded-md shrink-0">
+        <span className="text-ui-2xs font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-md shrink-0">
           {section.requiredTier}
         </span>
       )}
@@ -567,21 +548,17 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
     return (
       <div className="flex h-full">
         {/* Left: Section navigation sidebar */}
-        <div className="hidden md:flex flex-col shrink-0 overflow-hidden" style={{ width: 210, backgroundColor: '#FAF9F6', borderRight: '1px solid #EDE8E2' }}>
+        <div className="hidden md:flex flex-col shrink-0 overflow-hidden w-[210px] bg-ivory border-r border-hairline">
           {/* Sidebar header */}
-          <div className="shrink-0 px-3.5 pt-3.5 pb-2" style={{ borderBottom: '1px solid #EDE8E2' }}>
+          <div className="shrink-0 px-3.5 pt-3.5 pb-2 border-b border-hairline">
             <div className="flex items-center justify-between mb-2.5">
-              <h3 className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#292524' }}>Konten</h3>
+              <h3 className="text-ui-xs font-bold uppercase tracking-wider text-carbon">Konten</h3>
               <button
                 onClick={() => setReorderMode(!reorderMode)}
-                className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg transition-all"
-                style={
-                  reorderMode
-                    ? { background: 'linear-gradient(135deg, #2C4A34, #1A3020)', color: '#FEFDFB' }
-                    : { color: '#A8A29E' }
-                }
-                onMouseEnter={(e) => { if (!reorderMode) e.currentTarget.style.backgroundColor = '#F0EDE8' }}
-                onMouseLeave={(e) => { if (!reorderMode) e.currentTarget.style.backgroundColor = 'transparent' }}
+                aria-pressed={reorderMode}
+                className={`flex items-center gap-1 text-ui-2xs font-semibold px-2 py-1 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 ${
+                  reorderMode ? 'bg-forest text-chalk' : 'text-ash hover:bg-mist'
+                }`}
                 title={reorderMode ? 'Selesai menyusun' : 'Susun ulang section'}
               >
                 <ArrowUpDown size={11} />
@@ -590,19 +567,18 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
             </div>
             {/* Progress bar */}
             <div className="flex items-center gap-2">
-              <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#EDE8E2' }}>
+              <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-hairline">
                 <motion.div
-                  className="h-full rounded-full"
+                  className={`h-full rounded-full ${completeness.percentage === 100 ? 'bg-forest' : 'bg-gold-dark'}`}
                   initial={{ width: 0 }}
                   animate={{ width: `${completeness.percentage}%` }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ background: completeness.percentage === 100 ? '#4A7C59' : '#C9A961' }}
+                  transition={{ duration: 0.5, ease: EASE }}
                 />
               </div>
-              <span className="text-[10px] font-bold tabular-nums" style={{ color: '#A8A29E' }}>{completeness.percentage}%</span>
+              <span className="text-ui-2xs font-bold tabular-nums text-concrete">{completeness.percentage}%</span>
             </div>
             {completeness.missingRequired.length > 0 && (
-              <p className="text-[10px] text-amber-600 mt-1.5 leading-tight">
+              <p className="text-ui-2xs text-amber-600 mt-1.5 leading-tight">
                 Belum lengkap: {completeness.missingRequired.join(', ')}
               </p>
             )}
@@ -647,8 +623,8 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
                   >
                     {NAV_GROUPS.map((group) => (
                       <div key={group.label}>
-                        <div style={{ height: 1, backgroundColor: '#EDE8E2', marginBottom: 4 }} />
-                        <p className="uppercase select-none" style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.18em', color: '#C9B98A', padding: '10px 14px 4px' }}>
+                        <div className="h-px bg-hairline mb-1" />
+                        <p className="text-ui-eyebrow text-ash select-none px-3.5 pt-2.5 pb-1">
                           {group.label}
                         </p>
                         <div className="space-y-0.5">
@@ -671,22 +647,20 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
         </div>
 
         {/* Mobile: horizontal section nav */}
-        <div className="md:hidden fixed bottom-[52px] left-0 right-0 z-30 backdrop-blur-xl" style={{ backgroundColor: 'rgba(250,249,246,0.95)', borderTop: '1px solid #EDE8E2' }}>
-          <div className="flex overflow-x-auto px-2 py-1.5 gap-0.5" style={{ scrollbarWidth: 'none' }}>
+        <div className="md:hidden fixed bottom-[52px] left-0 right-0 z-30 backdrop-blur-xl bg-ivory/95 border-t border-hairline">
+          <div className="flex overflow-x-auto px-2 py-1.5 gap-0.5 scrollbar-hide">
             {SECTIONS.map(s => {
               const active = activeSection === s.id
               const SIcon = s.icon
               return (
                 <button key={s.id} onClick={() => setActiveSection(s.id)}
-                  className="shrink-0 flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl transition-all relative"
-                  style={
-                    active
-                      ? { background: 'linear-gradient(135deg, #2C4A34 0%, #1A3020 100%)', color: '#FFFFFF' }
-                      : { color: s.locked ? '#C9C2B8' : '#A8A29E' }
-                  }
+                  aria-current={active ? 'page' : undefined}
+                  className={`shrink-0 flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-xl transition-colors relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 ${
+                    active ? 'bg-forest text-chalk' : s.locked ? 'text-smoke' : 'text-ash'
+                  }`}
                 >
-                  <SIcon size={14} strokeWidth={active ? 2 : 1.5} color={active ? 'rgba(201,169,97,0.9)' : undefined} />
-                  <span className="text-[9px] font-medium">{s.label}</span>
+                  <SIcon size={14} strokeWidth={active ? 2 : 1.5} className={active ? 'text-gold' : ''} />
+                  <span className="text-ui-2xs font-medium">{s.label}</span>
                   {s.locked && !active && (
                     <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber-400 flex items-center justify-center">
                       <Lock size={6} className="text-white" />
@@ -701,14 +675,13 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
         {/* Center: form content */}
         <div className="flex-1 min-w-0 flex flex-col min-h-0">
           {/* Section header bar */}
-          <div className="shrink-0 backdrop-blur-xl px-4 sm:px-5 py-2.5 flex items-center gap-3" style={{ backgroundColor: 'rgba(250,249,246,0.92)', borderBottom: '1px solid #EDE8E2' }}>
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-              style={activeItem?.locked ? { backgroundColor: '#FEF3C7' } : { backgroundColor: '#F5EDD8' }}>
-              <ActiveIcon size={15} strokeWidth={2} color={activeItem?.locked ? '#D97706' : '#9A7A3F'} />
+          <div className="shrink-0 backdrop-blur-xl px-4 sm:px-5 py-2.5 flex items-center gap-3 bg-ivory/92 border-b border-hairline">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${activeItem?.locked ? 'bg-amber-50' : 'bg-forest-50'}`}>
+              <ActiveIcon size={15} strokeWidth={2} className={activeItem?.locked ? 'text-amber-600' : 'text-forest'} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold" style={{ color: '#292524' }}>{activeItem?.label ?? 'Editor'}</h2>
+                <h2 className="text-ui-base font-bold text-graphite">{activeItem?.label ?? 'Editor'}</h2>
                 <AnimatePresence mode="wait">
                   {saveStatus === 'saving' && (
                     <motion.span
@@ -716,7 +689,7 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      className="inline-flex items-center gap-1 text-[10px] text-stone-400 bg-stone-50 px-2 py-0.5 rounded-full"
+                      className="inline-flex items-center gap-1 text-ui-2xs text-concrete bg-mist px-2 py-0.5 rounded-full"
                     >
                       <Loader2 size={9} className="animate-spin" /> Menyimpan…
                     </motion.span>
@@ -727,7 +700,7 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      className="inline-flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full"
+                      className="inline-flex items-center gap-1 text-ui-2xs text-green-700 bg-green-50 px-2 py-0.5 rounded-full"
                     >
                       <Check size={9} /> Tersimpan
                     </motion.span>
@@ -735,7 +708,7 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
                 </AnimatePresence>
               </div>
               {activeItem?.locked && activeItem.requiredTier && (
-                <p className="text-[10px] text-amber-500 font-medium mt-0.5">
+                <p className="text-ui-2xs text-amber-600 font-medium mt-0.5">
                   Tersedia mulai paket {activeItem.requiredTier}
                 </p>
               )}
@@ -743,27 +716,26 @@ export default function InvitationStudio({ invitation, template, onSaved, isAdmi
 
             <button
               onClick={() => setShowPreview(true)}
-              className="xl:hidden flex items-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-xl transition-all"
-              style={{ background: 'linear-gradient(135deg, #2C4A34, #1A3020)', color: '#FEFDFB', border: 'none', boxShadow: '0 2px 8px rgba(44,74,52,0.3)' }}
+              className="xl:hidden flex items-center gap-1.5 text-ui-xs font-semibold px-3 py-2 rounded-button transition-colors bg-forest text-chalk hover:bg-forest-deep shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 focus-visible:ring-offset-2"
             >
               <Eye size={13} /> Preview
             </button>
           </div>
 
           {/* Active form */}
-          <div className="flex-1 overflow-y-auto min-h-0" style={{ scrollbarWidth: 'thin' }}>
+          <div className="flex-1 overflow-y-auto min-h-0 bg-ivory" style={{ scrollbarWidth: 'thin' }}>
             <div className="px-4 sm:px-5 py-4 max-w-xl mx-auto">
               {/* Completeness indicator (mobile, sidebar shows it on desktop) */}
-              <div className="md:hidden mb-4 px-3.5 py-3 bg-stone-50 border border-stone-200 rounded-xl">
+              <div className="md:hidden mb-4 px-3.5 py-3 bg-chalk border border-hairline rounded-card shadow-card">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-medium text-stone-600">Kelengkapan Undangan</span>
-                  <span className="text-xs font-bold text-stone-700">{completeness.percentage}%</span>
+                  <span className="text-ui-sm font-medium text-concrete">Kelengkapan Undangan</span>
+                  <span className="text-ui-sm font-bold text-graphite">{completeness.percentage}%</span>
                 </div>
-                <div className="h-1.5 bg-stone-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${completeness.percentage}%` }} />
+                <div className="h-1.5 bg-hairline rounded-full overflow-hidden">
+                  <div className={`h-full transition-all duration-500 ${completeness.percentage === 100 ? 'bg-forest' : 'bg-gold-dark'}`} style={{ width: `${completeness.percentage}%` }} />
                 </div>
                 {completeness.missingRequired.length > 0 && (
-                  <p className="text-[10px] text-amber-600 mt-1.5">Belum lengkap: {completeness.missingRequired.join(', ')}</p>
+                  <p className="text-ui-2xs text-amber-600 mt-1.5">Belum lengkap: {completeness.missingRequired.join(', ')}</p>
                 )}
               </div>
               <div className="relative">
