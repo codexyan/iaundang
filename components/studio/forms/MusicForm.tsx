@@ -111,20 +111,20 @@ export default function MusicForm({
       <audio ref={previewAudioRef} onEnded={() => setPreviewId(null)} />
 
       {musicUrl ? (
-        <div className="p-4 border-2 border-gold-300 bg-gold-50 rounded-xl space-y-3">
+        <div className="p-4 border-2 border-forest bg-forest-50 rounded-xl space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gold-500 text-white flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-forest text-white flex items-center justify-center">
               <Music size={24} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-stone-900">{musicTitle || 'Musik Terpilih'}</p>
-              <p className="text-xs text-stone-600 truncate">{musicUrl}</p>
+              <p className="font-semibold text-graphite">{musicTitle || 'Musik Terpilih'}</p>
+              <p className="text-xs text-concrete truncate">{musicUrl}</p>
             </div>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={togglePlay}
-                className="w-9 h-9 rounded-lg bg-gold-500 text-white hover:bg-gold-600 flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-lg bg-forest text-white hover:bg-forest-deep flex items-center justify-center transition-colors"
                 title={playing ? 'Pause' : 'Play'}
               >
                 {playing ? <Pause size={16} /> : <Play size={16} />}
@@ -150,26 +150,26 @@ export default function MusicForm({
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-sm font-semibold text-stone-700">Pilih dari Perpustakaan</p>
+          <p className="text-sm font-semibold text-graphite">Pilih dari Perpustakaan</p>
 
           {/* Search & Filter */}
           {library.length > 4 && (
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
+                <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ash" />
                 <input
                   type="text"
                   placeholder="Cari lagu..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 text-sm border border-stone-200 rounded-lg focus:ring-1 focus:ring-gold-500 focus:border-gold-500 outline-none"
+                  className="w-full pl-8 pr-3 py-1.5 text-sm border border-hairline rounded-lg focus:ring-1 focus:ring-forest/40 focus:border-forest-light outline-none"
                 />
               </div>
               {categories.length > 1 && (
                 <select
                   value={filterCat}
                   onChange={e => setFilterCat(e.target.value)}
-                  className="px-2 py-1.5 text-sm border border-stone-200 rounded-lg focus:ring-1 focus:ring-gold-500 outline-none bg-white"
+                  className="px-2 py-1.5 text-sm border border-hairline rounded-lg focus:ring-1 focus:ring-forest/40 outline-none bg-white"
                 >
                   <option value="all">Semua</option>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
@@ -180,10 +180,10 @@ export default function MusicForm({
 
           {loadingLib ? (
             <div className="flex items-center justify-center py-6">
-              <Loader2 size={20} className="animate-spin text-stone-400" />
+              <Loader2 size={20} className="animate-spin text-ash" />
             </div>
           ) : filtered.length === 0 ? (
-            <p className="text-sm text-stone-400 text-center py-4">
+            <p className="text-sm text-ash text-center py-4">
               {library.length === 0 ? 'Belum ada musik tersedia' : 'Tidak ditemukan'}
             </p>
           ) : (
@@ -191,32 +191,32 @@ export default function MusicForm({
               {filtered.map(track => (
                 <div
                   key={track.id}
-                  className="w-full p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all flex items-center gap-3"
+                  className="w-full p-3 border border-hairline rounded-lg hover:border-gold-dark/50 hover:bg-forest-50 transition-all flex items-center gap-3"
                 >
                   <button
                     type="button"
                     onClick={() => togglePreview(track)}
                     className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                       previewId === track.id
-                        ? 'bg-gold-500 text-white'
-                        : 'bg-stone-100 text-stone-600 hover:bg-gold-100'
+                        ? 'bg-forest text-white'
+                        : 'bg-mist text-concrete hover:bg-forest-50'
                     }`}
                   >
                     {previewId === track.id ? <Pause size={16} /> : <Play size={16} />}
                   </button>
                   <div className="flex-1 min-w-0 text-left">
-                    <p className="text-sm font-semibold text-stone-900 truncate">{track.title}</p>
-                    <p className="text-xs text-stone-500 truncate">
+                    <p className="text-sm font-semibold text-graphite truncate">{track.title}</p>
+                    <p className="text-xs text-concrete truncate">
                       {track.artist || track.category}
                       {track.usage_count > 0 && (
-                        <span className="text-stone-400"> · {track.usage_count}x dipilih</span>
+                        <span className="text-ash"> · {track.usage_count}x dipilih</span>
                       )}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => selectFromLibrary(track)}
-                    className="px-3 py-1.5 text-xs font-medium bg-gold-500 text-white rounded-lg hover:bg-gold-600 transition-colors shrink-0"
+                    className="px-3 py-1.5 text-xs font-medium bg-forest text-white rounded-lg hover:bg-forest-deep transition-colors shrink-0"
                   >
                     Pilih
                   </button>
@@ -227,8 +227,8 @@ export default function MusicForm({
         </div>
       )}
 
-      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-xs text-blue-800">
+      <div className="p-3 bg-forest-50 border border-forest-100 rounded-lg">
+        <p className="text-xs text-forest-deep">
           <strong>Tips:</strong> Musik mulai diputar sejak halaman pembuka ditampilkan. Tamu bisa pause/play melalui kontrol musik. Pilih lagu yang sesuai dengan suasana pernikahan.
         </p>
       </div>

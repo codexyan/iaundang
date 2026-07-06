@@ -70,13 +70,13 @@ export default function StoryForm({
           />
         </FormField>
 
-        <div className="border-t border-stone-200 pt-4">
+        <div className="border-t border-hairline pt-4">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-bold text-stone-700">
+            <h4 className="text-sm font-bold text-graphite">
               Bab Kisah ({chapters.length}/{MAX_CHAPTERS})
             </h4>
             {chapters.length > 0 && (
-              <span className="text-xs text-stone-400">
+              <span className="text-xs text-ash">
                 Navigasi IG Stories di undangan
               </span>
             )}
@@ -84,19 +84,19 @@ export default function StoryForm({
 
           {chapters.map((ch, idx) => (
             <div key={idx}
-              className="relative p-4 border border-stone-200 rounded-xl space-y-3 mb-3 group hover:border-gold-300 transition-colors">
+              className="relative p-4 border border-hairline rounded-xl space-y-3 mb-3 group hover:border-gold-dark/50 transition-colors">
 
               {/* Controls */}
               <div className="absolute top-3 right-3 flex items-center gap-1">
                 <button type="button" onClick={() => moveChapter(idx, -1)}
                   disabled={idx === 0}
-                  className="w-7 h-7 rounded-lg bg-stone-100 text-stone-500 hover:bg-stone-200 flex items-center justify-center disabled:opacity-30 transition-all"
+                  className="w-7 h-7 rounded-lg bg-mist text-concrete hover:bg-hairline flex items-center justify-center disabled:opacity-30 transition-all"
                   title="Pindah ke atas">
                   <ChevronUp size={14} />
                 </button>
                 <button type="button" onClick={() => moveChapter(idx, 1)}
                   disabled={idx === chapters.length - 1}
-                  className="w-7 h-7 rounded-lg bg-stone-100 text-stone-500 hover:bg-stone-200 flex items-center justify-center disabled:opacity-30 transition-all"
+                  className="w-7 h-7 rounded-lg bg-mist text-concrete hover:bg-hairline flex items-center justify-center disabled:opacity-30 transition-all"
                   title="Pindah ke bawah">
                   <ChevronDown size={14} />
                 </button>
@@ -108,10 +108,10 @@ export default function StoryForm({
               </div>
 
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-7 h-7 rounded-lg bg-gold-100 text-gold-700 flex items-center justify-center text-xs font-bold">
+                <div className="w-7 h-7 rounded-lg bg-forest-50 text-gold-dark flex items-center justify-center text-xs font-bold">
                   {idx + 1}
                 </div>
-                <span className="text-sm font-semibold text-stone-700">
+                <span className="text-sm font-semibold text-graphite">
                   Bab {idx + 1}
                 </span>
               </div>
@@ -150,14 +150,14 @@ export default function StoryForm({
 
           {chapters.length < MAX_CHAPTERS && (
             <button type="button" onClick={addChapter}
-              className="w-full py-3 border-2 border-dashed border-stone-300 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold text-stone-600 hover:border-gold-400 hover:text-gold-600 hover:bg-gold-50/50 transition-all">
+              className="w-full py-3 border-2 border-dashed border-hairline rounded-xl flex items-center justify-center gap-2 text-sm font-semibold text-concrete hover:border-gold-dark/50 hover:text-forest hover:bg-forest-50/50 transition-all">
               <Plus size={18} />
               Tambah Bab ({chapters.length}/{MAX_CHAPTERS})
             </button>
           )}
 
           {chapters.length === 0 && (
-            <div className="text-center py-6 text-stone-400">
+            <div className="text-center py-6 text-ash">
               <BookOpen size={28} className="mx-auto mb-2 opacity-50" />
               <p className="text-sm">
                 Belum ada bab kisah. Tambahkan bab untuk menampilkan kisah cinta bergaya IG Stories.

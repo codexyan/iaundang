@@ -82,17 +82,17 @@ export default function QuoteForm({
     >
       {/* Quick Select: Quranic Verses */}
       <div className="space-y-2">
-        <p className="text-sm font-semibold text-stone-700">Pilih Ayat Al-Quran</p>
+        <p className="text-sm font-semibold text-graphite">Pilih Ayat Al-Quran</p>
         <div className="space-y-2">
           {QURANIC_VERSES.map((verse, index) => (
             <button
               key={index}
               type="button"
               onClick={() => applyQuranVerse(verse)}
-              className="w-full p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
+              className="w-full p-3 border border-hairline rounded-lg hover:border-gold-dark/50 hover:bg-forest-50 transition-all text-left"
             >
-              <p className="text-xs font-semibold text-gold-700 mb-1">{verse.source}</p>
-              <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
+              <p className="text-xs font-semibold text-gold-dark mb-1">{verse.source}</p>
+              <p className="text-xs text-concrete leading-relaxed line-clamp-2">
                 {verse.translation}
               </p>
             </button>
@@ -101,28 +101,28 @@ export default function QuoteForm({
       </div>
 
       {/* Quick Select: Love Quotes */}
-      <div className="space-y-2 pt-4 border-t border-stone-200">
-        <p className="text-sm font-semibold text-stone-700">Pilih Kutipan Cinta</p>
+      <div className="space-y-2 pt-4 border-t border-hairline">
+        <p className="text-sm font-semibold text-graphite">Pilih Kutipan Cinta</p>
         <div className="space-y-2">
           {LOVE_QUOTES.map((quote, index) => (
             <button
               key={index}
               type="button"
               onClick={() => applyLoveQuote(quote)}
-              className="w-full p-3 border border-stone-200 rounded-lg hover:border-gold-400 hover:bg-gold-50 transition-all text-left"
+              className="w-full p-3 border border-hairline rounded-lg hover:border-gold-dark/50 hover:bg-forest-50 transition-all text-left"
             >
-              <p className="text-xs text-stone-700 italic leading-relaxed line-clamp-2">
+              <p className="text-xs text-graphite italic leading-relaxed line-clamp-2">
                 &ldquo;{quote.text}&rdquo;
               </p>
-              <p className="text-xs text-stone-500 mt-1">- {quote.author}</p>
+              <p className="text-xs text-concrete mt-1">- {quote.author}</p>
             </button>
           ))}
         </div>
       </div>
 
       {/* Custom Input */}
-      <div className="space-y-4 pt-4 border-t border-stone-200">
-        <p className="text-sm font-semibold text-stone-700">Atau Tulis Sendiri</p>
+      <div className="space-y-4 pt-4 border-t border-hairline">
+        <p className="text-sm font-semibold text-graphite">Atau Tulis Sendiri</p>
 
         <FormField
           label="Teks Arab (Opsional)"
@@ -166,15 +166,15 @@ export default function QuoteForm({
 
       {/* Preview */}
       {(quoteArabic || quoteTranslation) && (
-        <div className="p-6 rounded-xl bg-gradient-to-br from-stone-50 to-stone-100 border border-stone-200">
+        <div className="p-6 rounded-xl bg-ivory border border-hairline">
           <div className="text-center space-y-3">
-            <p className="text-xs font-semibold text-gold-600 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-gold-dark uppercase tracking-wider">
               Preview Quote
             </p>
 
             {quoteArabic && (
               <p
-                className="text-lg font-sans text-stone-800 leading-relaxed"
+                className="text-lg font-sans text-graphite leading-relaxed"
                 dir="rtl"
                 style={{ fontFamily: 'Arial, sans-serif' }}
               >
@@ -183,15 +183,15 @@ export default function QuoteForm({
             )}
 
             {quoteTranslation && (
-              <p className="text-sm text-stone-700 leading-relaxed max-w-md mx-auto">
+              <p className="text-sm text-graphite leading-relaxed max-w-md mx-auto">
                 {quoteTranslation}
               </p>
             )}
 
             {quoteSource && (
               <>
-                <div className="w-12 h-px bg-gold-400 mx-auto" />
-                <p className="text-xs font-semibold text-gold-700">
+                <div className="w-12 h-px bg-forest mx-auto" />
+                <p className="text-xs font-semibold text-gold-dark">
                   {quoteSource}
                 </p>
               </>

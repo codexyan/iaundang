@@ -89,9 +89,9 @@ export default function GalleryManager({ invitation }: Props) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 p-10 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-gray-400">
-          <div className="w-8 h-8 border-2 border-gray-200 border-t-rose-400 rounded-full animate-spin" />
+      <div className="bg-white rounded-2xl border border-hairline p-10 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-ash">
+          <div className="w-8 h-8 border-2 border-hairline border-t-rose-400 rounded-full animate-spin" />
           <span className="text-sm">Memuat galeri...</span>
         </div>
       </div>
@@ -101,11 +101,11 @@ export default function GalleryManager({ invitation }: Props) {
   return (
     <div className="space-y-4">
       {/* Header + limit */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5">
+      <div className="bg-white rounded-2xl border border-hairline p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="font-bold text-gray-900">Galeri Foto</h3>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <h3 className="font-bold text-graphite">Galeri Foto</h3>
+            <p className="text-sm text-concrete mt-0.5">
               {maxPhotos === -1
                 ? `${galleries.length} foto diupload`
                 : `${galleries.length} dari ${maxPhotos} foto`
@@ -114,20 +114,20 @@ export default function GalleryManager({ invitation }: Props) {
           </div>
 
           <div className="text-right">
-            <span className={`text-sm font-bold ${isAtLimit ? 'text-red-500' : isNearLimit ? 'text-amber-500' : 'text-gray-600'}`}>
+            <span className={`text-sm font-bold ${isAtLimit ? 'text-red-500' : isNearLimit ? 'text-amber-500' : 'text-concrete'}`}>
               {maxPhotos === -1 ? `${galleries.length} foto` : `${galleries.length}/${maxPhotos}`}
             </span>
-            <p className="text-xs text-gray-400">{maxPhotos === -1 ? 'unlimited' : 'paket ' + pkg.name}</p>
+            <p className="text-xs text-ash">{maxPhotos === -1 ? 'unlimited' : 'paket ' + pkg.name}</p>
           </div>
         </div>
 
         {/* Limit progress bar */}
         {maxPhotos !== -1 && (
           <div className="mb-4">
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-mist rounded-full overflow-hidden">
               <motion.div
                 className={`h-full rounded-full transition-colors ${
-                  isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-amber-400' : 'bg-gold-500'
+                  isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-amber-400' : 'bg-forest'
                 }`}
                 initial={{ width: 0 }}
                 animate={{ width: `${limitPercent}%` }}
@@ -135,10 +135,10 @@ export default function GalleryManager({ invitation }: Props) {
               />
             </div>
             <div className="flex justify-between mt-1">
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-ash">
                 {isAtLimit ? '⚠️ Batas foto tercapai' : isNearLimit ? '⚠️ Hampir penuh' : 'Kapasitas foto'}
               </span>
-              <span className="text-xs text-gray-400">{limitPercent}%</span>
+              <span className="text-xs text-ash">{limitPercent}%</span>
             </div>
           </div>
         )}
@@ -149,31 +149,31 @@ export default function GalleryManager({ invitation }: Props) {
             {...getRootProps()}
             className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
               isDragActive
-                ? 'border-rose-400 bg-gold-50'
+                ? 'border-forest bg-forest-50'
                 : uploading
-                ? 'border-gray-200 bg-gray-50 cursor-not-allowed'
-                : 'border-gray-200 hover:border-rose-300 hover:bg-gold-50/30'
+                ? 'border-hairline bg-ivory cursor-not-allowed'
+                : 'border-hairline hover:border-forest-light hover:bg-forest-50/30'
             }`}
           >
             <input {...getInputProps()} />
             {uploading ? (
               <div className="flex flex-col items-center gap-3">
-                <div className="w-10 h-10 border-2 border-gray-200 border-t-rose-400 rounded-full animate-spin" />
-                <p className="text-sm text-gray-500">Mengupload foto...</p>
+                <div className="w-10 h-10 border-2 border-hairline border-t-rose-400 rounded-full animate-spin" />
+                <p className="text-sm text-concrete">Mengupload foto...</p>
               </div>
             ) : isDragActive ? (
               <div className="flex flex-col items-center gap-2">
-                <Upload size={28} className="text-rose-500" />
-                <p className="text-sm font-semibold text-gold-600">Lepaskan file di sini!</p>
+                <Upload size={28} className="text-forest" />
+                <p className="text-sm font-semibold text-gold-dark">Lepaskan file di sini!</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
-                <div className="w-12 h-12 bg-gold-50 rounded-2xl flex items-center justify-center">
-                  <ImagePlus size={22} className="text-rose-400" />
+                <div className="w-12 h-12 bg-forest-50 rounded-2xl flex items-center justify-center">
+                  <ImagePlus size={22} className="text-forest" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-700">Seret foto ke sini atau klik untuk pilih</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-sm font-semibold text-graphite">Seret foto ke sini atau klik untuk pilih</p>
+                  <p className="text-xs text-ash mt-1">
                     JPG, PNG, WebP · Max 5MB per foto
                     {maxPhotos !== -1 && ` · Sisa ${maxPhotos - galleries.length} foto`}
                   </p>
@@ -212,11 +212,11 @@ export default function GalleryManager({ invitation }: Props) {
 
       {/* Photo grid */}
       {galleries.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+        <div className="bg-white rounded-2xl border border-hairline p-5">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="font-semibold text-gray-900 text-sm">Foto Terupload ({galleries.length})</h4>
+            <h4 className="font-semibold text-graphite text-sm">Foto Terupload ({galleries.length})</h4>
             {galleries.length > 0 && (
-              <p className="text-xs text-gray-400">Klik foto untuk preview · Klik 🗑️ untuk hapus</p>
+              <p className="text-xs text-ash">Klik foto untuk preview · Klik 🗑️ untuk hapus</p>
             )}
           </div>
 
@@ -232,7 +232,7 @@ export default function GalleryManager({ invitation }: Props) {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="relative group aspect-square rounded-xl overflow-hidden border border-gray-100 bg-gray-50"
+                  className="relative group aspect-square rounded-xl overflow-hidden border border-hairline bg-ivory"
                 >
                   <img
                     src={gallery.url}
@@ -246,19 +246,19 @@ export default function GalleryManager({ invitation }: Props) {
                       onClick={() => setLightbox(index)}
                       className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
                     >
-                      <ZoomIn size={14} className="text-gray-700" />
+                      <ZoomIn size={14} className="text-graphite" />
                     </button>
                     <button
                       onClick={() => setDeleteConfirm(gallery.id)}
                       className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
                     >
-                      <Trash2 size={14} className="text-gray-700 group-hover:text-inherit" />
+                      <Trash2 size={14} className="text-graphite group-hover:text-inherit" />
                     </button>
                   </div>
 
                   {/* Order badge */}
                   <div className="absolute top-2 left-2 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center">
-                    <span className="text-[9px] text-white font-bold">{index + 1}</span>
+                    <span className="text-ui-2xs text-white font-bold">{index + 1}</span>
                   </div>
                 </motion.div>
               ))}
@@ -268,9 +268,9 @@ export default function GalleryManager({ invitation }: Props) {
       )}
 
       {galleries.length === 0 && !loading && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center">
+        <div className="bg-white rounded-2xl border border-hairline p-8 text-center">
           <div className="text-4xl mb-3">📷</div>
-          <p className="text-gray-500 text-sm">Belum ada foto. Upload foto di atas untuk mulai!</p>
+          <p className="text-concrete text-sm">Belum ada foto. Upload foto di atas untuk mulai!</p>
         </div>
       )}
 
@@ -293,13 +293,13 @@ export default function GalleryManager({ invitation }: Props) {
             >
               <div className="text-center mb-4">
                 <div className="text-4xl mb-3">🗑️</div>
-                <h3 className="font-bold text-gray-900 mb-1">Hapus foto ini?</h3>
-                <p className="text-sm text-gray-500">Foto yang dihapus tidak bisa dikembalikan.</p>
+                <h3 className="font-bold text-graphite mb-1">Hapus foto ini?</h3>
+                <p className="text-sm text-concrete">Foto yang dihapus tidak bisa dikembalikan.</p>
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50"
+                  className="flex-1 py-2.5 border border-hairline rounded-xl text-sm font-semibold text-concrete hover:bg-ivory"
                 >
                   Batal
                 </button>
