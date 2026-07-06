@@ -31,7 +31,7 @@ export default function SectionBackgroundControl({
   return (
     <div>
       {/* Tab tipe */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 12, background: '#F5F2ED', padding: 2, borderRadius: 10 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 12, background: '#f2f2f2', padding: 2, borderRadius: 10 }}>
         {TYPES.map(t => {
           const active = type === t.id
           return (
@@ -43,7 +43,7 @@ export default function SectionBackgroundControl({
                 flex: 1, padding: '6px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
                 fontSize: 11, fontWeight: 600, transition: 'all 0.15s',
                 background: active ? '#FFFFFF' : 'transparent',
-                color: active ? accent : '#A8A29E',
+                color: active ? accent : '#737373',
                 boxShadow: active ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
@@ -59,7 +59,7 @@ export default function SectionBackgroundControl({
             type="color"
             value={value.value ?? defaultColor}
             onChange={e => onChange({ ...value, type: 'color', value: e.target.value })}
-            style={{ width: 36, height: 36, borderRadius: 10, cursor: 'pointer', border: '1px solid #E5E1DA', padding: 2, flexShrink: 0, background: '#fff' }}
+            style={{ width: 36, height: 36, borderRadius: 10, cursor: 'pointer', border: '1px solid #e5e5e5', padding: 2, flexShrink: 0, background: '#fff' }}
           />
           <input
             value={value.value ?? defaultColor}
@@ -67,7 +67,7 @@ export default function SectionBackgroundControl({
             placeholder="#000000"
             style={{
               flex: 1, minWidth: 0, fontSize: 11, fontFamily: 'monospace',
-              background: '#FFFFFF', border: '1px solid #E5E1DA', borderRadius: 10, padding: '8px 10px', outline: 'none',
+              background: '#FFFFFF', border: '1px solid #e5e5e5', borderRadius: 10, padding: '8px 10px', outline: 'none',
             }}
           />
         </div>
@@ -101,10 +101,10 @@ export default function SectionBackgroundControl({
 function OverlaySlider({ value, onChange, fallback }: { value: BackgroundConfig; onChange: (bg: BackgroundConfig) => void; fallback: number }) {
   const op = value.overlay_opacity ?? fallback
   return (
-    <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E2', borderRadius: 10, padding: 10 }}>
+    <div style={{ background: '#FFFFFF', border: '1px solid #e5e5e5', borderRadius: 10, padding: 10 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-        <p style={{ fontSize: 9, fontWeight: 600, color: '#78716C' }}>Overlay Gelap</p>
-        <span style={{ fontSize: 10, fontWeight: 700, color: '#44403C', background: '#F5F2ED', padding: '1px 6px', borderRadius: 6 }}>
+        <p style={{ fontSize: 9, fontWeight: 600, color: '#737373' }}>Overlay Gelap</p>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#171717', background: '#f2f2f2', padding: '1px 6px', borderRadius: 6 }}>
           {Math.round(op * 100)}%
         </span>
       </div>

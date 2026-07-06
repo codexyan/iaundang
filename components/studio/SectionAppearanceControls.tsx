@@ -7,7 +7,7 @@ import { StudioDivider } from './ui/StudioInput'
 import SectionBackgroundControl from '@/components/controls/SectionBackgroundControl'
 import SectionTransitionControl from '@/components/controls/SectionTransitionControl'
 
-const GOLD = '#C9A961'
+const STUDIO_ACCENT = '#1a3320'
 
 interface Props {
   /** Section template (sumber default + id untuk key override) */
@@ -57,7 +57,7 @@ export default function SectionAppearanceControls({ section, data, onUpdate, pri
           value={effectiveBg}
           onChange={setBg}
           defaultColor={primaryColor}
-          accent={GOLD}
+          accent={STUDIO_ACCENT}
         />
       </div>
 
@@ -68,7 +68,7 @@ export default function SectionAppearanceControls({ section, data, onUpdate, pri
           valueOut={effOut}
           onChangeIn={t => setTr({ in: t })}
           onChangeOut={t => setTr({ out: t })}
-          accent={GOLD}
+          accent={STUDIO_ACCENT}
         />
       </div>
     </SectionCard>

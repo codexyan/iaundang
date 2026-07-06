@@ -31,7 +31,7 @@ interface ColumnProps {
 function TransitionColumn({ title, value, onChange, accent }: ColumnProps) {
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
-      <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#78716C', marginBottom: 6 }}>
+      <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#737373', marginBottom: 6 }}>
         {title}
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
@@ -47,14 +47,14 @@ function TransitionColumn({ title, value, onChange, accent }: ColumnProps) {
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
                 padding: '7px 3px', borderRadius: 9, cursor: 'pointer',
-                border: `1px solid ${active ? accent : '#E5E1DA'}`,
+                border: `1px solid ${active ? accent : '#e5e5e5'}`,
                 background: active ? `${accent}14` : '#FFFFFF',
-                color: active ? accent : '#78716C',
+                color: active ? accent : '#737373',
                 transition: 'all 0.15s',
               }}
             >
               {meta.icon(13)}
-              <span style={{ fontSize: 8, fontWeight: 600, lineHeight: 1, color: active ? accent : '#A8A29E' }}>
+              <span style={{ fontSize: 8, fontWeight: 600, lineHeight: 1, color: active ? accent : '#737373' }}>
                 {meta.label}
               </span>
             </button>
@@ -85,7 +85,7 @@ export default function SectionTransitionControl({
   return (
     <div style={{ display: 'flex', gap: 12 }}>
       <TransitionColumn title="Masuk" value={valueIn} onChange={onChangeIn} accent={accent} />
-      <div style={{ width: 1, background: '#EDE8E2', flexShrink: 0 }} />
+      <div style={{ width: 1, background: '#e5e5e5', flexShrink: 0 }} />
       <TransitionColumn title="Keluar" value={valueOut} onChange={onChangeOut} accent={accent} />
     </div>
   )
